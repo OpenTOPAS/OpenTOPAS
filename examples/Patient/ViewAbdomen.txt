@@ -1,0 +1,72 @@
+# Demonstrates use of a DICOM file.
+# You must unzip Abdomen.zip before you run this example.
+# Reads in and displays a 3 slice scan of an abdomen.
+# The display writes very slowly to the screen.
+# This will be improved in an upcoming new release.
+# Until then, one useful trick is that if you iconize the graphics window,
+# then un-inconize it when drawing is done, the drawing will go much faster.
+
+includeFile = HUtoMaterialSchneider.txt
+
+s:Ge/World/Material  = "Vacuum"
+d:Ge/World/HLX       = 2.0 m
+d:Ge/World/HLY       = 2.0 m
+d:Ge/World/HLZ       = 2.0 m
+b:Ge/World/Invisible = "TRUE"
+
+s:Ge/Patient/Parent             = "World"
+s:Ge/Patient/Material           = "G4_WATER"
+s:Ge/Patient/Type               = "TsDicomPatient"
+d:Ge/Patient/TransX             = 0. m
+d:Ge/Patient/TransY             = 0. m
+d:Ge/Patient/TransZ             = 0. m
+d:Ge/Patient/RotX               = 0. deg
+d:Ge/Patient/RotY               = 0. deg
+d:Ge/Patient/RotZ               = 0. deg
+s:Ge/Patient/DicomDirectory     = "Abdomen"
+sv:Ge/Patient/DicomModalityTags = 1 "CT"
+
+# Restrict which voxels are loaded.
+# This will speed things up for purposes of this demonstration,
+# but also changes simulation results, as only part of the DICOM
+# will be loaded. Take care when using this feature in your research.
+i:Ge/Patient/RestrictVoxelsXMin = 200
+i:Ge/Patient/RestrictVoxelsYMin = 200
+i:Ge/Patient/RestrictVoxelsXMax = 400
+i:Ge/Patient/RestrictVoxelsYMax = 400
+
+# Specify which slices to show.
+# Comment this out or set to zero to show all slices.
+# Set to -1 to show only center slice.
+# Set to -2 to show first, center and last slice.
+#iv:Ge/Patient/ShowSpecificSlicesX = 1 -2
+#iv:Ge/Patient/ShowSpecificSlicesY = 1 -2
+iv:Ge/Patient/ShowSpecificSlicesZ = 1 -1
+
+# Simplify physics for faster start of this demonstration
+sv:Ph/Default/Modules = 1 "g4em-standard_opt0"
+
+s:So/Example/Type                     = "Beam"
+s:So/Example/Component                = "BeamPosition"
+s:So/Example/BeamParticle             = "proton"
+d:So/Example/BeamEnergy               = 169.23 MeV
+u:So/Example/BeamEnergySpread         = 0.757504
+s:So/Example/BeamPositionDistribution = "Gaussian"
+s:So/Example/BeamPositionCutoffShape  = "Ellipse"
+d:So/Example/BeamPositionCutoffX      = 10. cm
+d:So/Example/BeamPositionCutoffY      = 10. cm
+d:So/Example/BeamPositionSpreadX      = 0.65 cm
+d:So/Example/BeamPositionSpreadY      = 0.65 cm
+s:So/Example/BeamAngularDistribution  = "Gaussian"
+d:So/Example/BeamAngularCutoffX       = 90. deg
+d:So/Example/BeamAngularCutoffY       = 90. deg
+d:So/Example/BeamAngularSpreadX       = 0.0032 rad
+d:So/Example/BeamAngularSpreadY       = 0.0032 rad
+i:So/Example/NumberOfHistoriesInRun   = 10
+
+s:Gr/ViewA/Type        = "OpenGL"
+i:Gr/ViewA/WindowSizeX = 900
+i:Gr/ViewA/WindowSizeY = 900
+d:Gr/ViewA/Theta       = 70 deg
+d:Gr/ViewA/Phi         = 10 deg
+i:Gr/ShowOnlyOutlineIfVoxelCountExceeds = 1000000

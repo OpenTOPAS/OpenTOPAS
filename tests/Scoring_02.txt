@@ -1,0 +1,84 @@
+includeFile = Scoring_01.txt
+
+# A tiny volume is needed to score DoseToMaterial.
+# A box is placed off the beam axis and consists of lead
+s:Ge/BoxForDoseToMaterial/Type     = "TsBox"
+s:Ge/BoxForDoseToMaterial/Material = Sc/DoseToMaterial/Material
+s:Ge/BoxForDoseToMaterial/Parent   = "IsoCoordination"
+d:Ge/BoxForDoseToMaterial/HLX      = 0.5 mm
+d:Ge/BoxForDoseToMaterial/HLY      = 0.5 mm
+d:Ge/BoxForDoseToMaterial/HLZ      = 0.5 mm
+d:Ge/BoxForDoseToMaterial/TransX   = 10. * Ge/Phantom/HLX cm
+d:Ge/BoxForDoseToMaterial/TransY   = 10. * Ge/Phantom/HLY cm
+d:Ge/BoxForDoseToMaterial/TransZ   = 0. cm
+d:Ge/BoxForDoseToMaterial/RotX     = 0. deg
+d:Ge/BoxForDoseToMaterial/RotY     = 0. deg
+d:Ge/BoxForDoseToMaterial/RotZ     = 0. deg
+
+
+#--- Scoring
+s:Sc/Charge/IfOutputFileAlreadyExists            = "Overwrite"
+s:Sc/Charge/Quantity                             = "Charge"
+s:Sc/Charge/Component                            = "Phantom"
+
+s:Sc/Dose/IfOutputFileAlreadyExists              = "Overwrite"
+s:Sc/Dose/Quantity                               = "DoseToMedium"
+s:Sc/Dose/Component                              = "Phantom"
+
+s:Sc/DoseToMaterial/IfOutputFileAlreadyExists    = "Overwrite"
+s:Sc/DoseToMaterial/Quantity                     = "DoseToMaterial"
+s:Sc/DoseToMaterial/Material                     = "Lead"
+s:Sc/DoseToMaterial/Component                    = "Phantom"
+
+s:Sc/DoseToMaterialBinned/IfOutputFileAlreadyExists       = "Overwrite"
+s:Sc/DoseToMaterialBinned/Quantity                        = "DoseToMaterial"
+s:Sc/DoseToMaterialBinned/Material                        = "Lead"
+s:Sc/DoseToMaterialBinned/Component                       = "Phantom"
+b:Sc/DoseToMaterialBinned/PreCalculateStoppingPowerRatios = "True"
+
+s:Sc/DoseToWater/IfOutputFileAlreadyExists       = "Overwrite"
+s:Sc/DoseToWater/Quantity                        = "DoseToWater"
+s:Sc/DoseToWater/Component                       = "Phantom"
+
+s:Sc/DoseToWaterBinned/IfOutputFileAlreadyExists       = "Overwrite"
+s:Sc/DoseToWaterBinned/Quantity                        = "DoseToWater"
+s:Sc/DoseToWaterBinned/Component                       = "Phantom"
+b:Sc/DoseToWaterBinned/PreCalculateStoppingPowerRatios = "True"
+
+s:Sc/EffectiveCharge/IfOutputFileAlreadyExists   = "Overwrite"
+s:Sc/EffectiveCharge/Quantity                    = "EffectiveCharge"
+s:Sc/EffectiveCharge/Component                   = "Phantom"
+
+s:Sc/EnergyDeposit/IfOutputFileAlreadyExists     = "Overwrite"
+s:Sc/EnergyDeposit/Quantity                      = "EnergyDeposit"
+s:Sc/EnergyDeposit/Component                     = "Phantom"
+
+s:Sc/EnergyFluence/IfOutputFileAlreadyExists     = "Overwrite"
+s:Sc/EnergyFluence/Quantity                      = "EnergyFluence"
+s:Sc/EnergyFluence/Component                     = "Phantom"
+
+s:Sc/Fluence/IfOutputFileAlreadyExists           = "Overwrite"
+s:Sc/Fluence/Quantity                            = "Fluence"
+s:Sc/Fluence/Component                           = "Phantom"
+
+s:Sc/KineticEnergy/IfOutputFileAlreadyExists     = "Overwrite"
+s:Sc/KineticEnergy/Quantity                      = "KineticEnergyAtSurface"
+s:Sc/KineticEnergy/Component                     = "Phantom"
+
+s:Sc/LETd/IfOutputFileAlreadyExists              = "Overwrite"
+s:Sc/LETd/Quantity                               = "ProtonLET"
+s:Sc/LETd/Component                              = "Phantom"
+
+s:Sc/StepCount/IfOutputFileAlreadyExists         = "Overwrite"
+s:Sc/StepCount/Quantity                          = "StepCount"
+s:Sc/StepCount/Component                         = "Phantom"
+
+
+
+s:Sc/SurfaceCurrent/IfOutputFileAlreadyExists    = "Overwrite"
+s:Sc/SurfaceCurrent/Quantity                     = "SurfaceCurrent"
+s:Sc/SurfaceCurrent/Surface                      = Ge/Phantom/UpstreamSurface
+
+s:Sc/SurfaceTrackCount/IfOutputFileAlreadyExists = "Overwrite"
+s:Sc/SurfaceTrackCount/Quantity                  = "SurfaceTrackCount"
+s:Sc/SurfaceTrackCount/Surface                   = Ge/Phantom/UpstreamSurface

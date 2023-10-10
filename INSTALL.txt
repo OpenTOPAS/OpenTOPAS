@@ -1,0 +1,84 @@
+These are the instructions to build TOPAS from source code assuming
+you are a member of the TOPAS Support and Development community.
+
+These instructions assume you already have familiarity with building Geant4
+and other dependent packages, so our instructions are fairly minimal.
+
+A separate set of instructions intended for end users who run TOPAS
+from pre-built executables is in:
+forenduser/README.txt
+
+For most of your work, follow the instructions in the file:
+Packaging.txt.
+It shows how some of us have built TOPAS from source on various operating systems
+including how to build the required dependencies: Geant4 and gdcm.
+
+As the packaging instructions were written by Joseph Perl for his own work
+in packaging our public releases, the file paths there are specific
+to Joseph's setup.
+You will need to adjust file paths as appropriate for your own file system.
+
+
+If you are only building TOPAS to use for yourself,
+you can skip the part that says
+make package
+and the various rm, cp and tar commands after that.
+Those parts are only needed to package the finished product into tar.gz files for others.
+
+You can instead just run your new TOPAS version as shown in the sections that start:
+"Test in new terminal window:"
+
+
+Extra build instructions for case where you are on Mac and
+want to work in the XCode development environment:
+
+Build Geant4.10.7.p2
+cd /Applications
+curl -O https://geant4-data.web.cern.ch/geant4-data/releases/geant4.10.07.p02.tar.gz
+tar -zxf geant4.10.07.p02.tar.gz
+patch -p0 < /Applications/tswork/topas/patches/geant4_10_07_p02.patch
+
+rm -rf /Applications/geant4.10.07.p02-installoglxcode
+rm -rf /Applications/geant4.10.07.p02-buildoglxcode
+mkdir /Applications/geant4.10.07.p02-buildoglxcode
+cd /Applications/geant4.10.07.p02-buildoglxcode
+cmake /Applications/geant4.10.07.p02 -DGEANT4_INSTALL_DATA=OFF -DGEANT4_BUILD_MULTITHREADED=ON -DCMAKE_INSTALL_PREFIX=/Applications/geant4.10.07.p02-installoglxcode -DGEANT4_USE_QT=ON -DCMAKE_PREFIX_PATH=/Users/perl/Qt/5.15.2/clang_64 -DGEANT4_USE_OPENGL_X11=ON -DGEANT4_USE_RAYTRACER_X11=ON -GXcode
+open Geant4.xcodeproj/
+Select target ALL_BUILD from the thing to right of arrow.
+Click the arrow on top to do the build.
+Select target install from the thing to right of arrow.
+Click the arrow on top to do the install.
+
+rm -rf /Applications/tswork/topas-build
+mkdir /Applications/tswork/topas-build
+cd /Applications/tswork/topas-build
+export Geant4_DIR=/Applications/geant4.10.07.p02-installoglxcode/
+cmake /Applications/tswork/topas -GXcode
+open topas.xcodeproj
+Select target ALL_BUILD from the thing to right of arrow.
+Click the arrow on top to do the build.
+
+Run:
+Select target topas > My Mac from the thing to right of arrow.
+in menu Product...Scheme... scroll down to Edit Scheme
+Open Options tab
+Select "Use custom working directory"
+and fill in chosen directory, such as
+"/Applications/tswork/testarea"
+If "Use custom working directory" is not selectable, probably means you are accidentally
+editing the scheme for the build, not for the run.
+Opens Arguments tab
+Set "Arguments Passed On Launch" to top level parameter file such as
+QtTest.txt
+Set environment variables to
+export GDCM_DIR=/Applications/gdcm-install
+export TOPAS_G4_DATA_DIR=/Applications/G4Data
+
+Close that dialog
+Click the arrow on top to run
+
+
+If you also want the nBio extensions:
+When you do the cmake to build TOPAS, add the option:
+-DTOPAS_EXTENSIONS_DIR=/Applications/tswork/nBio
+(with your correct path to your nBio extensions)

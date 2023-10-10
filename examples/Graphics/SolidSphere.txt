@@ -1,0 +1,49 @@
+# Demonstrate effect of drawing style and hidden line removal
+
+s:Ge/Sphere/Type         = "TsSphere"
+s:Ge/Sphere/Parent       = "World"
+s:Ge/Sphere/Material     = "G4_WATER"
+d:Ge/Sphere/RMin         = 0. m
+d:Ge/Sphere/RMax         = 2. m
+d:Ge/Sphere/SPhi         = 0. deg
+d:Ge/Sphere/DPhi         = 360. deg
+d:Ge/Sphere/STheta       = 0. deg
+d:Ge/Sphere/DTheta       = 180. deg
+d:Ge/Sphere/TransX       = 0. m
+d:Ge/Sphere/TransY       = 0. m
+d:Ge/Sphere/TransZ       = 0. m
+d:Ge/Sphere/RotX         = 0. deg
+d:Ge/Sphere/RotY         = 0. deg
+d:Ge/Sphere/RotZ         = 0. deg
+s:Ge/Sphere/DrawingStyle = "Solid"
+
+s:Gr/MyOGL/Type        = "OpenGL"
+i:Gr/MyOGL/WindowSizeX = 600
+i:Gr/MyOGL/WindowSizeY = 600
+i:Gr/MyOGL/WindowPosX  = 0
+i:Gr/MyOGL/WindowPosY  = 0
+d:Gr/MyOGL/Theta       = 30. deg
+d:Gr/MyOGL/Phi         = 30. deg
+u:Gr/MyOGL/Zoom        = 3.
+s:Gr/MyOGL/ColorBy     = "particletype"
+b:Gr/MyOGL/HiddenLineRemovalForTrajectories = "True"
+
+s:So/Example/Type                     = "Beam"
+s:So/Example/Component                = "BeamPosition"
+s:So/Example/BeamParticle             = "proton"
+d:So/Example/BeamEnergy               = 169.23 MeV
+u:So/Example/BeamEnergySpread         = 0.757504
+s:So/Example/BeamPositionDistribution = "Gaussian"
+s:So/Example/BeamPositionCutoffShape  = "Ellipse"
+d:So/Example/BeamPositionCutoffX      = 10. cm
+d:So/Example/BeamPositionCutoffY      = 10. cm
+d:So/Example/BeamPositionSpreadX      = 0.65 cm
+d:So/Example/BeamPositionSpreadY      = 0.65 cm
+s:So/Example/BeamAngularDistribution  = "Gaussian"
+d:So/Example/BeamAngularCutoffX       = 90. deg
+d:So/Example/BeamAngularCutoffY       = 90. deg
+d:So/Example/BeamAngularSpreadX       = 0.0032 rad
+d:So/Example/BeamAngularSpreadY       = 0.0032 rad
+i:So/Example/NumberOfHistoriesInRun   = 100
+
+b:Ts/PauseBeforeQuit = "True"

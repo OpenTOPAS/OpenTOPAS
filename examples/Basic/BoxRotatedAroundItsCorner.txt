@@ -1,0 +1,44 @@
+# Example demonsrating a box rotated around its corner
+# by placing the box inside of a Group and rotating that group.
+
+s:Ge/MyGroup/Type    = "Group"
+s:Ge/MyGroup/Parent = "World"
+dc:Ge/MyGroup/RotX   = 0. deg
+d:Ge/MyGroup/RotY   = 0. deg
+d:Ge/MyGroup/RotZ   = 0. deg
+d:Ge/MyGroup/TransZ = -2. m
+
+s:Ge/MyBox/Type     = "TsBox"
+s:Ge/MyBox/Material = "G4_WATER"
+s:Ge/MyBox/Parent   = "MyGroup"
+d:Ge/MyBox/HLX      = 1.5 m
+d:Ge/MyBox/HLY      = 1. m
+d:Ge/MyBox/HLZ      = 1. m
+d:Ge/MyBox/TransX   = Ge/MyBox/HLX m
+d:Ge/MyBox/TransY   = Ge/MyBox/HLY m
+d:Ge/MyBox/TransZ   = Ge/MyBox/HLZ m
+dc:Ge/MyBox/RotX    = 20. deg
+d:Ge/MyBox/RotY     = 20. deg
+d:Ge/MyBox/RotZ     = 20. deg
+s:Ge/MyBox/Color    = "blue"
+s:Ge/MyBox/DrawingStyle = "WireFrame"
+
+s:Ge/BoxCorner/Type     = "TsBox"
+s:Ge/BoxCorner/Material = "G4_WATER"
+s:Ge/BoxCorner/Parent   = "MyBox"
+d:Ge/BoxCorner/HLX      = .2 m
+d:Ge/BoxCorner/HLY      = .2 m
+d:Ge/BoxCorner/HLZ      = .2 m
+d:Ge/BoxCorner/TransX   = Ge/BoxCorner/HLX - Ge/MyBox/HLX m
+d:Ge/BoxCorner/TransY   = Ge/BoxCorner/HLY - Ge/MyBox/HLY m
+d:Ge/BoxCorner/TransZ   = Ge/BoxCorner/HLZ - Ge/MyBox/HLZ m
+s:Ge/BoxCorner/Color    = "magenta"
+s:Ge/BoxCorner/DrawingStyle = "Solid"
+
+sv:Ph/Default/Modules = 1 "g4em-standard_opt0"
+
+s:Gr/ViewA/Type = "OpenGL"
+b:Gr/ViewA/IncludeAxes = "True"
+d:Gr/ViewA/AxesSize = 4. m
+
+Ts/UseQt = "True"

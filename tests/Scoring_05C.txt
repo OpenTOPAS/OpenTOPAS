@@ -1,0 +1,6 @@
+includeFile = Scoring_05A.txt
+
+#--- Scoring
+s:Ge/ScoringVolume/Material = "Lead"
+
+sv:Ph/Default/LayeredMassGeometryWorlds = 1 "ScoringVolume"

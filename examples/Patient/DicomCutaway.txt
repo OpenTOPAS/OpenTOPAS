@@ -1,0 +1,51 @@
+# Demonstrates use of graphical cutaway planes.
+# You must unzip DICOM_Box.zip before you run this example.
+
+includeFile = HUtoMaterialSchneider.txt
+
+s:Ge/World/Material    = "Vacuum"
+b:Ge/World/Invisible   = "TRUE"
+
+s:Ge/Patient/Parent   = "World"
+s:Ge/Patient/Material = "G4_WATER"
+s:Ge/Patient/Type           = "TsDicomPatient"
+s:Ge/Patient/DicomDirectory = "DICOM_Box"
+
+s:So/Example/Type                     = "Beam"
+s:So/Example/Component                = "BeamPosition"
+s:So/Example/BeamParticle             = "proton"
+d:So/Example/BeamEnergy               = 30. MeV
+u:So/Example/BeamEnergySpread         = 0.757504
+s:So/Example/BeamPositionDistribution = "Flat"
+s:So/Example/BeamPositionCutoffShape  = "Ellipse"
+d:So/Example/BeamPositionCutoffX      = 5. cm
+d:So/Example/BeamPositionCutoffY      = 20. cm
+s:So/Example/BeamAngularDistribution  = "None"
+i:So/Example/NumberOfHistoriesInRun   = 5
+
+s:Gr/ViewA/Type           = "OpenGL"
+sv:Gr/ViewA/VisibleWorlds = 1 "All"
+i:Gr/ViewA/WindowSizeX    = 900
+i:Gr/ViewA/WindowSizeY    = 900
+d:Gr/ViewA/Theta          = 70 deg
+d:Gr/ViewA/Phi            = 10 deg
+
+i:Gr/ViewA/nCutawayPlanes = 2
+d:Gr/ViewA/CutawayPlane/1/XPos = 0. cm
+d:Gr/ViewA/CutawayPlane/1/YPos = 0. cm
+d:Gr/ViewA/CutawayPlane/1/ZPos = 0. cm
+u:Gr/ViewA/CutawayPlane/1/XDir = -1.
+u:Gr/ViewA/CutawayPlane/1/YDir = -1.
+u:Gr/ViewA/CutawayPlane/1/ZDir =  0.
+
+d:Gr/ViewA/CutawayPlane/2/XPos = 0. cm
+d:Gr/ViewA/CutawayPlane/2/YPos = 0. cm
+d:Gr/ViewA/CutawayPlane/2/ZPos = 0. cm
+u:Gr/ViewA/CutawayPlane/2/XDir = -1.
+u:Gr/ViewA/CutawayPlane/2/YDir =  0.
+u:Gr/ViewA/CutawayPlane/2/ZDir =  0.
+
+# Extra graphics options to handle complex voxel geometries
+i:Gr/ShowOnlyOutlineIfVoxelCountExceeds = 210000000
+
+b:Ts/PauseBeforeQuit = "True"

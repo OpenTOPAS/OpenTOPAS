@@ -1,0 +1,9 @@
+includeFile = Scoring_01.txt
+
+#--- Target
+i:Ge/Phantom/XBins = 8
+i:Ge/Phantom/YBins = 9
+i:Ge/Phantom/ZBins = 10
+
+#--- Scoring
+s:Sc/Dose/OutputType = "DICOM"

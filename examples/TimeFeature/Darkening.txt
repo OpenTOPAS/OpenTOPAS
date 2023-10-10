@@ -1,0 +1,383 @@
+# Boxes are set up such that they darken as they receive radiation.
+# They therefore represent pieces of radiosensitive film.
+# One of these films starts outside of the beam
+# and moves into the beam over the course of the session.
+
+s:Ge/World/Material = "Vacuum"
+d:Ge/World/HLX      = 10. m
+d:Ge/World/HLY      = 10. m
+d:Ge/World/HLZ      = 10. m
+
+d:Ge/Phantom/TransY = Tf/BoxMove/Value cm
+
+b:Ts/PauseBeforeQuit = "False"
+
+s:So/Example/Type                     = "Beam"
+s:So/Example/Component                = "BeamPosition"
+s:So/Example/BeamParticle             = "proton"
+d:So/Example/BeamEnergy               = 169.23 MeV
+u:So/Example/BeamEnergySpread         = 0.757504
+s:So/Example/BeamPositionDistribution = "Gaussian"
+s:So/Example/BeamPositionCutoffShape  = "Ellipse"
+d:So/Example/BeamPositionCutoffX      = 10. cm
+d:So/Example/BeamPositionCutoffY      = 10. cm
+d:So/Example/BeamPositionSpreadX      = 0.1 cm
+d:So/Example/BeamPositionSpreadY      = 0.1 cm
+s:So/Example/BeamAngularDistribution  = "Gaussian"
+d:So/Example/BeamAngularCutoffX       = 90. deg
+d:So/Example/BeamAngularCutoffY       = 90. deg
+d:So/Example/BeamAngularSpreadX       = 0.3 rad
+d:So/Example/BeamAngularSpreadY       = 0.0032 rad
+i:So/Example/NumberOfHistoriesInRun   = 4
+
+s:Tf/BoxMoveDown/Function           = "Linear m"
+d:Tf/BoxMoveDown/Rate               = -5. cm/ms
+d:Tf/BoxMoveDown/StartValue         = 1. m
+d:Tf/BoxMoveDown/RepetitionInterval = 250. ms
+
+s:Tf/BoxMove/Function = "Step"
+dv:Tf/BoxMove/Times   = 2 20. 250 ms
+dv:Tf/BoxMove/Values  = 2 Tf/BoxMoveDown/Value 0. cm
+
+d:Tf/TimelineEnd             = 75.0 ms
+i:Tf/NumberOfSequentialTimes = 200
+
+# Graphics
+s:Gr/ViewA/Type                             = "OpenGL"
+i:Gr/ViewA/WindowSizeX                      = 900
+i:Gr/ViewA/WindowSizeY                      = 900
+d:Gr/ViewA/Theta                            = 55 deg
+d:Gr/ViewA/Phi                              = 20 deg
+s:Gr/ViewA/Projection                       = "Perspective"
+d:Gr/ViewA/PerspectiveAngle                 = 30 deg
+u:Gr/ViewA/Zoom                             = 15.
+u:Gr/ViewA/TransX                           = .0
+u:Gr/ViewA/TransY                           = .2
+b:Gr/ViewA/HiddenLineRemovalForTrajectories = "True"
+#b:Gr/ViewA/CopyOpenGLToEPS                 = "True"
+
+sv:Ph/Default/Modules = 1 "g4em-standard_opt0"
+
+s:Ge/Phantom/Type         = "TsBox"
+s:Ge/Phantom/Parent       = "World"
+s:Ge/Phantom/Material     = "G4_WATER"
+d:Ge/Phantom/HLX          = 30.0 cm
+d:Ge/Phantom/HLY          = 30.0 cm
+d:Ge/Phantom/HLZ          = 9. cm
+d:Ge/Phantom/TransX       = 0. cm
+d:Ge/Phantom/TransZ       = 20. cm
+d:Ge/Phantom/RotX         = 0. deg
+d:Ge/Phantom/RotY         = 0. deg
+d:Ge/Phantom/RotZ         = 0. deg
+s:Ge/Phantom/Color        = "white"
+s:Ge/Phantom/DrawingStyle = "solid"
+
+s:Ge/Phantom1/Type         = "TsBox"
+s:Ge/Phantom1/Parent       = "World"
+s:Ge/Phantom1/Material     = "G4_WATER"
+d:Ge/Phantom1/HLX          = 30.0 cm
+d:Ge/Phantom1/HLY          = 30.0 cm
+d:Ge/Phantom1/HLZ          = 10.0 cm
+d:Ge/Phantom1/TransX       = 0. cm
+d:Ge/Phantom1/TransY       = 0. cm
+d:Ge/Phantom1/TransZ       = -30. cm
+d:Ge/Phantom1/RotX         = 0. deg
+d:Ge/Phantom1/RotY         = 0. deg
+d:Ge/Phantom1/RotZ         = 0. deg
+s:Ge/Phantom1/Color        = "white"
+s:Ge/Phantom1/DrawingStyle = "solid"
+
+s:Ge/Phantom2/Type         = "TsBox"
+s:Ge/Phantom2/Parent       = "World"
+s:Ge/Phantom2/Material     = "G4_WATER"
+d:Ge/Phantom2/HLX          = 30.0 cm
+d:Ge/Phantom2/HLY          = 30.0 cm
+d:Ge/Phantom2/HLZ          = 10.0 cm
+d:Ge/Phantom2/TransX       = -70. cm
+d:Ge/Phantom2/TransY       = 0. cm
+d:Ge/Phantom2/TransZ       = -30. cm
+d:Ge/Phantom2/RotX         = 0. deg
+d:Ge/Phantom2/RotY         = 0. deg
+d:Ge/Phantom2/RotZ         = 0. deg
+s:Ge/Phantom2/Color        = "white"
+s:Ge/Phantom2/DrawingStyle = "solid"
+
+s:Ge/Phantom3/Type         = "TsBox"
+s:Ge/Phantom3/Parent       = "World"
+s:Ge/Phantom3/Material     = "G4_WATER"
+d:Ge/Phantom3/HLX          = 30.0 cm
+d:Ge/Phantom3/HLY          = 30.0 cm
+d:Ge/Phantom3/HLZ          = 10.0 cm
+d:Ge/Phantom3/TransX       = 70. cm
+d:Ge/Phantom3/TransY       = 0. cm
+d:Ge/Phantom3/TransZ       = -30. cm
+d:Ge/Phantom3/RotX         = 0. deg
+d:Ge/Phantom3/RotY         = 0. deg
+d:Ge/Phantom3/RotZ         = 0. deg
+s:Ge/Phantom3/Color        = "white"
+s:Ge/Phantom3/DrawingStyle = "solid"
+
+s:Ge/Phantom4/Type         = "TsBox"
+s:Ge/Phantom4/Parent       = "World"
+s:Ge/Phantom4/Material     = "G4_WATER"
+d:Ge/Phantom4/HLX          = 30.0 cm
+d:Ge/Phantom4/HLY          = 30.0 cm
+d:Ge/Phantom4/HLZ          = 10.0 cm
+d:Ge/Phantom4/TransX       = -140. cm
+d:Ge/Phantom4/TransY       = 0. cm
+d:Ge/Phantom4/TransZ       = -30. cm
+d:Ge/Phantom4/RotX         = 0. deg
+d:Ge/Phantom4/RotY         = 0. deg
+d:Ge/Phantom4/RotZ         = 0. deg
+s:Ge/Phantom4/Color        = "white"
+s:Ge/Phantom4/DrawingStyle = "solid"
+
+s:Ge/Phantom5/Type         = "TsBox"
+s:Ge/Phantom5/Parent       = "World"
+s:Ge/Phantom5/Material     = "G4_WATER"
+d:Ge/Phantom5/HLX          = 30.0 cm
+d:Ge/Phantom5/HLY          = 30.0 cm
+d:Ge/Phantom5/HLZ          = 10.0 cm
+d:Ge/Phantom5/TransX       = 140. cm
+d:Ge/Phantom5/TransY       = 0. cm
+d:Ge/Phantom5/TransZ       = -30. cm
+d:Ge/Phantom5/RotX         = 0. deg
+d:Ge/Phantom5/RotY         = 0. deg
+d:Ge/Phantom5/RotZ         = 0. deg
+s:Ge/Phantom5/Color        = "white"
+s:Ge/Phantom5/DrawingStyle = "solid"
+
+s:Sc/DoseAtPhantom/Quantity    = "EnergyDeposit"
+s:Sc/DoseAtPhantom/Component   = "Phantom"
+s:Sc/DoseAtPhantom/IfOutputFileAlreadyExists = "Overwrite"
+s:Sc/DoseAtPhantom/ColorBy     = "Sum"
+sv:Sc/DoseAtPhantom/ColorNames = 14
+"white"
+"grey240"
+"grey220"
+"grey200"
+"grey180"
+"grey160"
+"grey140"
+"grey120"
+"grey100"
+"grey080"
+"grey060"
+"grey040"
+"grey020"
+"black"
+
+dv:Sc/DoseAtPhantom/ColorValues = 13
+0.
+1000
+2000
+3000
+4000
+5000
+6000
+7000
+8000
+9000
+10000
+11000
+12000
+MeV
+
+b:Sc/DoseAtPhantom/OutputAfterRun = "True"
+
+
+s:Sc/DoseAtPhantom1/Quantity    = "EnergyDeposit"
+s:Sc/DoseAtPhantom1/Component   = "Phantom1"
+s:Sc/DoseAtPhantom1/IfOutputFileAlreadyExists = "Overwrite"
+s:Sc/DoseAtPhantom1/ColorBy     = "Sum"
+sv:Sc/DoseAtPhantom1/ColorNames = 14
+"white"
+"grey240"
+"grey220"
+"grey200"
+"grey180"
+"grey160"
+"grey140"
+"grey120"
+"grey100"
+"grey080"
+"grey060"
+"grey040"
+"grey020"
+"black"
+
+dv:Sc/DoseAtPhantom1/ColorValues = 13
+0.
+1000
+2000
+3000
+4000
+5000
+6000
+7000
+8000
+9000
+10000
+11000
+12000
+MeV
+
+b:Sc/DoseAtPhantom1/OutputAfterRun = "True"
+
+
+s:Sc/DoseAtPhantom2/Quantity    = "EnergyDeposit"
+s:Sc/DoseAtPhantom2/Component   = "Phantom2"
+s:Sc/DoseAtPhantom2/IfOutputFileAlreadyExists = "Overwrite"
+s:Sc/DoseAtPhantom2/ColorBy     = "Sum"
+sv:Sc/DoseAtPhantom2/ColorNames = 14
+"white"
+"grey240"
+"grey220"
+"grey200"
+"grey180"
+"grey160"
+"grey140"
+"grey120"
+"grey100"
+"grey080"
+"grey060"
+"grey040"
+"grey020"
+"black"
+
+dv:Sc/DoseAtPhantom2/ColorValues = 13
+0.
+1000
+2000
+3000
+4000
+5000
+6000
+7000
+8000
+9000
+10000
+11000
+12000
+MeV
+
+b:Sc/DoseAtPhantom2/OutputAfterRun = "True"
+
+
+s:Sc/DoseAtPhantom3/Quantity    = "EnergyDeposit"
+s:Sc/DoseAtPhantom3/Component   = "Phantom3"
+s:Sc/DoseAtPhantom3/IfOutputFileAlreadyExists = "Overwrite"
+s:Sc/DoseAtPhantom3/ColorBy     = "Sum"
+sv:Sc/DoseAtPhantom3/ColorNames = 14
+"white"
+"grey240"
+"grey220"
+"grey200"
+"grey180"
+"grey160"
+"grey140"
+"grey120"
+"grey100"
+"grey080"
+"grey060"
+"grey040"
+"grey020"
+"black"
+
+dv:Sc/DoseAtPhantom3/ColorValues = 13
+0.
+1000
+2000
+3000
+4000
+5000
+6000
+7000
+8000
+9000
+10000
+11000
+12000
+MeV
+
+b:Sc/DoseAtPhantom3/OutputAfterRun = "True"
+
+
+
+s:Sc/DoseAtPhantom4/Quantity    = "EnergyDeposit"
+s:Sc/DoseAtPhantom4/Component   = "Phantom4"
+s:Sc/DoseAtPhantom4/IfOutputFileAlreadyExists = "Overwrite"
+s:Sc/DoseAtPhantom4/ColorBy     = "Sum"
+sv:Sc/DoseAtPhantom4/ColorNames = 14
+"white"
+"grey240"
+"grey220"
+"grey200"
+"grey180"
+"grey160"
+"grey140"
+"grey120"
+"grey100"
+"grey080"
+"grey060"
+"grey040"
+"grey020"
+"black"
+
+dv:Sc/DoseAtPhantom4/ColorValues = 13
+0.
+1000
+2000
+3000
+4000
+5000
+6000
+7000
+8000
+9000
+10000
+11000
+12000
+MeV
+
+b:Sc/DoseAtPhantom4/OutputAfterRun = "True"
+
+
+
+s:Sc/DoseAtPhantom5/Quantity    = "EnergyDeposit"
+s:Sc/DoseAtPhantom5/Component   = "Phantom5"
+s:Sc/DoseAtPhantom5/IfOutputFileAlreadyExists = "Overwrite"
+s:Sc/DoseAtPhantom5/ColorBy     = "Sum"
+sv:Sc/DoseAtPhantom5/ColorNames = 14
+"white"
+"grey240"
+"grey220"
+"grey200"
+"grey180"
+"grey160"
+"grey140"
+"grey120"
+"grey100"
+"grey080"
+"grey060"
+"grey040"
+"grey020"
+"black"
+
+dv:Sc/DoseAtPhantom5/ColorValues = 13
+0.
+1000
+2000
+3000
+4000
+5000
+6000
+7000
+8000
+9000
+10000
+11000
+12000
+MeV
+
+b:Sc/DoseAtPhantom5/OutputAfterRun = "True"

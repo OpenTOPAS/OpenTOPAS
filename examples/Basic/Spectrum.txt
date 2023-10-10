@@ -1,0 +1,40 @@
+# Demonstrates use of EnergySpectrum.
+# Resulting particles can be seen in ASCIIOutput.phsp
+
+s:Ge/World/Material = "Vacuum"
+
+s:So/Example/BeamEnergySpectrumType       = "Continuous"
+dv:So/Example/BeamEnergySpectrumValues    = 3 50. 100. 150. MeV
+uv:So/Example/BeamEnergySpectrumWeights   = 3 .20 .60 .20
+
+s:Ge/VacFilm/Type     = "TsBox"
+s:Ge/VacFilm/Parent   = "World"
+s:Ge/VacFilm/Material = "Vacuum"
+d:Ge/VacFilm/HLX      = 50.0 cm
+d:Ge/VacFilm/HLY      = 50.0 cm
+d:Ge/VacFilm/HLZ      = 1.0 cm
+
+s:Sc/PhaseSpaceAtVacFilm/Quantity                  = "PhaseSpace"
+b:Sc/PhaseSpaceAtVacFilm/OutputToConsole           = "True"
+s:Sc/PhaseSpaceAtVacFilm/Surface                   = "VacFilm/ZMinusSurface"
+s:Sc/PhaseSpaceAtVacFilm/OutputType                = "ASCII" # ASCII, Binary or Limited
+s:Sc/PhaseSpaceAtVacFilm/OutputFile                = "ASCIIOutput"
+s:Sc/PhaseSpaceAtVacFilm/IfOutputFileAlreadyExists = "Overwrite"
+
+s:So/Example/Type                     = "Beam"
+s:So/Example/Component                = "BeamPosition"
+s:So/Example/BeamParticle             = "proton"
+s:So/Example/BeamPositionDistribution = "Gaussian"
+s:So/Example/BeamPositionCutoffShape  = "Ellipse"
+d:So/Example/BeamPositionCutoffX      = 10. cm
+d:So/Example/BeamPositionCutoffY      = 10. cm
+d:So/Example/BeamPositionSpreadX      = 0.65 cm
+d:So/Example/BeamPositionSpreadY      = 0.65 cm
+s:So/Example/BeamAngularDistribution  = "Gaussian"
+d:So/Example/BeamAngularCutoffX       = 90. deg
+d:So/Example/BeamAngularCutoffY       = 90. deg
+d:So/Example/BeamAngularSpreadX       = 0.0032 rad
+d:So/Example/BeamAngularSpreadY       = 0.0032 rad
+i:So/Example/NumberOfHistoriesInRun   = 1000
+
+i:Ts/ShowHistoryCountAtInterval = 10

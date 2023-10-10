@@ -1,0 +1,39 @@
+# Target used in some demonstrations.
+
+includeFile = ConstantsForNozzles.txt
+
+s:Ge/WaterPhantom/Type     = "TsBox"
+s:Ge/WaterPhantom/Parent   = "World"
+s:Ge/WaterPhantom/Material = "G4_WATER"
+d:Ge/WaterPhantom/HLX      = 8.0 cm
+d:Ge/WaterPhantom/HLY      = 8.0 cm
+d:Ge/WaterPhantom/HLZ      = 10.0 cm
+d:Ge/WaterPhantom/MinusHLZ = Ge/WaterPhantom/HLZ cm * -1.0
+d:Ge/WaterPhantom/TransX   = 0. cm
+d:Ge/WaterPhantom/TransY   = 0. cm
+d:Ge/WaterPhantom/TransZ   = Ge/WaterPhantom/MinusHLZ cm
+d:Ge/WaterPhantom/RotX     = 0. deg
+d:Ge/WaterPhantom/RotY     = 0. deg
+d:Ge/WaterPhantom/RotZ     = 0. deg
+s:Ge/WaterPhantom/Color    = "white"
+
+#Value for placing a target.
+#146.25 mm is the R80 for about 141 MeV proton
+d:Ge/R80 = -146.25 mm
+
+s:Ge/PlaneAtR80/Type       = "TsBox"
+s:Ge/PlaneAtR80/Parent     = "WaterPhantom"
+s:Ge/PlaneAtR80/Material   = "G4_WATER"
+d:Ge/PlaneAtR80/HLX        = 5.0 cm
+d:Ge/PlaneAtR80/HLY        = 5.0 cm
+d:Ge/PlaneAtR80/HLZ        = 0.5 cm
+d:Ge/PlaneAtR80/TransX     = 0. cm
+d:Ge/PlaneAtR80/TransY     = 0. cm
+d:Ge/PlaneAtR80/TransZ     = Ge/WaterPhantom/HLZ + Ge/R80 cm
+d:Ge/PlaneAtR80/RotX       = 0.0 deg
+d:Ge/PlaneAtR80/RotY       = 0.0 deg
+d:Ge/PlaneAtR80/RotZ       = 0.0 deg
+s:Ge/PlaneAtR80/Color      = "red"
+i:Ge/PlaneAtR80/XBins      = 1
+i:Ge/PlaneAtR80/YBins      = 1
+i:Ge/PlaneAtR80/ZBins      = 1

@@ -1,0 +1,4 @@
+add_library( extensions
+TsExtensionManager.cc
+TsExtensionManager.hh
+)

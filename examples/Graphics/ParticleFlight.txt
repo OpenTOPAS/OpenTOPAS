@@ -1,0 +1,320 @@
+# Constructs the name TOPAS out of a variety of geometry components
+# and sends particles through this geometry with animated particle flight
+
+b:Ge/World/Invisible = "True"
+
+#--------- Letter T --------
+s:Ge/Letter_T/Parent  = "World"
+s:Ge/Letter_T/Type    = "Group"
+d:Ge/Letter_T/TransX  = 0. m
+d:Ge/Letter_T/TransY  = 0.5 m
+d:Ge/Letter_T/TransZ  = 0. m
+d:Ge/Letter_T/RotX    = 0. deg
+d:Ge/Letter_T/RotY    = 0. deg
+d:Ge/Letter_T/RotZ    = 0. deg
+#b:Ge/Letter_T/Include = "False"
+
+s:Ge/T_1st/Type     = "TsBox"
+s:Ge/T_1st/Material = "Vacuum"
+s:Ge/T_1st/Parent   = "Letter_T"
+d:Ge/T_1st/HLX      = 50.0 cm
+d:Ge/T_1st/HLY      = 10.0 cm
+d:Ge/T_1st/HLZ      = 10.0 cm
+d:Ge/T_1st/TransX   = 0. m
+d:Ge/T_1st/TransY   = 0. m
+d:Ge/T_1st/TransZ   = 0. m
+d:Ge/T_1st/RotX     = 0. deg
+d:Ge/T_1st/RotY     = 0. deg
+d:Ge/T_1st/RotZ     = 0. deg
+
+s:Ge/T_2nd/Type     = "TsCylinder"
+s:Ge/T_2nd/Material = "G4_WATER"
+s:Ge/T_2nd/Parent   = "Letter_T"
+d:Ge/T_2nd/RMin     =   6.0 cm
+d:Ge/T_2nd/RMax     =  10.0 cm
+d:Ge/T_2nd/HL       =  50.0 cm
+d:Ge/T_2nd/SPhi     =   0.0 deg
+d:Ge/T_2nd/DPhi     = 360.0 deg
+d:Ge/T_2nd/TransX   =   0.0 cm
+d:Ge/T_2nd/TransY   = -1.25 * Ge/T_2nd/HL cm
+d:Ge/T_2nd/TransZ   =   0.0 cm
+d:Ge/T_2nd/RotX     =  90.0 deg
+d:Ge/T_2nd/RotY     =   0.0 deg
+d:Ge/T_2nd/RotZ     =   0.0 deg
+
+#--------- Letter O --------
+s:Ge/Letter_O/Parent  = "World"
+s:Ge/Letter_O/Type    = "Group"
+d:Ge/Letter_O/TransX  = 1.0 m
+d:Ge/Letter_O/TransY  = 0. m
+d:Ge/Letter_O/TransZ  = 0. m
+d:Ge/Letter_O/RotX    = 0. deg
+d:Ge/Letter_O/RotY    = 0. deg
+d:Ge/Letter_O/RotZ    = 0. deg
+#b:Ge/Letter_O/Include = "False"
+
+s:Ge/O_Left/Type     = "G4Cons"
+s:Ge/O_Left/Material = "Aluminum"
+s:Ge/O_Left/Parent   = "Letter_O"
+#RM[in,max]1 : -Z surface
+#RM[in,max]2 : +Z surface
+d:Ge/O_Left/RMin1    = 38.0 cm
+d:Ge/O_Left/RMax1    = 45.0 cm
+d:Ge/O_Left/RMin2    = 45.0 cm
+d:Ge/O_Left/RMax2    = 50.0 cm
+d:Ge/O_Left/HL    	 =  5.0 cm
+#Sphi : angle from x axis
+d:Ge/O_Left/SPhi     =  90.0 deg
+d:Ge/O_Left/DPhi     = 180.0 deg
+d:Ge/O_Left/TransX   = 0. m
+d:Ge/O_Left/TransY   = 0. m
+d:Ge/O_Left/TransZ   = 0. m
+d:Ge/O_Left/RotX     = 0. deg
+d:Ge/O_Left/RotY     = 0. deg
+d:Ge/O_Left/RotZ     = 0. deg
+
+s:Ge/O_Right/Type     = "TsSphere"
+s:Ge/O_Right/Material = "Carbon"
+s:Ge/O_Right/Parent   = "Letter_O"
+#RM[in,max]1 : -Z surface
+#RM[in,max]2 : +Z surface
+d:Ge/O_Right/RMin     = 45.0 cm
+d:Ge/O_Right/RMax     = 50.0 cm
+#Sphi : angle from x axis
+d:Ge/O_Right/SPhi     = 270.0 deg
+d:Ge/O_Right/DPhi     = 180.0 deg
+#STheta : angle from Y rotation
+d:Ge/O_Right/STheta   =  90.0 deg
+d:Ge/O_Right/DTheta   = 45.0 deg
+d:Ge/O_Right/TransX   = 0. m
+d:Ge/O_Right/TransY   = 0. m
+d:Ge/O_Right/TransZ   = 0. m
+d:Ge/O_Right/RotX     = 0. deg
+d:Ge/O_Right/RotY     = 0. deg
+d:Ge/O_Right/RotZ     = 0. deg
+
+#--------- Letter P --------
+s:Ge/Letter_P/Parent  = "World"
+s:Ge/Letter_P/Type    = "Group"
+d:Ge/Letter_P/TransX  = 1.7 m
+d:Ge/Letter_P/TransY  = 0. m
+d:Ge/Letter_P/TransZ  = 0. m
+d:Ge/Letter_P/RotX    = 0. deg
+d:Ge/Letter_P/RotY    = 0. deg
+d:Ge/Letter_P/RotZ    = 0. deg
+#b:Ge/Letter_P/Include = "False"
+
+s:Ge/P_1st/Type     = "G4EllipticalTube"
+s:Ge/P_1st/Material = "Lexan"
+s:Ge/P_1st/Parent   = "Letter_P"
+d:Ge/P_1st/HLX      =  9.0 cm
+d:Ge/P_1st/HLY      =  7.0 cm
+d:Ge/P_1st/HLZ    	= 25.0 cm
+d:Ge/P_1st/TransX   =  0.0 cm
+d:Ge/P_1st/TransY   =  Ge/P_1st/HLZ cm
+d:Ge/P_1st/TransZ   =  0.0 cm
+d:Ge/P_1st/RotX     = 90.0 deg
+d:Ge/P_1st/RotY     =  0.0 deg
+d:Ge/P_1st/RotZ     =  0.0 deg
+
+s:Ge/P_2nd/Type     = "G4Trd"
+s:Ge/P_2nd/Material = "Kapton"
+s:Ge/P_2nd/Parent   = "Letter_P"
+d:Ge/P_2nd/HLX1     = 10.0 cm
+d:Ge/P_2nd/HLY1     =  8.0 cm
+d:Ge/P_2nd/HLX2     =  9.5 cm
+d:Ge/P_2nd/HLY2     =  7.5 cm
+d:Ge/P_2nd/HLZ    	= 25.0 cm
+d:Ge/P_2nd/TransX   =  0.0 cm
+d:Ge/P_2nd/TransY   = -1.0 * Ge/P_2nd/HLZ cm
+d:Ge/P_2nd/TransZ   =  0.0 cm
+d:Ge/P_2nd/RotX     = 90.0 deg
+d:Ge/P_2nd/RotY     =  0.0 deg
+d:Ge/P_2nd/RotZ     =  0.0 deg
+
+s:Ge/P_3rd/Type     = "G4Torus"
+s:Ge/P_3rd/Material = "Lucite"
+s:Ge/P_3rd/Parent   = "Letter_P"
+d:Ge/P_3rd/RMin     =  5.0 cm
+d:Ge/P_3rd/RMax     =  6.0 cm
+d:Ge/P_3rd/RTor     =  25.0 cm
+d:Ge/P_3rd/SPhi     = 265.0 deg
+d:Ge/P_3rd/DPhi    	= 190.0 deg
+d:Ge/P_3rd/TransX   =  -8.0 cm + Ge/P_3rd/RTor
+d:Ge/P_3rd/TransY   =  Ge/P_3rd/RTor cm
+d:Ge/P_3rd/TransZ   =  0.0 cm
+d:Ge/P_3rd/RotX     =  0.0 deg
+d:Ge/P_3rd/RotY     =  0.0 deg
+d:Ge/P_3rd/RotZ     =  0.0 deg
+
+#--------- Letter A --------
+s:Ge/Letter_A/Parent  = "World"
+s:Ge/Letter_A/Type    = "Group"
+d:Ge/Letter_A/TransX  = 2.7 m
+d:Ge/Letter_A/TransY  = 0. m
+d:Ge/Letter_A/TransZ  = 0. m
+d:Ge/Letter_A/RotX    = 0. deg
+d:Ge/Letter_A/RotY    = 0. deg
+d:Ge/Letter_A/RotZ    = 0. deg
+#b:Ge/Letter_A/Include = "False"
+
+#HLZ, Theta, Phi, HLY1,
+#HLX1, HLX2, HLX3, HLX4,
+#Alp2, Alp1, HLY2,
+s:Ge/A_1st/Type     = "G4Para"
+s:Ge/A_1st/Material = "Brass"
+s:Ge/A_1st/Parent   = "Letter_A"
+d:Ge/A_1st/HLX      = 9.0 cm
+d:Ge/A_1st/HLY      = 50.0 cm
+d:Ge/A_1st/HLZ      = 7.0 cm
+d:Ge/A_1st/Alpha    = 15.0 deg
+d:Ge/A_1st/Theta    = 0.0 deg
+d:Ge/A_1st/Phi      = 0.0 deg
+d:Ge/A_1st/TransX   = -2.7 * Ge/A_1st/HLX  cm
+d:Ge/A_1st/TransY   = 0.0 cm
+d:Ge/A_1st/TransZ   = 0.0 cm
+d:Ge/A_1st/RotX     = 0.0 deg
+d:Ge/A_1st/RotY     = 0.0 deg
+d:Ge/A_1st/RotZ     = 0.0 deg
+
+#Will Try to build with G4GTrap or G4RTrap
+s:Ge/A_2nd/Type     = "G4Para"
+s:Ge/A_2nd/Material = "Mylar"
+s:Ge/A_2nd/Parent   = "Letter_A"
+d:Ge/A_2nd/HLX      = 9.0 cm
+d:Ge/A_2nd/HLY      = 50.0 cm
+d:Ge/A_2nd/HLZ      = 7.0 cm
+d:Ge/A_2nd/Alpha    = -15.0 deg
+d:Ge/A_2nd/Theta    = 0.0 deg
+d:Ge/A_2nd/Phi      = 0.0 deg
+d:Ge/A_2nd/TransX   = -1.0 * Ge/A_1st/TransX  cm
+d:Ge/A_2nd/TransY   = 0.0 cm
+d:Ge/A_2nd/TransZ   = 0.0 cm
+d:Ge/A_2nd/RotX     = 0.0 deg
+d:Ge/A_2nd/RotY     = 0.0 deg
+d:Ge/A_2nd/RotZ     = 0.0 deg
+
+s:Ge/A_3rd/Type     = "G4Orb"
+s:Ge/A_3rd/Material = "Titanium"
+s:Ge/A_3rd/Parent   = "Letter_A"
+d:Ge/A_3rd/R        = 8.0 cm
+d:Ge/A_3rd/TransX   = 0.0 cm
+d:Ge/A_3rd/TransY   = 0.0 cm
+d:Ge/A_3rd/TransZ   = 0.0 cm
+d:Ge/A_3rd/RotX     = 0.0 deg
+d:Ge/A_3rd/RotY     = 0.0 deg
+d:Ge/A_3rd/RotZ     = 0.0 deg
+
+#--------- Letter S --------
+s:Ge/Letter_S/Parent  = "World"
+s:Ge/Letter_S/Type    = "Group"
+#d:Ge/Letter_S/TransX  = 0.0 m
+d:Ge/Letter_S/TransX  = 3.7 m
+d:Ge/Letter_S/TransY  = 0. m
+d:Ge/Letter_S/TransZ  = 0. m
+d:Ge/Letter_S/RotX    = 0. deg
+d:Ge/Letter_S/RotY    = 0. deg
+d:Ge/Letter_S/RotZ    = -20. deg
+#b:Ge/Letter_S/Include = "False"
+
+s:Ge/S_1st/Type     = "G4HPolycone"
+s:Ge/S_1st/Material = "Copper"
+s:Ge/S_1st/Parent   = "Letter_S"
+d:Ge/S_1st/PhiStart =  350.0 deg
+d:Ge/S_1st/PhiTotal =  225.0 deg
+dv:Ge/S_1st/Z        =6   8.0  4.0  4.0 -4.0 -4.0 -8.0 cm
+dv:Ge/S_1st/RInner   =6  10.0 10.0 10.0 10.0 10.0 10.0 cm
+dv:Ge/S_1st/ROuter   =6  18.0 18.0 30.0 30.0 18.0 18.0 cm
+d:Ge/S_1st/TransX   = 10.0 cm
+d:Ge/S_1st/TransY   = 22.0 cm
+d:Ge/S_1st/TransZ   =  0.0 cm
+d:Ge/S_1st/RotX     =  0.0 deg
+d:Ge/S_1st/RotY     =  0.0 deg
+d:Ge/S_1st/RotZ     =  0.0 deg
+
+s:Ge/S_2nd/Type      = "G4Hype"
+s:Ge/S_2nd/Material  = "Brass"
+s:Ge/S_2nd/Parent    = "Letter_S"
+d:Ge/S_2nd/IR  	     = 7.0 cm
+d:Ge/S_2nd/OR  	     = 10.0 cm
+d:Ge/S_2nd/IS  	     = 10.0 deg
+d:Ge/S_2nd/OS  	     = 20.0 deg
+d:Ge/S_2nd/HLZ    	 = 10.0 cm
+d:Ge/S_2nd/TransX   =  0.0 cm
+d:Ge/S_2nd/TransY   =  0.0 cm
+d:Ge/S_2nd/TransZ   =  0.0 cm
+d:Ge/S_2nd/RotX     =  90.0 deg
+d:Ge/S_2nd/RotY     =  35.0 deg
+d:Ge/S_2nd/RotZ     =  0.0 deg
+#b:Ge/S_2nd/Include  = "false"
+
+s:Ge/S_3rd/Type     = "G4HPolyhedra"
+s:Ge/S_3rd/Material = "Kapton"
+s:Ge/S_3rd/Parent   = "Letter_S"
+d:Ge/S_3rd/PhiStart =  170.0 deg
+d:Ge/S_3rd/PhiTotal =  225.0 deg
+i:Ge/S_3rd/NSides   =8
+dv:Ge/S_3rd/Z        =6   8.0  4.0  4.0 -4.0 -4.0 -8.0 cm
+dv:Ge/S_3rd/RInner   =6  10.0 10.0 10.0 10.0 10.0 10.0 cm
+dv:Ge/S_3rd/ROuter   =6  18.0 18.0 30.0 30.0 18.0 18.0 cm
+d:Ge/S_3rd/TransX   = -10.0 cm
+d:Ge/S_3rd/TransY   = -23.0 cm
+d:Ge/S_3rd/TransZ   =  0.0 cm
+d:Ge/S_3rd/RotX     =  0.0 deg
+d:Ge/S_3rd/RotY     =  0.0 deg
+d:Ge/S_3rd/RotZ     =  0.0 deg
+
+# Default Beam position (S)
+s:Ge/BeamPosition/Parent   = "World"
+s:Ge/BeamPosition/Type     = "Group"
+d:Ge/BeamPosition/TransX   = 0.15 m
+d:Ge/BeamPosition/TransY   = 0. m
+d:Ge/BeamPosition/TransZ   = 0 m
+#flipped cause the beam flies 0 to +z.
+d:Ge/BeamPosition/RotX     = 0. deg
+d:Ge/BeamPosition/RotY     = 270. deg
+d:Ge/BeamPosition/RotZ     = 0. deg
+
+s:So/Example/Type                     = "Beam"
+s:So/Example/Component                = "BeamPosition"
+s:So/Example/BeamParticle             = "proton"
+d:So/Example/BeamEnergy               = 169.23 MeV
+u:So/Example/BeamEnergySpread         = 0.757504
+s:So/Example/BeamPositionDistribution = "Gaussian"
+s:So/Example/BeamPositionCutoffShape  = "Ellipse"
+d:So/Example/BeamPositionCutoffX      = 10. cm
+d:So/Example/BeamPositionCutoffY      = 10. cm
+d:So/Example/BeamPositionSpreadX      = 0.65 cm
+d:So/Example/BeamPositionSpreadY      = 0.65 cm
+s:So/Example/BeamAngularDistribution  = "Gaussian"
+d:So/Example/BeamAngularCutoffX       = 90. deg
+d:So/Example/BeamAngularCutoffY       = 90. deg
+d:So/Example/BeamAngularSpreadX       = 0.0032 rad
+d:So/Example/BeamAngularSpreadY       = 0.0032 rad
+i:So/Example/NumberOfHistoriesInRun   = 20
+
+i:Tf/NumberOfSequentialTimes = 10
+
+s:Gr/ViewA/Type          = "OpenGL"
+i:Gr/ViewA/WindowSizeX   = 800
+i:Gr/ViewA/WindowSizeY   = 800
+s:Gr/ViewA/ColorBy       = "particletype"
+s:Gr/ViewA/AxesComponent = "Letter_O"
+d:Gr/ViewA/AxesSize      = 20.0 cm
+u:Gr/ViewA/Zoom          = 1
+s:Gr/ViewA/Projection    = "Orthogonal"
+#s:Gr/ViewA/Projection   = "Perspective"
+d:Gr/ViewA/Theta         =  0.0 deg
+d:Gr/ViewA/Phi           = 90.0 deg
+s:Gr/Viewa/RefreshEvery = "Run"
+
+ic:Gr/ViewA/ParticleFlightNumberOfFrames = 240
+dc:Gr/ViewA/ParticleFlightTimeStart = 0. ns
+dc:Gr/ViewA/ParticleFlightTimeEnd = 60. ns
+ic:Gr/ViewA/ParticleFlightFramesPerSecond = 30
+uc:Gr/ViewA/ParticleFlightSegmentFactor = 8.
+uc:Gr/ViewA/ParticleFlightFadeFactor = 1.
+dc:Gr/ViewA/ParticleFlightSliceInterval = 0.1 ns
+ic:Gr/ViewA/TrajectoryLinewidth = 4
+
+b:Ts/PauseBeforeQuit = "True"

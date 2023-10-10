@@ -1,0 +1,80 @@
+# Demonstrates a variety of Graphics options
+
+s:Ge/Box/Type         = "TsBox"
+s:Ge/Box/Parent       = "World"
+s:Ge/Box/Material     = "G4_WATER"
+d:Ge/Box/HLX          = 1. m
+d:Ge/Box/HLY          = 1. m
+d:Ge/Box/HLZ          = .4 m
+s:Ge/Box/DrawingStyle = "Solid"
+
+s:Gr/MyOGL/Type                             = "OpenGL"
+b:Gr/MyOGL/CopyOpenGLToEPS                  = "True"
+i:Gr/MyOGL/WindowSizeX                      = 600
+i:Gr/MyOGL/WindowSizeY                      = 600
+i:Gr/MyOGL/WindowPosX                       = 0
+i:Gr/MyOGL/WindowPosY                       = 0
+u:Gr/MyOGL/Zoom                             = 3.
+d:Gr/MyOGL/Theta                            = 30. deg
+d:Gr/MyOGL/Phi                              = 30. deg
+b:Gr/MyOGL/IncludeGeometry                  = "t"
+b:Gr/MyOGL/IncludeTrajectories              = "t"
+b:Gr/MyOGL/HiddenLineRemovalForGeometry     = "f"
+b:Gr/MyOGL/HiddenLineRemovalForTrajectories = "f"
+
+# ColorBy options are "Charge", "ParticleType", "OriginComponent", "Energy",
+# "Momentum", "Generation" and  "CreatorProcess"
+s:Gr/MyOGL/ColorBy                       = "particletype"
+sv:Gr/MyOGL/ColorByChargeColors          = 3 "red" "red" "red"
+sv:Gr/MyOGL/ColorByParticleTypeNames     = 2 "proton" "e-"
+sv:Gr/MyOGL/ColorByParticleTypeColors    = 2 "red" "green"
+sv:Gr/MyOGL/ColorByOriginComponentNames  = 2 "World" "Box"
+sv:Gr/MyOGL/ColorByOriginComponentColors = 2 "yellow" "red"
+dv:Gr/MyOGL/ColorByEnergyRanges          = 4 .3 2. 100. 200. MeV
+sv:Gr/MyOGL/ColorByEnergyColors          = 5 "red" "yellow" "green" "blue" "white"
+dv:Gr/MyOGL/ColorByMomentumRanges        = 4 .3 2. 200. 646. MeV
+sv:Gr/MyOGL/ColorByMomentumColors        = 5 "red" "yellow" "green" "blue" "white"
+sv:Gr/MyOGL/ColorByCreatorProcessNames   = 5 "eBrem" "annihil" "Decay" "eIoni" "hIoni"
+sv:Gr/MyOGL/ColorByCreatorProcessColors  = 5 "red" "green" "blue" "yellow" "magenta"
+
+s:Gr/MyHepRep/Type     = "HepRep"
+s:Gr/MyHepRep/FileName = "Above200MeV"
+
+#s:Gr/MyVRML/Type = "VRML"
+
+#s:Gr/MyRayTracer/Type = "RayTracer"
+
+#s:Gr/MyRayTracerX/Type = "RayTracerX"
+i:Gr/MyRayTracerX/WindowSizeX = 200
+i:Gr/MyRayTracerX/WindowSizeY = 800
+i:Gr/MyRayTracerX/WindowPosX  = 100
+i:Gr/MyRayTracerX/WindowPosY  = 300
+
+#s:Gr/MyDAWN/Type = "DAWN"
+
+s:Gr/RefreshEvery = "Run"
+#sv:Gr/OnlyIncludeParticlesNamed = 1 "proton"
+#sv:Gr/OnlyIncludeParticlesCharged = 1 "negative neutral"
+d:Gr/OnlyIncludeParticlesWithInitialKEAbove = 199. MeV
+d:Gr/OnlyIncludeParticlesWithInitialKEBelow = 202. MeV
+#sv:Gr/OnlyIncludeParticlesFromProcess = 1 "eBrem"
+
+s:So/Example/Type                     = "Beam"
+s:So/Example/Component                = "BeamPosition"
+s:So/Example/BeamParticle             = "proton"
+d:So/Example/BeamEnergy               = 200. MeV
+u:So/Example/BeamEnergySpread         = 0.757504
+s:So/Example/BeamPositionDistribution = "Gaussian"
+s:So/Example/BeamPositionCutoffShape  = "Ellipse"
+d:So/Example/BeamPositionCutoffX      = 10. cm
+d:So/Example/BeamPositionCutoffY      = 10. cm
+d:So/Example/BeamPositionSpreadX      = 0.65 cm
+d:So/Example/BeamPositionSpreadY      = 0.65 cm
+s:So/Example/BeamAngularDistribution  = "Gaussian"
+d:So/Example/BeamAngularCutoffX       = 90. deg
+d:So/Example/BeamAngularCutoffY       = 90. deg
+d:So/Example/BeamAngularSpreadX       = 0.0032 rad
+d:So/Example/BeamAngularSpreadY       = 0.0032 rad
+i:So/Example/NumberOfHistoriesInRun   = 10
+
+b:Ts/PauseBeforeQuit = "True"

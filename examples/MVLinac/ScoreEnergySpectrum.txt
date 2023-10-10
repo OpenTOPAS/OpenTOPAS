@@ -1,0 +1,38 @@
+# Scorer - Energy spectrum in 10 cm x 10 cm region at isocenter
+
+#################### Key Parameters In ScoreEnergySpectrum.txt ########################
+# Ebins: Number of energy bins to be scored
+# EBinMin/Max: Minimum and maximum energy to be scored
+# EBinLog: Scoring bins logarithmically spaced if true, linearily spaced if false
+# HLX/Y/Z: Half lengths of voxels used for scoring
+# X/YBins: Number of bins in IEC_G Xg and Yg
+# TransZ: Distance from isocenter to center of scoring region along IEC_G Zg
+#######################################################################################
+
+s:Sc/EnergySpectrum/Quantity = "Fluence"
+s:Sc/EnergySpectrum/Component= "Isocenter"
+s:Sc/EnergySpectrum/IfOutputFileAlreadyExists = "Exit" # "Exit", "Overwrite" or "Increment"
+s:Sc/EnergySpectrum/OutputType = "CSV"
+
+sv:Sc/EnergySpectrum/OnlyIncludeParticlesNamed = 1 "gamma"
+
+i:Sc/EnergySpectrum/EBins = 50
+d:Sc/EnergySpectrum/EBinMin = 0 MeV
+d:Sc/EnergySpectrum/EBinMax = 10 MeV
+# If you need log scale...
+#b:Sc/EnergySpectrum/EBinLog = “True”
+
+# Isocenter scoring volume (thin plane for scoring spectrum)
+s:Ge/Isocenter/Parent = "IEC_G"
+s:Ge/Isocenter/Type   = "TsBox"
+s:Ge/Isocenter/Material = "air"
+d:Ge/Isocenter/HLX      = 5 cm 
+d:Ge/Isocenter/HLY      = 5 cm 
+d:Ge/Isocenter/HLZ      = 0.01 cm 
+i:Ge/Isocenter/XBins    = 1
+i:Ge/Isocenter/YBins    = 1
+d:Ge/Isocenter/TransZ   = 0 cm 
+s:Ge/Isocenter/DrawingStyle = "Solid"
+s:Ge/Isocenter/Color = "skyblue"
+
+

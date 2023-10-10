@@ -1,0 +1,77 @@
+# Demonstrates use of the Divided Components,
+# TsBox, TsCylinder and TsSphere.
+
+d:Ge/World/HLX       = 2.0 m
+d:Ge/World/HLY       = 2.0 m
+d:Ge/World/HLZ       = 2.0 m
+b:Ge/World/Invisible = "True"
+
+s:Ge/TestBox/Parent   = "World"
+s:Ge/TestBox/Type     = "TsBox"
+s:Ge/TestBox/Material = "G4_WATER"
+d:Ge/TestBox/HLX      = 7.0 cm
+d:Ge/TestBox/HLY      = 7.0 cm
+d:Ge/TestBox/HLZ      = 9.0 cm
+d:Ge/TestBox/TransX   = 0. cm
+d:Ge/TestBox/TransY   = 0. cm
+d:Ge/TestBox/TransZ   = 0. cm
+d:Ge/TestBox/RotX     = 0. deg
+d:Ge/TestBox/RotY     = 0. deg
+d:Ge/TestBox/RotZ     = 0. deg
+s:Ge/TestBox/Color    = "blue"
+i:Ge/TestBox/XBins    = 3
+i:Ge/TestBox/YBins    = 4
+i:Ge/TestBox/ZBins    = 5
+
+s:Ge/TestCylinder/Parent   = "World"
+s:Ge/TestCylinder/Type     = "TsCylinder"
+s:Ge/TestCylinder/Material = "G4_WATER"
+d:Ge/TestCylinder/RMin     = 0.0 cm
+d:Ge/TestCylinder/RMax     = 8.0 cm
+d:Ge/TestCylinder/HL       = 10.0 cm
+d:Ge/TestCylinder/SPhi     = 0. deg
+d:Ge/TestCylinder/DPhi     = 360. deg
+d:Ge/TestCylinder/TransX   = 0. cm
+d:Ge/TestCylinder/TransY   = 0. cm
+d:Ge/TestCylinder/TransZ   = 25. cm
+d:Ge/TestCylinder/RotX     = 0. deg
+d:Ge/TestCylinder/RotY     = 0.0 deg
+d:Ge/TestCylinder/RotZ     = 0. deg
+s:Ge/TestCylinder/Color    = "blue"
+i:Ge/TestCylinder/RBins    = 2
+i:Ge/TestCylinder/PhiBins  = 8
+i:Ge/TestCylinder/ZBins    = 2
+
+s:Ge/TestSphere/Parent    = "World"
+s:Ge/TestSphere/Type      = "TsSphere"
+s:Ge/TestSphere/Material  = "G4_WATER"
+d:Ge/TestSphere/RMin      = 0.0 cm
+d:Ge/TestSphere/RMax      = 10.0 cm
+d:Ge/TestSphere/SPhi      = 0. deg
+d:Ge/TestSphere/DPhi      = 360. deg
+d:Ge/TestSphere/STheta    = 0. deg
+d:Ge/TestSphere/DTheta    = 180. deg
+d:Ge/TestSphere/TransX    = 0. cm
+d:Ge/TestSphere/TransY    = 0. cm
+d:Ge/TestSphere/TransZ    = 50. cm
+d:Ge/TestSphere/RotX      = 0. deg
+d:Ge/TestSphere/RotY      = 0. deg
+d:Ge/TestSphere/RotZ      = 0. deg
+s:Ge/TestSphere/Color     = "blue"
+i:Ge/TestSphere/RBins     = 3
+i:Ge/TestSphere/PhiBins   = 4
+i:Ge/TestSphere/ThetaBins = 12
+
+s:Gr/ViewA/Type             = "OpenGL"
+i:Gr/ViewA/WindowSizeX      = 1024
+i:Gr/ViewA/WindowSizeY      = 768
+d:Gr/ViewA/Theta            = 55 deg
+d:Gr/ViewA/Phi              = 20 deg
+s:Gr/ViewA/Projection       = "Perspective"
+d:Gr/ViewA/PerspectiveAngle = 30 deg
+u:Gr/ViewA/Zoom             = 1.8
+b:Gr/ViewA/HiddenLineRemovalForTrajectories = "True"
+
+sv:Ph/Default/Modules = 1 "g4em-standard_opt0"
+
+b:Ts/PauseBeforeQuit = "True"

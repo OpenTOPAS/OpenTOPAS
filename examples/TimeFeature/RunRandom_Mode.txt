@@ -1,0 +1,28 @@
+includeFile = RunSequential_Mode.txt
+
+#============================================================================#
+#--- Timeline setting
+#============================================================================#
+b:Tf/RandomizeTimeDistribution = "True"
+
+#============================================================================#
+#--- Time Feature for Probability
+#============================================================================#
+s:Tf/Weights/Function = "Step"
+dv:Tf/Weights/Times   = 5   1   2   3   4   5  s
+uv:Tf/Weights/Values  = 5 1.0 0.8 0.6 0.4 0.2
+
+
+#============================================================================#
+#--- Assign particles
+#============================================================================#
+#Same number of total particles in RunSequential_Mode.txt
+i:So/Example/NumberOfHistoriesInRandomJob = 3000
+
+u:So/Example/ProbabilityOfUsingAGivenRandomTime = Tf/Weights/Value
+i:Ts/ShowHistoryCountAtInterval = 0
+
+#============================================================================#
+#--- Dose for DoseGrid
+#============================================================================#
+s:Sc/dose/OutputFile = "Dose_Rand"

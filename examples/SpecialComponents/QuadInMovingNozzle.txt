@@ -1,0 +1,74 @@
+# Magnet mounted in a rotating nozzle
+
+s:So/Example/Type                     = "Beam"
+s:So/Example/Component                = "ExitWindow"
+s:So/Example/BeamParticle             = "chargedgeantino"
+d:So/Example/BeamEnergy               = 169.23 MeV
+u:So/Example/BeamEnergySpread         = 0.0
+s:So/Example/BeamPositionDistribution = "Flat"
+s:So/Example/BeamPositionCutoffShape  = "Ellipse"
+d:So/Example/BeamPositionCutoffX      = 3.0 cm
+d:So/Example/BeamPositionCutoffY      = 3.0 cm
+s:So/Example/BeamAngularDistribution  = "Gaussian"
+d:So/Example/BeamAngularCutoffX       = 90. deg
+d:So/Example/BeamAngularCutoffY       = 90. deg
+d:So/Example/BeamAngularSpreadX       = 0.0032 rad
+d:So/Example/BeamAngularSpreadY       = 0.0032 rad
+i:So/Example/NumberOfHistoriesInRun   = 100
+
+sv:Ph/Default/Modules = 1 "g4em-standard_opt0"
+
+b:Ts/PauseBeforeQuit = "True"
+
+s:Tf/NozzleRotation/Function           = "Linear deg"
+d:Tf/NozzleRotation/Rate               = 15. deg/ms
+d:Tf/NozzleRotation/StartValue         = .0 deg
+d:Tf/NozzleRotation/RepetitionInterval = 360. ms
+d:Tf/TimelineEnd                       = 20.0 ms
+i:Tf/NumberOfSequentialTimes           = 20
+
+d:Ge/World/HLX       = 2.0 m
+d:Ge/World/HLY       = 2.0 m
+d:Ge/World/HLZ       = 2.0 m
+b:Ge/World/Invisible = "True"
+
+s:Ge/Nozzle/Type   = "Group"
+s:Ge/Nozzle/Parent = "World"
+d:Ge/Nozzle/RotX   = Tf/NozzleRotation/value deg
+
+s:Ge/ExitWindow/Type         = "TsCylinder"
+s:Ge/ExitWindow/Parent       = "Nozzle"
+s:Ge/ExitWindow/Material     = "Mylar"
+d:Ge/ExitWindow/RMax         = 50.0 mm
+d:Ge/ExitWindow/HL           = 0.05 mm
+d:Ge/ExitWindow/TransZ       = 40. cm
+d:Ge/ExitWindow/RotY         = 180.0 deg
+s:Ge/ExitWindow/DrawingStyle = "Solid"
+
+s:Ge/MagnetBox/Type     = "TsBox"
+s:Ge/MagnetBox/Parent   = "Nozzle"
+s:Ge/MagnetBox/Material = "G4_AIR"
+d:Ge/MagnetBox/HLX      = 18 cm
+d:Ge/MagnetBox/HLY      = 10 cm
+d:Ge/MagnetBox/HLZ      = 20 cm
+
+#s:Ge/MagnetBox/Field = "DipoleMagnet"
+#u:Ge/MagnetBox/MagneticFieldDirectionX    = 1.0
+#u:Ge/MagnetBox/MagneticFieldDirectionY    = 1.0
+#u:Ge/MagnetBox/MagneticFieldDirectionZ    = 0.0
+#d:Ge/MagnetBox/MagneticFieldStrength      = 1.0 tesla
+
+s:Ge/MagnetBox/Field = "QuadrupoleMagnet"
+d:Ge/MagnetBox/MagneticFieldGradientX     = .1 tesla/cm
+d:Ge/MagnetBox/MagneticFieldGradientY     = .1 tesla/cm
+
+s:Gr/ViewA/Type                       = "OpenGL"
+i:Gr/ViewA/WindowSizeX                = 1024
+i:Gr/ViewA/WindowSizeY                = 768
+d:Gr/ViewA/Theta                      = 55 deg
+d:Gr/ViewA/Phi                        = 20 deg
+s:Gr/ViewA/Projection                 = "Perspective"
+d:Gr/ViewA/PerspectiveAngle           = 30 deg
+u:Gr/ViewA/Zoom                       = 1.
+b:Gr/ViewA/IncludeStepPoints          = "True"
+#i:Gr/ViewA/MagneticFieldArrowDensity = 10

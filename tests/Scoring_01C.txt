@@ -1,0 +1,7 @@
+includeFile = Scoring_01.txt
+
+#--- Scoring
+s:Sc/Dose/OutputType    = "Xml"
+i:Sc/Dose/HistogramBins = 10
+d:Sc/Dose/HistogramMin  = 0. Gy
+d:Sc/Dose/HistogramMax  = 1e-11 Gy

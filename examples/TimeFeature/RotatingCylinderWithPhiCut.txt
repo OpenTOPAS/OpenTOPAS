@@ -1,0 +1,118 @@
+# TOPAS Time Feature Example to rotate a notched cylinder in a beam.
+
+# Step 1: Create a simplified wheel and visualize it
+
+# Create the Wheel as a cylinder of aluminum, 20cm total length, 20 cm radius.
+# Place this into the world just using default translation and rotation.
+s:Ge/Wheel/Type = "TsCylinder"
+s:Ge/Wheel/Parent = "World"
+s:Ge/Wheel/Material = "G4_Al"
+d:Ge/Wheel/HL = 10. cm
+d:Ge/Wheel/RMax = 20. cm
+
+# Create an OpenGL graphics view with a 50 degree rotation in Theta.
+# and zoom factor of 25.
+s:Gr/MyView/Type = "OpenGL"
+d:Gr/MyView/Theta = 50. deg
+u:Gr/MyView/Zoom = 25
+
+# For particle source, use the built-in demonstration source.
+# Set it to make 50 histories per run.
+i:So/Demo/NumberOfHistoriesInRun = 50
+
+# Turn on PauseBeforeQuit so we have a chance to see the graphics.
+b:Ts/PauseBeforeQuit = "True"
+
+# Run. You should see 50 particle histories.
+# Most or all of the particles will be stopped by the Wheel.
+
+# MacOS 10.15 users will find that the Qt GUI starts up automatically.
+# To generate particles, hit the Run button above the parameter control widget.
+
+
+# Step 2: Make the simulation start faster
+
+# Simplify the physics so that the simulation starts faster.
+sv:Ph/Default/Modules = 1 "g4em-standard_opt0"
+
+# Run. You should see that the simulation starts very fast.
+# This happens at the expense of losing scattering accuracy and losing
+# all hadronic physics.
+# Remember to change back to full physics if you need high accuracy.
+
+
+# Step 3: Improve the visualization
+
+# Make the wheel solid.
+s:Ge/Wheel/DrawingStyle = "Solid"
+
+# Make trajectories disappear when they enter this solid.
+b:Gr/MyView/HiddenLineRemovalForTrajectories = "True"
+
+# Run. You should see a solid wheel and trajectories disappear into the wheel.
+
+
+# Step 4: Make the Wheel a little more like a Range Modulator Wheel
+
+# Offset the Wheel relative to the Beam in X by 1/2 the Wheel's radius.
+d:Ge/Wheel/TransX = -0.5 * Ge/Wheel/RMax cm
+
+# Cut a 90 degree phi segment out of the Wheel by adjusting the dphi parameter.
+d:Ge/Wheel/DPhi = 270. deg
+dc:Ge/Wheel/SPhi = 45. deg
+
+# Run: The wheel will be missing a 90 degree segment in phi.
+
+
+# Step 5: Make simulation include multiple runs
+
+# Declare that the simulation should contain 8 runs.
+i:Tf/NumberOfSequentialTimes = 8
+
+# Run. You will see 8 separate runs happen, each with 50 histories.
+# This will be reflected in the console, where you will see not just the
+# History number increasing but also the Run number increasing.
+
+
+# Step 6: Increase time feature verbosity
+
+# Set verbosity to get more information about the 8 runs.
+i:Tf/Verbosity = 2
+
+# Run. Study the console information.
+# Note that there are no significant differences between the 8 runs.
+# They all happen with time = 0.
+
+
+# Step 7: Make each run have different time
+
+# Specify an end time for the run sequence.
+d:Tf/TimelineEnd = 8. s
+
+# Run. Note that each run has a different time.
+
+
+# Step 8: Create a TOPAS Time Feature
+
+# The following four parameters define a Time Feature we are calling MyRotation.
+s:Tf/MyRotation/Function = "Linear deg"
+d:Tf/MyRotation/Rate = 45. deg/s
+d:Tf/MyRotation/StartValue = 0.0 deg
+d:Tf/MyRotation/RepetitionInterval = 8. s
+
+# Run. See from the console that Tf/MyRotation/Value changes for each run.
+
+
+# Step 9: Use the time feature to rotate the wheel
+
+# Make the time feature control the cylinder rotation.
+d:Ge/Wheel/RotZ = Tf/MyRotation/Value deg
+
+# As an additional diagnostic, ask for parameters to be printed out at each run:
+b:Ts/DumpNonDefaultParameters = "True"
+
+# Run. The Wheel should now rotate under control of the time feature.
+
+# You will find eight html files in your current directory.
+# These show the values of all non-default parameters for each run.
+# You can see how the current value of Ge/Wheel/RotZ was computed at each run.

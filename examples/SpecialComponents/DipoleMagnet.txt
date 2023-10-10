@@ -1,0 +1,57 @@
+# Dipole magnet
+
+d:Ge/World/HLX       = 2.0 m
+d:Ge/World/HLY       = 2.0 m
+d:Ge/World/HLZ       = 2.0 m
+b:Ge/World/Invisible = "True"
+
+s:Ge/Nozzle/Type   = "Group"
+s:Ge/Nozzle/Parent = "World"
+
+s:Ge/Dipole/Type          = "TsBox"
+s:Ge/Dipole/Parent        = "Nozzle"
+s:Ge/Dipole/Material      = "G4_AIR"
+d:Ge/Dipole/HLX           = 10 cm
+d:Ge/Dipole/HLY           = 10 cm
+d:Ge/Dipole/HLZ           = 20 cm
+s:Ge/Dipole/Field = "DipoleMagnet"
+u:Ge/Dipole/MagneticFieldDirectionX    = 0.0
+u:Ge/Dipole/MagneticFieldDirectionY    = 1.0
+u:Ge/Dipole/MagneticFieldDirectionZ    = 0.0
+d:Ge/Dipole/MagneticFieldStrength      = 3.0 tesla
+
+s:Ge/InnerBox/Type     = "TsBox"
+s:Ge/InnerBox/Parent   = "Dipole"
+s:Ge/InnerBox/Material = "G4_AIR"
+d:Ge/InnerBox/HLX      = 9 cm
+d:Ge/InnerBox/HLY      = 9 cm
+d:Ge/InnerBox/HLZ      = 18 cm
+
+d:Ge/BeamPosition/TransZ = Ge/World/HLZ cm
+d:Ge/BeamPosition/RotX   = 180. deg
+
+s:So/Example/Type                     = "Beam"
+s:So/Example/Component                = "BeamPosition"
+s:So/Example/BeamParticle             = "chargedgeantino"
+d:So/Example/BeamEnergy               = 169.23 MeV
+u:So/Example/BeamEnergySpread         = 0.0
+s:So/Example/BeamPositionDistribution = "Gaussian"
+s:So/Example/BeamPositionCutoffShape  = "Ellipse"
+d:So/Example/BeamPositionCutoffX      = 5.0 cm
+d:So/Example/BeamPositionCutoffY      = 5.0 cm
+d:So/Example/BeamPositionSpreadX      = 0.65 cm
+d:So/Example/BeamPositionSpreadY      = 0.65 cm
+s:So/Example/BeamAngularDistribution  = "None"
+i:So/Example/NumberOfHistoriesInRun   = 1
+
+s:Gr/ViewA/Type              = "OpenGL"
+i:Gr/ViewA/WindowSizeX       = 1024
+i:Gr/ViewA/WindowSizeY       = 768
+d:Gr/ViewA/Theta             = 55 deg
+d:Gr/ViewA/Phi               = 20 deg
+s:Gr/ViewA/Projection        = "Perspective"
+d:Gr/ViewA/PerspectiveAngle  = 30 deg
+u:Gr/ViewA/Zoom              = 1.
+b:Gr/ViewA/IncludeStepPoints = "True"
+
+b:Ts/PauseBeforeQuit = "True"

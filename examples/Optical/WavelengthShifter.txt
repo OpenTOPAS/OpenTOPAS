@@ -1,0 +1,127 @@
+# Demonstrates optical behavior in a wavelength shifter
+
+includeFile = OpticalMaterialSample.txt
+
+i:Ts/SequenceVerbosity = 0
+
+# SEQUENCE
+b:Ts/PauseBeforeQuit = "False"
+b:Ts/ShowCPUTime = "True"
+i:Ts/ShowHistoryCountAtInterval= 10000
+
+# SCORER
+s:Sc/PhSp1/Quantity                        = "PhaseSpace"
+s:Sc/PhSp1/Surface                         = "WLS/OuterCurvedSurface"
+s:Sc/PhSp1/OutputType                      = "ASCII"
+s:Sc/PhSp1/OutputFile                      = "In"
+s:Sc/PhSp1/IfOutputFileAlreadyExists       = "Overwrite"
+b:Sc/PhSp1/IncludeTimeOfFlight             = "true"
+b:Sc/PhSp1/UsePDGEncoding                  = "True"
+sv:Sc/PhSp1/OnlyIncludeParticlesFromVolume = 1 "Plastic"
+s:Sc/PhSp1/OnlyIncludeParticlesGoing       = "in"
+
+s:Sc/PhSp2/Quantity                  = "PhaseSpace"
+s:Sc/PhSp2/Surface                   = "WLS/Core/ZPlusSurface"
+s:Sc/PhSp2/OutputType                = "ASCII"
+s:Sc/PhSp2/OutputFile                = "Out"
+s:Sc/PhSp2/IfOutputFileAlreadyExists = "Overwrite"
+b:Sc/PhSp2/IncludeTimeOfFlight       = "true"
+b:Sc/PhSp2/UsePDGEncoding            = "True"
+
+# VISUALIZATION
+#s:Gr/view/Type       = "OpenGl"
+b:Gr/view/IncludeAxes = "True"
+i:Gr/view/WindowSizeX = 600
+i:Gr/view/WindowSizeY = 600
+d:Gr/view/Theta       = 45. deg
+d:Gr/view/Phi         = 45. deg
+
+# PHYSICS LIST
+s:Ph/ListName         = "Optical"
+s:Ph/Optical/Type     = "Geant4_Modular"
+sv:Ph/Optical/Modules = 7 "g4optical" "g4em-standard_opt3" "g4h-phy_QGSP_BIC_HP" "g4decay"
+"g4ion-binarycascade" "g4h-elastic_HP" "g4stopping"
+
+# SOURCE
+s:So/Example/Type                     = "Beam"
+s:So/Example/Component                = "BeamPosition"
+s:So/Example/BeamParticle             = "proton"
+d:So/Example/BeamEnergy               = 200 MeV
+u:So/Example/BeamEnergySpread         = 0.5
+s:So/Example/BeamPositionDistribution = "Flat"
+s:So/Example/BeamPositionCutoffShape  = "Ellipse"
+d:So/Example/BeamPositionCutoffX      = 0.5 mm
+d:So/Example/BeamPositionCutoffY      = 0.5 mm
+s:So/Example/BeamAngularDistribution  = "Gaussian"
+d:So/Example/BeamAngularCutoffX       = 90. deg
+d:So/Example/BeamAngularCutoffY       = 90. deg
+d:So/Example/BeamAngularSpreadX       = 0.2 rad
+d:So/Example/BeamAngularSpreadY       = 0.2 rad
+i:So/Example/NumberOfHistoriesInRun   = 100000
+d:Ge/BeamPosition/TransY            = -3.0 cm
+
+# GEOMETRY
+d:Ge/World/HLX      =6 cm
+d:Ge/World/HLY      =6 cm
+d:Ge/World/HLZ      =20 cm
+s:Ge/World/Material = "Air"
+
+# Plastic
+s:Ge/WaterBox/Parent   = "World"
+s:Ge/WaterBox/Type     = "TsBox"
+s:Ge/WaterBox/Material = "G4_WATER"
+d:Ge/WaterBox/HLX      = 2.5 cm
+d:Ge/WaterBox/HLY      = 2.5 cm
+d:Ge/WaterBox/HLZ      = 5.0 cm
+d:Ge/WaterBox/TransX   = 0 mm
+d:Ge/WaterBox/TransY   = -3.0 cm
+d:Ge/WaterBox/TransZ   = 0 mm
+d:Ge/WaterBox/RotX     = 0 deg
+d:Ge/WaterBox/RotY     = 0 deg
+d:Ge/WaterBox/RotZ     = 0 deg
+
+# Plastic
+s:Ge/Plastic/Parent   = "World"
+s:Ge/Plastic/Type     = "TsBox"
+s:Ge/Plastic/Material = "BUAPFCFM"
+d:Ge/Plastic/HLX      = 0.5 cm
+d:Ge/Plastic/HLY      = 0.5 cm
+d:Ge/Plastic/HLZ      =	2.5 cm
+d:Ge/Plastic/TransX   = 0 mm
+d:Ge/Plastic/TransY   = 0 mm
+d:Ge/Plastic/TransZ   = 0 mm
+d:Ge/Plastic/RotX     = 0 deg
+d:Ge/Plastic/RotY     = 0 deg
+d:Ge/Plastic/RotZ     = 0 deg
+
+# WLS
+d:Ge/WLS/Diameter = 1.03 mm
+s:Ge/WLS/Parent   = "World"
+s:Ge/WLS/Type     = "TsCylinder"
+s:Ge/WLS/Material = "PMMA"
+d:Ge/WLS/HL       = 10 cm
+d:Ge/WLS/RMin     = 0.50 mm
+d:Ge/WLS/RMax     = 0.515 mm
+d:Ge/WLS/SPhi     = 0 deg
+d:Ge/WLS/DPhi     = 360 deg
+d:Ge/WLS/TransX   = 0 mm
+d:Ge/WLS/TransY   = Ge/Plastic/HLY + Ge/WLS/RMax mm
+d:Ge/WLS/TransZ   = Ge/WLS/HL - Ge/Plastic/HLZ cm
+d:Ge/WLS/RotX     = 0 deg
+d:Ge/WLS/RotY     = 0 deg
+d:Ge/WLS/RotZ     = 0 deg
+
+s:Ge/WLS/Core/Parent   = "World"
+s:Ge/WLS/Core/Type     = "TsCylinder"
+s:Ge/WLS/Core/Material = "Polystyrene"
+d:Ge/WLS/Core/HL       = Ge/WLS/HL cm
+d:Ge/WLS/Core/RMin     = 0.0 mm
+d:Ge/WLS/Core/RMax     = 0.5 mm
+d:Ge/WLS/Core/SPhi     = 0 deg
+d:Ge/WLS/Core/DPhi     = 360 deg
+d:Ge/WLS/Core/TransX   = 0 mm
+d:Ge/WLS/Core/TransY   = Ge/Plastic/HLY + Ge/WLS/RMax mm
+d:Ge/WLS/Core/TransZ   = Ge/WLS/HL - Ge/Plastic/HLZ cm
+d:Ge/WLS/Core/RotX     = 0 deg
+d:Ge/WLS/Core/RotY     = 0 deg
+d:Ge/WLS/Core/RotZ     = 0 deg

@@ -1,0 +1,357 @@
+#                                                          #
+#               Pd 103 - Theraseed 200 Heavy               #
+#                                                          #
+#                                                          #
+#                Latest version - May 2021                 #
+#                  Author: Audran Poher                    #
+#              Contact - fberumenm@gmail.com               #
+#       https://doi.org/10.1016/j.brachy.2020.12.007       #
+#                                                          #
+
+
+##### MATERIAL DEFINITION #####
+sv:Ma/Graphite/Components = 1 "Carbon"
+uv:Ma/Graphite/Fractions  = 1 1
+d:Ma/Graphite/Density     = 2.09 g/cm3
+
+##### SOURCE #####
+s:So/ActiveSource/Type                       = "Volumetric"
+s:So/ActiveSource/Component                  = "ActiveSourceGeometry"
+sc:So/ActiveSource/ActiveMaterial            = "G4_Pd"
+s:So/ActiveSource/BeamParticle               = "gamma"
+b:So/ActiveSource/RecursivelyIncludeChildren = "T"
+i:So/ActiveSource/MaxNumberOfPointsToSample  = 1000000000
+s:So/ActiveSource/BeamEnergySpectrumType     = "Discrete"
+ic:So/ActiveSource/NumberOfHistoriesInRun    = 10
+
+##### SPECTRUM #####
+dv:So/ActiveSource/BeamEnergySpectrumValues = 15 2.7 20.074 20.216 22.699 22.724 23.172 39.748 53.29 62.41 241.88 294.98 317.72 357.45 443.79 497.08 keV
+uv:So/ActiveSource/BeamEnergySpectrumWeightsUnscaled = 15 0.0873 0.224 0.425 0.0354 0.0685 0.0164 0.000683 0.0000003 0.0000104 0.000000005 0.000028 0.00000015 0.000221 0.00000015 0.0000396
+uv:So/ActiveSource/BeamEnergySpectrumWeights = 1.16607197 * So/ActiveSource/BeamEnergySpectrumWeightsUnscaled
+
+##### SOURCE GEOMETRY #####
+
+s:Ge/ActiveSourceGeometry/Type              = "Group"
+s:Ge/ActiveSourceGeometry/Parent            = "World"
+b:Ge/ActiveSourceGeometry/IsParallel        = "True"
+s:Ge/ActiveSourceGeometry/ParallelWorldName = "ActiveSourceWorld"
+
+#===========================
+#Left pellet of graphite 
+#===========================
+
+s:Ge/LeftGraphitePellet/Type         = "TsCylinder"
+s:Ge/LeftGraphitePellet/Parent       = "LeftPalladiumCoating"
+s:Ge/LeftGraphitePellet/Material     = "Graphite"
+d:Ge/LeftGraphitePellet/RMin         = 0. mm
+d:Ge/LeftGraphitePellet/RMax         = 0.28 mm
+d:Ge/LeftGraphitePellet/SPhi         = 0. deg
+d:Ge/LeftGraphitePellet/DPhi         = 360. deg
+d:Ge/LeftGraphitePellet/HL           = 0.445 mm
+d:Ge/LeftGraphitePellet/TransX       = 0. mm
+d:Ge/LeftGraphitePellet/TransY       = 0. mm
+d:Ge/LeftGraphitePellet/TransZ       = 0. mm
+d:Ge/LeftGraphitePellet/RotX         = 0. deg
+d:Ge/LeftGraphitePellet/RotY         = 0. deg
+d:Ge/LeftGraphitePellet/RotZ         = 0. deg
+s:Ge/LeftGraphitePellet/Color        = "green"
+s:Ge/LeftGraphitePellet/DrawingStyle = "FullWireFrame"
+b:Ge/LeftGraphitePellet/IsParallel   = "True"
+s:Ge/LeftGraphitePellet/ParallelWorldName = "ActiveSourceWorld"
+
+#===========================
+#Right pellet of graphite 
+#===========================
+
+s:Ge/RightGraphitePellet/Type         = "TsCylinder"
+s:Ge/RightGraphitePellet/Parent       = "RightPalladiumCoating"
+s:Ge/RightGraphitePellet/Material     = "Graphite"
+d:Ge/RightGraphitePellet/RMin         = 0. mm
+d:Ge/RightGraphitePellet/RMax         = 0.28 mm
+d:Ge/RightGraphitePellet/SPhi         = 0. deg
+d:Ge/RightGraphitePellet/DPhi         = 360. deg
+d:Ge/RightGraphitePellet/HL           = 0.445 mm
+d:Ge/RightGraphitePellet/TransX       = 0. mm
+d:Ge/RightGraphitePellet/TransY       = 0. mm
+d:Ge/RightGraphitePellet/TransZ       = 0. mm
+d:Ge/RightGraphitePellet/RotX         = 0. deg
+d:Ge/RightGraphitePellet/RotY         = 0. deg
+d:Ge/RightGraphitePellet/RotZ         = 0. deg
+s:Ge/RightGraphitePellet/Color        = "green"
+s:Ge/RightGraphitePellet/DrawingStyle = "FullWireFrame"
+b:Ge/RightGraphitePellet/IsParallel   = "True"
+s:Ge/RightGraphitePellet/ParallelWorldName = "ActiveSourceWorld"
+
+#===========================
+#Left Heavy coating of palladium 
+#===========================
+
+s:Ge/LeftPalladiumCoating/Type         = "TsCylinder"
+s:Ge/LeftPalladiumCoating/Parent       = "ActiveSourceGeometry"
+s:Ge/LeftPalladiumCoating/Material     = "G4_Pd"
+d:Ge/LeftPalladiumCoating/RMin         = 0. mm
+d:Ge/LeftPalladiumCoating/RMax         = 0.2905 mm
+d:Ge/LeftPalladiumCoating/SPhi         = 0. deg
+d:Ge/LeftPalladiumCoating/DPhi         = 360. deg
+d:Ge/LeftPalladiumCoating/HL           = 0.4555 mm
+d:Ge/LeftPalladiumCoating/TransX       = 0. mm
+d:Ge/LeftPalladiumCoating/TransY       = 0. mm
+d:Ge/LeftPalladiumCoating/TransZ       = 1.0575 mm
+d:Ge/LeftPalladiumCoating/RotX         = 0. deg
+d:Ge/LeftPalladiumCoating/RotY         = 0. deg
+d:Ge/LeftPalladiumCoating/RotZ         = 0. deg
+s:Ge/LeftPalladiumCoating/Color        = "red"
+s:Ge/LeftPalladiumCoating/DrawingStyle = "FullWireFrame"
+b:Ge/LeftPalladiumCoating/IsParallel   = "True"
+s:Ge/LeftPalladiumCoating/ParallelWorldName = "ActiveSourceWorld"
+
+#===========================
+#Right Heavy coating of palladium 
+#===========================
+
+s:Ge/RightPalladiumCoating/Type         = "TsCylinder"
+s:Ge/RightPalladiumCoating/Parent       = "ActiveSourceGeometry"
+s:Ge/RightPalladiumCoating/Material     = "G4_Pd"
+d:Ge/RightPalladiumCoating/RMin         = 0. mm
+d:Ge/RightPalladiumCoating/RMax         = 0.2905 mm
+d:Ge/RightPalladiumCoating/SPhi         = 0. deg
+d:Ge/RightPalladiumCoating/DPhi         = 360. deg
+d:Ge/RightPalladiumCoating/HL           = 0.4555 mm
+d:Ge/RightPalladiumCoating/TransX       = 0. mm
+d:Ge/RightPalladiumCoating/TransY       = 0. mm
+d:Ge/RightPalladiumCoating/TransZ       = -1.0575 mm
+d:Ge/RightPalladiumCoating/RotX         = 0. deg
+d:Ge/RightPalladiumCoating/RotY         = 0. deg
+d:Ge/RightPalladiumCoating/RotZ         = 0. deg
+s:Ge/RightPalladiumCoating/Color        = "red"
+s:Ge/RightPalladiumCoating/DrawingStyle = "FullWireFrame"
+b:Ge/RightPalladiumCoating/IsParallel   = "True"
+s:Ge/RightPalladiumCoating/ParallelWorldName = "ActiveSourceWorld"
+
+#===========================
+#Lead marker
+#===========================
+
+s:Ge/LeadMarker/Type         = "TsCylinder"
+s:Ge/LeadMarker/Parent       = "ActiveSourceGeometry"
+s:Ge/LeadMarker/Material     = "G4_Pb"
+d:Ge/LeadMarker/RMin         = 0. mm
+d:Ge/LeadMarker/RMax         = 0.255 mm
+d:Ge/LeadMarker/SPhi         = 0. deg
+d:Ge/LeadMarker/DPhi         = 360. deg
+d:Ge/LeadMarker/HL           = 0.545 mm
+d:Ge/LeadMarker/TransX       = 0. mm
+d:Ge/LeadMarker/TransY       = 0. mm
+d:Ge/LeadMarker/TransZ       = 0. mm
+d:Ge/LeadMarker/RotX         = 0. deg
+d:Ge/LeadMarker/RotY         = 0. deg
+d:Ge/LeadMarker/RotZ         = 0. deg
+s:Ge/LeadMarker/Color        = "brown"
+s:Ge/LeadMarker/DrawingStyle = "FullWireFrame"
+b:Ge/LeadMarker/IsParallel   = "True"
+s:Ge/LeadMarker/ParallelWorldName = "ActiveSourceWorld"
+
+##### FILLING GEOMETRY #####
+
+s:Ge/FillingGeometry/Type              = "Group"
+s:Ge/FillingGeometry/Parent            = "World"
+b:Ge/FillingGeometry/IsParallel        = "True"
+s:Ge/FillingGeometry/ParallelWorldName = "FillingWorld"
+
+#====================
+#Dry Air cylinder
+#====================
+
+s:Ge/DryAirCylinder/Type         = "TsCylinder"
+s:Ge/DryAirCylinder/Parent       = "FillingGeometry"
+s:Ge/DryAirCylinder/Material     = "G4_AIR"
+d:Ge/DryAirCylinder/RMin         = 0. mm
+d:Ge/DryAirCylinder/RMax         = 0.357 mm
+d:Ge/DryAirCylinder/SPhi         = 0. deg
+d:Ge/DryAirCylinder/DPhi         = 360. deg
+d:Ge/DryAirCylinder/HL           = 1.916 mm
+d:Ge/DryAirCylinder/TransX       = 0. mm
+d:Ge/DryAirCylinder/TransY       = 0. mm
+d:Ge/DryAirCylinder/TransZ       = 0. mm
+d:Ge/DryAirCylinder/RotX         = 0. deg
+d:Ge/DryAirCylinder/RotY         = 0. deg
+d:Ge/DryAirCylinder/RotZ         = 0. deg
+s:Ge/DryAirCylinder/DrawingStyle = "FullWireFrame"
+s:Ge/DryAirCylinder/Color        = "white"
+b:Ge/DryAirCylinder/IsParallel   = "True"
+s:Ge/DryAirCylinder/ParallelWorldName = "FillingWorld"
+
+##### SHIELDING #####
+
+s:Ge/ShieldingGeo/Type              = "Group"
+s:Ge/ShieldingGeo/Parent            = "World"
+d:Ge/ShieldingGeo/TransZ            = 0 mm
+b:Ge/ShieldingGeo/IsParallel        = "True"
+s:Ge/ShieldingGeo/ParallelWorldName = "ShieldingWorld"
+
+#===========================
+#Center Cylinder of Titanium
+#===========================
+
+s:Ge/TitaniumCylinder/Type         = "TsCylinder"
+s:Ge/TitaniumCylinder/Parent       = "ShieldingGeo"
+s:Ge/TitaniumCylinder/Material     = "G4_Ti"
+d:Ge/TitaniumCylinder/RMin         = 0.357 mm
+d:Ge/TitaniumCylinder/RMax         = 0.413 mm
+d:Ge/TitaniumCylinder/SPhi         = 0. deg
+d:Ge/TitaniumCylinder/DPhi         = 360. deg
+d:Ge/TitaniumCylinder/HL           = 1.916 mm
+d:Ge/TitaniumCylinder/TransX       = 0. mm
+d:Ge/TitaniumCylinder/TransY       = 0. mm
+d:Ge/TitaniumCylinder/TransZ       = 0. mm
+d:Ge/TitaniumCylinder/RotX         = 0. deg
+d:Ge/TitaniumCylinder/RotY         = 0. deg
+d:Ge/TitaniumCylinder/RotZ         = 0. deg
+s:Ge/TitaniumCylinder/Color        = "blue"
+s:Ge/TitaniumCylinder/DrawingStyle = "FullWireFrame"
+b:Ge/TitaniumCylinder/IsParallel   = "True"
+s:Ge/TitaniumCylinder/ParallelWorldName = "ShieldingWorld"
+
+#=========================
+#Left cylinder of titanium
+#=========================
+
+s:Ge/LeftTitaniumCylinder/Type         = "TsCylinder"
+s:Ge/LeftTitaniumCylinder/Parent       = "ShieldingGeo"
+s:Ge/LeftTitaniumCylinder/Material     = "G4_Ti"
+d:Ge/LeftTitaniumCylinder/RMin         = 0.306 mm
+d:Ge/LeftTitaniumCylinder/RMax         = 0.413 mm
+d:Ge/LeftTitaniumCylinder/SPhi         = 0. deg
+d:Ge/LeftTitaniumCylinder/DPhi         = 360. deg
+d:Ge/LeftTitaniumCylinder/HL           = 0.167 mm
+d:Ge/LeftTitaniumCylinder/TransX       = 0. mm
+d:Ge/LeftTitaniumCylinder/TransY       = 0. mm
+d:Ge/LeftTitaniumCylinder/TransZ       = 2.083 mm
+d:Ge/LeftTitaniumCylinder/RotX         = 0. deg
+d:Ge/LeftTitaniumCylinder/RotY         = 0. deg
+d:Ge/LeftTitaniumCylinder/RotZ         = 0. deg
+s:Ge/LeftTitaniumCylinder/Color        = "blue"
+s:Ge/LeftTitaniumCylinder/DrawingStyle = "FullWireFrame"
+b:Ge/LeftTitaniumCylinder/IsParallel   = "True"
+s:Ge/LeftTitaniumCylinder/ParallelWorldName = "ShieldingWorld"
+
+#=========================
+#Right cylinder of titanium
+#=========================
+
+s:Ge/RightTitaniumCylinder/Type         = "TsCylinder"
+s:Ge/RightTitaniumCylinder/Parent       = "ShieldingGeo"
+s:Ge/RightTitaniumCylinder/Material     = "G4_Ti"
+d:Ge/RightTitaniumCylinder/RMin         = 0.306 mm
+d:Ge/RightTitaniumCylinder/RMax         = 0.413 mm
+d:Ge/RightTitaniumCylinder/SPhi         = 0. deg
+d:Ge/RightTitaniumCylinder/DPhi         = 360. deg
+d:Ge/RightTitaniumCylinder/HL           = 0.167 mm
+d:Ge/RightTitaniumCylinder/TransX       = 0. mm
+d:Ge/RightTitaniumCylinder/TransY       = 0. mm
+d:Ge/RightTitaniumCylinder/TransZ       = -2.083 mm
+d:Ge/RightTitaniumCylinder/RotX         = 0. deg
+d:Ge/RightTitaniumCylinder/RotY         = 0. deg
+d:Ge/RightTitaniumCylinder/RotZ         = 0. deg
+s:Ge/RightTitaniumCylinder/Color        = "blue"
+s:Ge/RightTitaniumCylinder/DrawingStyle = "FullWireFrame"
+b:Ge/RightTitaniumCylinder/IsParallel   = "True"
+s:Ge/RightTitaniumCylinder/ParallelWorldName = "ShieldingWorld"
+
+#===============================
+#Left half-sphere of Titanium 
+#===============================
+
+s:Ge/TitaniumLeftCap/Type         = "TsSphere"
+s:Ge/TitaniumLeftCap/Parent       = "ShieldingGeo"
+s:Ge/TitaniumLeftCap/Material     = "G4_Ti"
+d:Ge/TitaniumLeftCap/RMin         = 0.306 mm
+d:Ge/TitaniumLeftCap/RMax         = 0.346 mm
+d:Ge/TitaniumLeftCap/SPhi         = 0. deg
+d:Ge/TitaniumLeftCap/DPhi         = 360. deg
+d:Ge/TitaniumLeftCap/STheta       = 0. deg
+d:Ge/TitaniumLeftCap/DTheta       = 90. deg
+d:Ge/TitaniumLeftCap/TransX       = 0. mm
+d:Ge/TitaniumLeftCap/TransY       = 0. mm
+d:Ge/TitaniumLeftCap/TransZ       = 1.916 mm
+d:Ge/TitaniumLeftCap/RotX         = 0. deg
+d:Ge/TitaniumLeftCap/RotY         = 180 deg
+d:Ge/TitaniumLeftCap/RotZ         = 0. deg
+s:Ge/TitaniumLeftCap/DrawingStyle = "FullWireFrame"
+s:Ge/TitaniumLeftCap/Color        = "blue"
+b:Ge/TitaniumLeftCap/IsParallel   = "True"
+s:Ge/TitaniumLeftCap/ParallelWorldName = "ShieldingWorld"
+
+#================================
+#Right half-sphere of titanium
+#================================
+
+s:Ge/TitaniumRightCap/Type         = "TsSphere"
+s:Ge/TitaniumRightCap/Parent       = "ShieldingGeo"
+s:Ge/TitaniumRightCap/Material     = "G4_Ti"
+d:Ge/TitaniumRightCap/RMin         = 0.306 mm
+d:Ge/TitaniumRightCap/RMax         = 0.346 mm
+d:Ge/TitaniumRightCap/SPhi         = 0. deg
+d:Ge/TitaniumRightCap/DPhi         = 360. deg
+d:Ge/TitaniumRightCap/STheta       = 0. deg
+d:Ge/TitaniumRightCap/DTheta       = 90. deg
+d:Ge/TitaniumRightCap/TransX       = 0. mm
+d:Ge/TitaniumRightCap/TransY       = 0. mm
+d:Ge/TitaniumRightCap/TransZ       = -1.916 mm
+d:Ge/TitaniumRightCap/RotX         = 0 deg
+d:Ge/TitaniumRightCap/RotY         = 0. deg
+d:Ge/TitaniumRightCap/RotZ         = 0. deg
+s:Ge/TitaniumRightCap/DrawingStyle = "FullWireFrame"
+s:Ge/TitaniumRightCap/Color        = "blue"
+b:Ge/TitaniumRightCap/IsParallel   = "True"
+s:Ge/TitaniumRightCap/ParallelWorldName = "ShieldingWorld"
+
+#========================================
+#Left half-sphere of environment material 
+#========================================
+
+s:Ge/EnvironmentLeftCap/Type         = "TsSphere"
+s:Ge/EnvironmentLeftCap/Parent       = "ShieldingGeo"
+s:Ge/EnvironmentLeftCap/Material     = "Vacuum"
+d:Ge/EnvironmentLeftCap/RMin         = 0. mm
+d:Ge/EnvironmentLeftCap/RMax         = 0.306 mm
+d:Ge/EnvironmentLeftCap/SPhi         = 0. deg
+d:Ge/EnvironmentLeftCap/DPhi         = 360. deg
+d:Ge/EnvironmentLeftCap/STheta       = 0. deg
+d:Ge/EnvironmentLeftCap/DTheta       = 90. deg
+d:Ge/EnvironmentLeftCap/TransX       = 0. mm
+d:Ge/EnvironmentLeftCap/TransY       = 0. mm
+d:Ge/EnvironmentLeftCap/TransZ       = 1.916 mm
+d:Ge/EnvironmentLeftCap/RotX         = 0. deg
+d:Ge/EnvironmentLeftCap/RotY         = 180 deg
+d:Ge/EnvironmentLeftCap/RotZ         = 0. deg
+s:Ge/EnvironmentLeftCap/DrawingStyle = "FullWireFrame"
+s:Ge/EnvironmentLeftCap/Color        = "grey"
+b:Ge/EnvironmentLeftCap/IsParallel   = "True"
+s:Ge/EnvironmentLeftCap/ParallelWorldName = "ShieldingWorld"
+
+#=========================================
+#Right half-sphere of environment material
+#=========================================
+
+s:Ge/EnvironmentRightCap/Type         = "TsSphere"
+s:Ge/EnvironmentRightCap/Parent       = "ShieldingGeo"
+s:Ge/EnvironmentRightCap/Material     = "Vacuum"
+d:Ge/EnvironmentRightCap/RMin         = 0. mm
+d:Ge/EnvironmentRightCap/RMax         = 0.306 mm
+d:Ge/EnvironmentRightCap/SPhi         = 0. deg
+d:Ge/EnvironmentRightCap/DPhi         = 360. deg
+d:Ge/EnvironmentRightCap/STheta       = 0. deg
+d:Ge/EnvironmentRightCap/DTheta       = 90. deg
+d:Ge/EnvironmentRightCap/TransX       = 0. mm
+d:Ge/EnvironmentRightCap/TransY       = 0. mm
+d:Ge/EnvironmentRightCap/TransZ       = -1.916 mm
+d:Ge/EnvironmentRightCap/RotX         = 0 deg
+d:Ge/EnvironmentRightCap/RotY         = 0. deg
+d:Ge/EnvironmentRightCap/RotZ         = 0. deg
+s:Ge/EnvironmentRightCap/DrawingStyle = "FullWireFrame"
+s:Ge/EnvironmentRightCap/Color        = "grey"
+b:Ge/EnvironmentRightCap/IsParallel   = "True"
+s:Ge/EnvironmentRightCap/ParallelWorldName = "ShieldingWorld"
+
+sv:Ph/Default/LayeredMassGeometryWorlds =  3 "FillingWorld" "ShieldingWorld" "ActiveSourceWorld"

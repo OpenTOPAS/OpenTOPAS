@@ -1,0 +1,710 @@
+includeFile = UCSF_DefaultParameters.txt
+
+sv:Ma/Gold/Components=1 "Gold"
+uv:Ma/Gold/Fractions=1 1.0
+d:Ma/Gold/Density=19.3 g/cm3
+d:Ma/Gold/MeanExcitationEnergy= 790.0 eV
+s:Ma/Gold/DefaultColor="orange"
+
+sv:Ma/NitrogenGas/Components=1 "Nitrogen"
+uv:Ma/NitrogenGas/Fractions=1 1.0
+#Wikipedia: 0.001251 g/cm3 (gas)
+#PDG(PTSim): 0.8073  g/cm3
+d:Ma/NitrogenGas/Density= 0.001251 g/cm3
+
+#Treatment room
+#The HL[X,Y,Z] must be extended enough to cover patient's body.
+
+s:Ge/Nozzle/Parent  = "World"
+s:Ge/Nozzle/Type    = "Group"
+d:Ge/Nozzle/RotX    = 0.0 deg
+d:Ge/Nozzle/RotY    = 0.0 deg
+d:Ge/Nozzle/RotZ    = 0.0 deg
+d:Ge/Nozzle/TransX  = 0.0 cm
+d:Ge/Nozzle/TransY  = 0.0 cm
+d:Ge/Nozzle/TransZ  = 0.0 cm
+
+# NIM.A 380 (1996) P. 597-612
+#Exit2Iso = 241.8 cm (19 Dec 2011)
+#d:Ge/Exit2Iso/Distance = Ge/WaterColumn/BaseLine + Ge/ExtWindow/TransZ cm
+
+###########################################################################
+#1. Beam Exit Window
+#25 um thickness Mylar window
+###########################################################################
+s:Ge/ExtWindow/Parent  = "Nozzle"
+s:Ge/ExtWindow/Type    = "TsCylinder"
+s:Ge/ExtWindow/Material= "Mylar"
+d:Ge/ExtWindow/RMin    = 0.0 mm
+d:Ge/ExtWindow/RMax    = 110.0 mm
+d:Ge/ExtWindow/HL      = 0.0125 mm
+d:Ge/ExtWindow/SPhi    = 0.0 deg
+d:Ge/ExtWindow/DPhi    = 360.0 deg
+d:Ge/ExtWindow/TransX  = 0.0 mm
+d:Ge/ExtWindow/TransY  = 0.0 mm
+d:Ge/ExtWindow/TransZ  = 102.7 cm + Ge/WaterColumn/BaseLine 
+d:Ge/ExtWindow/RotX    = 0.0 deg
+d:Ge/ExtWindow/RotY    = 0.0 deg
+d:Ge/ExtWindow/RotZ    = 0.0 deg
+b:Ge/ExtWindow/Include = "True"
+s:Ge/ExtWindow/DrawingStyle = "Solid"
+s:Ge/ExtWindow/Message = "UCSFETF::ExitWindow is constructed!"
+
+###########################################################################
+#2. Wire Chamber
+#NitrogenGas 
+#Kapton	window 
+#MWC: material(brass), dimensions
+#Topasized : only dummy envolope boxes were implemented
+###########################################################################
+s:Ge/WireChamber/Parent="Nozzle"
+s:Ge/WireChamber/Type="TsBox"
+s:Ge/WireChamber/Material= "NitrogenGas"
+d:Ge/WireChamber/HLX=170.0   mm
+d:Ge/WireChamber/HLY=110.0   mm
+d:Ge/WireChamber/HLZ=17.5 mm
+d:Ge/WireChamber/TransX=0.0   mm
+d:Ge/WireChamber/TransY=0.0   mm
+d:Ge/WireChamber/TransZ= 94.55 cm + Ge/WaterColumn/BaseLine  
+d:Ge/WireChamber/RotX=0.0 deg
+d:Ge/WireChamber/RotY=0.0 deg
+d:Ge/WireChamber/RotZ=0.0 deg
+i:Ge/WireChamber/NbOfLayers=2
+d:Ge/WireChamber/MaxStepSize=100.0 mm
+b:Ge/WireChamber/Include="True"
+s:Ge/WireChamber/Message = "UCSFETF::WireChamber is constructed!"
+
+s:Ge/WireChamber/Window1/Parent   = "WireChamber"
+s:Ge/WireChamber/Window1/Type     = "TsBox"
+s:Ge/WireChamber/Window1/Material = "Kapton"
+d:Ge/WireChamber/Window1/HLX      = 165.0  mm
+d:Ge/WireChamber/Window1/HLY      = 105.0  mm
+d:Ge/WireChamber/Window1/HLZ      = 0.0635 mm
+d:Ge/WireChamber/Window1/TransX   = 0.0 mm
+d:Ge/WireChamber/Window1/TransY   = 0.0 mm
+d:Ge/WireChamber/Window1/TransZ   = 15.123 mm
+d:Ge/WireChamber/Window1/RotX     = 0.0 deg
+d:Ge/WireChamber/Window1/RotY     = 0.0 deg
+d:Ge/WireChamber/Window1/RotZ     = 0.0 deg
+
+s:Ge/WireChamber/Window2/Parent   = "WireChamber"
+s:Ge/WireChamber/Window2/Type     = "TsBox"
+s:Ge/WireChamber/Window2/Material = "Kapton"
+d:Ge/WireChamber/Window2/HLX      = 165.0  mm
+d:Ge/WireChamber/Window2/HLY      = 105.0  mm
+d:Ge/WireChamber/Window2/HLZ      = 0.0635 mm
+d:Ge/WireChamber/Window2/TransX   = 0.0 mm
+d:Ge/WireChamber/Window2/TransY   = 0.0 mm
+d:Ge/WireChamber/Window2/TransZ   = -15.123 mm
+d:Ge/WireChamber/Window2/RotX     = 0.0 deg
+d:Ge/WireChamber/Window2/RotY     = 0.0 deg
+d:Ge/WireChamber/Window2/RotZ     = 0.0 deg
+#s:Ge/WireChamber/Window2/DrawingStyle = "Solid"
+
+s:Ge/MWC/Parent="WireChamber"
+s:Ge/MWC/Type="TsMultiWireChamber"
+s:Ge/MWC/Material= "parent"
+d:Ge/MWC/HLX=170.0  mm
+d:Ge/MWC/HLY=110.0  mm
+d:Ge/MWC/HLZ=15.0   mm
+d:Ge/MWC/TransX=0.0 mm
+d:Ge/MWC/TransY=0.0 mm
+d:Ge/MWC/TransZ=0.0 mm
+d:Ge/MWC/RotX=0.0   deg
+d:Ge/MWC/RotY=0.0   deg
+d:Ge/MWC/RotZ=0.0   deg
+i:Ge/MWC/NbOfLayers=2
+d:Ge/MWC/MaxStepSize= Ge/WireChamber/MaxStepSize cm
+
+d:Ge/MWC/Layer1/RMin=0.0   mm
+d:Ge/MWC/Layer1/RMax=0.029 mm
+s:Ge/MWC/Layer1/Material="Brass"
+d:Ge/MWC/Layer1/HL=160.0 mm
+s:Ge/MWC/Layer1/Align="X"
+d:Ge/MWC/Layer1/PosZ=5.0 mm
+d:Ge/MWC/Layer1/MaxStepSize=100.0 mm
+s:Ge/MWC/Layer1/DrawingStyle="FullWireFrame"
+dv:Ge/MWC/Layer1/Displacement=72
+-71.9855 -69.9855 -67.9855 -65.9855 -63.9855 -61.9855 -59.9855 -57.9855 -55.9855 -53.9855
+-51.9855 -49.9855 -47.9855 -45.9855 -43.9855 -41.9855 -39.9855 -37.9855 -35.9855 -33.9855
+-31.9855 -29.9855 -27.9855 -25.9855 -23.9855 -21.9855 -19.9855 -17.9855 -15.9855 -13.9855
+-11.9855  -9.9855  -7.9855  -5.9855  -3.9855 -1.9855   0.0145   2.0145   4.0145   6.0145
+  8.0145  10.0145  12.0145  14.0145  16.0145 18.0145  20.0145  22.0145  24.0145  26.0145
+ 28.0145  30.0145  32.0145  34.0145  36.0145 38.0145  40.0145  42.0145  44.0145  46.0145
+ 48.0145  50.0145  52.0145  54.0145  56.0145 58.0145  60.0145  62.0145  64.0145  66.0145
+ 68.0145  70.0145 mm
+
+d:Ge/MWC/Layer2/RMin=0.0   mm
+d:Ge/MWC/Layer2/RMax=0.029 mm
+s:Ge/MWC/Layer2/Material="Brass"
+d:Ge/MWC/Layer2/HL=100.0 mm
+s:Ge/MWC/Layer2/Align="Y"
+d:Ge/MWC/Layer2/PosZ=-5.0 mm
+d:Ge/MWC/Layer2/MaxStepSize=100.0 mm
+s:Ge/MWC/Layer2/DrawingStyle="FullWireFrame"
+s:Ge/MWC/Layer2/Color="red"
+dv:Ge/MWC/Layer2/Displacement=72
+-71.9855 -69.9855 -67.9855 -65.9855 -63.9855 -61.9855 -59.9855 -57.9855 -55.9855 -53.9855
+-51.9855 -49.9855 -47.9855 -45.9855 -43.9855 -41.9855 -39.9855 -37.9855 -35.9855 -33.9855
+-31.9855 -29.9855 -27.9855 -25.9855 -23.9855 -21.9855 -19.9855 -17.9855 -15.9855 -13.9855
+-11.9855  -9.9855  -7.9855  -5.9855  -3.9855 -1.9855   0.0145   2.0145   4.0145   6.0145
+  8.0145  10.0145  12.0145  14.0145  16.0145 18.0145  20.0145  22.0145  24.0145  26.0145
+ 28.0145  30.0145  32.0145  34.0145  36.0145 38.0145  40.0145  42.0145  44.0145  46.0145
+ 48.0145  50.0145  52.0145  54.0145  56.0145 58.0145  60.0145  62.0145  64.0145  66.0145
+ 68.0145  70.0145 mm
+
+
+###########################################################################
+#3. Collimator 1
+# A 30 cm diameter brass collimator with openining in the center downstream from
+# the wire chamber limits the beam size to 50 mm at the first transmission IC1
+###########################################################################
+s:Ge/Collimator1/Parent  = "Nozzle"
+s:Ge/Collimator1/Type    = "TsCylinder"
+s:Ge/Collimator1/Material= "Brass"
+d:Ge/Collimator1/RMin    = 2.5  cm
+d:Ge/Collimator1/RMax    = 15.0 cm
+d:Ge/Collimator1/HL      = 1.3  cm
+d:Ge/Collimator1/SPhi    = 0.0 deg
+d:Ge/Collimator1/DPhi    = 360.0 deg
+d:Ge/Collimator1/TransX  = 0.0 mm
+d:Ge/Collimator1/TransY  = 0.0 mm
+d:Ge/Collimator1/TransZ  = 86.5 cm + Ge/WaterColumn/BaseLine
+d:Ge/Collimator1/RotX    = 0.0 deg
+d:Ge/Collimator1/RotY    = 0.0 deg
+d:Ge/Collimator1/RotZ    = 0.0 deg
+b:Ge/Collimator1/Include = "True"
+s:Ge/Collimator1/DrawingStyle = "Solid"
+s:Ge/Collimator1/Messange= "UCSFETF::Collimator1 is constructed!"
+
+###########################################################################
+#4.  IonChamber1 
+#NitrogenGas 10
+#Mat    Rin        Rout   dZ       z
+#Kapton 0	       200	  0.0254  -23.9873 : plate
+#Gold   0	       10	  1E-7    1.2700050E-2
+#Gold   10.00254   30	  1E-7    1.2700050E-2
+#Gold   30.00254   60	  1E-7    1.2700050E-2
+#Gold   60.00254   90	  1E-7    1.2700050E-2
+#Gold   90.00254   120	  1E-7    1.2700050E-2
+#Gold   120.00254  150	  1E-7    1.2700050E-2
+#Gold   150.00254  180	  1E-7    1.2700050E-2
+#Kapton 0	       200	  0.0254  0.0 : plates
+#Kapton 0	       200	  0.0254  23.9873 : plates
+#Initially implemented at 11Oct2010
+###########################################################################
+s:Ge/IonChamber1/Parent   = "Nozzle"
+s:Ge/IonChamber1/Type     = "TsCylinder"
+s:Ge/IonChamber1/Material = "NitrogenGas"
+d:Ge/IonChamber1/RMin     = 0.0  mm
+d:Ge/IonChamber1/RMax     = 200.0 mm
+d:Ge/IonChamber1/HL       = 24.0  mm
+d:Ge/IonChamber1/SPhi     = 0.0   deg
+d:Ge/IonChamber1/DPhi     = 360.0 deg
+d:Ge/IonChamber1/RotX     = 0.0 deg
+d:Ge/IonChamber1/RotY     = 0.0 deg
+d:Ge/IonChamber1/RotZ     = 0.0 deg
+d:Ge/IonChamber1/TransX   = 0.0 mm
+d:Ge/IonChamber1/TransY   = 0.0 mm
+d:Ge/IonChamber1/TransZ   = 77.8 cm + Ge/WaterColumn/BaseLine 
+b:Ge/IonChamber1/Include  = "True"
+s:Ge/IonChamber1/Message  = "UCSFETF::IonChamber1 is constructed!"
+
+s:Ge/IonChamber1/Layer1/Parent   = "IonChamber1"
+s:Ge/IonChamber1/Layer1/Type     = "TsCylinder"
+s:Ge/IonChamber1/Layer1/Material = "Kapton"
+d:Ge/IonChamber1/Layer1/RMin     =   0.0  mm
+d:Ge/IonChamber1/Layer1/RMax     = 200.0  mm
+d:Ge/IonChamber1/Layer1/HL       = 0.0127 mm
+d:Ge/IonChamber1/Layer1/SPhi     = 0.0   deg
+d:Ge/IonChamber1/Layer1/DPhi     = 360.0 deg
+d:Ge/IonChamber1/Layer1/TransX   = 0.0 mm
+d:Ge/IonChamber1/Layer1/TransY   = 0.0 mm
+d:Ge/IonChamber1/Layer1/TransZ   = -23.9873 mm
+d:Ge/IonChamber1/Layer1/RotX     = 0.0 deg
+d:Ge/IonChamber1/Layer1/RotY     = 0.0 deg 
+d:Ge/IonChamber1/Layer1/RotZ     = 0.0 deg
+
+s:Ge/IonChamber1/Ring1/Parent   = "IonChamber1"
+s:Ge/IonChamber1/Ring1/Type     = "TsCylinder"
+s:Ge/IonChamber1/Ring1/Material = "Gold"
+d:Ge/IonChamber1/Ring1/RMin     =  0.0 mm
+d:Ge/IonChamber1/Ring1/RMax     = 10.0 mm
+d:Ge/IonChamber1/Ring1/HL       = 5e-8 mm
+d:Ge/IonChamber1/Ring1/SPhi     = 0.0   deg
+d:Ge/IonChamber1/Ring1/DPhi     = 360.0 deg
+d:Ge/IonChamber1/Ring1/TransX   = 0.0 mm
+d:Ge/IonChamber1/Ring1/TransY   = 0.0 mm
+d:Ge/IonChamber1/Ring1/TransZ   = 0.0127 mm
+d:Ge/IonChamber1/Ring1/RotX     = 0.0 deg
+d:Ge/IonChamber1/Ring1/RotY     = 0.0 deg 
+d:Ge/IonChamber1/Ring1/RotZ     = 0.0 deg
+
+s:Ge/IonChamber1/Ring2/Parent   = "IonChamber1"
+s:Ge/IonChamber1/Ring2/Type     = "TsCylinder"
+s:Ge/IonChamber1/Ring2/Material = "Gold"
+d:Ge/IonChamber1/Ring2/RMin     = 10.0025 mm
+d:Ge/IonChamber1/Ring2/RMax     = 30.0 mm
+d:Ge/IonChamber1/Ring2/HL       = 5e-8 mm
+d:Ge/IonChamber1/Ring2/SPhi     = 0.0   deg
+d:Ge/IonChamber1/Ring2/DPhi     = 360.0 deg
+d:Ge/IonChamber1/Ring2/TransX   = 0.0 mm
+d:Ge/IonChamber1/Ring2/TransY   = 0.0 mm
+d:Ge/IonChamber1/Ring2/TransZ   = 0.0127 mm
+d:Ge/IonChamber1/Ring2/RotX     = 0.0 deg
+d:Ge/IonChamber1/Ring2/RotY     = 0.0 deg 
+d:Ge/IonChamber1/Ring2/RotZ     = 0.0 deg
+
+s:Ge/IonChamber1/Ring3/Parent   = "IonChamber1"
+s:Ge/IonChamber1/Ring3/Type     = "TsCylinder"
+s:Ge/IonChamber1/Ring3/Material = "Gold"
+d:Ge/IonChamber1/Ring3/RMin     = 30.0025 mm
+d:Ge/IonChamber1/Ring3/RMax     = 60.0 mm
+d:Ge/IonChamber1/Ring3/HL       = 5e-8 mm
+d:Ge/IonChamber1/Ring3/SPhi     = 0.0   deg
+d:Ge/IonChamber1/Ring3/DPhi     = 360.0 deg
+d:Ge/IonChamber1/Ring3/TransX   = 0.0 mm
+d:Ge/IonChamber1/Ring3/TransY   = 0.0 mm
+d:Ge/IonChamber1/Ring3/TransZ   = 0.0127 mm
+d:Ge/IonChamber1/Ring3/RotX     = 0.0 deg
+d:Ge/IonChamber1/Ring3/RotY     = 0.0 deg 
+d:Ge/IonChamber1/Ring3/RotZ     = 0.0 deg
+
+s:Ge/IonChamber1/Ring4/Parent   = "IonChamber1"
+s:Ge/IonChamber1/Ring4/Type     = "TsCylinder"
+s:Ge/IonChamber1/Ring4/Material = "Gold"
+d:Ge/IonChamber1/Ring4/RMin     = 60.0025 mm
+d:Ge/IonChamber1/Ring4/RMax     = 90.0 mm
+d:Ge/IonChamber1/Ring4/HL       = 5e-8 mm
+d:Ge/IonChamber1/Ring4/SPhi     = 0.0   deg
+d:Ge/IonChamber1/Ring4/DPhi     = 360.0 deg
+d:Ge/IonChamber1/Ring4/TransX   = 0.0 mm
+d:Ge/IonChamber1/Ring4/TransY   = 0.0 mm
+d:Ge/IonChamber1/Ring4/TransZ   = 0.0127 mm
+d:Ge/IonChamber1/Ring4/RotX     = 0.0 deg
+d:Ge/IonChamber1/Ring4/RotY     = 0.0 deg 
+d:Ge/IonChamber1/Ring4/RotZ     = 0.0 deg
+
+s:Ge/IonChamber1/Ring5/Parent   = "IonChamber1"
+s:Ge/IonChamber1/Ring5/Type     = "TsCylinder"
+s:Ge/IonChamber1/Ring5/Material = "Gold"
+d:Ge/IonChamber1/Ring5/RMin     = 90.0025 mm
+d:Ge/IonChamber1/Ring5/RMax     = 120.0 mm
+d:Ge/IonChamber1/Ring5/HL       = 5e-8 mm
+d:Ge/IonChamber1/Ring5/SPhi     = 0.0   deg
+d:Ge/IonChamber1/Ring5/DPhi     = 360.0 deg
+d:Ge/IonChamber1/Ring5/TransX   = 0.0 mm
+d:Ge/IonChamber1/Ring5/TransY   = 0.0 mm
+d:Ge/IonChamber1/Ring5/TransZ   = 0.0127 mm
+d:Ge/IonChamber1/Ring5/RotX     = 0.0 deg
+d:Ge/IonChamber1/Ring5/RotY     = 0.0 deg 
+d:Ge/IonChamber1/Ring5/RotZ     = 0.0 deg
+
+s:Ge/IonChamber1/Ring6/Parent   = "IonChamber1"
+s:Ge/IonChamber1/Ring6/Type     = "TsCylinder"
+s:Ge/IonChamber1/Ring6/Material = "Gold"
+d:Ge/IonChamber1/Ring6/RMin     = 120.003 mm
+d:Ge/IonChamber1/Ring6/RMax     = 150.0 mm
+d:Ge/IonChamber1/Ring6/HL       = 5e-8 mm
+d:Ge/IonChamber1/Ring6/SPhi     = 0.0   deg
+d:Ge/IonChamber1/Ring6/DPhi     = 360.0 deg
+d:Ge/IonChamber1/Ring6/TransX   = 0.0 mm
+d:Ge/IonChamber1/Ring6/TransY   = 0.0 mm
+d:Ge/IonChamber1/Ring6/TransZ   = 0.0127 mm
+d:Ge/IonChamber1/Ring6/RotX     = 0.0 deg
+d:Ge/IonChamber1/Ring6/RotY     = 0.0 deg 
+d:Ge/IonChamber1/Ring6/RotZ     = 0.0 deg
+
+s:Ge/IonChamber1/Ring7/Parent   = "IonChamber1"
+s:Ge/IonChamber1/Ring7/Type     = "TsCylinder"
+s:Ge/IonChamber1/Ring7/Material = "Gold"
+d:Ge/IonChamber1/Ring7/RMin     = 150.003 mm
+d:Ge/IonChamber1/Ring7/RMax     = 180.0 mm
+d:Ge/IonChamber1/Ring7/HL       = 5e-8 mm
+d:Ge/IonChamber1/Ring7/SPhi     = 0.0   deg
+d:Ge/IonChamber1/Ring7/DPhi     = 360.0 deg
+d:Ge/IonChamber1/Ring7/TransX   = 0.0 mm
+d:Ge/IonChamber1/Ring7/TransY   = 0.0 mm
+d:Ge/IonChamber1/Ring7/TransZ   = 0.0127 mm
+d:Ge/IonChamber1/Ring7/RotX     = 0.0 deg
+d:Ge/IonChamber1/Ring7/RotY     = 0.0 deg 
+d:Ge/IonChamber1/Ring7/RotZ     = 0.0 deg
+s:Ge/IonChamber1/Ring7/DrawingStyle = "Solid"
+
+s:Ge/IonChamber1/Layer2/Parent   = "IonChamber1"
+s:Ge/IonChamber1/Layer2/Type     = "TsCylinder"
+s:Ge/IonChamber1/Layer2/Material = "Kapton"
+d:Ge/IonChamber1/Layer2/RMin     =   0.0  mm
+d:Ge/IonChamber1/Layer2/RMax     = 200.0  mm
+d:Ge/IonChamber1/Layer2/HL       = 0.0127 mm
+d:Ge/IonChamber1/Layer2/SPhi     = 0.0   deg
+d:Ge/IonChamber1/Layer2/DPhi     = 360.0 deg
+d:Ge/IonChamber1/Layer2/TransX   = 0.0 mm
+d:Ge/IonChamber1/Layer2/TransY   = 0.0 mm
+d:Ge/IonChamber1/Layer2/TransZ   = 10.0127 mm
+d:Ge/IonChamber1/Layer2/RotX     = 0.0 deg
+d:Ge/IonChamber1/Layer2/RotY     = 0.0 deg 
+d:Ge/IonChamber1/Layer2/RotZ     = 0.0 deg
+
+s:Ge/IonChamber1/Layer3/Parent   = "IonChamber1"
+s:Ge/IonChamber1/Layer3/Type     = "TsCylinder"
+s:Ge/IonChamber1/Layer3/Material = "Kapton"
+d:Ge/IonChamber1/Layer3/RMin     =   0.0  mm
+d:Ge/IonChamber1/Layer3/RMax     = 200.0  mm
+d:Ge/IonChamber1/Layer3/HL       = 0.0127 mm
+d:Ge/IonChamber1/Layer3/SPhi     = 0.0   deg
+d:Ge/IonChamber1/Layer3/DPhi     = 360.0 deg
+d:Ge/IonChamber1/Layer3/TransX   = 0.0 mm
+d:Ge/IonChamber1/Layer3/TransY   = 0.0 mm
+d:Ge/IonChamber1/Layer3/TransZ   = 23.9853 mm
+d:Ge/IonChamber1/Layer3/RotX     = 0.0 deg
+d:Ge/IonChamber1/Layer3/RotY     = 0.0 deg 
+d:Ge/IonChamber1/Layer3/RotZ     = 0.0 deg
+
+###########################################################################
+#5. PropellerBlade
+#Lucite ~= PMMA ~= G4_PLEXIGLASS : density: 1.4, Iev = 74.0 eV
+###########################################################################
+d:Ge/UCSFPropeller/Position =  58.1 cm +  Ge/WaterColumn/BaseLine
+
+###########################################################################
+#6. Collimator 2
+#Topasized : done at 11 Oct 2010
+###########################################################################
+s:Ge/Collimator2/Parent  = "Nozzle"
+s:Ge/Collimator2/Type    = "TsCylinder"
+s:Ge/Collimator2/Material= "Brass"
+d:Ge/Collimator2/RMin    = 2.5  cm
+d:Ge/Collimator2/RMax    = 15.0  cm
+d:Ge/Collimator2/HL      = 1.3 cm
+d:Ge/Collimator2/SPhi    = 0.0 deg
+d:Ge/Collimator2/DPhi    = 360.0 deg
+d:Ge/Collimator2/RotX    = 0.0 deg
+d:Ge/Collimator2/RotY    = 0.0 deg
+d:Ge/Collimator2/RotZ    = 0.0 deg
+d:Ge/Collimator2/TransX  = 0.0 mm
+d:Ge/Collimator2/TransY  = 0.0 mm
+d:Ge/Collimator2/TransZ  =  44.8 cm + Ge/WaterColumn/BaseLine
+b:Ge/Collimator2/Include = "True"
+s:Ge/Collimator2/DrawingStyle = "Solid"
+s:Ge/Collimator2/Message = "UCSFETF::Collimator2 is constructed!"
+
+###########################################################################
+#7. WaterColumn
+#The HL of WC_Water varies from 0.0 mm to 13.0 mm
+#!!!!!!!IMPORTANT #
+#Ge/WaterColumn/Water/HL = 0.0 must lead WaterColumn/Water/Include=False
+# 0.0 cm thickness is used sometimes when they won't modulate beam energy!
+###########################################################################
+#The WaterColumn extends. 
+# ||> <--------- || 
+# ||> <--------- ||
+# ||> <--------- ||
+# ||> <--------- ||
+#     water   base line (138.9 cm)
+# Air gap between Water colum and Collimator3 is 6 mm
+# Base line is fixed. 
+# So water volume extends toward/backward beam source. 
+# i.e. Not bi-directional movement
+d:Ge/WCColl3/AirGap        		 = 6.0 mm
+d:Ge/WaterColumn/BaseLine  		 = 138.5 cm + Ge/WCColl3/AirGap
+d:Ge/WaterColumn/Thickness 		 = 10.0 mm
+d:Ge/WaterColumn/HalfOfThickness = 0.5 * Ge/WaterColumn/Thickness mm 
+
+s:Ge/WC_Container/Parent  = "Nozzle"
+s:Ge/WC_Container/Type    = "TsCylinder"
+s:Ge/WC_Container/Material= "G4_PLEXIGLASS"
+d:Ge/WC_Container/RMin    = 0.0 mm
+d:Ge/WC_Container/RMax    = 100.0 mm
+##The wall thickness will be updated by Inder. (14Feb2011)
+#0.25 mm as WC wall thickness.
+d:Ge/WC_Container/HL      = 1.0 mm + Ge/WC_Water/HL
+d:Ge/WC_Container/SPhi    = 0.0 deg
+d:Ge/WC_Container/DPhi    = 360.0 deg
+d:Ge/WC_Container/RotX    = 0.0 deg
+d:Ge/WC_Container/RotY    = 0.0 deg
+d:Ge/WC_Container/RotZ    = 0.0 deg
+d:Ge/WC_Container/TransX  = 0.0 mm
+d:Ge/WC_Container/TransY  = 0.0 mm
+d:Ge/WC_Container/TransZ  = Ge/WaterColumn/BaseLine + Ge/WC_Container/HL cm
+b:Ge/WC_Container/Include = "True"
+s:Ge/WC_Container/DrawingStyle   = "FullWireFrame"
+s:Ge/WC_Container/Message = "UCSFETF::WaterColumn Container is constructed!"
+
+s:Ge/WC_Water/Parent  = "WC_Container"
+s:Ge/WC_Water/Type    = "TsCylinder"
+s:Ge/WC_Water/Material= "G4_WATER"
+d:Ge/WC_Water/RMin    =  0.0 mm
+d:Ge/WC_Water/RMax    = 95.0 mm
+d:Ge/WC_Water/HL      = 0.05  mm + Ge/WaterColumn/HalfOfThickness
+d:Ge/WC_Water/SPhi    = 0.0 deg
+d:Ge/WC_Water/DPhi    = 360.0 deg
+d:Ge/WC_Water/TransX  = 0.0 mm
+d:Ge/WC_Water/TransY  = 0.0 mm
+d:Ge/WC_Water/TransZ  = 0.0 mm
+d:Ge/WC_Water/RotX    = 0.0 deg
+d:Ge/WC_Water/RotY    = 0.0 deg
+d:Ge/WC_Water/RotZ    = 0.0 deg
+b:Ge/WC_Water/Include = "True"
+s:Ge/WC_Water/DrawingStyle   = "Solid"
+s:Ge/WC_Water/Messange= "UCSFETF::WaterColumn Water is constructed!"
+
+###########################################################################
+#8. Collimator 3
+###########################################################################
+s:Ge/Collimator3/Parent   = "Nozzle"
+s:Ge/Collimator3/Type     = "TsCylinder"
+s:Ge/Collimator3/Material = "Brass"
+d:Ge/Collimator3/RMin     = 25.0 mm
+d:Ge/Collimator3/RMax     = 150.0 mm
+d:Ge/Collimator3/HL       = 13.0 mm
+d:Ge/Collimator3/SPhi     = 0.0 deg
+d:Ge/Collimator3/DPhi     = 360.0 deg
+d:Ge/Collimator3/RotX     = 0.0   deg
+d:Ge/Collimator3/RotY     = 0.0   deg
+d:Ge/Collimator3/RotZ     = 0.0   deg
+d:Ge/Collimator3/TransX   = 0.0   mm
+d:Ge/Collimator3/TransY   = 0.0   mm
+d:Ge/Collimator3/TransZ   = 135.9 cm + Ge/Collimator3/HL
+b:Ge/Collimator3/Include  = "True"
+s:Ge/Collimator3/DrawingStyle = "Solid"
+s:Ge/Collimator3/Messange = "UCSFETF::Collimator3 is constructed!"
+
+###########################################################################
+#9.  IonChamber2 
+#NitrogenGas Gas
+###########################################################################
+s:Ge/IonChamber2/Parent   = "Nozzle"
+s:Ge/IonChamber2/Type     = "TsCylinder"
+s:Ge/IonChamber2/Material = "NitrogenGas"
+d:Ge/IonChamber2/RMin     = 0.0 mm
+d:Ge/IonChamber2/RMax     = 200.0 mm
+d:Ge/IonChamber2/HL       = 24.0 mm
+d:Ge/IonChamber2/SPhi     = 0.0 deg
+d:Ge/IonChamber2/DPhi     = 360.0 deg
+d:Ge/IonChamber2/RotX     = 0.0 deg
+d:Ge/IonChamber2/RotY     = 0.0 deg
+d:Ge/IonChamber2/RotZ     = 0.0 deg
+d:Ge/IonChamber2/TransX   = 0.0 mm
+d:Ge/IonChamber2/TransY   = 0.0 mm
+d:Ge/IonChamber2/TransZ   = 85.8 cm + Ge/IonChamber2/HL
+b:Ge/IonChamber2/Include  = "True"
+s:Ge/IonChamber2/Message  = "UCSFETF::IonChamber2 is constructed!"
+
+s:Ge/IonChamber2/Layer1/Parent   = "IonChamber2"
+s:Ge/IonChamber2/Layer1/Type     = "TsCylinder"
+s:Ge/IonChamber2/Layer1/Material = "Kapton"
+d:Ge/IonChamber2/Layer1/RMin     =   0.0  mm
+d:Ge/IonChamber2/Layer1/RMax     = 200.0  mm
+d:Ge/IonChamber2/Layer1/HL       = 0.0127 mm
+d:Ge/IonChamber2/Layer1/SPhi     = 0.0   deg
+d:Ge/IonChamber2/Layer1/DPhi     = 360.0 deg
+d:Ge/IonChamber2/Layer1/TransX   = 0.0 mm
+d:Ge/IonChamber2/Layer1/TransY   = 0.0 mm
+d:Ge/IonChamber2/Layer1/TransZ   = -13.9873 mm
+d:Ge/IonChamber2/Layer1/RotX     = 0.0 deg
+d:Ge/IonChamber2/Layer1/RotY     = 0.0 deg 
+d:Ge/IonChamber2/Layer1/RotZ     = 0.0 deg
+
+s:Ge/IonChamber2/Ring1/Parent   = "IonChamber2"
+s:Ge/IonChamber2/Ring1/Type     = "TsCylinder"
+s:Ge/IonChamber2/Ring1/Material = "Gold"
+d:Ge/IonChamber2/Ring1/RMin     =  0.0 mm
+d:Ge/IonChamber2/Ring1/RMax     = 10.0 mm
+d:Ge/IonChamber2/Ring1/HL       = 5e-08 mm
+d:Ge/IonChamber2/Ring1/SPhi     = 0.0   deg
+d:Ge/IonChamber2/Ring1/DPhi     = 360.0 deg
+d:Ge/IonChamber2/Ring1/TransX   = 0.0 mm
+d:Ge/IonChamber2/Ring1/TransY   = 0.0 mm
+d:Ge/IonChamber2/Ring1/TransZ   = 10.0127 mm
+d:Ge/IonChamber2/Ring1/RotX     = 0.0 deg
+d:Ge/IonChamber2/Ring1/RotY     = 0.0 deg 
+d:Ge/IonChamber2/Ring1/RotZ     = 0.0 deg
+
+s:Ge/IonChamber2/Ring2/Parent   = "IonChamber2"
+s:Ge/IonChamber2/Ring2/Type     = "TsCylinder"
+s:Ge/IonChamber2/Ring2/Material = "Gold"
+d:Ge/IonChamber2/Ring2/RMin     = 10.00254 mm
+d:Ge/IonChamber2/Ring2/RMax     = 30.0 mm
+d:Ge/IonChamber2/Ring2/HL       = 5e-08 mm
+d:Ge/IonChamber2/Ring2/SPhi     = 0.0   deg
+d:Ge/IonChamber2/Ring2/DPhi     = 360.0 deg
+d:Ge/IonChamber2/Ring2/TransX   = 0.0 mm
+d:Ge/IonChamber2/Ring2/TransY   = 0.0 mm
+d:Ge/IonChamber2/Ring2/TransZ   = 10.0127 mm
+d:Ge/IonChamber2/Ring2/RotX     = 0.0 deg
+d:Ge/IonChamber2/Ring2/RotY     = 0.0 deg 
+d:Ge/IonChamber2/Ring2/RotZ     = 0.0 deg
+
+s:Ge/IonChamber2/Ring3/Parent   = "IonChamber2"
+s:Ge/IonChamber2/Ring3/Type     = "TsCylinder"
+s:Ge/IonChamber2/Ring3/Material = "Gold"
+d:Ge/IonChamber2/Ring3/RMin     = 30.00254 mm
+d:Ge/IonChamber2/Ring3/RMax     = 60.0 mm
+d:Ge/IonChamber2/Ring3/HL       = 5e-08 mm
+d:Ge/IonChamber2/Ring3/SPhi     = 0.0   deg
+d:Ge/IonChamber2/Ring3/DPhi     = 360.0 deg
+d:Ge/IonChamber2/Ring3/TransX   = 0.0 mm
+d:Ge/IonChamber2/Ring3/TransY   = 0.0 mm
+d:Ge/IonChamber2/Ring3/TransZ   = 10.0127 mm
+d:Ge/IonChamber2/Ring3/RotX     = 0.0 deg
+d:Ge/IonChamber2/Ring3/RotY     = 0.0 deg 
+d:Ge/IonChamber2/Ring3/RotZ     = 0.0 deg
+
+s:Ge/IonChamber2/Ring4/Parent   = "IonChamber2"
+s:Ge/IonChamber2/Ring4/Type     = "TsCylinder"
+s:Ge/IonChamber2/Ring4/Material = "Gold"
+d:Ge/IonChamber2/Ring4/RMin     = 60.00254 mm
+d:Ge/IonChamber2/Ring4/RMax     = 90.0 mm
+d:Ge/IonChamber2/Ring4/HL       = 5e-08 mm
+d:Ge/IonChamber2/Ring4/SPhi     = 0.0   deg
+d:Ge/IonChamber2/Ring4/DPhi     = 360.0 deg
+d:Ge/IonChamber2/Ring4/TransX   = 0.0 mm
+d:Ge/IonChamber2/Ring4/TransY   = 0.0 mm
+d:Ge/IonChamber2/Ring4/TransZ   = 10.0127 mm
+d:Ge/IonChamber2/Ring4/RotX     = 0.0 deg
+d:Ge/IonChamber2/Ring4/RotY     = 0.0 deg 
+d:Ge/IonChamber2/Ring4/RotZ     = 0.0 deg
+
+s:Ge/IonChamber2/Ring5/Parent   = "IonChamber2"
+s:Ge/IonChamber2/Ring5/Type     = "TsCylinder"
+s:Ge/IonChamber2/Ring5/Material = "Gold"
+d:Ge/IonChamber2/Ring5/RMin     = 90.00254 mm
+d:Ge/IonChamber2/Ring5/RMax     = 120.0 mm
+d:Ge/IonChamber2/Ring5/HL       = 5e-08 mm
+d:Ge/IonChamber2/Ring5/SPhi     = 0.0   deg
+d:Ge/IonChamber2/Ring5/DPhi     = 360.0 deg
+d:Ge/IonChamber2/Ring5/TransX   = 0.0 mm
+d:Ge/IonChamber2/Ring5/TransY   = 0.0 mm
+d:Ge/IonChamber2/Ring5/TransZ   = 10.0127 mm
+d:Ge/IonChamber2/Ring5/RotX     = 0.0 deg
+d:Ge/IonChamber2/Ring5/RotY     = 0.0 deg 
+d:Ge/IonChamber2/Ring5/RotZ     = 0.0 deg
+
+s:Ge/IonChamber2/Ring6/Parent   = "IonChamber2"
+s:Ge/IonChamber2/Ring6/Type     = "TsCylinder"
+s:Ge/IonChamber2/Ring6/Material = "Gold"
+d:Ge/IonChamber2/Ring6/RMin     = 120.00254 mm
+d:Ge/IonChamber2/Ring6/RMax     = 150.0 mm
+d:Ge/IonChamber2/Ring6/HL       = 5e-08 mm
+d:Ge/IonChamber2/Ring6/SPhi     = 0.0   deg
+d:Ge/IonChamber2/Ring6/DPhi     = 360.0 deg
+d:Ge/IonChamber2/Ring6/TransX   = 0.0 mm
+d:Ge/IonChamber2/Ring6/TransY   = 0.0 mm
+d:Ge/IonChamber2/Ring6/TransZ   = 10.0127 mm
+d:Ge/IonChamber2/Ring6/RotX     = 0.0 deg
+d:Ge/IonChamber2/Ring6/RotY     = 0.0 deg 
+d:Ge/IonChamber2/Ring6/RotZ     = 0.0 deg
+
+s:Ge/IonChamber2/Ring7/Parent   = "IonChamber2"
+s:Ge/IonChamber2/Ring7/Type     = "TsCylinder"
+s:Ge/IonChamber2/Ring7/Material = "Gold"
+d:Ge/IonChamber2/Ring7/RMin     = 150.00254 mm
+d:Ge/IonChamber2/Ring7/RMax     = 180.0 mm
+d:Ge/IonChamber2/Ring7/HL       = 5e-08 mm
+d:Ge/IonChamber2/Ring7/SPhi     = 0.0   deg
+d:Ge/IonChamber2/Ring7/DPhi     = 360.0 deg
+d:Ge/IonChamber2/Ring7/TransX   = 0.0 mm
+d:Ge/IonChamber2/Ring7/TransY   = 0.0 mm
+d:Ge/IonChamber2/Ring7/TransZ   = 10.0127 mm
+d:Ge/IonChamber2/Ring7/RotX     = 0.0 deg
+d:Ge/IonChamber2/Ring7/RotY     = 0.0 deg 
+d:Ge/IonChamber2/Ring7/RotZ     = 0.0 deg
+
+s:Ge/IonChamber2/Layer2/Parent   = "IonChamber2"
+s:Ge/IonChamber2/Layer2/Type     = "TsCylinder"
+s:Ge/IonChamber2/Layer2/Material = "Kapton"
+d:Ge/IonChamber2/Layer2/RMin     =   0.0  mm
+d:Ge/IonChamber2/Layer2/RMax     = 200.0  mm
+d:Ge/IonChamber2/Layer2/HL       = 5e-08 mm
+d:Ge/IonChamber2/Layer2/SPhi     = 0.0   deg
+d:Ge/IonChamber2/Layer2/DPhi     = 360.0 deg
+d:Ge/IonChamber2/Layer2/TransX   = 0.0 mm
+d:Ge/IonChamber2/Layer2/TransY   = 0.0 mm
+d:Ge/IonChamber2/Layer2/TransZ   = 10.0127 mm
+d:Ge/IonChamber2/Layer2/RotX     = 0.0 deg
+d:Ge/IonChamber2/Layer2/RotY     = 0.0 deg 
+d:Ge/IonChamber2/Layer2/RotZ     = 0.0 deg
+
+s:Ge/IonChamber2/Layer3/Parent   = "IonChamber2"
+s:Ge/IonChamber2/Layer3/Type     = "TsCylinder"
+s:Ge/IonChamber2/Layer3/Material = "Kapton"
+d:Ge/IonChamber2/Layer3/RMin     =   0.0  mm
+d:Ge/IonChamber2/Layer3/RMax     = 200.0  mm
+d:Ge/IonChamber2/Layer3/HL       = 0.0127 mm
+d:Ge/IonChamber2/Layer3/SPhi     = 0.0   deg
+d:Ge/IonChamber2/Layer3/DPhi     = 360.0 deg
+d:Ge/IonChamber2/Layer3/TransX   = 0.0 mm
+d:Ge/IonChamber2/Layer3/TransY   = 0.0 mm
+d:Ge/IonChamber2/Layer3/TransZ   = 13.9873 mm
+d:Ge/IonChamber2/Layer3/RotX     = 0.0 deg
+d:Ge/IonChamber2/Layer3/RotY     = 0.0 deg 
+d:Ge/IonChamber2/Layer3/RotZ     = 0.0 deg
+
+###########################################################################
+#10. Patient shield: 61 diameter
+###########################################################################
+s:Ge/PatientShield/Parent   = "Nozzle"
+s:Ge/PatientShield/Type     = "TsCylinder"
+s:Ge/PatientShield/Material = "Aluminum"
+d:Ge/PatientShield/RMin     =  2.5 cm
+d:Ge/PatientShield/RMax     = 30.5 cm
+d:Ge/PatientShield/HL       =  1.6 cm
+d:Ge/PatientShield/SPhi     =  0.0 deg
+d:Ge/PatientShield/DPhi     = 360.0 deg
+d:Ge/PatientShield/TransX   = 0.0 mm
+d:Ge/PatientShield/TransY   = 0.0 mm
+d:Ge/PatientShield/TransZ   = 77.8 cm
+d:Ge/PatientShield/RotX     = 0.0 deg
+d:Ge/PatientShield/RotY     = 0.0 deg 
+d:Ge/PatientShield/RotZ     = 0.0 deg
+s:Ge/PatientShield/DrawingStyle = "FullWireFrame"
+s:Ge/PatientShield/Message = "UCSFETF::Patient Shield is constructed!"
+
+###########################################################################
+#11. Patient assembly
+###########################################################################
+s:Ge/PatientAssembly/Parent = "Nozzle"
+s:Ge/PatientAssembly/Type   = "Group"
+d:Ge/PatientAssembly/RotX   = 0.0 deg
+d:Ge/PatientAssembly/RotY   = 0.0 deg
+d:Ge/PatientAssembly/RotZ   = 0.0 deg
+d:Ge/PatientAssembly/TransX = 0.0 mm
+d:Ge/PatientAssembly/TransY = 0.0 mm
+#This value means distance from isocenter
+d:Ge/PatientAssembly/TransZ = 50.0 mm
+d:Ge/PatientAssembly/Opening = 12.5 mm
+s:Ge/PatientAssembly/Message = "UCSFETF::Patient Assembly is constructed!"
+
+#Plate is important component
+s:Ge/PatientAssembly/Plate/Parent   = "PatientAssembly"
+s:Ge/PatientAssembly/Plate/Type     = "TsCylinder"
+s:Ge/PatientAssembly/Plate/Material = "Brass"
+d:Ge/PatientAssembly/Plate/RMin     = Ge/PatientAssembly/Opening mm
+d:Ge/PatientAssembly/Plate/RMax     = 130.0 mm
+d:Ge/PatientAssembly/Plate/HL       = 10.0  mm
+d:Ge/PatientAssembly/Plate/SPhi     = 0.0   deg
+d:Ge/PatientAssembly/Plate/DPhi     = 360.0 deg
+d:Ge/PatientAssembly/Plate/TransX   = 0.0   mm
+d:Ge/PatientAssembly/Plate/TransY   = 0.0   mm
+d:Ge/PatientAssembly/Plate/TransZ   = 10.0 cm + Ge/PatientAssembly/Plate/HL
+d:Ge/PatientAssembly/Plate/RotX     = 0.0 deg
+d:Ge/PatientAssembly/Plate/RotY     = 0.0 deg
+d:Ge/PatientAssembly/Plate/RotZ     = 0.0 deg
+s:Ge/PatientAssembly/Plate/DrawingStyle = "Solid"
+
+s:Ge/PatientAssembly/Tube/Parent   = "PatientAssembly"
+s:Ge/PatientAssembly/Tube/Type     = "TsCylinder"
+s:Ge/PatientAssembly/Tube/Material = "Brass"
+d:Ge/PatientAssembly/Tube/RMin     = Ge/PatientAssembly/Opening mm
+d:Ge/PatientAssembly/Tube/RMax     = 4.0 mm + Ge/PatientAssembly/Opening
+d:Ge/PatientAssembly/Tube/HL       = 50.0 mm
+d:Ge/PatientAssembly/Tube/SPhi     = 0.0  deg
+d:Ge/PatientAssembly/Tube/DPhi     = 360.0 deg
+d:Ge/PatientAssembly/Tube/TransX   = 0.0  mm
+d:Ge/PatientAssembly/Tube/TransY   = 0.0 mm
+d:Ge/PatientAssembly/Tube/TransZ   = Ge/PatientAssembly/Tube/HL cm
+d:Ge/PatientAssembly/Tube/RotX     = 0.0 deg
+d:Ge/PatientAssembly/Tube/RotY     = 0.0 deg
+d:Ge/PatientAssembly/Tube/RotZ     = 0.0 deg
+s:Ge/PatientAssembly/Tube/DrawingStyle = "Solid"

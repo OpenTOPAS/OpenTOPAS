@@ -1,0 +1,53 @@
+# Use scanning nozzle to paint target this is moving in depth
+
+includeFile = RasterScanningPattern.txt TargetInWaterPhantom.txt Viewer.txt
+
+sv:Ph/Default/Modules = 1 "g4em-standard_opt0"
+
+b:Ts/PauseBeforeQuit = "False"
+
+i:So/Example/NumberOfHistoriesInRun = 10
+d:Tf/TimelineEnd                    = 1 s
+i:Tf/NumberOfSequentialTimes        = 100
+
+#1. Target position and Energy varies as a sinusoidal
+s:Tf/VerticalMoveCosine/Function           = "Cosine"
+d:Tf/VerticalMoveCosine/RepetitionInterval = 1.0 s
+d:Tf/VerticalMoveCosine/Rate               = 0.36 deg/ms
+d:Tf/VerticalMoveCosine/StartValue         = 0.0 deg
+
+#2. Tracking target
+d:Tf/VerticalMoveD_Cosine/Value = 18.6 mm  * Tf/VerticalMoveCosine/Value
+d:Tf/VerticalMoveR80/Value      = -166.142 mm + Tf/VerticalMoveD_Cosine/Value
+
+#3. Beam energy changing for tracking target
+d:Tf/VerticalMoveE_Cosine/Value = -10.0 MeV * Tf/VerticalMoveCosine/Value
+d:Tf/VerticalMoveEnergy/Value   = 155.0 MeV + Tf/VerticalMoveE_Cosine/Value
+d:So/Example/BeamEnergy         = Tf/VerticalMoveEnergy/Value MeV
+
+d:Ge/R80 = Tf/VerticalMoveR80/Value cm
+
+#Fixed target for visual guidance
+d:Ge/R80Fix                 = -140.50 mm
+s:Ge/PlaneAtR80Fix/Parent   = "WaterPhantom"
+s:Ge/PlaneAtR80Fix/Type     = "TsBox"
+s:Ge/PlaneAtR80Fix/Material = "G4_WATER"
+d:Ge/PlaneAtR80Fix/HLX      = 5.0 cm
+d:Ge/PlaneAtR80Fix/HLY      = 5.0 cm
+d:Ge/PlaneAtR80Fix/HLZ      = 0.01 cm
+d:Ge/PlaneAtR80Fix/TransX   = 0. cm
+d:Ge/PlaneAtR80Fix/TransY   = 0. cm
+d:Ge/PlaneAtR80Fix/TransZ   = Ge/WaterPhantom/HLZ + Ge/R80Fix cm
+d:Ge/PlaneAtR80Fix/RotX     = 0.0 deg
+d:Ge/PlaneAtR80Fix/RotY     = 0.0 deg
+d:Ge/PlaneAtR80Fix/RotZ     = 0.0 deg
+s:Ge/PlaneAtR80Fix/Color    = "green"
+i:Ge/PlaneAtR80Fix/XBins    = 1
+i:Ge/PlaneAtR80Fix/YBins    = 1
+i:Ge/PlaneAtR80Fix/ZBins    = 1
+
+d:Gr/ViewA/Theta            = 90 deg
+d:Gr/ViewA/Phi              = 0 deg
+s:Gr/ViewA/Projection       = "Perspective"
+d:Gr/ViewA/PerspectiveAngle = 20 deg
+u:Gr/ViewA/Zoom             = 10

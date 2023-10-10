@@ -1,0 +1,57 @@
+# Demonstrates binning by R, Phi and Z in a cylinder
+
+s:Ge/World/Material    = "Vacuum"
+d:Ge/World/HLX         = 1.0 m
+d:Ge/World/HLY         = 1.0 m
+d:Ge/World/HLZ         = 1.0 m
+d:Ge/World/MaxStepSize = 1.0 m
+
+s:Ge/ScoringCylinder/Type     = "TsCylinder"
+s:Ge/ScoringCylinder/Parent   = "World"
+s:Ge/ScoringCylinder/Material = "G4_WATER"
+d:Ge/ScoringCylinder/RMin     = 2. cm
+d:Ge/ScoringCylinder/RMax     = 40. cm
+d:Ge/ScoringCylinder/HL       = 40. cm
+d:Ge/ScoringCylinder/SPhi     = 0. deg
+d:Ge/ScoringCylinder/DPhi     = 360. deg
+i:Ge/ScoringCylinder/RBins    = 6
+i:Ge/ScoringCylinder/PhiBins  = 6
+i:Ge/ScoringCylinder/ZBins    = 6
+
+s:Sc/MyScorer/Quantity                  = "EnergyDeposit"
+s:Sc/MyScorer/Component                 = "ScoringCylinder"
+s:Sc/MyScorer/OutputFile                = "Energy_Test"
+s:Sc/MyScorer/OutputType                = "csv"
+b:Sc/MyScorer/OutputToConsole           = "False"
+s:Sc/MyScorer/IfOutputFileAlreadyExists = "Overwrite"
+
+s:Gr/ViewA/Type                             = "OpenGL"
+i:Gr/ViewA/WindowSizeX                      = 1024
+i:Gr/ViewA/WindowSizeY                      = 768
+d:Gr/ViewA/Theta                            = 55 deg
+d:Gr/ViewA/Phi                              = 20 deg
+s:Gr/ViewA/Projection                       = "Perspective"
+d:Gr/ViewA/PerspectiveAngle                 = 30 deg
+u:Gr/ViewA/Zoom                             = 2.
+b:Gr/ViewA/HiddenLineRemovalForTrajectories = "True"
+
+s:So/Example/Type                     = "Beam"
+s:So/Example/Component                = "BeamPosition"
+s:So/Example/BeamParticle             = "proton"
+d:So/Example/BeamEnergy               = 169.23 MeV
+u:So/Example/BeamEnergySpread         = 0.757504
+s:So/Example/BeamPositionDistribution = "Gaussian"
+s:So/Example/BeamPositionCutoffShape  = "Ellipse"
+d:So/Example/BeamPositionCutoffX      = 10. cm
+d:So/Example/BeamPositionCutoffY      = 10. cm
+d:So/Example/BeamPositionSpreadX      = 0.65 cm
+d:So/Example/BeamPositionSpreadY      = 0.65 cm
+s:So/Example/BeamAngularDistribution  = "Gaussian"
+d:So/Example/BeamAngularCutoffX       = 90. deg
+d:So/Example/BeamAngularCutoffY       = 90. deg
+d:So/Example/BeamAngularSpreadX       = 0.0032 rad
+d:So/Example/BeamAngularSpreadY       = 0.0032 rad
+i:So/Example/NumberOfHistoriesInRun   = 1000
+
+i:Ts/ShowHistoryCountAtInterval = 100
+b:Ts/PauseBeforeQuit = "True"

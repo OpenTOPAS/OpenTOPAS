@@ -1,0 +1,128 @@
+# This is the top-level TOPAS parameter control file used to simulate a linear
+# accelerator treatment head. The linac is modeled after a Siemens Oncor machine.
+#
+# The exit window, target and monitor chamber are largely from Jabbari et al,
+# "Monte Carlo simulation of Siemens ONCOR linear accelerator with BEAMnrc and
+# DOSXYnrc code," J Med Signals & Sensors, 3(3):172-9, 2013.
+#
+# The water channel thickness in the exit window, source details and the rest
+# of the geometry are from Sawkey and Faddegon, "Simulation of large x-ray fields
+# using independently measured source and geometry details," Med Phys 36(12):5622-32
+# and references therein, supplemented with direct measurement.
+#
+# Treatment head components are positioned at distance from source according to SAD.
+#
+# Example prepared by KyungDon Choi, Jose Ramos Mendez and Bruce Faddegon. May 28, 2021.
+
+# Uncomment one and only one of the following four includeFile lines:
+includeFile = FullTxHead.txt
+#includeFile = FixedTxHead.txt
+#includeFile = Field.txt
+#includeFile = TestComponent.txt
+#
+# FullTxHead.txt
+#    Simulates the full treatment head, from the exit window of the waveguide
+#    through to the isocenter. Change gantry, collimator and couch angles and
+#    field size settings from defaults set in the includeFile files included
+#    in FullTxHead.txt. Does not contain any scoring.
+#
+# FixedTxHead.txt
+#    Simulates the fixed components of the treatment head from the exit window
+#    to just upstream of the jaws. Scores phase space.
+#
+# Field.txt
+#    Simulates the movable components of the treatment head, including Gantry,
+#    collimator angle, jaw and MLC leaves. Change gantry, collimator and couch 
+#    angles and field size settings from defaults set in the includeFile files 
+#    included in Field.txt. Scores dose distributions.
+#
+# TestComponent.txt
+#    Displays one or more of the linac components in the GUI. Change parameter
+#    values in the includeFile files (these contain the default values). 
+
+# The above four includeFiles in turn include one or more of the following:
+# Target.txt: Exit window and target
+# Flattener.txt: Primary collimator and flattening filter
+# Monitor.txt: Monitor chamber  
+# Jaws.txt: Pair of asymmetric beam-defining jaws
+# MLC.txt: Opposing banks of doubly-diverging MLC leaves of different widths and travel
+# PhaseSpace.txt: Phase-space scored on plane perpendicular to beam axis
+# WaterPhantom.txt: Voxelized water phantom for scoring dose distributions
+# Pelvis.txt: DICOM pelvic phantom
+# LinacDefaults.txt: Default field and patient specific parameters
+
+# Parameter Descriptions
+# IEC 61217 co-ordinates are used in this example. See the TOPAS user guide for details
+# Axis names Xa, Ya, Za, rotation angles RotXa, RotYa, RotZa "a" from IEC as follows:
+#   Fixed system IEC_F, parent Geant4 world - e.g. Xf; (Xf,Yf,Zf) is world (-Z,-X,Y) 
+#   Gantry system IEC_G, parent IEC_F - e.g. Xg; Gantry rotates about Yg by IEC_G/RotY
+#   Beam limiting system IEC_B, parent IEC_G; Collimator rotates about Zb by IEC_B/RotZ
+#   Patient support system (couch) IEC_S, parent IEC_F - couch rotates by RotZs
+#   In this example, table top eccentric rotation and translation combined with patient 
+#   Patient (in this example, DICOM CT image) IECp, parent IEC_S - rotate about all axes
+#
+# HLX/Y/Z: half length of X/Y/Z axes
+# TransX/Y/Z: translation of X/Y/Z axes relative to co-ordinates of parent
+# RotX/Y/Z: rotation of X/Y/Z axes relative to co-ordinates of parent
+
+# The parameters in this TOPAS control file need not be changed.
+# Parameters the user may wish to adjust are in the includeFile included above.
+
+# Graphics
+iv:Gr/Color/TransparentRed  = 4 255 0 255 200
+iv:Gr/Color/TransparentBlue = 4 0 0 255 200
+
+s:Gr/ViewA/Type              = "OpenGL"
+i:Gr/ViewA/WindowSizeX       = 1400
+i:Gr/ViewA/WindowSizeY       = 700
+u:Gr/ViewA/Zoom              = 1.0
+d:Gr/ViewA/Theta             = 89 deg
+d:Gr/ViewA/Phi               = -90 deg
+b:Gr/ViewA/IncludeAxes       = "True"
+d:Gr/ViewA/AxesSize          = 10 cm
+
+# Geometry
+s:Ge/World/Material         = "Air"
+d:Ge/World/HLX              = 1.25 m
+d:Ge/World/HLY              = 1.25 m
+d:Ge/World/HLZ              = 1.25 m
+b:Ge/World/Invisible        = "True"
+
+# Fixed system IEC_F, parent Geant4 world - e.g. Xf; (Xf,Yf,Zf) is world (X,Y,Z)
+s:Ge/IEC_F/Parent           = "World"
+s:Ge/IEC_F/Type             = "Group"
+d:Ge/IEC_F/TransX           = 0.0 cm
+d:Ge/IEC_F/TransY           = 0.0 cm
+d:Ge/IEC_F/TransZ           = 0.0 cm
+
+# Gantry system IEC_G, parent IEC_F - e.g. Xg; Gantry rotates about Yg by IEC_G/RotY
+# Gantry rotation, if any, is applied in the includeFile (see above)
+s:Ge/IEC_G/Parent           = "IEC_F"
+s:Ge/IEC_G/Type             = "Group"
+d:Ge/IEC_G/TransX           = 0. m
+d:Ge/IEC_G/TransY           = 0. m
+d:Ge/IEC_G/TransZ           = 0. m
+
+# Beam limiting system IEC_B, parent IEC_G - e.g. Xb; Collimator rotates about Zb by IEC_B/RotZ
+# Collimator rotation, if any, is applied in the includeFile (see above)
+s:Ge/IEC_B/Parent           = "IEC_G"
+s:Ge/IEC_B/Type             = "Group"
+d:Ge/IEC_B/TransX           = 0. m
+d:Ge/IEC_B/TransY           = 0. m
+d:Ge/IEC_B/TransZ           = 0. m
+
+# Patient support system (couch) IEC_S, parent IEC_F - couch rotates by RotZs
+# Couch rotation, if any, is applied in the includeFile (see above)
+s:Ge/IEC_S/Parent           = "IEC_F"
+s:Ge/IEC_S/Type             = "Group"
+d:Ge/IEC_S/TransX           = 0. m
+d:Ge/IEC_S/TransY           = 0. m
+d:Ge/IEC_S/TransZ           = 0. m
+
+# Physics
+sv:Ph/Default/Modules       = 1 "g4em-standard_opt4"
+
+# Overall TOPAS control
+Ts/NumberOfThreads          = 1 # Change to 0 to use all available threads
+b:Ts/ShowCPUTime            = "True"
+b:Ts/PauseBeforeQuit        = Gr/Enable

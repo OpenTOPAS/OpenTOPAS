@@ -1,0 +1,36 @@
+# Phase space scored on plane perpendicular to beam axis Zg
+
+##################### Key Parameters In ScorePhaseSpace.txt ##########################
+# Parameters marked with "^" are set to be changeable in the TOPAS GUI
+# ^Pos: Distance along beam axis Zg from the nominal target position (defined by SAD)
+# HLX/Y/Z: Half lengths of voxels used for scoring
+# X/YBins: Number of bins in IEC_G Xg and Yg
+# TransX/Y/Z: Distance from IEC_G origin to center of scoring region in Xg, Yg, Zg
+# RotX/Y/Z: Rotation of scoring region in Xg, Yg, Zg
+######################################################################################
+
+includeFile = LinacDefaults.txt #Values in LinacDafaults.txt overriden in Field.txt
+
+s:Ge/VacFilm/Type     = "TsBox"
+s:Ge/VacFilm/Parent   = "IEC_G"
+s:Ge/VacFilm/Material = "G4_AIR"
+d:Ge/VacFilm/HLX      = 10.0 cm
+d:Ge/VacFilm/HLY      = 10.0 cm
+d:Ge/VacFilm/HLZ      = 0.05 cm
+d:Ge/VacFilm/TransX   = 0. cm
+d:Ge/VacFilm/TransY   = 0. cm
+dc:Ge/VacFilm/Pos     = 19.0 cm
+d:Ge/VacFilm/TransZ   = Ge/SAD - Ge/VacFilm/Pos cm
+d:Ge/VacFilm/RotX     = 0. deg
+d:Ge/VacFilm/RotY     = 0. deg
+d:Ge/VacFilm/RotZ     = 0. deg
+s:Ge/VacFilm/Color    = "skyblue"
+
+s:Sc/PhaseSpaceAtVacFilm/Quantity                    = "PhaseSpace"
+b:Sc/PhaseSpaceAtVacFilm/OutputToConsole             = "False"
+s:Sc/PhaseSpaceAtVacFilm/Surface                     = "VacFilm/ZPlusSurface"
+s:Sc/PhaseSpaceAtVacFilm/OutputType                  = "ASCII" # ASCII, Binary, Limited or ROOT
+s:Sc/PhaseSpaceAtVacFilm/IfOutputFileAlreadyExists   = "Exit" # "Exit", "Overwrite" or "Increment"
+s:Sc/PhaseSpaceAtVacFilm/OutputFile                  = "PhaseSpaceFixed"
+i:Sc/PhaseSpaceAtVacFilm/OutputBufferSize            = 1000
+

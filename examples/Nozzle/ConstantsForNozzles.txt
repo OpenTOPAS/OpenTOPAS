@@ -1,0 +1,94 @@
+# These values are used in all of the nozzle examples.
+
+#All coordination information comes from TsDefaultParameters.
+#IEC 61217 compliance
+
+#Fixed Reference system (If)     => World volume
+#Gantry coordination system (Ig) => GantryCoordination
+#Source coordination system (S)  => BeamPosition rotateX(180), Z position w.r.t GantryCoordination
+#Beam source coordinate system rotate 180 and translate along z w.r.t g.
+#-> Y is -Y. we have to flip phase space data.
+#Isocenter coordination system (Io)
+
+d:Ge/World/HLX = 1. m
+d:Ge/World/HLY = 1. m
+d:Ge/World/HLZ = 3. m
+
+#S2I
+#d:Ge/S2I = 3.0 m
+
+#Gantry coordination system (Ig)
+s:Ge/Gantry/Parent = "World"
+s:Ge/Gantry/Type   = "Group"
+d:Ge/Gantry/TransX = 0. m
+d:Ge/Gantry/TransY = 0. m
+d:Ge/Gantry/TransZ = 0. m
+d:Ge/Gantry/RotX   = 0. deg
+d:Ge/Gantry/RotY   = 0. deg
+d:Ge/Gantry/RotZ   = 0. deg
+
+# Default Beam position
+s:Ge/BeamPosition/Parent = "Gantry"
+s:Ge/BeamPosition/Type   = "Group"
+d:Ge/BeamPosition/TransX = 0. m
+d:Ge/BeamPosition/TransY = 0. m
+d:Ge/BeamPosition/TransZ = 3.0 m
+d:Ge/BeamPosition/RotX   = 180. deg
+d:Ge/BeamPosition/RotY   = 0. deg
+d:Ge/BeamPosition/RotZ   = 0. deg
+
+b:Ts/ShowCPUTime                  = "true"
+i:Ts/ShowHistoryCountAtInterval   = 0
+b:Ts/ShowHistoryCountOnSingleLine = "False"
+
+########################################
+#Material
+#NitrogenGas for Chamber
+#HeliumGas   for Pipe
+########################################
+sv:Ma/NiGas/Components = 1 "Nitrogen"
+uv:Ma/NiGas/Fractions  = 1 1.0
+d:Ma/NiGas/Density     = 0.001251 g/cm3
+#0.001251 g/cm3 (gas, 0 C, 101.325 kPa)
+
+sv:Ma/HeGas/Components = 1 "Helium"
+uv:Ma/HeGas/Fractions  = 1 1.0
+d:Ma/HeGas/Density     = 0.000166322 g/cm3
+
+sv:Ma/Gold/Components          = 1 "Gold"
+uv:Ma/Gold/Fractions           = 1 1.0
+d:Ma/Gold/Density              = 19.3 g/cm3
+d:Ma/Gold/MeanExcitationEnergy = 790.0 eV
+s:Ma/Gold/DefaultColor         = "orange"
+
+sv:Ma/CompensatorLucite/Components          = 3 "Hydrogen" "Carbon" "Oxygen"
+uv:Ma/CompensatorLucite/Fractions           = 3 0.080538 0.599848 0.319614
+d:Ma/CompensatorLucite/Density              = 1.181 g/cm3
+d:Ma/CompensatorLucite/MeanExcitationEnergy = 74.0 eV
+s:Ma/CompensatorLucite/DefaultColor         = "grey"
+
+
+########################################
+# Dummy beam
+########################################
+s:So/Example/Type                     = "Beam"
+s:So/Example/Component                = "BeamPosition"
+s:So/Example/BeamParticle             = "proton"
+d:So/Example/BeamEnergy               = 160.0 MeV
+u:So/Example/BeamEnergySpread         = 0.0
+s:So/Example/BeamPositionDistribution = "None"
+s:So/Example/BeamAngularDistribution  = "None"
+i:So/Example/NumberOfHistoriesInRun   = 10
+
+
+########################################
+# Physics
+########################################
+sv:Ph/Default/Modules = 1 "g4em-standard_opt0"
+
+i:Tf/Verbosity = 1
+
+########################################
+# Sequence control
+########################################
+b:Ts/PauseBeforeSequence = "F"

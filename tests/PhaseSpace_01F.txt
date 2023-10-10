@@ -1,0 +1,4 @@
+includeFile = PhaseSpace_01A.txt
+
+#--- Scoring
+s:Sc/PHSP/OutputType = "ROOT"

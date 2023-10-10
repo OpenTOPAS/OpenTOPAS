@@ -1,0 +1,27 @@
+# 
+includeFile = Optical_Globals.txt
+
+# Surface used to detect optical photons
+s:Su/SurfaceDetector/Type                = "dielectric_metal"
+s:Su/SurfaceDetector/Finish              = "polished"
+s:Su/SurfaceDetector/Model               = "unified"
+dv:Su/SurfaceDetector/Efficiency/Energies   = 2 1.6 7.2 eV
+uv:Su/SurfaceDetector/Efficiency/Values     = 2 0.2 0.2 
+dv:Su/SurfaceDetector/Reflectivity/Energies = 2 1.6 4.2 eV
+uv:Su/SurfaceDetector/Reflectivity/Values   = 2 0.0 0.0
+
+s:Ge/Photocathode/OpticalBehavior = "SurfaceDetector"
+
+# SCORER
+
+s:Sc/OpticalCount/Quantity                   = "OpticalPhotonCount"
+s:Sc/OpticalCount/Component                  = "Photocathode"
+s:Sc/OpticalCount/OutputType                 = "Ascii"
+s:Sc/OpticalCount/OutputFile                 = "Scoring_07"
+s:Sc/OpticalCount/IfOutputFileAlreadyExists  = "Overwrite"
+i:Sc/OpticalCount/BounceLimit                = 1000000
+
+i:So/Default/NumberOfHistoriesInRun   = 10
+
+
+

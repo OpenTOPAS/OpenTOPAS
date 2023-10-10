@@ -1,0 +1,43 @@
+# Score charge in a sphere
+
+s:Ge/World/Material  = "Vacuum"
+d:Ge/World/HLX       = 2.0 m
+d:Ge/World/HLY       = 2.0 m
+d:Ge/World/HLZ       = 2.0 m
+b:Ge/World/Invisible = "TRUE"
+
+s:Ge/Sphere/Type         = "TsSphere"
+s:Ge/Sphere/Parent       = "World"
+s:Ge/Sphere/Material     = "Air"
+d:Ge/Sphere/RMax         = 55.0 cm
+s:Ge/Sphere/DrawingStyle = "FullWireFrame"
+
+s:Sc/Charge/Quantity                          = "Charge"
+s:Sc/Charge/Component                         = "Sphere"
+b:Sc/Charge/OutputToConsole                   = "TRUE"
+s:Sc/Charge/IfOutputFileAlreadyExists         = "Overwrite"
+sv:Sc/Charge/OnlyIncludeParticlesNamed        = 1 "proton"
+#s:Sc/Charge/OnlyIncludeParticlesOfGeneration  = "secondary"
+
+s:Gr/ViewA/Type = "OpenGL"
+
+s:So/Example/Type                     = "Beam"
+s:So/Example/Component                = "BeamPosition"
+s:So/Example/BeamParticle             = "proton"
+d:So/Example/BeamEnergy               = 169.23 MeV
+u:So/Example/BeamEnergySpread         = 0.757504
+s:So/Example/BeamPositionDistribution = "Gaussian"
+s:So/Example/BeamPositionCutoffShape  = "Ellipse"
+d:So/Example/BeamPositionCutoffX      = 10. cm
+d:So/Example/BeamPositionCutoffY      = 10. cm
+d:So/Example/BeamPositionSpreadX      = 0.65 cm
+d:So/Example/BeamPositionSpreadY      = 0.65 cm
+s:So/Example/BeamAngularDistribution  = "Gaussian"
+d:So/Example/BeamAngularCutoffX       = 90. deg
+d:So/Example/BeamAngularCutoffY       = 90. deg
+d:So/Example/BeamAngularSpreadX       = 0.0032 rad
+d:So/Example/BeamAngularSpreadY       = 0.0032 rad
+i:So/Example/NumberOfHistoriesInRun   = 500
+
+i:Ts/ShowHistoryCountAtInterval = 10
+b:Ts/PauseBeforeQuit = "True"

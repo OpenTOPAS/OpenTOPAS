@@ -1,0 +1,101 @@
+# Create a variety of energy histograms
+
+s:Ge/World/Material  = "Vacuum"
+d:Ge/World/HLX       = 2.0 m
+d:Ge/World/HLY       = 2.0 m
+d:Ge/World/HLZ       = 2.0 m
+b:Ge/World/Invisible = "TRUE"
+
+s:Ge/Phantom/Type     = "TsBox"
+s:Ge/Phantom/Parent   = "World"
+s:Ge/Phantom/Material = "Lead"
+d:Ge/Phantom/HLX      = 30.0 cm
+d:Ge/Phantom/HLY      = 30.0 cm
+d:Ge/Phantom/HLZ      = 10.0 cm
+d:Ge/Phantom/TransX   = 0. cm
+d:Ge/Phantom/TransY   = 0. cm
+d:Ge/Phantom/TransZ   = -30. cm
+d:Ge/Phantom/RotX     = 0. deg
+d:Ge/Phantom/RotY     = 0. deg
+d:Ge/Phantom/RotZ     = 0. deg
+s:Ge/Phantom/Color    = "blue"
+
+s:Sc/DoseAtPhantom/Quantity                     = "EnergyDeposit"
+s:Sc/DoseAtPhantom/Component                    = "Phantom"
+b:Sc/DoseAtPhantom/OutputToConsole              = "TRUE"
+s:Sc/DoseAtPhantom/IfOutputFileAlreadyExists    = "Overwrite"
+s:Sc/DoseAtPhantom/OutputType                   = "Root"
+i:Sc/DoseAtPhantom/HistogramBins                = 10
+d:Sc/DoseAtPhantom/HistogramMin                 = 0. MeV
+d:Sc/DoseAtPhantom/HistogramMax                 = 200. MeV
+
+s:Sc/DoseAtPhantomByX/Quantity                  = "EnergyDeposit"
+s:Sc/DoseAtPhantomByX/Component                 = "Phantom"
+b:Sc/DoseAtPhantomByX/OutputToConsole           = "TRUE"
+s:Sc/DoseAtPhantomByX/IfOutputFileAlreadyExists = "Overwrite"
+s:Sc/DoseAtPhantomByX/OutputType                = "Root"
+i:Sc/DoseAtPhantomByX/XBins                     = 10
+i:Sc/DoseAtPhantomByX/HistogramBins             = 10
+d:Sc/DoseAtPhantomByX/HistogramMin              = 0. MeV
+d:Sc/DoseAtPhantomByX/HistogramMax              = 200. MeV
+
+s:Sc/DoseAtPhantomByY/Quantity                  = "EnergyDeposit"
+s:Sc/DoseAtPhantomByY/Component                 = "Phantom"
+b:Sc/DoseAtPhantomByY/OutputToConsole           = "TRUE"
+s:Sc/DoseAtPhantomByY/IfOutputFileAlreadyExists = "Overwrite"
+s:Sc/DoseAtPhantomByY/OutputType                = "Root"
+i:Sc/DoseAtPhantomByY/YBins                     = 10
+i:Sc/DoseAtPhantomByY/HistogramBins             = 10
+d:Sc/DoseAtPhantomByY/HistogramMin              = 0. MeV
+d:Sc/DoseAtPhantomByY/HistogramMax              = 200. MeV
+
+s:Sc/DoseAtPhantomByZ/Quantity                  = "EnergyDeposit"
+s:Sc/DoseAtPhantomByZ/Component                 = "Phantom"
+b:Sc/DoseAtPhantomByZ/OutputToConsole           = "TRUE"
+s:Sc/DoseAtPhantomByZ/IfOutputFileAlreadyExists = "Overwrite"
+s:Sc/DoseAtPhantomByZ/OutputType                = "Root"
+i:Sc/DoseAtPhantomByZ/ZBins                     = 10
+i:Sc/DoseAtPhantomByZ/HistogramBins             = 10
+d:Sc/DoseAtPhantomByZ/HistogramMin              = 0. MeV
+d:Sc/DoseAtPhantomByZ/HistogramMax              = 200. MeV
+
+s:Sc/DoseAtPhantomByE/Quantity                  = "EnergyDeposit"
+s:Sc/DoseAtPhantomByE/Component                 = "Phantom"
+b:Sc/DoseAtPhantomByE/OutputToConsole           = "TRUE"
+s:Sc/DoseAtPhantomByE/IfOutputFileAlreadyExists = "Overwrite"
+s:Sc/DoseAtPhantomByE/OutputType                = "Root"
+i:Sc/DoseAtPhantomByE/EBins                     = 10
+d:Sc/DoseAtPhantomByE/EBinMax                   = 200. MeV
+i:Sc/DoseAtPhantomByE/HistogramBins             = 10
+d:Sc/DoseAtPhantomByE/HistogramMin              = 0. MeV
+d:Sc/DoseAtPhantomByE/HistogramMax              = 200. MeV
+
+#s:Gr/ViewA/Type            = "OpenGL"
+i:Gr/ViewA/WindowSizeX      = 900
+i:Gr/ViewA/WindowSizeY      = 900
+d:Gr/ViewA/Theta            = 55 deg
+d:Gr/ViewA/Phi              = 20 deg
+s:Gr/ViewA/Projection       = "Perspective"
+d:Gr/ViewA/PerspectiveAngle = 30 deg
+u:Gr/ViewA/Zoom             = 1.3
+b:Gr/ViewA/HiddenLineRemovalForTrajectories = "True"
+
+s:So/Example/Type                     = "Beam"
+s:So/Example/Component                = "BeamPosition"
+s:So/Example/BeamParticle             = "proton"
+d:So/Example/BeamEnergy               = 169.23 MeV
+u:So/Example/BeamEnergySpread         = 0.757504
+s:So/Example/BeamPositionDistribution = "Gaussian"
+s:So/Example/BeamPositionCutoffShape  = "Ellipse"
+d:So/Example/BeamPositionCutoffX      = 10. cm
+d:So/Example/BeamPositionCutoffY      = 10. cm
+d:So/Example/BeamPositionSpreadX      = 0.65 cm
+d:So/Example/BeamPositionSpreadY      = 0.65 cm
+s:So/Example/BeamAngularDistribution  = "Gaussian"
+d:So/Example/BeamAngularCutoffX       = 90. deg
+d:So/Example/BeamAngularCutoffY       = 90. deg
+d:So/Example/BeamAngularSpreadX       = 0.0032 rad
+d:So/Example/BeamAngularSpreadY       = 0.0032 rad
+i:So/Example/NumberOfHistoriesInRun   = 10000
+
+i:Ts/ShowHistoryCountAtInterval = 100

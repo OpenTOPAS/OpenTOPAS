@@ -1,0 +1,36 @@
+includeFile = UCSF_Beamline_Propeller24.txt UCSF_WaterPhantom.txt 
+
+# ===============================================#
+# WaterColumn thickness adjustment to define Range
+# ===============================================#
+Ge/WaterColumn/Thickness = 4.0 mm
+
+# ===============================================#
+# Execution mode setting (RandomJob & SequentialJob)
+# ===============================================#
+Tf/TimelineEnd = Tf/TimeOfPropellerRotation ms
+Tf/NumberOfSequentialTimes = Tf/UCSF_NbTimes 
+
+b:Tf/RandomizeTimeDistribution = "True"
+
+So/Default/NumberOfHistoriesInRun  = 100 * Tf/UCSF_NbHistoriesInRun
+i:So/Default/NumberOfHistoriesInRandomJob = 15625
+b:Ts/ShowCPUTime = "True"
+
+Ts/PauseBeforeQuit = "False"
+
+# ===============================================#
+# Water phantom. voxelization for scoring
+# Scoring option
+# ===============================================#
+i:Ge/WaterPhantom/XBins=1
+i:Ge/WaterPhantom/YBins=1
+i:Ge/WaterPhantom/ZBins=80
+
+s:Sc/DoseAtWaterPhantom/Quantity    = "DoseToMedium"
+s:Sc/DoseAtWaterPhantom/Component   = "WaterPhantom"
+s:Sc/DoseAtWaterPhantom/OutputFile  = "SOBP24_R28"
+s:Sc/DoseAtWaterPhantom/OutputType  = "binary"
+b:Sc/DoseAtWaterPhantom/OutputToConsole = "False"
+b:Sc/DoseAtWaterPhantom/Visualize   = "True"
+s:Sc/DoseAtWaterPhantom/IfOutputFileAlreadyExists = "Overwrite"

@@ -1,0 +1,46 @@
+#                                                          #
+#  Example: Dose scoring using the Track-Length Estimator  #
+#           TG186 source inside the TG186 applicator       #
+#           Water cube of 50 cm side                       #
+#           Centered dose grid                             #
+#                                                          #
+#                                                          #
+#                Latest version - May 2021                 #
+#                Author: Francisco Berumen                 #
+#              Contact - fberumenm@gmail.com               #
+#       https://doi.org/10.1016/j.brachy.2020.12.007       #
+#                                                          #
+
+##### Import the source inside the applicator ##### 
+includeFile = HDRSourceInApplicator.txt
+
+##### Scorer geometry ######
+s:Ge/DoseGrid/Type       = "TsBox"
+s:Ge/DoseGrid/Parent     = "World"
+d:Ge/DoseGrid/HLX        =  10.05 cm
+d:Ge/DoseGrid/HLY        =  10.05 cm
+d:Ge/DoseGrid/HLZ        =  10.05 cm
+s:Ge/DoseGrid/Color      =  "red"
+b:Ge/DoseGrid/IsParallel = "T"
+i:Ge/DoseGrid/XBins      = 201
+i:Ge/DoseGrid/YBins      = 201
+i:Ge/DoseGrid/ZBins      = 201
+
+##### Dose scoring using the TLE ####
+s:Sc/DoseOnRTGrid/Quantity                   = "TrackLengthEstimator"
+sv:Sc/DoseOnRTGrid/Report                    = 1 "Sum"
+s:Sc/DoseOnRTGrid/InputFile                  = "Muen.dat"
+s:Sc/DoseOnRTGrid/Component                  = "DoseGrid"
+b:Sc/DoseOnRTGrid/OutputToConsole            = "F"
+s:Sc/DoseOnRTGrid/IfOutputFileAlreadyExists  = "Increment"
+s:Sc/DoseOnRTGrid/OutputType                 = "DICOM"
+b:Sc/DoseOnRTGrid/DICOMOutput32BitsPerPixel  = "True"
+s:Sc/DoseOnRTGrid/OutputFile                 = "DoseTLE"
+sv:Sc/DoseOnRTGrid/OnlyIncludeParticlesNamed = 1 "gamma"
+
+##### Local energy deposition of electrons
+d:Ph/Default/CutForElectron = 10 cm
+
+##### Run 10000 histories
+b:Gr/Enable = "F"
+i:So/Source/NumberOfHistoriesInRun = 10000

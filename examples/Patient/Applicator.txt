@@ -1,0 +1,278 @@
+# Set world material to lead so that test particles
+# stop right away, making it easy to just see all the
+# starting positions of the particles.
+
+Ge/World/HLX = 50. cm
+Ge/World/HLY = 50. cm
+Ge/World/HLZ = 50. cm
+Ge/World/Material = "G4_WATER"
+b:Ge/World/Invisible = "True"
+
+# If using water phantom
+s:Ge/Patient/Type = "TsBox"
+s:Ge/Patient/Parent = "World"
+s:Ge/Patient/Material = "G4_WATER"
+d:Ge/Patient/HLX = 4. cm
+d:Ge/Patient/HLY = 4. cm
+d:Ge/Patient/HLZ = 4. cm
+#i:Ge/Patient/XBins = 10
+#i:Ge/Patient/YBins = 10
+#i:Ge/Patient/ZBins = 5
+
+# If using real DICOM
+#s:Ge/Patient/Type = "TsDicomPatient"
+#s:Ge/Patient/Parent = "World"
+d:Ge/Patient/TransX = 0. cm
+d:Ge/Patient/TransY = 0. cm
+d:Ge/Patient/TransZ = 0. cm
+d:Ge/Patient/RotX               = 0. deg
+d:Ge/Patient/RotY               = 0. deg
+d:Ge/Patient/RotZ               = 0. deg
+s:Ge/Patient/DicomDirectory     = "Abdomen"
+sv:Ge/Patient/DicomModalityTags = 1 "CT"
+includeFile = HUtoMaterialSchneider.txt
+
+# Scoring
+s:Sc/Dose/Quantity                  = "DoseToMedium"
+s:Sc/Dose/Component                 = "Patient"
+s:Sc/Dose/IfOutputFileAlreadyExists = "Overwrite"
+s:Sc/Dose/OutputType                = "DICOM"
+b:Sc/Dose/DICOMOutput32BitsPerPixel = "True"
+
+# Applicator Geometry
+s:Ge/Applicator/Type = "TsBrachyApplicator"
+s:Ge/Applicator/Parent = "Patient"
+b:Ge/Applicator/IsParallel = "True"
+s:Ge/Applicator/Material = "G4_WATER"
+d:Ge/Applicator/CylinderLength = 40. mm
+d:Ge/Applicator/Radius = 12.5 mm
+i:Ge/Applicator/NumberOfRadialHoles = 6
+d:Ge/Applicator/HoleOffset = 6 mm
+d:Ge/Applicator/HoleRadius = 1.2 mm
+s:Ge/Applicator/DrawingStyle = "Solid"
+s:Ge/Applicator/Color = "transparentgrey"
+iv:Gr/Color/transparentgrey = 4 255 255 255 90
+
+# The following parameters are updated automatically
+# by the applicator component to show true hole centers.
+# They need to be defined here, but these initial values
+# are not important
+dc:Ge/Applicator/Hole0/TransX = 0. mm
+dc:Ge/Applicator/Hole0/TransY = 0. mm
+dc:Ge/Applicator/Hole1/TransX = 0. mm
+dc:Ge/Applicator/Hole1/TransY = 0. mm
+dc:Ge/Applicator/Hole2/TransX = 0. mm
+dc:Ge/Applicator/Hole2/TransY = 0. mm
+dc:Ge/Applicator/Hole3/TransX = 0. mm
+dc:Ge/Applicator/Hole3/TransY = 0. mm
+dc:Ge/Applicator/Hole4/TransX = 0. mm
+dc:Ge/Applicator/Hole4/TransY = 0. mm
+dc:Ge/Applicator/Hole5/TransX = 0. mm
+dc:Ge/Applicator/Hole5/TransY = 0. mm
+dc:Ge/Applicator/Hole6/TransX = 0. mm
+dc:Ge/Applicator/Hole6/TransY = 0. mm
+
+
+# Varian Source wire model VS2000 Geometry
+s:Ge/Wire/Type                 = "TsCylinder"
+s:Ge/Wire/Parent               = "Patient"
+b:Ge/Wire/IsParallel = Ge/Applicator/IsParallel
+s:Ge/Wire/ParallelWorldName = "Applicator"
+
+# These for fixed position
+#d:Ge/Wire/TransX              = Ge/Applicator/Hole1/TransX mm
+#d:Ge/Wire/TransY              = Ge/Applicator/Hole1/TransY mm
+#d:Ge/Wire/TransZ              = 0. mm - Ge/SourcePellets/TransZ # Offset wire so SourcePellets is centered in Patient
+
+# These to have wire move under time feature
+d:Ge/Wire/TransX              = Tf/WireX/Value mm
+d:Ge/Wire/TransY              = Tf/WireY/Value mm
+d:Ge/Wire/TransZ              = Tf/WireZ/Value  - Ge/SourcePellets/TransZ mm # Offset wire so SourcePellets is centered in Patient
+
+s:Ge/Wire/Material             = "G4_AIR"
+d:Ge/Wire/RMax                = .295 mm
+d:Ge/Wire/HalfRMax		= 0.5 * Ge/Wire/RMax mm
+d:Ge/Wire/HL			= Ge/WireCylinder/HL + Ge/Wire/HalfRMax mm
+b:Ge/Wire/Invisible = "True"
+
+s:Ge/WireCylinder/Type         = "TsCylinder"
+s:Ge/WireCylinder/Parent       = "Wire"
+b:Ge/WireCylinder/IsParallel = Ge/Applicator/IsParallel
+s:Ge/WireCylinder/ParallelWorldName = "Applicator"
+s:Ge/WireCylinder/Material    = "TitaniumNickel"
+d:Ge/WireCylinder/RMax        = Ge/Wire/RMax mm
+d:Ge/WireCylinder/HL         = 10.0 mm
+d:Ge/WireCylinder/TransZ      = Ge/Wire/HalfRMax mm
+d:Ge/WireCylinder/DistanceFromEndOfActiveSourceToEndOfCylinder = 1. mm - Ge/Wire/RMax
+s:Ge/WireCylinder/Color         = "blue"
+
+s:Ge/WireTip/Type              = "TsSphere"
+s:Ge/WireTip/Parent            = "Wire"
+b:Ge/WireTip/IsParallel = Ge/Applicator/IsParallel
+s:Ge/WireTip/ParallelWorldName = "Applicator"
+s:Ge/WireTip/Material         = "TitaniumNickel"
+d:Ge/WireTip/RMax             = Ge/Wire/RMax mm
+d:Ge/WireTip/STheta           = 90 deg
+d:Ge/WireTip/DTheta           = 90 deg
+d:Ge/WireTip/NegTransZ           = Ge/WireCylinder/HL - Ge/Wire/HalfRMax mm
+d:Ge/WireTip/TransZ           = -1. * Ge/WireTip/NegTransZ mm
+s:Ge/WireTip/Color = "blue"
+
+s:Ge/SourcePellets/Type         = "TsCylinder"
+s:Ge/SourcePellets/Parent       = "WireCylinder"
+b:Ge/SourcePellets/IsParallel = Ge/Applicator/IsParallel
+s:Ge/SourcePellets/ParallelWorldName = "Applicator"
+s:Ge/SourcePellets/Material    = Ge/Wire/Material
+d:Ge/SourcePellets/RMax        = .17 mm
+d:Ge/SourcePellets/HL          = 2.5 mm
+d:Ge/SourcePellets/OnePelletHL = 0.5 * Ge/SourcePellets/HL mm
+d:Ge/SourcePellets/CylinderHL   = Ge/SourcePellets/OnePelletHL - Ge/SourcePellets/RMax mm
+d:Ge/SourcePellets/Temp1       = Ge/WireCylinder/HL - Ge/SourcePellets/HL mm
+d:Ge/SourcePellets/Temp2       = Ge/SourcePellets/Temp1 - Ge/WireCylinder/DistanceFromEndOfActiveSourceToEndOfCylinder mm
+d:Ge/SourcePellets/TransZ       = -1. * Ge/SourcePellets/Temp2 mm
+b:Ge/SourcePellets/Invisible = "True"
+s:Ge/SourcePellets/Color = "white"
+
+s:Ge/Source1Pellet/Type         = "TsCylinder"
+s:Ge/Source1Pellet/Parent       = "SourcePellets"
+b:Ge/Source1Pellet/IsParallel = Ge/Applicator/IsParallel
+s:Ge/Source1Pellet/ParallelWorldName = "Applicator"
+s:Ge/Source1Pellet/Material    = Ge/Wire/Material
+d:Ge/Source1Pellet/RMax        = Ge/SourcePellets/RMax mm
+d:Ge/Source1Pellet/HL           = Ge/SourcePellets/OnePelletHL mm
+d:Ge/Source1Pellet/TransZ       = Ge/SourcePellets/OnePelletHL mm
+b:Ge/Source1Pellet/Invisible = "True"
+
+s:Ge/Source1Cylinder/Type       = "TsCylinder"
+s:Ge/Source1Cylinder/Parent     = "Source1Pellet"
+b:Ge/Source1Cylinder/IsParallel = Ge/Applicator/IsParallel
+s:Ge/Source1Cylinder/ParallelWorldName = "Applicator"
+s:Ge/Source1Cylinder/Material  = "G4_Ir"
+d:Ge/Source1Cylinder/RMax      = Ge/SourcePellets/RMax mm
+d:Ge/Source1Cylinder/HL        = Ge/SourcePellets/CylinderHL mm
+
+s:Ge/Source1CapPlusZ/Type       = "TsSphere"
+s:Ge/Source1CapPlusZ/Parent     = "Source1Pellet"
+b:Ge/Source1CapPlusZ/IsParallel = Ge/Applicator/IsParallel
+s:Ge/Source1CapPlusZ/ParallelWorldName = "Applicator"
+s:Ge/Source1CapPlusZ/Material  = "G4_Ir"
+d:Ge/Source1CapPlusZ/RMax      = Ge/SourcePellets/RMax mm
+d:Ge/Source1CapPlusZ/STheta    = 0 deg
+d:Ge/Source1CapPlusZ/DTheta	  = 90 deg
+d:Ge/Source1CapPlusZ/TransZ    = Ge/SourcePellets/CylinderHL mm
+
+s:Ge/Source1CapMinusZ/Type      = "TsSphere"
+s:Ge/Source1CapMinusZ/Parent    = "Source1Pellet"
+b:Ge/Source1CapMinusZ/IsParallel = Ge/Applicator/IsParallel
+s:Ge/Source1CapMinusZ/ParallelWorldName = "Applicator"
+s:Ge/Source1CapMinusZ/Material = "G4_Ir"
+d:Ge/Source1CapMinusZ/RMax     = Ge/SourcePellets/RMax mm
+d:Ge/Source1CapMinusZ/STheta   = 90 deg
+d:Ge/Source1CapMinusZ/DTheta	  = 90 deg
+d:Ge/Source1CapMinusZ/TransZ   = -1. * Ge/SourcePellets/CylinderHL mm
+
+s:Ge/Source2Pellet/Type         = "TsCylinder"
+s:Ge/Source2Pellet/Parent       = "SourcePellets"
+b:Ge/Source2Pellet/IsParallel = Ge/Applicator/IsParallel
+s:Ge/Source2Pellet/ParallelWorldName = "Applicator"
+s:Ge/Source2Pellet/Material    = Ge/Wire/Material
+d:Ge/Source2Pellet/RMax        = Ge/SourcePellets/RMax mm
+d:Ge/Source2Pellet/HL           = Ge/SourcePellets/OnePelletHL mm
+d:Ge/Source2Pellet/TransZ      = -1. * Ge/SourcePellets/OnePelletHL mm
+b:Ge/Source2Pellet/Invisible = "True"
+
+s:Ge/Source2Cylinder/Type       = "TsCylinder"
+s:Ge/Source2Cylinder/Parent     = "Source2Pellet"
+b:Ge/Source2Cylinder/IsParallel = Ge/Applicator/IsParallel
+s:Ge/Source2Cylinder/ParallelWorldName = "Applicator"
+s:Ge/Source2Cylinder/Material  = "G4_Ir"
+d:Ge/Source2Cylinder/RMax      = Ge/SourcePellets/RMax mm
+d:Ge/Source2Cylinder/HL        = Ge/SourcePellets/CylinderHL mm
+
+s:Ge/Source2CapPlusZ/Type       = "TsSphere"
+s:Ge/Source2CapPlusZ/Parent     = "Source2Pellet"
+b:Ge/Source2CapPlusZ/IsParallel = Ge/Applicator/IsParallel
+s:Ge/Source2CapPlusZ/ParallelWorldName = "Applicator"
+s:Ge/Source2CapPlusZ/Material  = "G4_Ir"
+d:Ge/Source2CapPlusZ/RMax      = Ge/SourcePellets/RMax mm
+d:Ge/Source2CapPlusZ/STheta    = 0 deg
+d:Ge/Source2CapPlusZ/DTheta	  = 90 deg
+d:Ge/Source2CapPlusZ/TransZ    = Ge/SourcePellets/CylinderHL mm
+
+s:Ge/Source2CapMinusZ/Type      = "TsSphere"
+s:Ge/Source2CapMinusZ/Parent    = "Source2Pellet"
+b:Ge/Source2CapMinusZ/IsParallel = Ge/Applicator/IsParallel
+s:Ge/Source2CapMinusZ/ParallelWorldName = "Applicator"
+s:Ge/Source2CapMinusZ/Material = "G4_Ir"
+d:Ge/Source2CapMinusZ/RMax     = Ge/SourcePellets/RMax mm
+d:Ge/Source2CapMinusZ/STheta   = 90 deg
+d:Ge/Source2CapMinusZ/DTheta	  = 90 deg
+d:Ge/Source2CapMinusZ/TransZ   = -1. * Ge/SourcePellets/CylinderHL mm
+
+sv:Ma/TitaniumNickel/Components  = 2 "Titanium" "Nickel"
+uv:Ma/TitaniumNickel/Fractions   = 2 0.444 0.556
+d:Ma/TitaniumNickel/Density      = 6.5 g/cm3
+s:Ma/TitaniumNickel/DefaultColor ="grass"
+
+
+# Radioactivity
+s:So/Example/Type                     = "Volumetric"
+s:So/Example/Component                = "SourcePellets"
+s:So/Example/ActiveMaterial		= "G4_Ir"
+s:So/Example/BeamParticle             = "gamma"
+i:So/Example/NumberOfHistoriesInRun   = Tf/NumberOfHistoriesInRun/Value
+b:So/Example/RecursivelyIncludeChildren = "True"
+i:So/Example/MaxNumberOfPointsToSample = 1000000000
+
+s:So/Example/BeamEnergySpectrumType       = "Continuous"
+dv:So/Example/BeamEnergySpectrumValues    = 117 0.0614 0.0615 0.0616 0.0629 0.063 0.0631 0.065 0.0651 0.0652 0.0667 0.0668 0.0669 0.071 0.0711 0.0712 0.0713 0.0714 0.0715 0.0733 0.0734 0.0735 0.0753 0.0754 0.0755 0.0756 0.0757 0.0758 0.0777 0.0778 0.0779 0.1103 0.1104 0.1105 0.1362 0.1363 0.1364 0.1769 0.177 0.1771 0.2012 0.2013 0.2014 0.2057 0.2058 0.2059 0.2802 0.2803 0.2804 0.2832 0.2833 0.2834 0.2959 0.296 0.2961 0.3084 0.3085 0.3086 0.3164 0.3165 0.3166 0.3291 0.3292 0.3293 0.3744 0.3745 0.3746 0.4164 0.4165 0.4166 0.4204 0.4205 0.4206 0.468 0.4681 0.4682 0.4845 0.4846 0.4847 0.4852 0.4853 0.4854 0.489 0.4891 0.4892 0.5885 0.5886 0.5887 0.5934 0.5935 0.5936 0.5993 0.5994 0.5995 0.6043 0.6044 0.6045 0.6124 0.6125 0.6126 0.7038 0.7039 0.704 0.7657 0.7658 0.7659 0.8844 0.8845 0.8846 1.0614 1.0615 1.0616 1.0898 1.0899 1.089 1.3781 1.3782 1.3783 MeV
+
+uv:So/Example/BeamEnergySpectrumWeightsUnscaled   = 117
+1e-08 0.412 1e-08 1e-08 0.7039 1e-08 1e-08 1.1309 1e-08 1e-08 1.9178 1e-08 1e-08 0.0827 1e-08 1e-08 0.16 1e-08 1e-08 0.056 1e-08 1e-08 0.2292 1e-08 1e-08 0.4408 1e-08 1e-08 0.157 1e-08 1e-08 0.0042 1e-08 1e-08 0.086 1e-08 1e-08 0.0018 1e-08 1e-08 0.1624 1e-08 1e-08 1.1468 1e-08 1e-08 0.0039 1e-08 1e-08 0.0913 1e-08 1e-08 12.3498 1e-08 1e-08 12.7626 1e-08 1e-08 35.566 1e-08 1e-08 0.006 1e-08 1e-08 0.2493 1e-08 1e-08 0.2877 1e-08 1e-08 0.0237 1e-08 1e-08 20.5587 1e-08 1e-08 1.0942 1e-08 1e-08 0.001 1e-08 1e-08 0.1504 1e-08 1e-08 1.9423 1e-08 1e-08 0.0181 1e-08 1e-08 0.0017 1e-08 1e-08 3.5361 1e-08 1e-08 2.2962 1e-08 1e-08 0.0018 1e-08 1e-08 0.0006 1e-08 1e-08 0.1251 1e-08 1e-08 0.0228 1e-08 1e-08 0.0005 1e-08 1e-08 0.0005 1e-8
+
+# Scale these values to give total weight of 1.
+uv:So/Example/BeamEnergySpectrumWeights   = .0102269 * So/Example/BeamEnergySpectrumWeightsUnscaled
+
+
+# Graphics
+s:Gr/ViewA/Type              = "OpenGL"
+b:Gr/ViewA/IncludeStepPoints = "True"
+d:Gr/ViewA/Phi = 0 deg
+d:Gr/ViewA/Theta = 65 deg
+u:Gr/ViewA/Zoom = 2.
+
+
+# Simplify physics to only require electromagnetics
+# (don't need hadronic physics which is otherwise in default setup)
+sv:Ph/Default/Modules = 1 "g4em-standard_opt0"
+sv:Ph/Default/LayeredMassGeometryWorlds = 1 "Applicator"
+
+
+# Overall run parameters
+i:Ts/ShowHistoryCountAtInterval = 100
+Ts/NumberOfThreads = 1
+
+
+i:Tf/Verbosity               = 2
+d:Tf/TimelineEnd             = 70.0 s
+i:Tf/NumberOfSequentialTimes = 70
+
+s:Tf/WireX/Function           = "Step"
+dv:Tf/WireX/Times             = 7 10. 20. 30. 40. 50. 60. 70. s
+dv:Tf/WireX/Values            = 7 Ge/Applicator/Hole0/TransX Ge/Applicator/Hole1/TransX Ge/Applicator/Hole2/TransX Ge/Applicator/Hole3/TransX Ge/Applicator/Hole4/TransX Ge/Applicator/Hole5/TransX Ge/Applicator/Hole6/TransX mm
+d:Tf/WireX/RepetitionInterval = 70. s
+
+s:Tf/WireY/Function           = "Step"
+dv:Tf/WireY/Times             = 7 10. 20. 30. 40. 50. 60. 70. s
+dv:Tf/WireY/Values            = 7 Ge/Applicator/Hole0/TransY Ge/Applicator/Hole1/TransY Ge/Applicator/Hole2/TransY Ge/Applicator/Hole3/TransY Ge/Applicator/Hole4/TransY Ge/Applicator/Hole5/TransY Ge/Applicator/Hole6/TransY mm
+d:Tf/WireY/RepetitionInterval = 70. s
+
+s:Tf/WireZ/Function           = "Step"
+dv:Tf/WireZ/Times             = 10 1. 2. 3. 4. 5. 6. 7. 8. 9. 10. s
+dv:Tf/WireZ/Values            = 10 -18. -14. -10. -6. -2. 2. 6. 10. 14. 18. mm
+d:Tf/WireZ/RepetitionInterval = 10. s
+
+s:Tf/NumberOfHistoriesInRun/Function           = "Step"
+dv:Tf/NumberOfHistoriesInRun/Times             = 7 10. 20. 30. 40. 50. 60. 70. s
+iv:Tf/NumberOfHistoriesInRun/Values            = 7 70 30 10 10 40 60 70
+d:Tf/NumberOfHistoriesInRun/RepetitionInterval = 70. s

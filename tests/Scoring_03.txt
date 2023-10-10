@@ -1,0 +1,4 @@
+includeFile = Scoring_01.txt
+
+#--- Scoring
+sv:Sc/Dose/Report = 9 "Sum" "Mean" "Histories" "Count_in_bin" "Second_Moment" "Variance" "Standard_Deviation" "Min" "Max"

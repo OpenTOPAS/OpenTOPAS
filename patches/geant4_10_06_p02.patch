@@ -1,0 +1,70 @@
+diff -Naur geant4.10.06.p02/source/geometry/solids/specific/src/G4TessellatedSolid.cc geant4.10.06.p02.patched/source/geometry/solids/specific/src/G4TessellatedSolid.cc
+--- geant4.10.06.p02/source/geometry/solids/specific/src/G4TessellatedSolid.cc	2020-02-14 05:09:36.000000000 -0800
++++ geant4.10.06.p02.patched/source/geometry/solids/specific/src/G4TessellatedSolid.cc	2020-05-27 17:16:11.000000000 -0700
+@@ -1654,20 +1654,22 @@
+                                           const G4ThreeVector& v)const
+ {
+   G4double dist = DistanceToInCore(p,v,kInfinity);
+-#ifdef G4SPECSDEBUG
++//#ifdef G4SPECSDEBUG
+   if (dist < kInfinity)
+   {
+     if (Inside(p + dist*v) != kSurface)
+     {
+       std::ostringstream message;
+-      message << "Invalid response from facet in solid '" << GetName() << "',"
++//      message << "Invalid response from facet in solid '" << GetName() << "',"
++      message << "Calculation error in G4TessellatedSolid::DistanceToIn from facet in solid '" << GetName() << "',"
+               << G4endl
+               << "at point: " << p <<  "and direction: " << v;
+       G4Exception("G4TessellatedSolid::DistanceToIn(p,v)",
+-                  "GeomSolids1002", JustWarning, message);
++//                  "GeomSolids1002", JustWarning, message);
++                  "G4T0001", EventMustBeAborted, message);
+     }
+   }
+-#endif
++//#endif
+   return dist;
+ }
+ 
+@@ -1716,20 +1718,22 @@
+     *norm = n;
+     *validNorm = valid;
+   }
+-#ifdef G4SPECSDEBUG
++//#ifdef G4SPECSDEBUG
+   if (dist < kInfinity)
+   {
+     if (Inside(p + dist*v) != kSurface)
+     {
+       std::ostringstream message;
+-      message << "Invalid response from facet in solid '" << GetName() << "',"
++//      message << "Invalid response from facet in solid '" << GetName() << "',"
++      message << "Calculation error in G4TessellatedSolid::DistanceToOut from facet in solid '" << GetName() << "',"
+               << G4endl
+               << "at point: " << p <<  "and direction: " << v;
+       G4Exception("G4TessellatedSolid::DistanceToOut(p,v,..)",
+-                  "GeomSolids1002", JustWarning, message);
++//                  "GeomSolids1002", JustWarning, message);
++                  "G4T0001", EventMustBeAborted, message);
+     }
+   }
+-#endif
++//#endif
+   return dist;
+ }
+ 
+diff -Naur geant4.10.06.p02/source/processes/electromagnetic/dna/management/include/G4ITFinder.icc geant4.10.06.p02.patched/source/processes/electromagnetic/dna/management/include/G4ITFinder.icc
+--- geant4.10.06.p02/source/processes/electromagnetic/dna/management/include/G4ITFinder.icc	2020-02-14 05:09:34.000000000 -0800
++++ geant4.10.06.p02.patched/source/processes/electromagnetic/dna/management/include/G4ITFinder.icc	2020-05-27 17:25:31.000000000 -0700
+@@ -143,7 +143,8 @@
+           "Bad request : no node found in the IT you are searching "
+           "closest neighbourg for");
+       G4Exception("G4ITManager::FindNearest", "ITManager002",
+-          FatalErrorInArgument, exceptionDescription);
++          JustWarning, exceptionDescription);
++          //FatalErrorInArgument, exceptionDescription);
+       return 0; // coverity
+     }
+ 

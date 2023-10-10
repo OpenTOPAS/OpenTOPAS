@@ -1,0 +1,106 @@
+s:Ge/World/Material  = "Vacuum"
+d:Ge/World/HLX       = 2.0 m
+d:Ge/World/HLY       = 2.0 m
+d:Ge/World/HLZ       = 2.0 m
+b:Ge/World/Invisible = "True"
+
+s:Ge/Phantom/Type     = "TsSphere"
+s:Ge/Phantom/Parent   = "World"
+s:Ge/Phantom/Material = "G4_WATER"
+d:Ge/Phantom/RMax      = 1.0 m
+
+s:Sc/InteractionCountAbove0/Quantity = "EnergyDeposit"
+s:Sc/InteractionCountAbove0/Component = "Phantom"
+b:Sc/InteractionCountAbove0/OutputToConsole = "True"
+s:Sc/InteractionCountAbove0/IfOutputFileAlreadyExists = "Overwrite"
+i:Sc/InteractionCountAbove0/OnlyIncludeParticlesWithInteractionCountAbove = 0
+
+s:Sc/InteractionCountAbove1/Quantity = "EnergyDeposit"
+s:Sc/InteractionCountAbove1/Component = "Phantom"
+b:Sc/InteractionCountAbove1/OutputToConsole = "True"
+s:Sc/InteractionCountAbove1/IfOutputFileAlreadyExists = "Overwrite"
+i:Sc/InteractionCountAbove1/OnlyIncludeParticlesWithInteractionCountAbove = 1
+
+s:Sc/InteractionCountAbove2/Quantity = "EnergyDeposit"
+s:Sc/InteractionCountAbove2/Component = "Phantom"
+b:Sc/InteractionCountAbove2/OutputToConsole = "True"
+s:Sc/InteractionCountAbove2/IfOutputFileAlreadyExists = "Overwrite"
+i:Sc/InteractionCountAbove2/OnlyIncludeParticlesWithInteractionCountAbove = 2
+
+s:Sc/InteractionCountAbove20/Quantity = "EnergyDeposit"
+s:Sc/InteractionCountAbove20/Component = "Phantom"
+b:Sc/InteractionCountAbove20/OutputToConsole = "True"
+s:Sc/InteractionCountAbove20/IfOutputFileAlreadyExists = "Overwrite"
+i:Sc/InteractionCountAbove20/OnlyIncludeParticlesWithInteractionCountAbove = 20
+
+s:Sc/InteractionCountBelow0/Quantity = "EnergyDeposit"
+s:Sc/InteractionCountBelow0/Component = "Phantom"
+b:Sc/InteractionCountBelow0/OutputToConsole = "True"
+s:Sc/InteractionCountBelow0/IfOutputFileAlreadyExists = "Overwrite"
+i:Sc/InteractionCountBelow0/OnlyIncludeParticlesWithInteractionCountBelow = 0
+
+s:Sc/InteractionCountBelow1/Quantity = "EnergyDeposit"
+s:Sc/InteractionCountBelow1/Component = "Phantom"
+b:Sc/InteractionCountBelow1/OutputToConsole = "True"
+s:Sc/InteractionCountBelow1/IfOutputFileAlreadyExists = "Overwrite"
+i:Sc/InteractionCountBelow1/OnlyIncludeParticlesWithInteractionCountBelow = 1
+
+s:Sc/InteractionCountBelow2/Quantity = "EnergyDeposit"
+s:Sc/InteractionCountBelow2/Component = "Phantom"
+b:Sc/InteractionCountBelow2/OutputToConsole = "True"
+s:Sc/InteractionCountBelow2/IfOutputFileAlreadyExists = "Overwrite"
+i:Sc/InteractionCountBelow2/OnlyIncludeParticlesWithInteractionCountBelow = 2
+
+s:Sc/InteractionCountBelow20/Quantity = "EnergyDeposit"
+s:Sc/InteractionCountBelow20/Component = "Phantom"
+b:Sc/InteractionCountBelow20/OutputToConsole = "True"
+s:Sc/InteractionCountBelow20/IfOutputFileAlreadyExists = "Overwrite"
+i:Sc/InteractionCountBelow20/OnlyIncludeParticlesWithInteractionCountBelow = 20
+
+s:Sc/InteractionCountEqual0/Quantity = "EnergyDeposit"
+s:Sc/InteractionCountEqual0/Component = "Phantom"
+b:Sc/InteractionCountEqual0/OutputToConsole = "True"
+s:Sc/InteractionCountEqual0/IfOutputFileAlreadyExists = "Overwrite"
+i:Sc/InteractionCountEqual0/OnlyIncludeParticlesWithInteractionCount = 0
+
+s:Sc/InteractionCountEqual1/Quantity = "EnergyDeposit"
+s:Sc/InteractionCountEqual1/Component = "Phantom"
+b:Sc/InteractionCountEqual1/OutputToConsole = "True"
+s:Sc/InteractionCountEqual1/IfOutputFileAlreadyExists = "Overwrite"
+i:Sc/InteractionCountEqual1/OnlyIncludeParticlesWithInteractionCount = 1
+
+s:Sc/InteractionCountEqual2/Quantity = "EnergyDeposit"
+s:Sc/InteractionCountEqual2/Component = "Phantom"
+b:Sc/InteractionCountEqual2/OutputToConsole = "True"
+s:Sc/InteractionCountEqual2/IfOutputFileAlreadyExists = "Overwrite"
+i:Sc/InteractionCountEqual2/OnlyIncludeParticlesWithInteractionCount = 2
+
+s:Sc/InteractionCountNotEqual0/Quantity = "EnergyDeposit"
+s:Sc/InteractionCountNotEqual0/Component = "Phantom"
+b:Sc/InteractionCountNotEqual0/OutputToConsole = "True"
+s:Sc/InteractionCountNotEqual0/IfOutputFileAlreadyExists = "Overwrite"
+i:Sc/InteractionCountNotEqual0/OnlyIncludeParticlesWithInteractionCountNot = 0
+
+s:Sc/InteractionCountNotEqual1/Quantity = "EnergyDeposit"
+s:Sc/InteractionCountNotEqual1/Component = "Phantom"
+b:Sc/InteractionCountNotEqual1/OutputToConsole = "True"
+s:Sc/InteractionCountNotEqual1/IfOutputFileAlreadyExists = "Overwrite"
+i:Sc/InteractionCountNotEqual1/OnlyIncludeParticlesWithInteractionCountNot = 1
+
+s:Sc/InteractionCountNotEqual2/Quantity = "EnergyDeposit"
+s:Sc/InteractionCountNotEqual2/Component = "Phantom"
+b:Sc/InteractionCountNotEqual2/OutputToConsole = "True"
+s:Sc/InteractionCountNotEqual2/IfOutputFileAlreadyExists = "Overwrite"
+i:Sc/InteractionCountNotEqual2/OnlyIncludeParticlesWithInteractionCountNot = 2
+
+s:Gr/ViewA/Type = "OpenGL"
+
+s:So/Example/Type                     = "Isotropic"
+s:So/Example/Component                = "Phantom"
+s:So/Example/BeamParticle             = "gamma"
+d:So/Example/BeamEnergy               = 100. keV
+u:So/Example/BeamEnergySpread         = 0.
+i:So/Example/NumberOfHistoriesInRun   = 10
+
+i:Ts/ShowHistoryCountAtInterval = 100
+b:Ts/PauseBeforeQuit = "True"

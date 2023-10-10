@@ -1,0 +1,156 @@
+#                                                          #
+#          Isodose Control Flexisource Ir-192 source       #
+#                                                          #
+#                                                          #
+#                Latest version - May 2021                 #
+#                  Author: Audran Poher                    #
+#              Contact - fberumenm@gmail.com               #
+#       https://doi.org/10.1016/j.brachy.2020.12.007       #
+#                                                          #
+
+##### Materials #####
+sv:Ma/StainlessSteel/Components = 6 "Iron" "Chromium" "Nickel" "Manganese" "Silicon" "Carbon"
+uv:Ma/StainlessSteel/Fractions  = 6 0.6792 0.19 0.1 0.02 0.01 0.0008
+d:Ma/StainlessSteel/Density     = 8.2 g/cm3
+
+##### Radioactive source #####
+s:So/ActiveSource/Type                       = "Volumetric"
+s:So/ActiveSource/Component                  = "IridiumCore"
+sc:So/ActiveSource/ActiveMaterial            = "G4_Ir"
+s:So/ActiveSource/BeamParticle               = "gamma"
+b:So/ActiveSource/RecursivelyIncludeChildren = "T"
+ic:So/ActiveSource/NumberOfHistoriesInRun    = 10
+i:So/ActiveSource/MaxNumberOfPointsToSample  = 1000000000
+s:So/ActiveSource/BeamEnergySpectrumType     = "Discrete"
+
+##### Spectrum, NNDC Rivard 2010, 10 keV cut ######
+dv:So/ActiveSource/BeamEnergySpectrumValues = 39 61.486 63.0 65.122 66.831 71.079 71.414 73.363 75.368 75.749 77.831 110.4 136.3426 176.98 201.3112 205.79430 280.27 283.2668 295.95650 308.45507 316.50618 329.17 374.4852 416.4688 420.52 468.0688 484.5751 485.30 489.06 588.5810 593.49 599.41 604.41105 612.4621 703.87 765.8 884.5365 1061.48 1089.9 1378.20 keV
+
+uv:So/ActiveSource/BeamEnergySpectrumWeightsUnscaled = 39 0.0120 0.0205 0.0263 0.0446 0.00241 0.00466 0.00163 0.00533 0.01025 0.00365 0.000122 0.0020 0.000043 0.00473 0.0334 0.00009 0.00266 0.2872 0.2968 0.8271 0.000174 0.00726 0.00669 0.00069 0.4781 0.03187 0.000023 0.00438 0.04517 0.000421 0.000039 0.0820 0.0534 0.000053 0.000013 0.00291 0.000530 0.000012 0.000012
+
+uv:So/ActiveSource/BeamEnergySpectrumWeights = 0.43492973 * So/ActiveSource/BeamEnergySpectrumWeightsUnscaled
+
+##### SOURCE GEOMETRY #####
+
+s:Ge/CenterStainlessSteelCylinder/Type         = "TsCylinder"
+s:Ge/CenterStainlessSteelCylinder/Parent       = "World"
+s:Ge/CenterStainlessSteelCylinder/Material     = "StainlessSteel"
+d:Ge/CenterStainlessSteelCylinder/RMin         = 0. mm
+d:Ge/CenterStainlessSteelCylinder/RMax         = 0.425 mm
+d:Ge/CenterStainlessSteelCylinder/SPhi         = 0. deg
+d:Ge/CenterStainlessSteelCylinder/DPhi         = 360. deg
+d:Ge/CenterStainlessSteelCylinder/HL           = 1.8 mm
+d:Ge/CenterStainlessSteelCylinder/TransX       = 0. mm
+d:Ge/CenterStainlessSteelCylinder/TransY       = 0. mm
+d:Ge/CenterStainlessSteelCylinder/TransZ       = 0. mm
+d:Ge/CenterStainlessSteelCylinder/RotX         = 0. deg
+d:Ge/CenterStainlessSteelCylinder/RotY         = 0. deg
+d:Ge/CenterStainlessSteelCylinder/RotZ         = 0. deg
+s:Ge/CenterStainlessSteelCylinder/Color        = "blue"
+s:Ge/CenterStainlessSteelCylinder/DrawingStyle = "FullWireFrame"
+
+s:Ge/AirFilling/Type         = "TsCylinder"
+s:Ge/AirFilling/Parent       = "CenterStainlessSteelCylinder"
+s:Ge/AirFilling/Material     = "G4_AIR"
+d:Ge/AirFilling/RMin         = 0. mm
+d:Ge/AirFilling/RMax         = 0.335 mm
+d:Ge/AirFilling/SPhi         = 0. deg
+d:Ge/AirFilling/DPhi         = 360. deg
+d:Ge/AirFilling/HL           = 1.8 mm
+d:Ge/AirFilling/TransX       = 0. mm
+d:Ge/AirFilling/TransY       = 0. mm
+d:Ge/AirFilling/TransZ       = 0. mm
+d:Ge/AirFilling/RotX         = 0. deg
+d:Ge/AirFilling/RotY         = 0. deg
+d:Ge/AirFilling/RotZ         = 0. deg
+s:Ge/AirFilling/DrawingStyle = "FullWireFrame"
+s:Ge/AirFilling/Color        = "white"
+
+s:Ge/IridiumCore/Type         = "TsCylinder"
+s:Ge/IridiumCore/Parent       = "AirFilling"
+s:Ge/IridiumCore/Material     = "G4_Ir"
+d:Ge/IridiumCore/RMin         = 0. mm
+d:Ge/IridiumCore/RMax         = 0.3 mm
+d:Ge/IridiumCore/SPhi         = 0. deg
+d:Ge/IridiumCore/DPhi         = 360. deg
+d:Ge/IridiumCore/HL           = 1.75 mm
+d:Ge/IridiumCore/TransX       = 0. mm
+d:Ge/IridiumCore/TransY       = 0. mm
+d:Ge/IridiumCore/TransZ       = 0. mm
+d:Ge/IridiumCore/RotX         = 0. deg
+d:Ge/IridiumCore/RotY         = 0. deg
+d:Ge/IridiumCore/RotZ         = 0. deg
+s:Ge/IridiumCore/DrawingStyle = "FullWireFrame"
+s:Ge/IridiumCore/Color        = "red"
+
+s:Ge/FullStainlessSteelCylinder/Type         = "TsCylinder"
+s:Ge/FullStainlessSteelCylinder/Parent       = "World"
+s:Ge/FullStainlessSteelCylinder/Material     = "StainlessSteel"
+d:Ge/FullStainlessSteelCylinder/RMin         = 0. mm
+d:Ge/FullStainlessSteelCylinder/RMax         = 0.425 mm
+d:Ge/FullStainlessSteelCylinder/SPhi         = 0. deg
+d:Ge/FullStainlessSteelCylinder/DPhi         = 360. deg
+d:Ge/FullStainlessSteelCylinder/HL           = 0.245 mm
+d:Ge/FullStainlessSteelCylinder/TransX       = 0. mm
+d:Ge/FullStainlessSteelCylinder/TransY       = 0. mm
+d:Ge/FullStainlessSteelCylinder/TransZ       = 2.045 mm
+d:Ge/FullStainlessSteelCylinder/RotX         = 0. deg
+d:Ge/FullStainlessSteelCylinder/RotY         = 0. deg
+d:Ge/FullStainlessSteelCylinder/RotZ         = 0. deg
+s:Ge/FullStainlessSteelCylinder/DrawingStyle = "FullWireFrame"
+s:Ge/FullStainlessSteelCylinder/Color        = "blue"
+
+s:Ge/LeftEndCone/Type                   = "G4Cons"
+s:Ge/LeftEndCone/Parent                 = "World"
+s:Ge/LeftEndCone/Material               = "StainlessSteel"
+d:Ge/LeftEndCone/TransX                 = 0 mm
+d:Ge/LeftEndCone/TransY                 = 0 mm
+d:Ge/LeftEndCone/TransZ                 = 2.344 mm
+d:Ge/LeftEndCone/RotX                   = 0 deg
+d:Ge/LeftEndCone/RotY                   = 0 deg
+d:Ge/LeftEndCone/RotZ                   = 0 deg
+d:Ge/LeftEndCone/RMin1                  = 0 mm
+d:Ge/LeftEndCone/RMax1                  = 0.425 mm
+d:Ge/LeftEndCone/RMin2                  = 0 mm
+d:Ge/LeftEndCone/RMax2                  = 0.17 mm
+d:Ge/LeftEndCone/HL                     = 0.054 mm
+d:Ge/LeftEndCone/SPhi                   = 0 deg
+d:Ge/LeftEndCone/DPhi                   = 360 deg
+s:Ge/LeftEndCone/Color                  = "blue"
+s:Ge/LeftEndCone/DrawingStyle           = "FullWireFrame"
+
+s:Ge/RightStainlessSteelCone/Type                   = "G4Cons"
+s:Ge/RightStainlessSteelCone/Parent                 = "World"
+s:Ge/RightStainlessSteelCone/Material               = "StainlessSteel"
+d:Ge/RightStainlessSteelCone/TransX                 = 0 mm
+d:Ge/RightStainlessSteelCone/TransY                 = 0 mm
+d:Ge/RightStainlessSteelCone/TransZ                 = -2 mm
+d:Ge/RightStainlessSteelCone/RotX                   = 0 deg
+d:Ge/RightStainlessSteelCone/RotY                   = 180 deg
+d:Ge/RightStainlessSteelCone/RotZ                   = 0 deg
+d:Ge/RightStainlessSteelCone/RMin1                  = 0. mm
+d:Ge/RightStainlessSteelCone/RMax1                  = 0.425 mm
+d:Ge/RightStainlessSteelCone/RMin2                  = 0. mm
+d:Ge/RightStainlessSteelCone/RMax2                  = 0.25 mm
+d:Ge/RightStainlessSteelCone/HL                     = 0.2 mm
+d:Ge/RightStainlessSteelCone/SPhi                   = 0 deg
+d:Ge/RightStainlessSteelCone/DPhi                   = 360 deg
+s:Ge/RightStainlessSteelCone/Color                  = "blue"
+s:Ge/RightStainlessSteelCone/DrawingStyle           = "FullWireFrame"
+
+s:Ge/CableStainlessSteelCylinder/Type         = "TsCylinder"
+s:Ge/CableStainlessSteelCylinder/Parent       = "World"
+s:Ge/CableStainlessSteelCylinder/Material     = "StainlessSteel"
+d:Ge/CableStainlessSteelCylinder/RMin         = 0. mm
+d:Ge/CableStainlessSteelCylinder/RMax         = 0.25 mm
+d:Ge/CableStainlessSteelCylinder/SPhi         = 0. deg
+d:Ge/CableStainlessSteelCylinder/DPhi         = 360. deg
+d:Ge/CableStainlessSteelCylinder/HL           = 2.5 mm
+d:Ge/CableStainlessSteelCylinder/TransX       = 0. mm
+d:Ge/CableStainlessSteelCylinder/TransY       = 0. mm
+d:Ge/CableStainlessSteelCylinder/TransZ       = -4.7 mm
+d:Ge/CableStainlessSteelCylinder/RotX         = 0. deg
+d:Ge/CableStainlessSteelCylinder/RotY         = 0. deg
+d:Ge/CableStainlessSteelCylinder/RotZ         = 0. deg
+s:Ge/CableStainlessSteelCylinder/DrawingStyle = "FullWireFrame"
+s:Ge/CableStainlessSteelCylinder/Color        = "blue"

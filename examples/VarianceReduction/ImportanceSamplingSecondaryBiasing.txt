@@ -1,0 +1,313 @@
+#
+# This example demonstrate the use of two variance reduction
+# techniques in the same simulation: uniform bremsstrahlung splitting
+# and importance sampling.
+# Bremstrahlung x-rays produced by e- hitting a lead target are split
+# and further split in their propagation through a parallel geometry 
+# of stacked slabs.
+# Due to the high number of tracks, only the e- shower is shown in the
+# OpenGl viewer.
+#
+########################
+# Simple shielding example
+########################
+d:Ge/World/HLX = 4 m
+d:Ge/World/HLY = 4 m
+d:Ge/World/HLZ = 4.1 m
+b:Ge/World/Invisible = "True"
+s:Ge/World/Material = "G4_WATER"
+
+s:Ge/group/Parent = "World"
+s:Ge/group/Type = "Group"
+
+s:Ge/target/Type     = "TsBox"
+s:Ge/target/Parent   = "group" 
+s:Ge/target/Material = "G4_Pb"
+s:Ge/target/Color = "magenta"
+s:Ge/target/DrawingStyle = "Solid"
+d:Ge/target/HLX      =  1 cm
+d:Ge/target/HLY      =  1 cm
+d:Ge/target/HLZ      =  2 mm
+d:Ge/target/TransX   =  0 m
+d:Ge/target/TransY   =  0 m
+d:Ge/target/TransZ   =  0 m
+d:Ge/target/RotX     =  0 deg
+d:Ge/target/RotY     =  0 deg
+d:Ge/target/RotZ     =  0 deg
+
+s:Ge/target/AssignToRegionNamed = "targetregion"
+
+#########################
+# Gemetry for vrt
+#########################
+d:Ge/subComponent/Thickness     = 2 mm
+d:Ge/subComponent/StartPosition = -1.0 * Ge/VrtParallelWorld/HLZ cm
+
+s:Ge/VrtParallelWorld/Type       = "TsBox"
+s:Ge/VrtParallelWorld/Parent     = "group" 
+d:Ge/VrtParallelWorld/HLX        = 21 cm
+d:Ge/VrtParallelWorld/HLY        = 21 cm
+d:Ge/VrtParallelWorld/HLZ        = 6 cm
+d:Ge/VrtParallelWorld/TransX     = 0 cm
+d:Ge/VrtParallelWorld/TransY     = 0 cm
+d:Ge/VrtParallelWorld/TransZ     = Ge/target/HLZ + Ge/VrtParallelWorld/HLZ cm
+d:Ge/VrtParallelWorld/RotX       = 0 deg
+d:Ge/VrtParallelWorld/RotY       = 0 deg
+d:Ge/VrtParallelWorld/RotZ       = 0 deg
+b:Ge/VrtParallelWorld/IsParallel = "true"
+
+s:Ge/subComponent1/Type       = "TsBox"
+s:Ge/subComponent1/Parent     = "VrtParallelWorld"
+d:Ge/subComponent1/HLX        = Ge/VrtParallelWorld/HLX m
+d:Ge/subComponent1/HLY        = Ge/VrtParallelWorld/HLY m
+d:Ge/subComponent1/HLZ        = 0.5 * Ge/subComponent/Thickness cm
+d:Ge/subComponent1/TransX     = 0 cm
+d:Ge/subComponent1/TransY     = 0 cm
+d:Ge/subComponent1/TransZ     = Ge/subComponent/StartPosition + Ge/subComponent1/HLZ cm
+d:Ge/subComponent1/RotX       = 0 deg
+d:Ge/subComponent1/RotY       = 0 deg
+d:Ge/subComponent1/RotZ       = 0 deg
+b:Ge/subComponent1/IsParallel = "true"
+
+s:Ge/subComponent2/Type       = "TsBox"
+s:Ge/subComponent2/Parent     = "VrtParallelWorld"
+d:Ge/subComponent2/HLX        = Ge/VrtParallelWorld/HLX m
+d:Ge/subComponent2/HLY        = Ge/VrtParallelWorld/HLY m
+d:Ge/subComponent2/HLZ        = 0.5 * Ge/subComponent/Thickness cm
+d:Ge/subComponent2/TransX     = 0 cm
+d:Ge/subComponent2/TransY     = 0 cm
+d:Ge/subComponent2/TransZTmp  = Ge/subComponent1/TransZ + Ge/subComponent1/HLZ cm
+d:Ge/subComponent2/TransZ     = Ge/subComponent2/TransZTmp + Ge/subComponent2/HLZ cm
+d:Ge/subComponent2/RotX       = 0 deg
+d:Ge/subComponent2/RotY       = 0 deg
+d:Ge/subComponent2/RotZ       = 0 deg
+b:Ge/subComponent2/IsParallel = "true"
+
+s:Ge/subComponent3/Type       = "TsBox"
+s:Ge/subComponent3/Parent     = "VrtParallelWorld"
+d:Ge/subComponent3/HLX        = Ge/VrtParallelWorld/HLX m
+d:Ge/subComponent3/HLY        = Ge/VrtParallelWorld/HLY m
+d:Ge/subComponent3/HLZ        = 0.5 * Ge/subComponent/Thickness cm
+d:Ge/subComponent3/TransX     = 0 cm
+d:Ge/subComponent3/TransY     = 0 cm
+d:Ge/subComponent3/TransZTmp  = Ge/subComponent2/TransZ + Ge/subComponent2/HLZ cm
+d:Ge/subComponent3/TransZ     = Ge/subComponent3/TransZTmp + Ge/subComponent3/HLZ cm
+d:Ge/subComponent3/RotX       = 0 deg
+d:Ge/subComponent3/RotY       = 0 deg
+d:Ge/subComponent3/RotZ       = 0 deg
+b:Ge/subComponent3/IsParallel = "true"
+
+s:Ge/subComponent4/Type       = "TsBox"
+s:Ge/subComponent4/Parent     = "VrtParallelWorld"
+d:Ge/subComponent4/HLX        = Ge/VrtParallelWorld/HLX m
+d:Ge/subComponent4/HLY        = Ge/VrtParallelWorld/HLY m
+d:Ge/subComponent4/HLZ        = 0.5 * Ge/subComponent/Thickness cm
+d:Ge/subComponent4/TransX     = 0 cm
+d:Ge/subComponent4/TransY     = 0 cm
+d:Ge/subComponent4/TransZTmp  = Ge/subComponent3/TransZ + Ge/subComponent3/HLZ cm
+d:Ge/subComponent4/TransZ     = Ge/subComponent4/TransZTmp + Ge/subComponent4/HLZ cm
+d:Ge/subComponent4/RotX       = 0 deg
+d:Ge/subComponent4/RotY       = 0 deg
+d:Ge/subComponent4/RotZ       = 0 deg
+b:Ge/subComponent4/IsParallel = "true"
+
+s:Ge/subComponent5/Type       = "TsBox"
+s:Ge/subComponent5/Parent     = "VrtParallelWorld"
+d:Ge/subComponent5/HLX        = Ge/VrtParallelWorld/HLX m
+d:Ge/subComponent5/HLY        = Ge/VrtParallelWorld/HLY m
+d:Ge/subComponent5/HLZ        = 0.5 * Ge/subComponent/Thickness cm
+d:Ge/subComponent5/TransX     = 0 cm
+d:Ge/subComponent5/TransY     = 0 cm
+d:Ge/subComponent5/TransZTmp  = Ge/subComponent4/TransZ + Ge/subComponent4/HLZ cm
+d:Ge/subComponent5/TransZ     = Ge/subComponent5/TransZTmp + Ge/subComponent5/HLZ cm
+d:Ge/subComponent5/RotX       = 0 deg
+d:Ge/subComponent5/RotY       = 0 deg
+d:Ge/subComponent5/RotZ       = 0 deg
+b:Ge/subComponent5/IsParallel = "true"
+
+s:Ge/subComponent6/Type       = "TsBox"
+s:Ge/subComponent6/Parent     = "VrtParallelWorld"
+d:Ge/subComponent6/HLX        = Ge/VrtParallelWorld/HLX m
+d:Ge/subComponent6/HLY        = Ge/VrtParallelWorld/HLY m
+d:Ge/subComponent6/HLZ        = 0.5 * Ge/subComponent/Thickness cm
+d:Ge/subComponent6/TransX     = 0 cm
+d:Ge/subComponent6/TransY     = 0 cm
+d:Ge/subComponent6/TransZTmp  = Ge/subComponent5/TransZ + Ge/subComponent5/HLZ cm
+d:Ge/subComponent6/TransZ     = Ge/subComponent6/TransZTmp + Ge/subComponent6/HLZ cm
+d:Ge/subComponent6/RotX       = 0 deg
+d:Ge/subComponent6/RotY       = 0 deg
+d:Ge/subComponent6/RotZ       = 0 deg
+b:Ge/subComponent6/IsParallel = "true"
+
+s:Ge/subComponent7/Type       = "TsBox"
+s:Ge/subComponent7/Parent     = "VrtParallelWorld"
+d:Ge/subComponent7/HLX        = Ge/VrtParallelWorld/HLX m
+d:Ge/subComponent7/HLY        = Ge/VrtParallelWorld/HLY m
+d:Ge/subComponent7/HLZ        = 0.5 * Ge/subComponent/Thickness cm
+d:Ge/subComponent7/TransX     = 0 cm
+d:Ge/subComponent7/TransY     = 0 cm
+d:Ge/subComponent7/TransZTmp  = Ge/subComponent6/TransZ + Ge/subComponent6/HLZ cm
+d:Ge/subComponent7/TransZ     = Ge/subComponent7/TransZTmp + Ge/subComponent7/HLZ cm
+d:Ge/subComponent7/RotX       = 0 deg
+d:Ge/subComponent7/RotY       = 0 deg
+d:Ge/subComponent7/RotZ       = 0 deg
+b:Ge/subComponent7/IsParallel = "true"
+
+s:Ge/subComponent8/Type       = "TsBox"
+s:Ge/subComponent8/Parent     = "VrtParallelWorld"
+d:Ge/subComponent8/HLX        = Ge/VrtParallelWorld/HLX m
+d:Ge/subComponent8/HLY        = Ge/VrtParallelWorld/HLY m
+d:Ge/subComponent8/HLZ        = 0.5 * Ge/subComponent/Thickness cm
+d:Ge/subComponent8/TransX     = 0 cm
+d:Ge/subComponent8/TransY     = 0 cm
+d:Ge/subComponent8/TransZTmp  = Ge/subComponent7/TransZ + Ge/subComponent7/HLZ cm
+d:Ge/subComponent8/TransZ     = Ge/subComponent8/TransZTmp + Ge/subComponent8/HLZ cm
+d:Ge/subComponent8/RotX       = 0 deg
+d:Ge/subComponent8/RotY       = 0 deg
+d:Ge/subComponent8/RotZ       = 0 deg
+b:Ge/subComponent8/IsParallel = "true"
+
+s:Ge/subComponent9/Type       = "TsBox"
+s:Ge/subComponent9/Parent     = "VrtParallelWorld"
+d:Ge/subComponent9/HLX        = Ge/VrtParallelWorld/HLX m
+d:Ge/subComponent9/HLY        = Ge/VrtParallelWorld/HLY m
+d:Ge/subComponent9/HLZ        = 0.5 * Ge/subComponent/Thickness cm
+d:Ge/subComponent9/TransX     = 0 cm
+d:Ge/subComponent9/TransY     = 0 cm
+d:Ge/subComponent9/TransZTmp  = Ge/subComponent8/TransZ + Ge/subComponent8/HLZ cm
+d:Ge/subComponent9/TransZ     = Ge/subComponent9/TransZTmp + Ge/subComponent9/HLZ cm
+d:Ge/subComponent9/RotX       = 0 deg
+d:Ge/subComponent9/RotY       = 0 deg
+d:Ge/subComponent9/RotZ       = 0 deg
+b:Ge/subComponent9/IsParallel = "true"
+
+s:Ge/subComponent10/Type       = "TsBox"
+s:Ge/subComponent10/Parent     = "VrtParallelWorld"
+d:Ge/subComponent10/HLX        = Ge/VrtParallelWorld/HLX m
+d:Ge/subComponent10/HLY        = Ge/VrtParallelWorld/HLY m
+d:Ge/subComponent10/HLZ        = 0.5 * Ge/subComponent/Thickness cm
+d:Ge/subComponent10/TransX     = 0 cm
+d:Ge/subComponent10/TransY     = 0 cm
+d:Ge/subComponent10/TransZTmp  = Ge/subComponent9/TransZ + Ge/subComponent9/HLZ cm
+d:Ge/subComponent10/TransZ     = Ge/subComponent10/TransZTmp + Ge/subComponent10/HLZ cm
+d:Ge/subComponent10/RotX       = 0 deg
+d:Ge/subComponent10/RotY       = 0 deg
+d:Ge/subComponent10/RotZ       = 0 deg
+b:Ge/subComponent10/IsParallel = "true"
+
+s:Ge/subComponent11/Type       = "TsBox"
+s:Ge/subComponent11/Parent     = "VrtParallelWorld"
+d:Ge/subComponent11/HLX        = Ge/VrtParallelWorld/HLX m
+d:Ge/subComponent11/HLY        = Ge/VrtParallelWorld/HLY m
+d:Ge/subComponent11/HLZ        = 0.5 * Ge/subComponent/Thickness cm
+d:Ge/subComponent11/TransX     = 0 cm
+d:Ge/subComponent11/TransY     = 0 cm
+d:Ge/subComponent11/TransZTmp  = Ge/subComponent10/TransZ + Ge/subComponent10/HLZ cm
+d:Ge/subComponent11/TransZ     = Ge/subComponent11/TransZTmp + Ge/subComponent11/HLZ cm
+d:Ge/subComponent11/RotX       = 0 deg
+d:Ge/subComponent11/RotY       = 0 deg
+d:Ge/subComponent11/RotZ       = 0 deg
+b:Ge/subComponent11/IsParallel = "true"
+
+s:Ge/subComponent12/Type       = "TsBox"
+s:Ge/subComponent12/Parent     = "VrtParallelWorld"
+d:Ge/subComponent12/HLX        = Ge/VrtParallelWorld/HLX m
+d:Ge/subComponent12/HLY        = Ge/VrtParallelWorld/HLY m
+d:Ge/subComponent12/HLZ        = 0.5 * Ge/subComponent/Thickness cm
+d:Ge/subComponent12/TransX     = 0 cm
+d:Ge/subComponent12/TransY     = 0 cm
+d:Ge/subComponent12/TransZTmp  = Ge/subComponent11/TransZ + Ge/subComponent11/HLZ cm
+d:Ge/subComponent12/TransZ     = Ge/subComponent12/TransZTmp + Ge/subComponent12/HLZ cm
+d:Ge/subComponent12/RotX       = 0 deg
+d:Ge/subComponent12/RotY       = 0 deg
+d:Ge/subComponent12/RotZ       = 0 deg
+b:Ge/subComponent12/IsParallel = "true"
+
+s:Ge/subComponent13/Type       = "TsBox"
+s:Ge/subComponent13/Parent     = "VrtParallelWorld"
+d:Ge/subComponent13/HLX        = Ge/VrtParallelWorld/HLX m
+d:Ge/subComponent13/HLY        = Ge/VrtParallelWorld/HLY m
+d:Ge/subComponent13/HLZ        = 0.5 * Ge/subComponent/Thickness cm
+d:Ge/subComponent13/TransX     = 0 cm
+d:Ge/subComponent13/TransY     = 0 cm
+d:Ge/subComponent13/TransZTmp  = Ge/subComponent12/TransZ + Ge/subComponent12/HLZ cm
+d:Ge/subComponent13/TransZ     = Ge/subComponent13/TransZTmp + Ge/subComponent13/HLZ cm
+d:Ge/subComponent13/RotX       = 0 deg
+d:Ge/subComponent13/RotY       = 0 deg
+d:Ge/subComponent13/RotZ       = 0 deg
+b:Ge/subComponent13/IsParallel = "true"
+
+s:Ge/subComponent14/Type       = "TsBox"
+s:Ge/subComponent14/Parent     = "VrtParallelWorld"
+d:Ge/subComponent14/HLX        = Ge/VrtParallelWorld/HLX m
+d:Ge/subComponent14/HLY        = Ge/VrtParallelWorld/HLY m
+d:Ge/subComponent14/HLZ        = 0.5 * Ge/subComponent/Thickness cm
+d:Ge/subComponent14/TransX     = 0 cm
+d:Ge/subComponent14/TransY     = 0 cm
+d:Ge/subComponent14/TransZTmp  = Ge/subComponent13/TransZ + Ge/subComponent13/HLZ cm
+d:Ge/subComponent14/TransZ     = Ge/subComponent14/TransZTmp + Ge/subComponent14/HLZ cm
+d:Ge/subComponent14/RotX       = 0 deg
+d:Ge/subComponent14/RotY       = 0 deg
+d:Ge/subComponent14/RotZ       = 0 deg
+b:Ge/subComponent14/IsParallel = "true"
+
+#########################
+# VRT
+#########################
+b:Vr/UseVarianceReduction         = "true"
+# Importance sampling
+b:Vr/ImportanceSampling/Active         = "true"
+sv:Vr/ImportanceSampling/ParticleName  = 1 "gamma" 
+s:Vr/ImportanceSampling/Component      = "VrtParallelWorld"
+sv:Vr/ImportanceSampling/SubComponents = 14
+"subComponent1" "subComponent2"
+"subComponent3" "subComponent4"
+"subComponent5" "subComponent6"
+"subComponent7" "subComponent8"
+"subComponent9" "subComponent10"
+"subComponent11" "subComponent12"
+"subComponent13" "subComponent14"
+
+s:Vr/ImportanceSampling/Type = "ImportanceSampling"
+uv:Vr/ImportanceSampling/ImportanceValues = 14 2 4 8 16 32 64 128 256 512 1024 2048 2048 2048 2048
+
+# Uniform split in the lead target 
+s:Vr/Uniform/Type = "SecondaryBiasing"
+sv:Vr/Uniform/forregion/targetregion/processesNamed   = 1 "eBrem"
+uv:Vr/Uniform/ForRegion/targetregion/SplitNumber      = 1   100.
+dv:Vr/Uniform/ForRegion/targetregion/MaximumEnergies  = 1   6  MeV
+
+
+#########################
+# Beam setting
+#########################
+s:So/Example/Type                     = "Beam"
+s:So/Example/Component                = "BeamPosition"
+s:So/Example/BeamParticle             = "e-" 
+d:So/Example/BeamEnergy               = 6 MeV 
+u:So/Example/BeamEnergySpread         = 0.757504
+s:So/Example/BeamPositionDistribution = "None"
+s:So/Example/BeamPositionCutoffShape  = "Ellipse"
+d:So/Example/BeamPositionCutoffX      = 10. cm
+d:So/Example/BeamPositionCutoffY      = 10. cm
+d:So/Example/BeamPositionSpreadX      = 0.65 cm
+d:So/Example/BeamPositionSpreadY      = 0.65 cm
+s:So/Example/BeamAngularDistribution  = "Gaussian"
+d:So/Example/BeamAngularCutoffX       = 90. deg
+d:So/Example/BeamAngularCutoffY       = 90. deg
+d:So/Example/BeamAngularSpreadX       = 0.0032 rad
+d:So/Example/BeamAngularSpreadY       = 0.0032 rad
+i:So/Example/NumberOfHistoriesInRun   = 1
+
+Ge/BeamPosition/Parent = "group"
+d:Ge/BeamPosition/TransZ = -1.0 * Ge/target/HLZ m
+d:Ge/BeamPosition/RotX   = 0 deg
+
+i:Ts/ShowHistoryCountAtInterval = 1000
+
+b:Ts/PauseBeforeQuit = "True"
+s:Gr/view/Type = "OpenGl"
+u:Gr/view/Zoom = 4
+sv:Gr/OnlyIncludeParticlesNamed = 1 "e-"
+
+

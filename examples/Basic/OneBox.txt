@@ -1,0 +1,29 @@
+# Simplest TOPAS example.
+# A box in a beam with EM physics.
+
+s:Ge/MyBox/Type     = "TsBox"
+s:Ge/MyBox/Material = "Air"
+s:Ge/MyBox/Parent   = "World"
+d:Ge/MyBox/HLX      = 2.5 m
+d:Ge/MyBox/HLY      = 2. m
+d:Ge/MyBox/HLZ      = 1. m
+d:Ge/MyBox/TransX   = 2. m
+d:Ge/MyBox/TransY   = 0. m
+d:Ge/MyBox/TransZ   = 0. m
+d:Ge/MyBox/RotX     = 0. deg
+d:Ge/MyBox/RotY     = 0. deg
+d:Ge/MyBox/RotZ     = 0. deg
+
+sv:Ph/Default/Modules = 1 "g4em-standard_opt0"
+
+s:Gr/ViewA/Type             = "OpenGL"
+i:Gr/ViewA/WindowSizeX      = 1024
+i:Gr/ViewA/WindowSizeY      = 768
+b:Gr/ViewA/IncludeAxes      = "True"
+d:Gr/ViewA/Theta            = 55 deg
+d:Gr/ViewA/Phi              = 20 deg
+s:Gr/ViewA/Projection       = "Perspective"
+d:Gr/ViewA/PerspectiveAngle = 30 deg
+u:Gr/ViewA/Zoom             = 2.
+
+b:Ts/PauseBeforeQuit = "True"

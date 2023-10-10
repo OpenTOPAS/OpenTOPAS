@@ -1,0 +1,29 @@
+# Defines a raster scanning pattern used in some demonstrations.
+
+includeFile = ScanningNozzle.txt
+
+# Time Features for Scanning Magnets
+d:Ge/BFieldX_max   = 0.15 tesla
+d:Ge/BFieldX_min   = Ge/BFieldX_max tesla * -1.0
+d:Ge/BFieldX_range = Ge/BFieldX_max tesla * 2.0
+
+s:Tf/BField2nd/Function = "Step"
+dv:Tf/BField2nd/Times   = 2 125.0 250.0 ms
+dv:Tf/BField2nd/Values  = 2 Tf/BField2ndLeft/Value Tf/BField2ndRight/Value tesla
+
+s:Tf/BField2ndLeft/Function           = "Linear tesla"
+d:Tf/BField2ndLeft/RepetitionInterval = 125.0 ms
+d:Tf/BField2ndLeft/Rate               = 0.0024 tesla/ms
+d:Tf/BField2ndLeft/StartValue         = Ge/BFieldX_min  tesla
+
+s:Tf/BField2ndRight/Function           = "Linear tesla"
+d:Tf/BField2ndRight/RepetitionInterval = 125.0 ms
+d:Tf/BField2ndRight/Rate               = -0.0024 tesla/ms
+d:Tf/BField2ndRight/StartValue         = Ge/BFieldX_max tesla
+
+s:Tf/BField1st/Function = "Step"
+dv:Tf/BField1st/Times   = 4  0.25 0.5 0.75 1.0 s
+dv:Tf/BField1st/Values  = 4 -0.105 -0.035 0.035  0.105 tesla
+
+d:Ge/Dipole1/MagneticFieldStrength = Tf/BField1st/Value tesla
+d:Ge/Dipole2/MagneticFieldStrength = Tf/BField2nd/Value tesla

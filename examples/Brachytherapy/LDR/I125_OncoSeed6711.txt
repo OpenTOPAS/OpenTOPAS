@@ -1,0 +1,285 @@
+#                                                          #
+#                  I 125 - OncoSeed 6711                   #
+#                                                          #
+#                                                          #
+#                Latest version - May 2021                 #
+#                  Author: Audran Poher                    #
+#              Contact - fberumenm@gmail.com               #
+#       https://doi.org/10.1016/j.brachy.2020.12.007       #
+#                                                          #
+
+
+##### MATERIALS ######
+sv:Ma/MatRadioMatrix/Components = 3 "Silver" "Iodine" "Bromine"
+uv:Ma/MatRadioMatrix/Fractions = 3 0.5416 0.30396 0.15444
+d:Ma/MatRadioMatrix/Density    = 6.2 g/cm3
+
+##### SOURCE #####
+s:So/ActiveSource/Type                       = "Volumetric"
+s:So/ActiveSource/Component                  = "ActiveSourceGeometry"
+sc:So/ActiveSource/ActiveMaterial            = "MatRadioMatrix"
+s:So/ActiveSource/BeamParticle               = "gamma"
+b:So/ActiveSource/RecursivelyIncludeChildren = "T"
+i:So/ActiveSource/MaxNumberOfPointsToSample  = 1000000000
+s:So/ActiveSource/BeamEnergySpectrumType     = "Discrete"
+ic:So/ActiveSource/NumberOfHistoriesInRun    = 10
+
+###### SPECTRUM ######
+dv:So/ActiveSource/BeamEnergySpectrumValues = 7 3.77 27.202 27.472 30.944 30.995 31.704 35.3922 keV
+uv:So/ActiveSource/BeamEnergySpectrumWeightsUnscaled = 7 0.149 0.401 0.740 0.0683 0.132 0.0380 0.0668
+uv:So/ActiveSource/BeamEnergySpectrumWeights = 0.6269199 * So/ActiveSource/BeamEnergySpectrumWeightsUnscaled
+
+##### SOURCE GEOMETRY #####
+
+s:Ge/ActiveSourceGeometry/Type              = "Group"
+s:Ge/ActiveSourceGeometry/Parent            = "World"
+b:Ge/ActiveSourceGeometry/IsParallel        = "True"
+s:Ge/ActiveSourceGeometry/ParallelWorldName = "ActiveSourceWorld"
+
+#====================
+#Radioactive cylinder
+#====================
+
+s:Ge/RadioactiveCylinder/Type         = "TsCylinder"
+s:Ge/RadioactiveCylinder/Parent       = "ActiveSourceGeometry"
+s:Ge/RadioactiveCylinder/Material     = "MatRadioMatrix"
+d:Ge/RadioactiveCylinder/RMin         = 0.25 mm
+d:Ge/RadioactiveCylinder/RMax         = 0.25175 mm
+d:Ge/RadioactiveCylinder/SPhi         = 0. deg
+d:Ge/RadioactiveCylinder/DPhi         = 360. deg
+d:Ge/RadioactiveCylinder/HL           = 1.325 mm
+d:Ge/RadioactiveCylinder/TransX       = 0. mm
+d:Ge/RadioactiveCylinder/TransY       = 0. mm
+d:Ge/RadioactiveCylinder/TransZ       = 0. mm
+d:Ge/RadioactiveCylinder/RotX         = 0. deg
+d:Ge/RadioactiveCylinder/RotY         = 0. deg
+d:Ge/RadioactiveCylinder/RotZ         = 0. deg
+s:Ge/RadioactiveCylinder/DrawingStyle = "FullWireFrame"
+s:Ge/RadioactiveCylinder/Color        = "yellow"
+b:Ge/RadioactiveCylinder/IsParallel   = "T"
+s:Ge/RadioactiveCylinder/ParallelWorldName = "ActiveSourceWorld"
+
+#=====================
+#Radioactive left end
+#=====================
+s:Ge/RadioactiveLeftEnd/Type                   = "G4Cons"
+s:Ge/RadioactiveLeftEnd/Parent                 = "ActiveSourceGeometry"
+s:Ge/RadioactiveLeftEnd/Material               = "MatRadioMatrix"
+d:Ge/RadioactiveLeftEnd/TransX                 = 0 mm
+d:Ge/RadioactiveLeftEnd/TransY                 = 0 mm
+d:Ge/RadioactiveLeftEnd/TransZ                 = 1.363375 mm
+d:Ge/RadioactiveLeftEnd/RotX                   = 0 deg
+d:Ge/RadioactiveLeftEnd/RotY                   = 0 deg
+d:Ge/RadioactiveLeftEnd/RotZ                   = 0 deg
+d:Ge/RadioactiveLeftEnd/RMin1                  = 0. mm
+d:Ge/RadioactiveLeftEnd/RMax1                  = 0.25175 mm
+d:Ge/RadioactiveLeftEnd/RMin2                  = 0. mm
+d:Ge/RadioactiveLeftEnd/RMax2                  = 0.17675 mm
+d:Ge/RadioactiveLeftEnd/HL                     = 0.038375 mm
+d:Ge/RadioactiveLeftEnd/SPhi                   = 0 deg
+d:Ge/RadioactiveLeftEnd/DPhi                   = 360 deg
+s:Ge/RadioactiveLeftEnd/Color                  = "yellow"
+s:Ge/RadioactiveLeftEnd/DrawingStyle           = "FullWireFrame"
+b:Ge/RadioactiveLeftEnd/IsParallel             = "T"
+s:Ge/RadioactiveLeftEnd/ParallelWorldName      = "ActiveSourceWorld"
+
+#=====================
+#Radioactive right end
+#=====================
+s:Ge/RadioactiveRightEnd/Type                   = "G4Cons"
+s:Ge/RadioactiveRightEnd/Parent                 = "ActiveSourceGeometry"
+s:Ge/RadioactiveRightEnd/Material               = "MatRadioMatrix"
+d:Ge/RadioactiveRightEnd/TransX                 = 0 mm
+d:Ge/RadioactiveRightEnd/TransY                 = 0 mm
+d:Ge/RadioactiveRightEnd/TransZ                 = -1.363375 mm
+d:Ge/RadioactiveRightEnd/RotX                   = 0 deg
+d:Ge/RadioactiveRightEnd/RotY                   = 180 deg
+d:Ge/RadioactiveRightEnd/RotZ                   = 0 deg
+d:Ge/RadioactiveRightEnd/RMin1                  = 0. mm
+d:Ge/RadioactiveRightEnd/RMax1                  = 0.25175 mm
+d:Ge/RadioactiveRightEnd/RMin2                  = 0. mm
+d:Ge/RadioactiveRightEnd/RMax2                  = 0.17675 mm
+d:Ge/RadioactiveRightEnd/HL                     = 0.038375 mm
+d:Ge/RadioactiveRightEnd/SPhi                   = 0 deg
+d:Ge/RadioactiveRightEnd/DPhi                   = 360 deg
+s:Ge/RadioactiveRightEnd/Color                  = "yellow"
+s:Ge/RadioactiveRightEnd/DrawingStyle           = "FullWireFrame"
+b:Ge/RadioactiveRightEnd/IsParallel             = "T"
+s:Ge/RadioactiveRightEnd/ParallelWorldName      = "ActiveSourceWorld"
+
+#====================
+#Silver cylinder
+#====================
+
+s:Ge/SilverCylinder/Type         = "TsCylinder"
+s:Ge/SilverCylinder/Parent       = "ActiveSourceGeometry"
+s:Ge/SilverCylinder/Material     = "G4_Ag"
+d:Ge/SilverCylinder/RMin         = 0. mm
+d:Ge/SilverCylinder/RMax         = 0.25 mm
+d:Ge/SilverCylinder/SPhi         = 0. deg
+d:Ge/SilverCylinder/DPhi         = 360. deg
+d:Ge/SilverCylinder/HL           = 1.325 mm
+d:Ge/SilverCylinder/TransX       = 0. mm
+d:Ge/SilverCylinder/TransY       = 0. mm
+d:Ge/SilverCylinder/TransZ       = 0. mm
+d:Ge/SilverCylinder/RotX         = 0. deg
+d:Ge/SilverCylinder/RotY         = 0. deg
+d:Ge/SilverCylinder/RotZ         = 0. deg
+s:Ge/SilverCylinder/DrawingStyle = "FullWireFrame"
+s:Ge/SilverCylinder/Color        = "grey"
+b:Ge/SilverCylinder/IsParallel   = "T"
+s:Ge/SilverCylinder/ParallelWorldName = "ActiveSourceWorld"
+
+#=================
+#Silver left end
+#=================
+
+s:Ge/SilverLeftEnd/Type                   = "G4Cons"
+s:Ge/SilverLeftEnd/Parent                 = "RadioactiveLeftEnd"
+s:Ge/SilverLeftEnd/Material               = "G4_Ag"
+d:Ge/SilverLeftEnd/TransX                 = 0 mm
+d:Ge/SilverLeftEnd/TransY                 = 0 mm
+d:Ge/SilverLeftEnd/TransZ                 = -0.000875 mm
+d:Ge/SilverLeftEnd/RotX                   = 0 deg
+d:Ge/SilverLeftEnd/RotY                   = 0 deg
+d:Ge/SilverLeftEnd/RotZ                   = 0 deg
+d:Ge/SilverLeftEnd/RMin1                  = 0 mm
+d:Ge/SilverLeftEnd/RMax1                  = 0.25 mm
+d:Ge/SilverLeftEnd/RMin2                  = 0 mm
+d:Ge/SilverLeftEnd/RMax2                  = 0.175 mm
+d:Ge/SilverLeftEnd/HL                     = 0.0375 mm
+d:Ge/SilverLeftEnd/SPhi                   = 0 deg
+d:Ge/SilverLeftEnd/DPhi                   = 360 deg
+s:Ge/SilverLeftEnd/Color                  = "grey"
+s:Ge/SilverLeftEnd/DrawingStyle           = "FullWireFrame"
+b:Ge/SilverLeftEnd/IsParallel             = "T"
+s:Ge/SilverLeftEnd/ParallelWorldName      = "ActiveSourceWorld"
+
+#=================
+#Silver right end
+#=================
+
+s:Ge/SilverRightEnd/Type                   = "G4Cons"
+s:Ge/SilverRightEnd/Parent                 = "RadioactiveRightEnd"
+s:Ge/SilverRightEnd/Material               = "G4_Ag"
+d:Ge/SilverRightEnd/TransX                 = 0 mm
+d:Ge/SilverRightEnd/TransY                 = 0 mm
+d:Ge/SilverRightEnd/TransZ                 = -0.000875 mm
+d:Ge/SilverRightEnd/RotX                   = 0 deg
+d:Ge/SilverRightEnd/RotY                   = 0 deg
+d:Ge/SilverRightEnd/RotZ                   = 0 deg
+d:Ge/SilverRightEnd/RMin1                  = 0 mm
+d:Ge/SilverRightEnd/RMax1                  = 0.25 mm
+d:Ge/SilverRightEnd/RMin2                  = 0 mm
+d:Ge/SilverRightEnd/RMax2                  = 0.175 mm
+d:Ge/SilverRightEnd/HL                     = 0.0375 mm
+d:Ge/SilverRightEnd/SPhi                   = 0 deg
+d:Ge/SilverRightEnd/DPhi                   = 360 deg
+s:Ge/SilverRightEnd/Color                  = "grey"
+s:Ge/SilverRightEnd/DrawingStyle           = "FullWireFrame"
+b:Ge/SilverRightEnd/IsParallel             = "T"
+s:Ge/SilverRightEnd/ParallelWorldName      = "ActiveSourceWorld"
+
+##### SHIELDING #####
+
+s:Ge/ShieldingGeo/Type              = "Group"
+s:Ge/ShieldingGeo/Parent            = "World"
+b:Ge/ShieldingGeo/IsParallel        = "True"
+s:Ge/ShieldingGeo/ParallelWorldName = "ShieldingWorld"
+
+
+#=====================
+#Cylinder of Titanium
+#=====================
+
+s:Ge/TitaniumCylinder/Type         = "TsCylinder"
+s:Ge/TitaniumCylinder/Parent       = "ShieldingGeo"
+s:Ge/TitaniumCylinder/Material     = "Titanium"
+d:Ge/TitaniumCylinder/RMin         = 0.33 mm
+d:Ge/TitaniumCylinder/RMax         = 0.40 mm
+d:Ge/TitaniumCylinder/SPhi         = 180. deg
+d:Ge/TitaniumCylinder/DPhi         = 360. deg
+d:Ge/TitaniumCylinder/HL           = 1.875 mm
+d:Ge/TitaniumCylinder/TransX       = 0. mm
+d:Ge/TitaniumCylinder/TransY       = 0. mm
+d:Ge/TitaniumCylinder/TransZ       = 0. mm
+d:Ge/TitaniumCylinder/RotX         = 0. deg
+d:Ge/TitaniumCylinder/RotY         = 0. deg
+d:Ge/TitaniumCylinder/RotZ         = 0. deg
+s:Ge/TitaniumCylinder/Color        = "blue"
+s:Ge/TitaniumCylinder/DrawingStyle = "FullWireFrame"
+b:Ge/TitaniumCylinder/IsParallel   = "T"
+s:Ge/TitaniumCylinder/ParallelWorldName = "ShieldingWorld"
+
+#===============================
+#Left half-sphere of Titanium 
+#===============================
+
+s:Ge/TitaniumLeftCap/Type         = "TsSphere"
+s:Ge/TitaniumLeftCap/Parent       = "ShieldingGeo"
+s:Ge/TitaniumLeftCap/Material     = "Titanium"
+d:Ge/TitaniumLeftCap/RMin         = 0. mm
+d:Ge/TitaniumLeftCap/RMax         = 0.4 mm
+d:Ge/TitaniumLeftCap/SPhi         = 0. deg
+d:Ge/TitaniumLeftCap/DPhi         = 360. deg
+d:Ge/TitaniumLeftCap/STheta       = 0. deg
+d:Ge/TitaniumLeftCap/DTheta       = 90. deg
+d:Ge/TitaniumLeftCap/TransX       = 0. mm
+d:Ge/TitaniumLeftCap/TransY       = 0. mm
+d:Ge/TitaniumLeftCap/TransZ       = 1.875 mm
+d:Ge/TitaniumLeftCap/RotX         = 0. deg
+d:Ge/TitaniumLeftCap/RotY         = 0. deg
+d:Ge/TitaniumLeftCap/RotZ         = 0. deg
+s:Ge/TitaniumLeftCap/DrawingStyle = "FullWireFrame"
+s:Ge/TitaniumLeftCap/Color        = "blue"
+b:Ge/TitaniumLeftCap/IsParallel   = "T"
+s:Ge/TitaniumLeftCap/ParallelWorldName = "ShieldingWorld"
+
+#================================
+#Right half-sphere of titanium
+#================================
+
+s:Ge/TitaniumRightCap/Type         = "TsSphere"
+s:Ge/TitaniumRightCap/Parent       = "ShieldingGeo"
+s:Ge/TitaniumRightCap/Material     = "Titanium"
+d:Ge/TitaniumRightCap/RMin         = 0. mm
+d:Ge/TitaniumRightCap/RMax         = 0.4 mm
+d:Ge/TitaniumRightCap/SPhi         = 0. deg
+d:Ge/TitaniumRightCap/DPhi         = 360. deg
+d:Ge/TitaniumRightCap/STheta       = 0. deg
+d:Ge/TitaniumRightCap/DTheta       = 90. deg
+d:Ge/TitaniumRightCap/TransX       = 0. mm
+d:Ge/TitaniumRightCap/TransY       = 0. mm
+d:Ge/TitaniumRightCap/TransZ       = -1.875 mm
+d:Ge/TitaniumRightCap/RotX         = 180. deg
+d:Ge/TitaniumRightCap/RotY         = 0. deg
+d:Ge/TitaniumRightCap/RotZ         = 0. deg
+s:Ge/TitaniumRightCap/DrawingStyle = "FullWireFrame"
+s:Ge/TitaniumRightCap/Color        = "blue"
+b:Ge/TitaniumRightCap/IsParallel   = "T"
+s:Ge/TitaniumRightCap/ParallelWorldName = "ShieldingWorld"
+
+#====================
+#Dry Air cylinder
+#====================
+
+s:Ge/DryAirCylinder/Type         = "TsCylinder"
+s:Ge/DryAirCylinder/Parent       = "ShieldingGeo"
+s:Ge/DryAirCylinder/Material     = "G4_AIR"
+d:Ge/DryAirCylinder/RMin         = 0. mm
+d:Ge/DryAirCylinder/RMax         = 0.33 mm
+d:Ge/DryAirCylinder/SPhi         = 0. deg
+d:Ge/DryAirCylinder/DPhi         = 360. deg
+d:Ge/DryAirCylinder/HL           = 1.875 mm
+d:Ge/DryAirCylinder/TransX       = 0. mm
+d:Ge/DryAirCylinder/TransY       = 0. mm
+d:Ge/DryAirCylinder/TransZ       = 0. mm
+d:Ge/DryAirCylinder/RotX         = 0. deg
+d:Ge/DryAirCylinder/RotY         = 0. deg
+d:Ge/DryAirCylinder/RotZ         = 0. deg
+s:Ge/DryAirCylinder/DrawingStyle = "FullWireFrame"
+s:Ge/DryAirCylinder/Color        = "white"
+b:Ge/DryAirCylinder/IsParallel   = "T"
+s:Ge/DryAirCylinder/ParallelWorldName = "ShieldingWorld"
+
+sv:Ph/Default/LayeredMassGeometryWorlds = 2 "ShieldingWorld" "ActiveSourceWorld"

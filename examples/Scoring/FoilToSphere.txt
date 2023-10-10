@@ -1,0 +1,86 @@
+# Test scoring in geometry of particle passing through a foil to a sphere
+
+s:Ge/World/Material  = "Vacuum"
+d:Ge/World/HLX       = 2.0 m
+d:Ge/World/HLY       = 2.0 m
+d:Ge/World/HLZ       = 2.0 m
+b:Ge/World/Invisible = "True"
+
+s:Ge/Foil/Type     = "TsBox"
+s:Ge/Foil/Parent   = "World"
+s:Ge/Foil/Material = "Lead"
+d:Ge/Foil/HLX      = 30.0 cm
+d:Ge/Foil/HLY      = 30.0 cm
+d:Ge/Foil/HLZ      = .5 cm
+d:Ge/Foil/TransX   = 0. cm
+d:Ge/Foil/TransY   = 0. cm
+d:Ge/Foil/TransZ   = -30. cm
+d:Ge/Foil/RotX     = 0. deg
+d:Ge/Foil/RotY     = 0. deg
+d:Ge/Foil/RotZ     = 0. deg
+s:Ge/Foil/Color    = "blue"
+i:Ge/Foil/XBins    = 1
+i:Ge/Foil/YBins    = 1
+i:Ge/Foil/ZBins    = 1
+
+s:Ge/Sphere/Type     = "TsSphere"
+s:Ge/Sphere/Parent   = "World"
+s:Ge/Sphere/Material = "Vacuum"
+d:Ge/Sphere/RMin     = 50.0 cm
+d:Ge/Sphere/RMax     = 55.0 cm
+d:Ge/Sphere/SPhi     = 0.0 deg
+d:Ge/Sphere/DPhi     = 120. deg
+d:Ge/Sphere/STheta   = 0 deg
+d:Ge/Sphere/DTheta   = 180 deg
+d:Ge/Sphere/TransX   = 0. cm
+d:Ge/Sphere/TransY   = 0. cm
+d:Ge/Sphere/TransZ   = -30. cm
+d:Ge/Sphere/RotX     = 0. deg
+d:Ge/Sphere/RotY     = 0. deg
+d:Ge/Sphere/RotZ     = 0. deg
+s:Ge/Sphere/Color    = "blue"
+i:Ge/Sphere/RBins    = 2
+
+s:Sc/MyScorer/Quantity                              = "SurfaceTrackCount"
+s:Sc/MyScorer/Surface                               = "Sphere/InnerCurvedSurface"
+b:Sc/MyScorer/OutputToConsole                       = "True"
+s:Sc/MyScorer/OutputType                            = "csv"
+s:Sc/MyScorer/IfOutputFileAlreadyExists             = "Overwrite"
+#i:Sc/MyScorer/EBins                                = 10
+s:Sc/MyScorer/OnlyIncludeParticlesGoing             = "Out"
+#sv:Sc/MyScorer/OnlyIncludeParticlesNamed           = 1 "gamma"
+s:Sc/MyScorer/OnlyIncludeParticlesOfGeneration      = "secondary"
+#d:Sc/MyScorer/EBinMin                              = 0. MeV
+d:Sc/MyScorer/EBinMax                               = 110. MeV
+#d:Sc/MyScorer/OnlyIncludeIfIncidentParticleKEAbove = 0 MeV
+
+# Graphics
+s:Gr/ViewA/Type                             = "OpenGL"
+i:Gr/ViewA/WindowSizeX                      = 900
+i:Gr/ViewA/WindowSizeY                      = 900
+d:Gr/ViewA/Theta                            = 55 deg
+d:Gr/ViewA/Phi                              = 20 deg
+s:Gr/ViewA/Projection                       = "Perspective"
+d:Gr/ViewA/PerspectiveAngle                 = 30 deg
+u:Gr/ViewA/Zoom                             = 1.3
+b:Gr/ViewA/HiddenLineRemovalForTrajectories = "True"
+
+s:So/Example/Type                     = "Beam"
+s:So/Example/Component                = "BeamPosition"
+s:So/Example/BeamParticle             = "proton"
+d:So/Example/BeamEnergy               = 169.23 MeV
+u:So/Example/BeamEnergySpread         = 0.757504
+s:So/Example/BeamPositionDistribution = "Gaussian"
+s:So/Example/BeamPositionCutoffShape  = "Ellipse"
+d:So/Example/BeamPositionCutoffX      = 10. cm
+d:So/Example/BeamPositionCutoffY      = 10. cm
+d:So/Example/BeamPositionSpreadX      = 0.65 cm
+d:So/Example/BeamPositionSpreadY      = 0.65 cm
+s:So/Example/BeamAngularDistribution  = "Gaussian"
+d:So/Example/BeamAngularCutoffX       = 90. deg
+d:So/Example/BeamAngularCutoffY       = 90. deg
+d:So/Example/BeamAngularSpreadX       = 0.0032 rad
+d:So/Example/BeamAngularSpreadY       = 0.0032 rad
+i:So/Example/NumberOfHistoriesInRun   = 10
+
+b:Ts/PauseBeforeQuit = "True"

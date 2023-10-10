@@ -1,0 +1,72 @@
+# Propeller
+
+d:Ge/World/HLX = 30. cm
+d:Ge/World/HLY = 30. cm
+d:Ge/World/HLZ = 10. cm
+
+s:Ge/PropellerA/Type             = "TsPropeller"
+s:Ge/PropellerA/Parent           = "World"
+d:Ge/PropellerA/TransX           = 0.0 cm
+d:Ge/PropellerA/TransY           = 0.0 cm
+d:Ge/PropellerA/TransZ           = 0.0 cm
+d:Ge/PropellerA/RotX             = 0.0 deg
+d:Ge/PropellerA/RotY             = 0.0 deg
+d:Ge/PropellerA/RotZ             = 0.0 deg
+b:Ge/PropellerA/Invisible        = "TRUE"
+b:Ge/PropellerA/PrintInformation = "True"
+
+i:Ge/PropellerA/NbOfBlades = 4
+d:Ge/PropellerA/Rin        = 10.0 mm
+d:Ge/PropellerA/Rout       = 127.5 mm
+
+s:Ge/PropellerA/Blade/Material         = "Parent" #Set to Parent
+s:Ge/PropellerA/Blade/Color            = "skyblue"
+s:Ge/PropellerA/Blade/DrawingStyle     = "Solid"
+i:Ge/PropellerA/Blade/VisSegsPerCircle = 360
+d:Ge/PropellerA/Blade/MaxStepSize      = 10 mm
+
+dv:Ge/PropellerA/Thickness = 10
+0.5	0.6	0.7	0.8	0.9	1.0	1.1	1.2	1.3	1.4	mm
+
+dv:Ge/PropellerA/Angles = 10
+63.15  54.15  46.450  40.65  35.85  31.8   28.1   24.725  21.8   19.1   deg
+
+sv:Ge/PropellerA/Materials = 10
+"Lexan" "G4_WATER" "G4_POLYVINYL_ACETATE" "G4_POLYVINYL_ACETATE" "G4_POLYVINYL_ACETATE"
+"G4_POLYVINYL_ACETATE"  "G4_POLYVINYL_ACETATE" "G4_POLYVINYL_ACETATE" "G4_POLYVINYL_ACETATE" "G4_POLYVINYL_ACETATE"
+
+sv:Ph/Default/Modules = 1 "g4em-standard_opt0"
+
+s:So/Example/Type                     = "Beam"
+s:So/Example/Component                = "BeamPosition"
+s:So/Example/BeamParticle             = "proton"
+d:So/Example/BeamEnergy               = 169.23 MeV
+u:So/Example/BeamEnergySpread         = 0.757504
+s:So/Example/BeamPositionDistribution = "Gaussian"
+s:So/Example/BeamPositionCutoffShape  = "Ellipse"
+d:So/Example/BeamPositionCutoffX      = 10. cm
+d:So/Example/BeamPositionCutoffY      = 10. cm
+d:So/Example/BeamPositionSpreadX      = 0.65 cm
+d:So/Example/BeamPositionSpreadY      = 0.65 cm
+s:So/Example/BeamAngularDistribution  = "Gaussian"
+d:So/Example/BeamAngularCutoffX       = 90. deg
+d:So/Example/BeamAngularCutoffY       = 90. deg
+d:So/Example/BeamAngularSpreadX       = 0.0032 rad
+d:So/Example/BeamAngularSpreadY       = 0.0032 rad
+i:So/Example/NumberOfHistoriesInRun   = 2
+
+b:Ts/PauseBeforeQuit = "True"
+
+s:Gr/ViewA/Type             = "OpenGL"
+i:Gr/ViewA/WindowSizeX      = 600
+i:Gr/ViewA/WindowSizeY      = 600
+d:Gr/ViewA/Theta            = 55 deg
+d:Gr/ViewA/Phi              = 20 deg
+s:Gr/ViewA/Projection       = "Perspective"
+d:Gr/ViewA/PerspectiveAngle = 20 deg
+u:Gr/ViewA/Zoom             = 2.
+b:Gr/ViewA/HiddenLineRemovalForTrajectories = "True"
+
+b:Gr/ViewA/IncludeAxes   = "true"
+s:Gr/ViewA/AxesComponent = "PropellerA"
+d:Gr/ViewA/AxesSize      = 0.1 m

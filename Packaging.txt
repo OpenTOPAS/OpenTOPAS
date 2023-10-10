@@ -1,0 +1,633 @@
+These instructions are Joseph Perl's recipes to build and test the TOPAS distribution packages from source.
+They assume Joseph's personal directory structures.
+ 
+>>>> Preparation on my Master Mac:
+
+Get Qt 5
+-
+On Select Components page:
+expand Qt 5.15.2
+Select macOS
+and nothing else
+At the end of the install, uncheck: Launch Qt Creator.
+
+cd /Applications
+curl -O https://geant4-data.web.cern.ch/geant4-data/releases/geant4.10.07.p03.tar.gz
+tar -zxf geant4.10.07.p03.tar.gz
+patch -p0 < /Applications/tswork/topas/patches/geant4_10_07_p03.patch
+
+rm -rf /Applications/geant4.10.07.p03-install
+rm -rf /Applications/geant4.10.07.p03-build
+mkdir /Applications/geant4.10.07.p03-build
+cd /Applications/geant4.10.07.p03-build
+cmake /Applications/geant4.10.07.p03 -DGEANT4_INSTALL_DATA=OFF -DGEANT4_BUILD_MULTITHREADED=ON -DCMAKE_INSTALL_PREFIX=/Applications/geant4.10.07.p03-install -DGEANT4_USE_QT=ON -DCMAKE_PREFIX_PATH=/Users/perl/Qt/5.15.2/clang_64 -DGEANT4_USE_OPENGL_X11=ON -DGEANT4_USE_RAYTRACER_X11=ON
+make -j8
+make install
+cp -r /Applications/geant4.10.07.p03-install/include/Geant4 /Applications/tswork/Geant4Headers
+
+Compress /Applications/tswork/Geant4Headers and copy this to topas/forenduser
+
+Make sure forenduser/LICENSE.txt is up to date (such as re supported OS versions)
+Make sure CMakeLists.txt TOPAS version number is up to date
+Adjust Beta message in main/TsMain.cc if needed.
+
+cd /Applications/tswork
+cp -r topas topas_20221213c
+
+cd /Applications/tswork
+rm -rf topas_3_9
+rm topas_3_9.zip
+cp -r topas topas_3_9
+cd topas_3_9
+rm -rf .git
+rm .DS_Store
+rm .gitignore
+cd ..
+
+compress /Applications/tswork/topas_3_9
+
+Move this zip file and a separate copy of this file, Packaging.txt
+to TOPAS private web space to be able to pull down to various build machines
+
+
+
+>>>> Prepare Extension Examples zip files.
+
+Only need to do this step if the extensions examples have changed (not often).
+We keep development versions of extension examples inside of topas/examples/Extensions.
+However we don't release these to the user inside the topas release because we don't want to get them into the habit of keeping their own examples within the topas release directory.
+We instead package these up as a separate zip file
+
+cd /Applications/tswork
+cp -r topas_3_2/examples/Extensions/simple ExtensionsExamples_topas_3_2_20170506a
+cp -r topas_3_2/examples/Extensions/full ExtensionsExamplesMore_topas_3_2_20170506a
+compress these files
+
+
+
+>>>> macOS:
+Install XCode 11.7 or newer
+The command line tools must also be installed by running xcode-select --install from the terminal. 
+
+cd /Applications
+curl -Ok https://www.slac.stanford.edu/~perl/gdcm/gdcm-2.6.8.tar.gz
+tar -zxf gdcm-2.6.8.tar.gz
+
+rm -rf /Applications/gdcm-install
+rm -rf /Applications/gdcm-build
+mkdir /Applications/gdcm-build
+cd /Applications/gdcm-build
+cmake /Applications/gdcm-2.6.8 -DGDCM_BUILD_SHARED_LIBS=ON -DGDCM_BUILD_DOCBOOK_MANPAGES:BOOL=OFF -DCMAKE_INSTALL_PREFIX=/Applications/gdcm-install -DCMAKE_INSTALL_RPATH=@loader_path -DCMAKE_MACOSX_RPATH=ON
+make -j8
+make install
+
+cd /Applications
+curl -O https://geant4-data.web.cern.ch/geant4-data/releases/geant4.10.07.p03.tar.gz
+tar -zxf geant4.10.07.p03.tar.gz
+patch -p0 < /Applications/tswork/topas_3_8/patches/geant4_10_07_p03.patch
+
+rm -rf /Applications/geant4.10.07.p03-install
+rm -rf /Applications/geant4.10.07.p03-build
+mkdir /Applications/geant4.10.07.p03-build
+cd /Applications/geant4.10.07.p03-build
+cmake /Applications/geant4.10.07.p03 -DGEANT4_INSTALL_DATA=OFF -DGEANT4_BUILD_MULTITHREADED=ON -DCMAKE_INSTALL_PREFIX=/Applications/geant4.10.07.p03-install -DGEANT4_USE_QT=ON -DCMAKE_PREFIX_PATH=/Users/perl/Qt/5.15.2/clang_64
+make -j16
+make install
+
+rm -rf /Applications/tswork/topas-install
+rm -rf /Applications/tswork/topas-build
+mkdir /Applications/tswork/topas-build
+cd /Applications/tswork/topas-build
+export Geant4_DIR=/Applications/geant4.10.07.p03-install
+export GDCM_DIR=/Applications/gdcm-install
+cmake /Applications/tswork/topas_3_9 -DTOPAS_TYPE=public -DCMAKE_INSTALL_PREFIX=/Applications/tswork/topas-install
+make -j16
+make install
+make package
+tar -zxf topas-*-Darwin.tar.gz
+rm topas-*-Darwin.tar.gz
+cd topas-*-Darwin
+rm topas/Frameworks/libexpat.1.dylib
+
+/Users/perl/Qt/5.15.2/clang_64/bin/macdeployqt topas
+mv topas/Contents/Frameworks/* topas/Frameworks/.
+mv topas/Contents/PlugIns/platforms topas/Frameworks/platforms
+mv topas/Contents/PlugIns/styles topas/Frameworks/styles
+rm -rf topas/Contents
+
+codesign --timestamp --options=runtime --continue -s "TOPAS" -v topas/Frameworks/libG4*.dylib
+codesign --timestamp --options=runtime --continue -s "TOPAS" -v topas/Frameworks/libgdcm*.2.6.8.dylib
+codesign --timestamp --options=runtime --continue -s "TOPAS" -v topas/Frameworks/libgdcmexpat.2.0.0.dylib
+codesign --timestamp --options=runtime --continue -s "TOPAS" -v topas/Frameworks/libgdcmopenjpeg.1.4.0.dylib
+codesign --timestamp --options=runtime --continue -s "TOPAS" -v topas/Frameworks/platforms/*.dylib
+codesign --timestamp --options=runtime --continue -s "TOPAS" -v topas/Frameworks/styles/*.dylib
+codesign --timestamp --options=runtime --continue -s "TOPAS" -v topas/Frameworks/*.framework
+codesign --timestamp --options=runtime --continue -s "TOPAS" -v topas/bin/topas
+
+Study results from above and repeat signing steps as needed
+(have seen cases where some libraries only seemed to sign correctly after
+a second attempt, perhaps some sort of timeout issues).
+
+Compress /Applications/tswork/topas-build/topas-*-Darwin/topas
+
+mv topas.zip topas_3_9_macOS11_7.zip
+codesign --timestamp --options=runtime -s "TOPAS" -v topas_3_9_macOS11_7.zip
+
+xcrun altool --notarize-app --file topas_3_9_macOS11_7.zip --primary-bundle-id "com.topasmc.topas" --username "username" --password "app-specific-password"
+
+
+
+Test in new terminal window:
+
+mkdir /Applications/G4Data
+cd /Applications/G4Data
+curl -O https://geant4-data.web.cern.ch/geant4-data/datasets/G4NDL.4.6.tar.gz
+curl -O https://geant4-data.web.cern.ch/geant4-data/datasets/G4EMLOW.7.13.tar.gz
+curl -O https://geant4-data.web.cern.ch/geant4-data/datasets/G4PhotonEvaporation.5.7.tar.gz
+curl -O https://geant4-data.web.cern.ch/geant4-data/datasets/G4RadioactiveDecay.5.6.tar.gz
+curl -O https://geant4-data.web.cern.ch/geant4-data/datasets/G4PARTICLEXS.3.1.1.tar.gz
+curl -O https://geant4-data.web.cern.ch/geant4-data/datasets/G4SAIDDATA.2.0.tar.gz
+curl -O https://geant4-data.web.cern.ch/geant4-data/datasets/G4ABLA.3.1.tar.gz
+curl -O https://geant4-data.web.cern.ch/geant4-data/datasets/G4INCL.1.0.tar.gz
+curl -O https://geant4-data.web.cern.ch/geant4-data/datasets/G4PII.1.3.tar.gz
+curl -O https://geant4-data.web.cern.ch/geant4-data/datasets/G4ENSDFSTATE.2.3.tar.gz
+curl -O https://geant4-data.web.cern.ch/geant4-data/datasets/G4RealSurface.2.2.tar.gz
+curl -O https://geant4-data.web.cern.ch/geant4-data/datasets/G4TENDL.1.3.2.tar.gz
+tar -zxf G4NDL.4.6.tar.gz
+tar -zxf G4EMLOW.7.13.tar.gz
+tar -zxf G4PhotonEvaporation.5.7.tar.gz
+tar -zxf G4RadioactiveDecay.5.6.tar.gz
+tar -zxf G4PARTICLEXS.3.1.1.tar.gz
+tar -zxf G4SAIDDATA.2.0.tar.gz
+tar -zxf G4ABLA.3.1.tar.gz
+tar -xzf G4INCL.1.0.tar.gz
+tar -zxf G4PII.1.3.tar.gz
+tar -zxf G4ENSDFSTATE.2.3.tar.gz
+tar -zxf G4RealSurface.2.2.tar.gz
+tar -zxf G4TENDL.1.3.2.tar.gz
+
+rm -rf /Applications/topas
+cp -r /Applications/tswork/topas-build/topas-*-Darwin/topas /Applications/.
+
+export TOPAS_G4_DATA_DIR=/Applications/G4Data
+export QT_QPA_PLATFORM_PLUGIN_PATH=/Applications/topas/Frameworks
+cd /Applications/topas/examples/Patient
+unzip Abdomen.zip
+../../bin/topas ViewAbdomen.txt
+cd ../..
+unzip Geant4Headers.zip
+cmake -DTOPAS_EXTENSIONS_DIR=/Applications/topas_extensions
+make -j4
+cd examples/Patient 
+../../bin/topas ViewAbdomen.txt
+cd ../Graphics
+../../bin/topas QtTest.txt
+
+
+
+>>>> Debian9 and 10 on Virtual Machine
+VirtualBox-6.0.14
+
+Create a new virtual machine accepting all defaults except set:
+Disk size to 40GB
+
+Open Settings for the new machine:
+System...Motherboard...Base Memory: 8192
+System...Processor(s).	..Processors: 8
+
+Start the new virtual machine
+
+Select install from:
+debian-9.12.0-amd64-netinst.iso
+debian-10.1.0-amd64-netinst.iso
+
+From the Virtual Box menu...View...Scaled Mode
+
+Take all defaults or obvious answers, but at last question,
+"Device for boot loader installation:"
+take the second option: /dev/sda
+
+Open Settings
+Date & Time...Automatic Date & Time: On
+Privacy...Screen Lock: Off
+Power...Blank screen: Never
+
+Super User from here until further notice:
+
+Install extra packages:
+apt install -y libexpat1-dev
+apt install -y libgl1-mesa-dev
+apt install -y libglu1-mesa-dev
+apt install -y libxt-dev
+apt install -y xorg-dev
+apt install -y build-essential
+apt install -y libharfbuzz-dev
+
+Debian10:
+apt install -y cmake
+
+Debian9:
+cd /usr
+wget https://cmake.org/files/v3.9/cmake-3.9.6-Linux-x86_64.sh -P /usr/
+chmod 755 /usr/cmake-3.9.6-Linux-x86_64.sh
+./cmake-3.9.6-Linux-x86_64.sh
+Answer y to accept the license.
+Answer n to putting this new cmake into a subdirectory.
+
+Debian9:
+Clone machine to have one without Qt (to simulate end-user's non-Qt machine).
+
+Debian9:
+Then on the machine that will have Qt:
+su
+apt install -y qtbase5-dev
+cp /usr/bin/lconvert /usr/lib/x86_64-linux-gnu/qt5/bin/.
+wget https://github.com/probonopd/linuxdeployqt/releases/download/6/linuxdeployqt-6-x86_64.AppImage
+chmod a+x linuxdeployqt-6-x86_64.AppImage
+
+Super User finished.
+
+cd ~
+wget --no-check-certificate https://www.slac.stanford.edu/~perl/gdcm/gdcm-2.6.8.tar.gz
+tar -zxf gdcm-2.6.8.tar.gz
+
+rm -rf ~/gdcm-install
+rm -rf ~/gdcm-build
+mkdir ~/gdcm-build
+cd ~/gdcm-build
+cmake ~/gdcm-2.6.8 -DGDCM_BUILD_SHARED_LIBS=ON -DGDCM_BUILD_SHARED_LIBS=ON -DGDCM_BUILD_DOCBOOK_MANPAGES:BOOL=OFF -DCMAKE_INSTALL_PREFIX=~/gdcm-install
+make -j8
+make install
+
+cd ~
+wget https://geant4-data.web.cern.ch/geant4-data/releases/geant4.10.07.p03.tar.gz
+tar -zxf geant4.10.07.p03.tar.gz
+patch -p0 < ~/topas_3_9/patches/geant4_10_07_p03.patch
+
+rm -rf ~/geant4.10.07.p03-install
+rm -rf ~/geant4.10.07.p03-build
+mkdir ~/geant4.10.07.p03-build
+cd ~/geant4.10.07.p03-build
+cmake ~/geant4.10.07.p03 -DGEANT4_INSTALL_DATA=OFF -DGEANT4_BUILD_MULTITHREADED=ON -DCMAKE_BUILD_TYPE=Release -DGEANT4_USE_OPENGL_X11=ON -DGEANT4_USE_RAYTRACER_X11=ON -DCMAKE_INSTALL_PREFIX=~/geant4.10.07.p03-install -DGEANT4_USE_QT=ON
+make -j8
+make install
+
+Download topas_3_9.zip from TOPAS private web space.
+cd ~
+rm -rf topas_3_9
+unzip Downloads/topas_3_9.zip
+rm -rf __MACOSX
+
+rm -rf ~/topas-install
+rm -rf ~/topas-build
+mkdir ~/topas-build
+cd ~/topas-build
+export Geant4_DIR=~/geant4.10.07.p03-install
+export GDCM_DIR=~/gdcm-install
+cmake ~/topas_3_9 -DTOPAS_TYPE=public -DCMAKE_INSTALL_PREFIX=~/topas-install
+make -j8
+make install
+make package
+tar -zxf topas-*-Linux.tar.gz
+rm topas-*-Linux.tar.gz
+cd topas-*-Linux
+
+export LD_LIBRARY_PATH=~/gdcm-install/lib:~/geant4.10.07.p03-install/lib:/usr/lib/x86_64-linux-gnu/qt5/lib:$LD_LIBRARY_PATH
+~/linuxdeployqt-6-x86_64.AppImage topas/bin/topas -qmake=/usr/lib/x86_64-linux-gnu/qt5/bin/qmake -bundle-non-qt-libs
+cd topas
+rm -rf share
+rm -rf translations
+cd lib
+
+ln -s libQt5Core.so.5 libQt5Core.so
+ln -s libQt5DBus.so.5 libQt5DBus.so
+ln -s libQt5Gui.so.5 libQt5Gui.so
+ln -s libQt5OpenGL.so.5 libQt5OpenGL.so
+ln -s libQt5PrintSupport.so.5 libQt5PrintSupport.so
+ln -s libQt5Widgets.so.5 libQt5Widgets.so
+ln -s libgdcmMSFF.so.2.6 libgdcmMSFF.so
+ln -s libgdcmIOD.so.2.6 libgdcmIOD.so
+ln -s libgdcmDICT.so.2.6 libgdcmDICT.so
+ln -s libgdcmDSED.so.2.6 libgdcmDSED.so
+ln -s libgdcmexpat.so.2.0 libgdcmexpat.so
+ln -s libgdcmCommon.so.2.6 libgdcmCommon.so
+ln -s libgdcmuuid.so.2.6 libgdcmuuid.so
+ln -s libgdcmcharls.so.2.6 libgdcmcharls.so
+ln -s libgdcmjpeg8.so.2.6 libgdcmjpeg8.so
+ln -s libgdcmjpeg12.so.2.6 libgdcmjpeg12.so
+ln -s libgdcmjpeg16.so.2.6 libgdcmjpeg16.so
+ln -s libgdcmzlib.so.2.6 libgdcmzlib.so
+ln -s libgdcmopenjpeg.so.1.4 libgdcmopenjpeg.so
+
+cd ../..
+tar -pczf topas_3_9_debian9.tar.gz topas
+split topas_3_9_debian9.tar.gz "topas_3_9_debian9.tar.gz.part_" -b 30M -d -a 1
+mv topas_3_9_debian9.tar.gz.part_1 topas_3_9_debian9.tar.gz.part_2
+mv topas_3_9_debian9.tar.gz.part_0 topas_3_9_debian9.tar.gz.part_1
+
+Upload tar.gz files to TOPAS private web space
+
+
+Test in new terminal window:
+
+mkdir ~/G4Data
+cd ~/G4Data
+wget -4 https://geant4-data.web.cern.ch/geant4-data/datasets/G4NDL.4.6.tar.gz
+wget -4 https://geant4-data.web.cern.ch/geant4-data/datasets/G4EMLOW.7.13.tar.gz
+wget -4 https://geant4-data.web.cern.ch/geant4-data/datasets/G4PhotonEvaporation.5.7.tar.gz
+wget -4 https://geant4-data.web.cern.ch/geant4-data/datasets/G4RadioactiveDecay.5.6.tar.gz
+wget -4 https://geant4-data.web.cern.ch/geant4-data/datasets/G4PARTICLEXS.3.1.1.tar.gz
+wget -4 https://geant4-data.web.cern.ch/geant4-data/datasets/G4SAIDDATA.2.0.tar.gz
+wget -4 https://geant4-data.web.cern.ch/geant4-data/datasets/G4ABLA.3.1.tar.gz
+wget -4 https://geant4-data.web.cern.ch/geant4-data/datasets/G4INCL.1.0.tar.gz
+wget -4 https://geant4-data.web.cern.ch/geant4-data/datasets/G4PII.1.3.tar.gz
+wget -4 https://geant4-data.web.cern.ch/geant4-data/datasets/G4ENSDFSTATE.2.3.tar.gz
+wget -4 https://geant4-data.web.cern.ch/geant4-data/datasets/G4RealSurface.2.2.tar.gz
+wget -4 https://geant4-data.web.cern.ch/geant4-data/datasets/G4TENDL.1.3.2.tar.gz
+tar -zxf G4NDL.4.6.tar.gz
+tar -zxf G4EMLOW.7.13.tar.gz
+tar -zxf G4PhotonEvaporation.5.7.tar.gz
+tar -zxf G4RadioactiveDecay.5.6.tar.gz
+tar -zxf G4PARTICLEXS.3.1.1.tar.gz
+tar -zxf G4SAIDDATA.2.0.tar.gz
+tar -zxf G4ABLA.3.1.tar.gz
+tar -xzf G4INCL.1.0.tar.gz
+tar -zxf G4PII.1.3.tar.gz
+tar -zxf G4ENSDFSTATE.2.3.tar.gz
+tar -zxf G4RealSurface.2.2.tar.gz
+tar -zxf G4TENDL.1.3.2.tar.gz
+
+Download topas_extensions.zip from TOPAS private web space
+cd ~
+rm -rf topas_extensions
+unzip Downloads/topas_extensions.zip
+rm -rf __MACOSX
+
+Download topas_3_9_debian9.tar.gz* from TOPAS private web space
+cd ~
+rm -rf topas
+rm topas_3_9_debian9.tar.gz
+cat Downloads/topas_3_9_debian9.tar.gz* > topas_3_9_debian9.tar.gz
+tar -zxf topas_3_9_debian9.tar.gz
+
+export TOPAS_G4_DATA_DIR=~/G4Data
+cd ~/topas/examples/Patient
+unzip Abdomen.zip
+../../bin/topas ViewAbdomen.txt
+cd ../..
+unzip Geant4Headers.zip
+cmake -DTOPAS_EXTENSIONS_DIR=~/topas_extensions
+make
+cd examples/Patient
+../../bin/topas ViewAbdomen.txt
+cd ../Graphics
+../../bin/topas QtTest.txt
+
+
+
+>>>> CentOS7 or 8 on Virtual Machine
+VirtualBox-6.0.14
+
+Create a new virtual machine accepting all defaults except set:
+Disk size to 40GB
+
+Open Settings for the new machine:
+System...Motherboard...Base Memory: 8192
+System...Motherboard...Pointing Device: USB Tablet
+System...Processor(s).	..Processors: 8
+Network...Adapter 1...Attached to: Bridged Adapter.
+
+Start the new virtual machine
+
+Select install from:
+CentOS-7-x86_64-DVD-1908.iso
+CentOS-8-x86_64-1905-dvd1.iso
+
+From the Virtual Box menu...View...Scaled Mode
+
+Take all the defaults, except:
+
+CentOS7:
+Install the version that skips the media testing
+Software Selection..."Development and Creative Workstation"
+Installation Destination: click Twice on ATA VBOX HARDDISK
+Network...Etnernet On
+Time & Date...Los Angeles (Network Time should auto set to On if network present)
+Begin Installation
+Root password set
+User creation set
+Virtual Box VM menu Devices...Optical Drives...Remove disk from virtual drive
+Reboot
+Accept license
+Finish configuration
+Turned off location services
+
+CentOS8:
+Install the version that skips the media testing
+Installation Destination: click Twice on ATA VBOX HARDDISK
+Network...Etnernet On
+Time & Date...Los Angeles (Network Time should auto set to On if network present)
+Begin Installation
+Root password set
+User creation set
+Virtual Box VM menu Devices...Optical Drives...Remove disk from virtual drive
+Reboot
+Accept license
+Finish configuration
+Turned off location services
+
+Super User from here until further notice:
+
+Note that the following yum installs sometimes time out, so watch the responses.
+When they do time out, can just run them again.
+
+yum groupinstall -y "Development Tools"
+yum install -y expat-devel
+yum install -y libXmu-devel
+yum install -y mesa-libGL-devel
+yum install -y mesa-libGLU-devel
+
+CentOS7:
+yum install -y centos-release-scl
+yum install -y devtoolset-7
+
+CentOS8:
+yum install -y cmake
+
+CentOS7 need a newer version of cmake.
+cd /usr
+wget https://cmake.org/files/v3.9/cmake-3.9.6-Linux-x86_64.sh -P /usr/
+chmod 755 /usr/cmake-3.9.6-Linux-x86_64.sh
+./cmake-3.9.6-Linux-x86_64.sh
+Answer y to accept the license.
+Answer n to putting this new cmake into a subdirectory.
+
+Clone machine to have one without Qt (to simulate end-user's non-Qt machine).
+Then on the machine that will have Qt:
+su
+yum install -y qt5-qtbase-devel
+wget https://github.com/probonopd/linuxdeployqt/releases/download/6/linuxdeployqt-6-x86_64.AppImage
+chmod a+x linuxdeployqt-6-x86_64.AppImage
+
+Super User finished.
+
+CentOS7:
+Each time you open a terminal window, activate this new compiler by doing:
+source /opt/rh/devtoolset-7/enable
+
+cd ~
+wget --no-check-certificate https://www.slac.stanford.edu/~perl/gdcm/gdcm-2.6.8.tar.gz
+tar -zxf gdcm-2.6.8.tar.gz
+rm -rf ~/gdcm-install
+rm -rf ~/gdcm-build
+mkdir ~/gdcm-build
+cd ~/gdcm-build
+cmake ~/gdcm-2.6.8 -DGDCM_BUILD_SHARED_LIBS=ON -DGDCM_BUILD_SHARED_LIBS=ON -DGDCM_BUILD_DOCBOOK_MANPAGES:BOOL=OFF -DCMAKE_INSTALL_PREFIX=~/gdcm-install
+make -j8
+make install
+
+cd ~
+wget https://geant4-data.web.cern.ch/geant4-data/releases/geant4.10.07.p03.tar.gz
+tar -zxf geant4.10.07.p03.tar.gz
+patch -p0 < ~/topas_3_9/patches/geant4_10_07_p03.patch
+
+CentOS7:
+source /opt/rh/devtoolset-7/enable
+
+rm -rf ~/geant4.10.07.p03-install
+rm -rf ~/geant4.10.07.p03-build
+mkdir ~/geant4.10.07.p03-build
+cd ~/geant4.10.07.p03-build
+cmake ~/geant4.10.07.p03 -DGEANT4_INSTALL_DATA=OFF -DGEANT4_BUILD_MULTITHREADED=ON -DCMAKE_BUILD_TYPE=Release -DGEANT4_USE_OPENGL_X11=ON -DGEANT4_USE_RAYTRACER_X11=ON -DCMAKE_INSTALL_PREFIX=~/geant4.10.07.p03-install -DGEANT4_USE_QT=ON
+make -j8
+make install
+
+Download topas_3_9.zip from TOPAS private web space.
+
+CentOS7:
+source /opt/rh/devtoolset-7/enable
+
+cd ~
+rm -rf topas_3_9
+unzip Downloads/topas_3_9.zip
+rm -rf __MACOSX
+
+rm -rf ~/topas-install
+rm -rf ~/topas-build
+mkdir ~/topas-build
+cd ~/topas-build
+export Geant4_DIR=~/geant4.10.07.p03-install
+export GDCM_DIR=~/gdcm-install
+cmake ~/topas_3_9 -DTOPAS_TYPE=public -DCMAKE_INSTALL_PREFIX=~/topas-install
+make -j8
+make install
+make package
+tar -zxf topas-*-Linux.tar.gz
+rm topas-*-Linux.tar.gz
+cd topas-*-Linux
+
+export LD_LIBRARY_PATH=~/gdcm-install/lib:~/geant4.10.07.p03-install/lib64:/usr/lib64/qt5/lib:$LD_LIBRARY_PATH
+~/linuxdeployqt-6-x86_64.AppImage topas/bin/topas -qmake=/usr/lib64/qt5/bin/qmake -bundle-non-qt-libs -no-translations -unsupported-allow-new-glibc
+cd topas
+rm -rf share
+rm -rf translations
+cd lib
+
+ln -s libQt5Core.so.5 libQt5Core.so
+ln -s libQt5DBus.so.5 libQt5DBus.so
+ln -s libQt5Gui.so.5 libQt5Gui.so
+ln -s libQt5OpenGL.so.5 libQt5OpenGL.so
+ln -s libQt5PrintSupport.so.5 libQt5PrintSupport.so
+ln -s libQt5Widgets.so.5 libQt5Widgets.so
+ln -s libgdcmMSFF.so.2.6 libgdcmMSFF.so
+ln -s libgdcmIOD.so.2.6 libgdcmIOD.so
+ln -s libgdcmDICT.so.2.6 libgdcmDICT.so
+ln -s libgdcmDSED.so.2.6 libgdcmDSED.so
+ln -s libgdcmexpat.so.2.0 libgdcmexpat.so
+ln -s libgdcmCommon.so.2.6 libgdcmCommon.so
+ln -s libgdcmuuid.so.2.6 libgdcmuuid.so
+ln -s libgdcmcharls.so.2.6 libgdcmcharls.so
+ln -s libgdcmjpeg8.so.2.6 libgdcmjpeg8.so
+ln -s libgdcmjpeg12.so.2.6 libgdcmjpeg12.so
+ln -s libgdcmjpeg16.so.2.6 libgdcmjpeg16.so
+ln -s libgdcmzlib.so.2.6 libgdcmzlib.so
+ln -s libgdcmopenjpeg.so.1.4 libgdcmopenjpeg.so
+cd ../..
+
+tar -pczf topas_3_9_centos7.tar.gz topas
+split topas_3_9_centos7.tar.gz "topas_3_9_centos7.tar.gz.part_" -b 30M -d -a 1
+mv topas_3_9_centos7.tar.gz.part_1 topas_3_9_centos7.tar.gz.part_2
+mv topas_3_9_centos7.tar.gz.part_0 topas_3_9_centos7.tar.gz.part_1
+
+tar -pczf topas_3_9_centos8.tar.gz topas
+split topas_3_9_centos8.tar.gz "topas_3_9_centos8.tar.gz.part_" -b 30M -d -a 1
+mv topas_3_9_centos8.tar.gz.part_1 topas_3_9_centos8.tar.gz.part_2
+mv topas_3_9_centos8.tar.gz.part_0 topas_3_9_centos8.tar.gz.part_1
+
+Upload tar.gz files to TOPAS private web space
+
+
+Test in new terminal window:
+
+mkdir ~/G4Data
+cd ~/G4Data
+wget -4 https://geant4-data.web.cern.ch/geant4-data/datasets/G4NDL.4.6.tar.gz
+wget -4 https://geant4-data.web.cern.ch/geant4-data/datasets/G4EMLOW.7.13.tar.gz
+wget -4 https://geant4-data.web.cern.ch/geant4-data/datasets/G4PhotonEvaporation.5.7.tar.gz
+wget -4 https://geant4-data.web.cern.ch/geant4-data/datasets/G4RadioactiveDecay.5.6.tar.gz
+wget -4 https://geant4-data.web.cern.ch/geant4-data/datasets/G4PARTICLEXS.3.1.1.tar.gz
+wget -4 https://geant4-data.web.cern.ch/geant4-data/datasets/G4SAIDDATA.2.0.tar.gz
+wget -4 https://geant4-data.web.cern.ch/geant4-data/datasets/G4ABLA.3.1.tar.gz
+wget -4 https://geant4-data.web.cern.ch/geant4-data/datasets/G4INCL.1.0.tar.gz
+wget -4 https://geant4-data.web.cern.ch/geant4-data/datasets/G4PII.1.3.tar.gz
+wget -4 https://geant4-data.web.cern.ch/geant4-data/datasets/G4ENSDFSTATE.2.3.tar.gz
+wget -4 https://geant4-data.web.cern.ch/geant4-data/datasets/G4RealSurface.2.2.tar.gz
+wget -4 https://geant4-data.web.cern.ch/geant4-data/datasets/G4TENDL.1.3.2.tar.gz
+tar -zxf G4NDL.4.6.tar.gz
+tar -zxf G4EMLOW.7.13.tar.gz
+tar -zxf G4PhotonEvaporation.5.7.tar.gz
+tar -zxf G4RadioactiveDecay.5.6.tar.gz
+tar -zxf G4PARTICLEXS.3.1.1.tar.gz
+tar -zxf G4SAIDDATA.2.0.tar.gz
+tar -zxf G4ABLA.3.1.tar.gz
+tar -xzf G4INCL.1.0.tar.gz
+tar -zxf G4PII.1.3.tar.gz
+tar -zxf G4ENSDFSTATE.2.3.tar.gz
+tar -zxf G4RealSurface.2.2.tar.gz
+tar -zxf G4TENDL.1.3.2.tar.gz
+
+Download topas_extensions.zip from TOPAS private web space
+cd ~
+rm -rf topas_extensions
+unzip Downloads/topas_extensions.zip
+rm -rf __MACOSX
+
+CentOS7:
+Download topas_3_9_centos7.tar.gz* from TOPAS private web space
+source /opt/rh/devtoolset-7/enable
+cd ~
+rm -rf topas
+rm topas_3_9_centos7.tar.gz
+cat Downloads/topas_3_9_centos7.tar.gz.* > topas_3_9_centos7.tar.gz
+tar -zxf topas_3_9_centos7.tar.gz
+
+CentOS8:
+Download topas_3_9_centos8.tar.gz* from TOPAS private web space
+cd ~
+rm -rf topas
+rm topas_3_9_centos8.tar.gz
+cat Downloads/topas_3_9_centos8.tar.gz.* > topas_3_9_centos8.tar.gz
+tar -zxf topas_3_9_centos8.tar.gz
+
+export TOPAS_G4_DATA_DIR=~/G4Data
+cd ~/topas/examples/Patient
+unzip Abdomen.zip
+../../bin/topas ViewAbdomen.txt
+cd ../..
+unzip Geant4Headers.zip
+cmake -DTOPAS_EXTENSIONS_DIR=~/topas_extensions
+make
+cd examples/Patient
+../../bin/topas ViewAbdomen.txt
+cd ../Graphics
+../../bin/topas QtTest.txt

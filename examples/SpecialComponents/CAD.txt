@@ -1,0 +1,64 @@
+# Builds components on-the-fly from information in CAD files.
+# The first component is built from the PLY format.
+# The second component is built from the STL format.
+
+d:Ge/World/HLX = 10 cm
+d:Ge/World/HLY = 10 cm
+d:Ge/World/HLZ = 10 cm
+
+d:Ge/BeamPosition/TransZ = -7 cm
+d:Ge/BeamPosition/RotX   = 0 deg
+
+s:Ge/CADVolumePly/Parent     = "World"
+s:Ge/CADVolumePly/Material   = "Brass"
+s:Ge/CADVolumePly/Type       = "TsCAD"
+s:Ge/CADVolumePly/InputFile  = "Aperture_cm"
+s:Ge/CADVolumePly/FileFormat = "ply"
+d:Ge/CADVolumePly/Units      = 0.5 cm
+d:Ge/CADVolumePly/TransX     = -4 cm
+d:Ge/CADVolumePly/TransY     = -4 cm
+d:Ge/CADVolumePly/TransZ     = -6.5 cm
+d:Ge/CADVolumePly/RotX       = 0 deg
+d:Ge/CADVolumePly/RotY       = 0 deg
+d:Ge/CADVolumePly/RotZ       = 0 deg
+
+s:Ge/CADVolumeStl/Parent     = "World"
+s:Ge/CADVolumeStl/Material   = "Lead"
+s:Ge/CADVolumeStl/Type       = "TsCAD"
+s:Ge/CADVolumeStl/InputFile  = "Aperture_cm"
+s:Ge/CADVolumeStl/FileFormat = "stl"
+d:Ge/CADVolumeStl/Units      = 0.5 cm
+d:Ge/CADVolumeStl/TransX     = -4 cm
+d:Ge/CADVolumeStl/TransY     = -4 cm
+d:Ge/CADVolumeStl/TransZ     = 0 cm
+d:Ge/CADVolumeStl/RotX       = 0 deg
+d:Ge/CADVolumeStl/RotY       = 0 deg
+d:Ge/CADVolumeStl/RotZ       = 0 deg
+
+s:Gr/view/Type        = "OpenGl"
+d:Gr/view/Theta       = 45 deg
+d:Gr/view/Phi         = 45 deg
+u:Gr/view/Zoom        = 1.5
+b:Gr/view/IncludeAxes = "True"
+d:Gr/view/AxesSize    = 8 cm
+
+s:So/Example/Type                     = "Beam"
+s:So/Example/Component                = "BeamPosition"
+s:So/Example/BeamParticle             = "proton"
+d:So/Example/BeamEnergy               = 150 MeV
+u:So/Example/BeamEnergySpread         = 0.757504
+s:So/Example/BeamPositionDistribution = "Flat"
+s:So/Example/BeamPositionCutoffShape  = "Ellipse"
+d:So/Example/BeamPositionCutoffX      = 3 cm
+d:So/Example/BeamPositionCutoffY      = 3 cm
+s:So/Example/BeamAngularDistribution  = "Gaussian"
+d:So/Example/BeamAngularCutoffX       = 90. deg
+d:So/Example/BeamAngularCutoffY       = 90. deg
+d:So/Example/BeamAngularSpreadX       = 0.0032 rad
+d:So/Example/BeamAngularSpreadY       = 0.0032 rad
+i:So/Example/NumberOfHistoriesInRun   = 30
+
+sv:Ph/Default/Modules = 1 "g4em-standard_opt0"
+
+i:Ts/ShowHistoryCountAtInterval = 10
+b:Ts/PauseBeforeQuit = "True"

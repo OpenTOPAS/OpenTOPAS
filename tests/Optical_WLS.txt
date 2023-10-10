@@ -1,0 +1,29 @@
+# 
+includeFile = Optical_Globals.txt
+
+# SCORER
+s:Sc/PhSpIn/Quantity                  = "PhaseSpace"
+s:Sc/PhSpIn/Surface                   = "Plastic/ZPlusSurface"
+s:Sc/PhSpIn/OutputType                 = "Ascii"
+s:Sc/PhSpIn/OutputFile                 = "Optical_WLS_In"
+s:Sc/PhSpIn/IfOutputFileAlreadyExists  = "Overwrite"
+b:Sc/PhSpIn/IncludeTimeOfFlight       = "true"
+b:Sc/PhSpIn/UsePDGEncoding            = "True"
+s:Sc/PhSpIn/OnlyIncludeParticlesGoing = "Out"
+
+s:Sc/PhSpOut/Quantity                  = "PhaseSpace"
+s:Sc/PhSpOut/Surface                   = "Photocathode/ZMinusSurface"
+s:Sc/PhSpOut/OutputType                = "Ascii"
+s:Sc/PhSpOut/OutputFile                = "Optical_WLS_Out"
+s:Sc/PhSpOut/IfOutputFileAlreadyExists = "Overwrite"
+b:Sc/PhSpOut/IncludeTimeOfFlight       = "true"
+b:Sc/PhSpOut/UsePDGEncoding            = "True"
+s:Sc/PhSpOut/OnlyIncludeParticlesGoing = "In"
+
+# PHYSICS LIST
+s:Ph/ListName         = "Optical"
+s:Ph/Optical/Type     = "Geant4_Modular"
+sv:Ph/Optical/Modules = 2 "g4em-standard_opt3" "g4optical"
+
+i:So/Default/NumberOfHistoriesInRun   = 10
+

@@ -1,0 +1,22 @@
+$TITLE:
+TOPAS Phase Space in "limited" format. Should only be used when it is necessary to read or write from restrictive older codes.
+$RECORD_CONTENTS:
+    1     // X is stored ?
+    1     // Y is stored ?
+    1     // Z is stored ?
+    1     // U is stored ?
+    1     // V is stored ?
+    1     // W is stored ?
+    1     // Weight is stored ?
+    0     // Extra floats stored ?
+    0     // Extra longs stored ?
+$RECORD_LENGTH:
+29
+$ORIG_HISTORIES:
+100
+$PARTICLES:
+106
+$EXTRA_FLOATS:
+0
+$EXTRA_INTS:
+0

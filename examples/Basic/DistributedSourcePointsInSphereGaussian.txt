@@ -1,0 +1,40 @@
+s:Ge/World/Material  = "G4_W"
+d:Ge/World/HLX       = 2.0 m
+d:Ge/World/HLY       = 2.0 m
+d:Ge/World/HLZ       = 2.0 m
+b:Ge/World/Invisible = "True"
+
+s:Ge/DemoSphere/Type                 = "TsSphere"
+s:Ge/DemoSphere/Parent               = "World"
+s:Ge/DemoSphere/Material             = "G4_WATER"
+d:Ge/DemoSphere/RMax                 = 120 mm
+
+s:Ge/DemoTwistedTubs/Type            = "G4TwistedTubs"
+#s:Ge/DemoTwistedTubs/Parent          = "World"
+s:Ge/DemoTwistedTubs/Material        = "Vacuum"
+d:Ge/DemoTwistedTubs/Twist           = 60 deg
+d:Ge/DemoTwistedTubs/EndInnerRad     = 10 mm
+d:Ge/DemoTwistedTubs/EndOuterRad     = 15 mm
+d:Ge/DemoTwistedTubs/HLZ             = 20 mm
+d:Ge/DemoTwistedTubs/Phi             = 90 deg
+s:Ge/DemoTwistedTubs/Color           = "brown"
+s:Ge/DemoTwistedTubs/DrawingStyle    = "FullWireFrame"
+
+s:So/Example/Type                     = "Distributed"
+s:So/Example/Component                = "DemoSphere"
+s:So/Example/BeamParticle             = "gamma"
+d:So/Example/BeamEnergy               = 10. keV
+u:So/Example/BeamEnergySpread         = 0.
+ic:So/Example/NumberOfHistoriesInRun  = 5
+ic:So/Example/NumberOfSourcePoints    = 4
+bc:So/Example/RedistributePointsOnNewRun = "False"
+s:So/Example/PointDistribution        = "Flat" # default to "Flat"
+dc:So/Example/PointDistributionSigma   = 20. mm
+
+sv:Ph/Default/Modules = 1 "g4em-standard_opt0"
+
+i:Ts/ShowHistoryCountAtInterval = 100
+b:Ts/PauseBeforeQuit = "True"
+
+s:Gr/ViewA/Type = "OpenGL"
+Ts/UseQt = "T"

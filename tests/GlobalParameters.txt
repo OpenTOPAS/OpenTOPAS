@@ -1,0 +1,47 @@
+#All coordination information comes from TsDefaultParameters.
+#IEC 61217 compliance
+
+#Fixed Reference system (If, Io) => World volume
+#Gantry coordination system (Ig) => GantryCoordination
+#Source coordination system (S)  => BeamPosition rotateX(180),
+#Z position w.r.t GantryCoordination
+#Beam source coordinate system rotate 180 and translate along z w.r.t g.
+#-> Y is -Y. we have to flip phase space data.
+
+#--- Geometry
+#Iso coordination system (If,Io)
+s:Ge/IsoCoordination/Parent  = "World"
+s:Ge/IsoCoordination/Type    = "Group"
+d:Ge/IsoCoordination/TransX  = 0. m
+d:Ge/IsoCoordination/TransY  = 0. m
+d:Ge/IsoCoordination/TransZ  = 0. m
+d:Ge/IsoCoordination/RotX    = 0. deg
+d:Ge/IsoCoordination/RotY    = 0. deg
+d:Ge/IsoCoordination/RotZ    = 0. deg
+
+#Gantry coordination system (Ig)
+s:Ge/GantryCoordination/Parent = "World"
+s:Ge/GantryCoordination/Type   = "Group"
+d:Ge/GantryCoordination/TransX = 0. m
+d:Ge/GantryCoordination/TransY = 0. m
+d:Ge/GantryCoordination/TransZ = 0. m
+d:Ge/GantryCoordination/RotX   = 0. deg
+d:Ge/GantryCoordination/RotY   = 0. deg
+d:Ge/GantryCoordination/RotZ   = 0. deg
+
+# Default Beam position (S)
+s:Ge/BeamPosition/Parent   = "GantryCoordination"
+s:Ge/BeamPosition/Type     = "Group"
+d:Ge/BeamPosition/TransX   = 0. m
+d:Ge/BeamPosition/TransY   = 0. m
+d:Ge/BeamPosition/TransZ   = 3.0 m
+#flipped cause the beam flies 0 to +z.
+d:Ge/BeamPosition/RotX     = 180. deg
+d:Ge/BeamPosition/RotY     = 0. deg
+d:Ge/BeamPosition/RotZ     = 0. deg
+
+
+#---- Sequence
+b:Ts/ShowCPUTime                = "True"
+i:Ts/ShowHistoryCountAtInterval = 1000000
+i:Ts/Seed                       = 5

@@ -1,0 +1,78 @@
+includeFile = GlobalParameters.txt
+
+
+# Analytical calculation
+# ----------------------
+# quadrupole focal length, f = p/qgl
+# where p = proton momentum
+#       q = proton charge
+#       g = magnetic field gradient (Ge/Quadrupole/MagneticFieldGradientX)
+#       l = length of quadrupole (2*Ge/Quadrupole/HLZ)
+#
+# optics says 1/f = 1/u + 1/v
+# where u = source-lens distance
+#       v = lens-image distance
+#
+# to form an image at the isocenter (surface of phantom), we
+# require u = v = 0.5*Ge/BeamPosition/TransZ
+#
+# ==> g = 6.1 T/m
+
+
+
+#--- Source
+s:So/Default/Type                     = "Beam"
+s:So/Default/BeamParticle             = "proton"
+d:So/Default/BeamEnergy               = 150.00 MeV
+u:So/Default/BeamEnergySpread         = 0.0
+s:So/Default/BeamPositionDistribution = "None"
+s:So/Default/BeamAngularDistribution  = "Gaussian"
+d:So/Default/BeamAngularSpreadX       = 0.05 rad
+d:So/Default/BeamAngularSpreadY       = 0.05 rad
+d:So/Default/BeamAngularCutoffX       = 90 deg
+d:So/Default/BeamAngularCutoffY       = 90 deg
+i:So/Default/NumberOfHistoriesInRun   = 1000
+s:So/Default/Component                = "BeamPosition"
+
+
+#--- Magnet
+s:Ge/Quadrupole/Type                   = "TsBox"
+s:Ge/Quadrupole/Field                  = "QuadrupoleMagnet"
+s:Ge/Quadrupole/Parent                 = "GantryCoordination"
+s:Ge/Quadrupole/Material               = "Air"
+d:Ge/Quadrupole/HLX                    = 30 cm
+d:Ge/Quadrupole/HLY                    = 30 cm
+d:Ge/Quadrupole/HLZ                    = 20 cm
+d:Ge/Quadrupole/TransX                 = 0.0 cm
+d:Ge/Quadrupole/TransY                 = 0.0 cm
+d:Ge/Quadrupole/TransZ                 = 0.5 * Ge/BeamPosition/TransZ m
+d:Ge/Quadrupole/RotX                   = 0.0 deg
+d:Ge/Quadrupole/RotY                   = 0.0 deg
+d:Ge/Quadrupole/RotZ                   = 0.0 deg
+d:Ge/Quadrupole/MagneticFieldGradientX = 0.061 tesla/cm
+d:Ge/Quadrupole/MagneticFieldGradientY = 0.0 tesla/cm
+
+
+#--- Target (upper surface at isocenter)
+s:Ge/Phantom/Type            = "TsBox"
+s:Ge/Phantom/Material        = "G4_WATER"
+s:Ge/Phantom/Parent          = "IsoCoordination"
+d:Ge/Phantom/HLX             = 30.0 cm
+d:Ge/Phantom/HLY             = 30.0 cm
+d:Ge/Phantom/HLZ             = 30.0 cm
+d:Ge/Phantom/TransX          = 0. m
+d:Ge/Phantom/TransY          = 0. m
+d:Ge/Phantom/TransZ          = -1.0 * Ge/Phantom/HLZ cm
+d:Ge/Phantom/RotX            = 0. deg
+d:Ge/Phantom/RotY            = 0. deg
+d:Ge/Phantom/RotZ            = 0. deg
+i:Ge/Phantom/XBins           = 10
+i:Ge/Phantom/YBins           = 10
+i:Ge/Phantom/ZBins           = 1
+s:Ge/Phantom/UpstreamSurface = "Phantom/ZPlusSurface"
+
+
+#--- Scoring
+s:Sc/SurfaceTracks/IfOutputFileAlreadyExists = "Overwrite"
+s:Sc/SurfaceTracks/Quantity                  = "SurfaceTrackCount"
+s:Sc/SurfaceTracks/Surface                   = Ge/Phantom/UpstreamSurface

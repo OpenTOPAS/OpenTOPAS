@@ -1,0 +1,35 @@
+# This is not any particular actual flattening filter.
+# It just demonstrates the general principle of how to
+# combine two different kinds of polycones to create
+# a shape that no single polycone can represent.
+
+b:Ge/World/Invisible = "True"
+
+s:Gr/MyViewA/Type = "OpenGL"
+d:Gr/MyViewA/Phi = 45. deg
+d:Gr/MyViewA/Theta = 45. deg
+
+b:Ts/PauseBeforeQuit = "True"
+
+s:Ge/FlatteningFilter/Type = "Group"
+s:Ge/FlatteningFilter/Parent = "World"
+#d:Ge/FlatteningFilter/RotX = 90. deg
+
+# Inner section is implemented as a Solid Polycone
+s:Ge/InnerCone/Type              = "G4SPolycone"
+s:Ge/InnerCone/Parent            = "FlatteningFilter"
+s:Ge/InnerCone/Material          = "G4_Ti"
+s:Ge/InnerCone/Color             = "grey"
+s:Ge/InnerCone/DrawingStyle      = "Solid"
+dv:Ge/InnerCone/R                = 7 0 9 9 6 5 2  0 mm
+dv:Ge/InnerCone/Z                = 7 0 0 1 2 6 8 10 mm
+
+# Outer section is implemented as a Hollow Polycone
+s:Ge/OuterCone/Type              = "G4HPolycone"
+s:Ge/OuterCone/Parent            = "FlatteningFilter"
+s:Ge/OuterCone/Material          = "G4_Ti"
+s:Ge/OuterCone/Color             = "brown"
+s:Ge/OuterCone/DrawingStyle      = "Solid"
+dv:Ge/OuterCone/ROuter           = 4 15 15 15 15 mm
+dv:Ge/OuterCone/RInner           = 4  9  9 10 13 mm
+dv:Ge/OuterCone/Z                = 4  0  1  2  3 mm

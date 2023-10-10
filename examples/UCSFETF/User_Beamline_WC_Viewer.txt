@@ -1,0 +1,54 @@
+includeFile = UCSF_Beamline_Base.txt Viewer.txt
+# ===============================================#
+# This example shows Waterphantom expansion
+# as a function of time
+# ===============================================#
+
+Ph/Default/Modules = 1 "g4em-standard_opt0"
+Ge/Nozzle/TransZ  = -133.66 cm
+
+# ===============================================#
+# Many of components are not included
+# ===============================================#
+Ge/ExtWindow/Include      = "TRUE"
+Ge/WireChamber/Include    = "TRUE"
+Ge/Collimator1/Include    = "TRUE"
+Ge/IonChamber1/Include    = "TRUE"
+Ge/Collimator2/Include    = "TRUE"
+b:Ge/Collimator3/Include     = "FALSE"
+b:Ge/IonChamber2/Include     = "TRUE"
+b:Ge/PatientShield/Include   = "TRUE"
+b:Ge/PatientAssembly/Include = "TRUE"
+
+# ===============================================#
+#Water phantom Thickness is under control by TimeFeature
+# ===============================================#
+Ge/WC_Water/HL			= 0.001 mm + Tf/WCThickness/Value
+s:Tf/WCThickness/Function="Linear mm"
+d:Tf/WCThickness/RepetitionInterval=30.0 ms
+d:Tf/WCThickness/Rate=3. mm/ms
+d:Tf/WCThickness/StartValue=0.0 mm
+
+
+# ===============================================#
+# Execution setting
+# ===============================================#
+i:So/Default/NumberOfHistoriesInRun = 2
+So/Default/BeamEnergySpread = 0.0
+Ts/PauseBeforeSequence = "False"
+Ts/ShowHistoryCountAtInterval = 1
+d:Tf/TimelineEnd=12.0 ms
+i:Tf/NumberOfSequentialTimes=120
+
+# ===============================================#
+# Visualization
+# ===============================================#
+i:Gr/ViewA/WindowSizeX = 1024
+i:Gr/ViewA/WindowSizeY = 768
+d:Gr/ViewA/Theta = 90 deg
+d:Gr/ViewA/Phi = 0 deg
+u:Gr/ViewA/TransX = -0.06
+b:Gr/ViewA/IncludeAxes = "True"
+u:Gr/ViewA/Zoom = 25
+s:Gr/ViewA/AxesComponent = "WC_Container"
+b:Gr/ViewA/CopyOpenGLToEPS = "False"

@@ -1,0 +1,24 @@
+includeFile = Geometry_01.txt
+
+
+#--- Geometry
+d:Ge/Letter_T/TransX  =  0.0 m
+d:Ge/Letter_T/TransY  =  0.5 m
+d:Ge/Letter_T/TransZ  =  0.0 m
+
+d:Ge/Letter_O/TransX  =  0.5 m
+d:Ge/Letter_O/TransY  =  0.0 m
+d:Ge/Letter_O/TransZ  = -0.4 m
+
+d:Ge/Letter_P/TransX  =  0.7 m
+d:Ge/Letter_P/TransY  =  0.0 m
+d:Ge/Letter_P/TransZ  = -1.0 m
+
+d:Ge/Letter_A/TransX  =  1.2 m
+d:Ge/Letter_A/TransY  =  0.0 m
+d:Ge/Letter_A/TransZ  = -1.4 m
+
+d:Ge/Letter_S/TransX  =  2.0 m
+d:Ge/Letter_S/TransY  =  0.0 m
+d:Ge/Letter_S/TransZ  = -1.6 m
+

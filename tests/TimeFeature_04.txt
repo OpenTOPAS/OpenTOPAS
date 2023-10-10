@@ -1,0 +1,7 @@
+includeFile = TimeFeature_01.txt
+
+#--- Source
+i:So/Default/NumberOfHistoriesInRun = Tf/BCM/Value
+s:Tf/BCM/Function                   = "Step integer"
+dv:Tf/BCM/Times                     = 5   0   1   2   3    4 s
+iv:Tf/BCM/Values                    = 5 200 400 600 800 1000

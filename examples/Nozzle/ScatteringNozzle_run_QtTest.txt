@@ -1,0 +1,46 @@
+# Use scattering nozzle to generate spread out Bragg peak
+
+includeFile = ScatteringNozzle_QtTest.txt TsAnalysisWaterPhantom.txt
+
+d:Ge/RMW_1/RotZ = Tf/RMW_Rotation/Value deg
+
+i:So/Example/NumberOfHistoriesInRun = 3
+
+d:Tf/TimelineEnd             = 100.0 ms
+i:Tf/NumberOfSequentialTimes = 100
+
+s:Tf/RMW_Rotation/Function           = "Linear deg"
+d:Tf/RMW_Rotation/Rate               = 3.6 deg/ms
+d:Tf/RMW_Rotation/StartValue         = 0.0 deg
+d:Tf/RMW_Rotation/RepetitionInterval = 100. ms
+
+i:Ts/ShowHistoryCountAtInterval = 0
+
+# Setting first scatterers:
+s:Tf/Scatterer1/L1/Function = "Step"
+dv:Tf/Scatterer1/L1/Times   = 5 20 40 60 80 100 ms
+dv:Tf/Scatterer1/L1/Values  = 5 Ge/Scatterer1/RotZ_OutOfBeam Ge/Scatterer1/RotZ_InBeam Ge/Scatterer1/RotZ_OutOfBeam Ge/Scatterer1/RotZ_InBeam Ge/Scatterer1/RotZ_OutOfBeam deg
+
+s:Tf/Scatterer1/L2/Function = "Step"
+dv:Tf/Scatterer1/L2/Times   = 2 30 100 ms
+dv:Tf/Scatterer1/L2/Values  = 2 Ge/Scatterer1/RotZ_InBeam Ge/Scatterer1/RotZ_OutOfBeam deg
+
+s:Tf/Scatterer1/L3/Function = "Step"
+dv:Tf/Scatterer1/L3/Times   = 4 20 40 80 100 ms
+dv:Tf/Scatterer1/L3/Values  = 4 Ge/Scatterer1/RotZ_InBeam Ge/Scatterer1/RotZ_OutOfBeam Ge/Scatterer1/RotZ_InBeam Ge/Scatterer1/RotZ_OutOfBeam deg
+
+Ge/Scatterer1/Lollipop1 = Tf/Scatterer1/L1/Value deg
+Ge/Scatterer1/Lollipop2 = Tf/Scatterer1/L2/Value deg
+Ge/Scatterer1/Lollipop3 = Tf/Scatterer1/L3/Value deg
+
+# Setting second scatterer:
+s:Tf/Scatterer2/Function = "Step"
+dv:Tf/Scatterer2/Times   = 2 50 100 ms
+dv:Tf/Scatterer2/Values  = 2 Ge/Scatterer2/RotZForS2 Ge/Scatterer2/RotZForS1 deg
+
+d:Ge/Scatterer2/Holder/RotZ = Tf/Scatterer2/Value deg
+
+# Show time feature steps on console
+i:Tf/Verbosity = 1
+
+b:Ts/UseQt = "True"

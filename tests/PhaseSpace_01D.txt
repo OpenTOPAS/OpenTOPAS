@@ -1,0 +1,13 @@
+includeFile = PhaseSpace_01A.txt
+
+#--- Scoring
+s:Sc/PHSP/OutputFile          = "iso_ascii_add"
+b:Sc/PHSP/IncludeTOPASTime    = "True"
+b:Sc/PHSP/IncludeTimeOfFlight = "True"
+b:Sc/PHSP/IncludeRunID        = "True"
+b:Sc/PHSP/IncludeEventID      = "True"
+b:Sc/PHSP/IncludeTrackID      = "True"
+b:Sc/PHSP/IncludeParentID     = "True"
+b:Sc/PHSP/IncludeCharge       = "True"
+b:Sc/PHSP/IncludeVertexInfo   = "True"
+b:Sc/PHSP/IncludeSeed         = "True"

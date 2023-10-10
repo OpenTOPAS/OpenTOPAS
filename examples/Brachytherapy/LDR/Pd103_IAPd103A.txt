@@ -1,0 +1,295 @@
+#                                                          #
+#                    Pd 103 - IA Pd103-A                   #
+#                                                          #
+#                                                          #
+#                Latest version - May 2021                 #
+#                  Author: Audran Poher                    #
+#              Contact - fberumenm@gmail.com               #
+#       https://doi.org/10.1016/j.brachy.2020.12.007       #
+#                                                          #
+
+##### SOURCE #####
+s:So/ActiveSource/Type                       = "Volumetric"
+s:So/ActiveSource/Component                  = "ActiveSourceGeometry"
+sc:So/ActiveSource/ActiveMaterial            = "G4_POLYSTYRENE"
+s:So/ActiveSource/BeamParticle               = "gamma"
+b:So/ActiveSource/RecursivelyIncludeChildren = "T"
+i:So/ActiveSource/MaxNumberOfPointsToSample  = 1000000000
+s:So/ActiveSource/BeamEnergySpectrumType     = "Discrete"
+ic:So/ActiveSource/NumberOfHistoriesInRun    = 10
+
+##### SPECTRUM #####
+dv:So/ActiveSource/BeamEnergySpectrumValues = 15 2.7 20.074 20.216 22.699 22.724 23.172 39.748 53.29 62.41 241.88 294.98 317.72 357.45 443.79 497.08 keV
+uv:So/ActiveSource/BeamEnergySpectrumWeightsUnscaled = 15 0.0873 0.224 0.425 0.0354 0.0685 0.0164 0.000683 0.0000003 0.0000104 0.000000005 0.000028 0.00000015 0.000221 0.00000015 0.0000396
+uv:So/ActiveSource/BeamEnergySpectrumWeights = 1.16607197 * So/ActiveSource/BeamEnergySpectrumWeightsUnscaled
+
+##### SOURCE GEOMETRY #####
+
+s:Ge/ActiveSourceGeometry/Type              = "Group"
+s:Ge/ActiveSourceGeometry/Parent            = "World"
+b:Ge/ActiveSourceGeometry/IsParallel        = "True"
+s:Ge/ActiveSourceGeometry/ParallelWorldName = "ActiveSourceWorld"
+
+#=====================
+#Polystyrene bead mid left
+#=====================
+
+s:Ge/PolystyreneSphereMidLeft/Type         = "TsSphere"
+s:Ge/PolystyreneSphereMidLeft/Parent       = "ActiveSourceGeometry"
+s:Ge/PolystyreneSphereMidLeft/Material     = "G4_POLYSTYRENE"
+d:Ge/PolystyreneSphereMidLeft/RMin         = 0. mm
+d:Ge/PolystyreneSphereMidLeft/RMax         = 0.25 mm
+d:Ge/PolystyreneSphereMidLeft/SPhi         = 0. deg
+d:Ge/PolystyreneSphereMidLeft/DPhi         = 360. deg
+d:Ge/PolystyreneSphereMidLeft/STheta       = 0. deg
+d:Ge/PolystyreneSphereMidLeft/DTheta       = 180. deg
+d:Ge/PolystyreneSphereMidLeft/TransX       = 0. mm
+d:Ge/PolystyreneSphereMidLeft/TransY       = 0. mm
+d:Ge/PolystyreneSphereMidLeft/TransZ       = 0.968 mm
+d:Ge/PolystyreneSphereMidLeft/RotX         = 0. deg
+d:Ge/PolystyreneSphereMidLeft/RotY         = 0. deg
+d:Ge/PolystyreneSphereMidLeft/RotZ         = 0. deg
+s:Ge/PolystyreneSphereMidLeft/DrawingStyle = "FullWireFrame"
+s:Ge/PolystyreneSphereMidLeft/Color        = "green"
+b:Ge/PolystyreneSphereMidLeft/IsParallel   = "T"
+s:Ge/PolystyreneSphereMidLeft/ParallelWorldName = "ActiveSourceWorld"
+
+#========================
+#Polystyrene bead mid right
+#========================
+
+s:Ge/PolystyreneSphereMidRight/Type         = "TsSphere"
+s:Ge/PolystyreneSphereMidRight/Parent       = "ActiveSourceGeometry"
+s:Ge/PolystyreneSphereMidRight/Material     = "G4_POLYSTYRENE"
+d:Ge/PolystyreneSphereMidRight/RMin         = 0. mm
+d:Ge/PolystyreneSphereMidRight/RMax         = 0.25 mm
+d:Ge/PolystyreneSphereMidRight/SPhi         = 0. deg
+d:Ge/PolystyreneSphereMidRight/DPhi         = 360. deg
+d:Ge/PolystyreneSphereMidRight/STheta       = 0. deg
+d:Ge/PolystyreneSphereMidRight/DTheta       = 180. deg
+d:Ge/PolystyreneSphereMidRight/TransX       = 0. mm
+d:Ge/PolystyreneSphereMidRight/TransY       = 0. mm
+d:Ge/PolystyreneSphereMidRight/TransZ       = -0.968 mm
+d:Ge/PolystyreneSphereMidRight/RotX         = 0. deg
+d:Ge/PolystyreneSphereMidRight/RotY         = 0. deg
+d:Ge/PolystyreneSphereMidRight/RotZ         = 0. deg
+s:Ge/PolystyreneSphereMidRight/DrawingStyle = "FullWireFrame"
+s:Ge/PolystyreneSphereMidRight/Color        = "green"
+b:Ge/PolystyreneSphereMidRight/IsParallel   = "T"
+s:Ge/PolystyreneSphereMidRight/ParallelWorldName = "ActiveSourceWorld"
+
+#=====================
+#Polystyrene bead far left
+#=====================
+
+s:Ge/PolystyreneSphereFarLeft/Type         = "TsSphere"
+s:Ge/PolystyreneSphereFarLeft/Parent       = "ActiveSourceGeometry"
+s:Ge/PolystyreneSphereFarLeft/Material     = "G4_POLYSTYRENE"
+d:Ge/PolystyreneSphereFarLeft/RMin         = 0. mm
+d:Ge/PolystyreneSphereFarLeft/RMax         = 0.25 mm
+d:Ge/PolystyreneSphereFarLeft/SPhi         = 0. deg
+d:Ge/PolystyreneSphereFarLeft/DPhi         = 360. deg
+d:Ge/PolystyreneSphereFarLeft/STheta       = 0. deg
+d:Ge/PolystyreneSphereFarLeft/DTheta       = 180. deg
+d:Ge/PolystyreneSphereFarLeft/TransX       = 0. mm
+d:Ge/PolystyreneSphereFarLeft/TransY       = 0. mm
+d:Ge/PolystyreneSphereFarLeft/TransZ       = 1.56 mm
+d:Ge/PolystyreneSphereFarLeft/RotX         = 0. deg
+d:Ge/PolystyreneSphereFarLeft/RotY         = 0. deg
+d:Ge/PolystyreneSphereFarLeft/RotZ         = 0. deg
+s:Ge/PolystyreneSphereFarLeft/DrawingStyle = "FullWireFrame"
+s:Ge/PolystyreneSphereFarLeft/Color        = "green"
+b:Ge/PolystyreneSphereFarLeft/IsParallel   = "T"
+s:Ge/PolystyreneSphereFarLeft/ParallelWorldName = "ActiveSourceWorld"
+
+#========================
+#Polystyrene bead far right
+#========================
+
+s:Ge/PolystyreneSphereFarRight/Type         = "TsSphere"
+s:Ge/PolystyreneSphereFarRight/Parent       = "ActiveSourceGeometry"
+s:Ge/PolystyreneSphereFarRight/Material     = "G4_POLYSTYRENE"
+d:Ge/PolystyreneSphereFarRight/RMin         = 0. mm
+d:Ge/PolystyreneSphereFarRight/RMax         = 0.25 mm
+d:Ge/PolystyreneSphereFarRight/SPhi         = 0. deg
+d:Ge/PolystyreneSphereFarRight/DPhi         = 360. deg
+d:Ge/PolystyreneSphereFarRight/STheta       = 0. deg
+d:Ge/PolystyreneSphereFarRight/DTheta       = 180. deg
+d:Ge/PolystyreneSphereFarRight/TransX       = 0. mm
+d:Ge/PolystyreneSphereFarRight/TransY       = 0. mm
+d:Ge/PolystyreneSphereFarRight/TransZ       = -1.56 mm
+d:Ge/PolystyreneSphereFarRight/RotX         = 0. deg
+d:Ge/PolystyreneSphereFarRight/RotY         = 0. deg
+d:Ge/PolystyreneSphereFarRight/RotZ         = 0. deg
+s:Ge/PolystyreneSphereFarRight/DrawingStyle = "FullWireFrame"
+s:Ge/PolystyreneSphereFarRight/Color        = "green"
+b:Ge/PolystyreneSphereFarRight/IsParallel   = "T"
+s:Ge/PolystyreneSphereFarRight/ParallelWorldName = "ActiveSourceWorld"
+
+#====================
+#Silver marker
+#====================
+
+s:Ge/SilverMarker/Type         = "TsCylinder"
+s:Ge/SilverMarker/Parent       = "ActiveSourceGeometry"
+s:Ge/SilverMarker/Material     = "G4_Ag"
+d:Ge/SilverMarker/RMin         = 0. mm
+d:Ge/SilverMarker/RMax         = 0.25 mm
+d:Ge/SilverMarker/SPhi         = 0. deg
+d:Ge/SilverMarker/DPhi         = 360. deg
+d:Ge/SilverMarker/HL           = 0.625 mm
+d:Ge/SilverMarker/TransX       = 0. mm
+d:Ge/SilverMarker/TransY       = 0. mm
+d:Ge/SilverMarker/TransZ       = 0. mm
+d:Ge/SilverMarker/RotX         = 0. deg
+d:Ge/SilverMarker/RotY         = 0. deg
+d:Ge/SilverMarker/RotZ         = 0. deg
+s:Ge/SilverMarker/DrawingStyle = "FullWireFrame"
+s:Ge/SilverMarker/Color        = "grey"
+b:Ge/SilverMarker/IsParallel   = "True"
+s:Ge/SilverMarker/ParallelWorldName = "ActiveSourceWorld"
+
+##### SHIELDING #####
+
+s:Ge/ShieldingGeo/Type              = "Group"
+s:Ge/ShieldingGeo/Parent            = "World"
+b:Ge/ShieldingGeo/IsParallel        = "True"
+s:Ge/ShieldingGeo/ParallelWorldName = "ShieldingWorld"
+
+#====================
+#Dry Air cylinder
+#====================
+
+s:Ge/DryAirCylinder/Type         = "TsCylinder"
+s:Ge/DryAirCylinder/Parent       = "ShieldingGeo"
+s:Ge/DryAirCylinder/Material     = "G4_AIR"
+d:Ge/DryAirCylinder/RMin         = 0. mm
+d:Ge/DryAirCylinder/RMax         = 0.35 mm
+d:Ge/DryAirCylinder/SPhi         = 0. deg
+d:Ge/DryAirCylinder/DPhi         = 360. deg
+d:Ge/DryAirCylinder/HL           = 1.85 mm
+d:Ge/DryAirCylinder/TransX       = 0. mm
+d:Ge/DryAirCylinder/TransY       = 0. mm
+d:Ge/DryAirCylinder/TransZ       = 0. mm
+d:Ge/DryAirCylinder/RotX         = 0. deg
+d:Ge/DryAirCylinder/RotY         = 0. deg
+d:Ge/DryAirCylinder/RotZ         = 0. deg
+s:Ge/DryAirCylinder/DrawingStyle = "FullWireFrame"
+s:Ge/DryAirCylinder/Color        = "white"
+b:Ge/DryAirCylinder/IsParallel   = "True"
+s:Ge/DryAirCylinder/ParallelWorldName = "ShieldingWorld"
+
+#===============================
+#Left cap of air 
+#===============================
+
+s:Ge/LeftAirCap/Type             = "G4Paraboloid"
+s:Ge/LeftAirCap/Parent           = "TitaniumLeftCap"
+s:Ge/LeftAirCap/Material         = "G4_AIR"
+d:Ge/LeftAirCap/TransX           = 0 mm
+d:Ge/LeftAirCap/TransY           = 0 mm
+d:Ge/LeftAirCap/TransZ           = 0.025 mm
+d:Ge/LeftAirCap/RotX             = 0 deg
+d:Ge/LeftAirCap/RotY             = 180 deg
+d:Ge/LeftAirCap/RotZ             = 0 deg
+d:Ge/LeftAirCap/HLZ              = 0.025 mm
+d:Ge/LeftAirCap/R1               = 0 mm
+d:Ge/LeftAirCap/R2               = 0.35 mm
+s:Ge/LeftAirCap/Color            = "white"
+s:Ge/LeftAirCap/DrawingStyle     = "FullWireFrame"
+b:Ge/LeftAirCap/IsParallel       = "True"
+s:Ge/LeftAirCap/ParallelWorldName = "ShieldingWorld"
+
+#================================
+#Right cap of air
+#================================
+
+s:Ge/RightAirCap/Type             = "G4Paraboloid"
+s:Ge/RightAirCap/Parent           = "TitaniumRightCap"
+s:Ge/RightAirCap/Material         = "G4_AIR"
+d:Ge/RightAirCap/TransX           = 0 mm
+d:Ge/RightAirCap/TransY           = 0 mm
+d:Ge/RightAirCap/TransZ           = 0.025 mm
+d:Ge/RightAirCap/RotX             = 0 deg
+d:Ge/RightAirCap/RotY             = 180 deg
+d:Ge/RightAirCap/RotZ             = 0 deg
+d:Ge/RightAirCap/HLZ              = 0.025 mm
+d:Ge/RightAirCap/R1               = 0 mm
+d:Ge/RightAirCap/R2               = 0.35 mm
+s:Ge/RightAirCap/Color            = "white"
+s:Ge/RightAirCap/DrawingStyle     = "FullWireFrame"
+b:Ge/RightAirCap/IsParallel       = "True"
+s:Ge/RightAirCap/ParallelWorldName = "ShieldingWorld"
+
+#=====================
+#Cylinder of Titanium
+#=====================
+
+s:Ge/TitaniumCylinder/Type         = "TsCylinder"
+s:Ge/TitaniumCylinder/Parent       = "ShieldingGeo"
+s:Ge/TitaniumCylinder/Material     = "G4_Ti"
+d:Ge/TitaniumCylinder/RMin         = 0.35 mm
+d:Ge/TitaniumCylinder/RMax         = 0.40 mm
+d:Ge/TitaniumCylinder/SPhi         = 0. deg
+d:Ge/TitaniumCylinder/DPhi         = 360. deg
+d:Ge/TitaniumCylinder/HL           = 1.85 mm
+d:Ge/TitaniumCylinder/TransX       = 0. mm
+d:Ge/TitaniumCylinder/TransY       = 0. mm
+d:Ge/TitaniumCylinder/TransZ       = 0. mm
+d:Ge/TitaniumCylinder/RotX         = 0. deg
+d:Ge/TitaniumCylinder/RotY         = 0. deg
+d:Ge/TitaniumCylinder/RotZ         = 0. deg
+s:Ge/TitaniumCylinder/Color        = "blue"
+s:Ge/TitaniumCylinder/DrawingStyle = "FullWireFrame"
+b:Ge/TitaniumCylinder/IsParallel   = "True"
+s:Ge/TitaniumCylinder/ParallelWorldName = "ShieldingWorld"
+
+#===============================
+#Left half-sphere of Titanium 
+#===============================
+
+s:Ge/TitaniumLeftCap/Type         = "TsSphere"
+s:Ge/TitaniumLeftCap/Parent       = "ShieldingGeo"
+s:Ge/TitaniumLeftCap/Material     = "G4_Ti"
+d:Ge/TitaniumLeftCap/RMin         = 0. mm
+d:Ge/TitaniumLeftCap/RMax         = 0.4 mm
+d:Ge/TitaniumLeftCap/SPhi         = 0. deg
+d:Ge/TitaniumLeftCap/DPhi         = 360. deg
+d:Ge/TitaniumLeftCap/STheta       = 0. deg
+d:Ge/TitaniumLeftCap/DTheta       = 90. deg
+d:Ge/TitaniumLeftCap/TransX       = 0. mm
+d:Ge/TitaniumLeftCap/TransY       = 0. mm
+d:Ge/TitaniumLeftCap/TransZ       = 1.85 mm
+d:Ge/TitaniumLeftCap/RotX         = 0. deg
+d:Ge/TitaniumLeftCap/RotY         = 0. deg
+d:Ge/TitaniumLeftCap/RotZ         = 0. deg
+s:Ge/TitaniumLeftCap/DrawingStyle = "FullWireFrame"
+s:Ge/TitaniumLeftCap/Color        = "blue"
+b:Ge/TitaniumLeftCap/IsParallel   = "True"
+s:Ge/TitaniumLeftCap/ParallelWorldName = "ShieldingWorld"
+
+#================================
+#Right half-sphere of titanium
+#================================
+
+s:Ge/TitaniumRightCap/Type         = "TsSphere"
+s:Ge/TitaniumRightCap/Parent       = "ShieldingGeo"
+s:Ge/TitaniumRightCap/Material     = "G4_Ti"
+d:Ge/TitaniumRightCap/RMin         = 0. mm
+d:Ge/TitaniumRightCap/RMax         = 0.4 mm
+d:Ge/TitaniumRightCap/SPhi         = 0. deg
+d:Ge/TitaniumRightCap/DPhi         = 360. deg
+d:Ge/TitaniumRightCap/STheta       = 0. deg
+d:Ge/TitaniumRightCap/DTheta       = 90. deg
+d:Ge/TitaniumRightCap/TransX       = 0. mm
+d:Ge/TitaniumRightCap/TransY       = 0. mm
+d:Ge/TitaniumRightCap/TransZ       = -1.85 mm
+d:Ge/TitaniumRightCap/RotX         = 180. deg
+d:Ge/TitaniumRightCap/RotY         = 0. deg
+d:Ge/TitaniumRightCap/RotZ         = 0. deg
+s:Ge/TitaniumRightCap/DrawingStyle = "FullWireFrame"
+s:Ge/TitaniumRightCap/Color        = "blue"
+b:Ge/TitaniumRightCap/IsParallel   = "True"
+s:Ge/TitaniumRightCap/ParallelWorldName = "ShieldingWorld"
+
+sv:Ph/Default/LayeredMassGeometryWorlds =  2 "ShieldingWorld" "ActiveSourceWorld"

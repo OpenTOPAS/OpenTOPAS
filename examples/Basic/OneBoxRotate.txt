@@ -1,0 +1,6 @@
+# Demonstrates use of includeFile.
+# Overrides the RotX value from OneBox.txt
+
+includeFile = OneBox.txt
+
+d:Ge/MyBox/RotX = 45. deg

@@ -1,0 +1,19 @@
+#Parameter obtained from Stavrev et. al. Physica Medica, Vol 17(2) (2001).
+# Table 1.
+#          Organ                                mu_cr   std     sigma   std    D50_FSU  std     Gamma50_FSU   std
+uv:Sc/CriticalVolumeValues/Lung	          = 8	0.08	0.02	0.02	0.01	220	51	0.3	0.02	# Pneumonitis
+uv:Sc/CriticalVolumeValues/Liver	  = 8	0.04	0.01	0.01	0.003	181	20	0.5	0.02	# Liver failure
+uv:Sc/CriticalVolumeValues/Brain	  = 8	0.08	0.02	0.05	0.02	104	7.9	1	0.1	# Necrosis
+uv:Sc/CriticalVolumeValues/Heart	  = 8	0.14	0.07	0.05	0.02	83	22	0.8	0.2	# Pericarditis
+uv:Sc/CriticalVolumeValues/Kidney	  = 8	0.22	0.06	0.05	0.01	59	14	0.4	0.06	# Clinical nephritis
+uv:Sc/CriticalVolumeValues/Esophagus	  = 8	0.01	0.02	0.02	0.03	97	14	2.4	0.8	# Clincial stricture, perforation
+uv:Sc/CriticalVolumeValues/Stomach	  = 8	0.02	0.01	0.03	0.01	94	7.1	2.2	0.5	# Ulceration, perforation
+uv:Sc/CriticalVolumeValues/BrachialPlexus = 8	0.01	0.03	0.05	0.1	86	9.9	6	4	# Clinically apparent nerve damage
+uv:Sc/CriticalVolumeValues/Bladder	  = 8	0.26	0.11	0.11	0.02	108	24	0.8	0.2	# Symptomatic bladder contraction and volume loss
+uv:Sc/CriticalVolumeValues/TMJointMandible= 8	0.07	0.06	0.09	0.07	86	7.4	3.1	1	# Marked limitation of joint function
+uv:Sc/CriticalVolumeValues/BrainStem	  = 8	0.12	0.06	0.08	0.04	97	12	1.2	0.2	# Necrosis
+uv:Sc/CriticalVolumeValues/Larynx 	  = 8	0.07	0.08	0.08	0.05	108	22	1.9	0.5	# Cartilage necrosis perforation
+uv:Sc/CriticalVolumeValues/SmallIntestine = 8	0.04	0.05	0.04	0.04	97	28	1.2	0.3	# Obstruction, perforation
+uv:Sc/CriticalVolumeValues/Colon	  = 8	0.03	0.02	0.02	0.01	108	16	1.1	0.1	# Obstruction, perforation
+uv:Sc/CriticalVolumeValues/SpinalCord	  = 8	0.08	0.09	0.16	0.15	81	12	2.6	1	# Myelitis necrosis
+uv:Sc/CriticalVolumeValues/Skin	          = 8	0.11	0.05	0.09	0.05	93	8.5	1.7	0.3	# Necrosis, ulceration

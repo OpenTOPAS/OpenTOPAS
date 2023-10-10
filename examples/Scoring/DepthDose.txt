@@ -1,0 +1,22 @@
+s:Ge/Phantom/Type      = "TsBox"
+s:Ge/Phantom/Parent   = "World"
+s:Ge/Phantom/Material = "G4_WATER"
+d:Ge/Phantom/HLX       = 10.0 cm
+d:Ge/Phantom/HLY       = 10.0 cm
+d:Ge/Phantom/HLZ       = 20.0 cm
+i:Ge/Phantom/ZBins = 20
+
+# Rotate Phantom so that the bin numbered 0 will be the
+# first bin hit.
+# Alternately, one could have adjusted the demo source
+# so that the beam pointed in from the other side of the world.
+d:Ge/Phantom/RotX = 180. deg
+
+s:Sc/DoseAtPhantom/Quantity = "DoseToMedium"
+s:Sc/DoseAtPhantom/Component = "Phantom"
+s:Sc/DoseAtPhantom/IfOutputFileAlreadyExists = "Overwrite"
+b:Sc/DoseAtPhantom/OutputToConsole = "True"
+
+i:So/Demo/NumberOfHistoriesInRun = 1000
+
+i:Ts/ShowHistoryCountAtInterval = 100

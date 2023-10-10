@@ -1,0 +1,57 @@
+########################
+# Importance sampling and particle split: Mass geometry
+########################
+includeFile = vrt_Shielding_Globals.txt
+
+d:Ge/World/HLX = 3.0 m
+d:Ge/World/HLY = 3.0 m
+d:Ge/World/HLZ = 3.0 m
+
+#########################
+# Gemetry for vrt set to mass geometry all the cells
+#########################
+b:Ge/subComponent1/IsParallel = "false"
+b:Ge/subComponent2/IsParallel = "false"
+b:Ge/subComponent3/IsParallel = "false"
+b:Ge/subComponent4/IsParallel = "false"
+b:Ge/subComponent5/IsParallel = "false"
+b:Ge/subComponent6/IsParallel = "false"
+b:Ge/subComponent7/IsParallel = "false"
+b:Ge/subComponent8/IsParallel = "false"
+b:Ge/subComponent9/IsParallel = "false"
+b:Ge/subComponent10/IsParallel = "false"
+
+s:Ge/subComponent1/Material = "G4_CONCRETE"
+s:Ge/subComponent2/Material = "G4_CONCRETE"
+s:Ge/subComponent3/Material = "G4_CONCRETE"
+s:Ge/subComponent4/Material = "G4_CONCRETE"
+s:Ge/subComponent5/Material = "G4_CONCRETE"
+s:Ge/subComponent6/Material = "G4_CONCRETE"
+s:Ge/subComponent7/Material = "G4_CONCRETE"
+s:Ge/subComponent8/Material = "G4_CONCRETE"
+s:Ge/subComponent9/Material = "G4_CONCRETE"
+s:Ge/subComponent10/Material = "G4_CONCRETE"
+
+b:Ge/Scorer/IsParallel = "True"
+s:Sc/Scorer/OutputFile = "vrt_Shielding_ImpSamp_Mass"
+
+#########################
+# VRT
+#########################
+b:Vr/UseVarianceRedUctioN         = "true"
+b:Vr/ParticleSplit/Active         = "true"
+sv:Vr/ParticleSplit/ParticlENamE  = 3 "neutron" "proton" "gamma"
+s:Vr/ParticleSplit/ComPonent      = "target" 
+sv:Vr/ParticleSplit/SUBComponents = 10
+"subComponent1" "subComponent2"
+"subComponent3" "subComponent4"
+"subComponent5" "subComponent6"
+"subComponent7" "subComponent8"
+"subComponent9" "subComponent10"
+s:Vr/ParticleSplit/TypE = "ImportanceSampling"
+uv:Vr/ParticleSplit/ImportANceValues = 10 2 4 8 16 32 64 128 256 512 1024
+
+i:Ts/Seed = 123
+i:So/Default/NumberOfHistoriesInRun = 10000
+i:Ts/ShowHistoryCountAtInterval     = 1000
+b:Ts/ShowCPUTime                    = "True"

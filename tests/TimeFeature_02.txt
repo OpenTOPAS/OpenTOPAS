@@ -1,0 +1,8 @@
+includeFile = TimeFeature_01.txt
+
+#--- Scoring
+s:Sc/Dose/SplitByTimeFeature        = "BeamEnergy"
+dv:Sc/Dose/SplitByTimeFeatureValues = 6 150 155 160 165 170 175 MeV
+
+s:Sc/PHSP/SplitByTimeFeature        = "BeamEnergy"
+dv:Sc/PHSP/SplitByTimeFeatureValues = 6 150 155 160 165 170 175 MeV

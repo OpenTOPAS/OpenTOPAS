@@ -1,0 +1,81 @@
+# Optical material properties for scintillation
+includeFile = OpticalMaterialSample.txt
+
+# Re-set world dimension
+d:Ge/World/HLX = 10 cm
+d:Ge/World/HLY = 10 cm
+d:Ge/World/HLZ = 5 cm
+b:Ge/World/Invisible = "True"
+s:Ge/World/Material = "Air"
+
+# Create new component
+s:Ge/Detector/Parent = "World"
+s:Ge/Detector/Type   = "TsPixelatedBox"
+s:Ge/Detector/Material = "PMMA"
+s:Ge/Detector/Pixel/Material = "Buapfcfm"
+s:Ge/Detector/Pixel/Color    = "yellow"
+d:Ge/Detector/PixelSizeX = 2 mm
+d:Ge/Detector/PixelSizeY = 2 mm
+d:Ge/Detector/PixelSizeZ = 15 mm
+d:Ge/Detector/PitchX     = 2.1 mm
+d:Ge/Detector/PitchY     = 2.1 mm
+i:Ge/Detector/NumberOfPixelsX     = 21
+i:Ge/Detector/NumberOfPixelsY     = 21
+
+# A plane to score phase space information
+iv:Gr/Color/TransparentRed    = 4 255 0   0 100
+s:Ge/PhaseSpace/Parent = "World"
+s:Ge/PhaseSpace/Type   = "TsBox"
+s:Ge/PhaseSpace/Material = "Borosilicate"
+s:Ge/PhaseSpace/Color    = "TransparentRed"
+s:Ge/PhaseSpace/DrawingStyle = "Solid"
+d:Ge/PhaseSpace/HLX      = 35 mm
+d:Ge/PhaseSpace/HLY      = 35 mm
+d:Ge/PhaseSpace/HLZ      = 0.5 mm
+d:Ge/PhaseSpace/TransZ   = 7.5 mm + Ge/PhaseSpace/HLZ 
+
+# Scorer for phase space 
+s:Sc/PhaseSpace/Quantity = "PhaseSpace"
+s:Sc/PhaseSpace/Surface  = "PhaseSpace/ZMinusSurface"
+s:Sc/PhaseSpace/OutputType = "binary" 
+s:Sc/PhaseSpace/IfOutputFileAlreadyExists = "Overwrite"
+s:Sc/PhaseSpace/OnlyIncludeParticlesGoing = "In"
+b:Sc/PhaseSpace/IncludeTimeOfFlight = "True"
+b:Sc/PhaseSpace/KillAfterPhaseSpace = "True"
+
+# Physics list (only electromagnetic and optical transport)
+Ph/Default/Modules = 2 "g4em-standard_opt4" "g4optical"
+
+# Particle source
+s:So/gammaSource/Type = "Beam"
+s:So/gammaSource/BeamParticle = "gamma"
+d:So/gammaSource/BeamEnergy   = 120 keV 
+s:So/gammaSource/Component    = "BeamPosition"
+u:So/gammaSource/BeamEnergySpread = 0.0
+s:So/gammaSource/BeamPositionCutoffShape = "Ellipse"
+s:So/gammaSource/BeamPositionDistribution = "Flat"
+d:So/gammaSource/BeamPositionCutOffX      = 20 mm
+d:So/gammaSource/BeamPositionCutOffY      = 20 mm
+s:So/gammaSource/BeamAngularDistribution  = "None"
+i:So/gammaSource/NumberOfHistoriesInRun   = 10 * Ts/ShowHistoryCountAtInterval 
+i:Ts/ShowHistoryCountAtInterval    = 100
+
+d:Ge/BeamPosition/TransX = 1 mm 
+d:Ge/BeamPosition/TransY = 1 mm 
+d:Ge/BeamPosition/TransZ = -20 mm
+d:Ge/BeamPosition/RotX   = 0 deg
+
+# Visualization
+b:Ts/UseQt = "True"
+b:Gr/enable = "True" 
+s:Gr/view1/Type = "OpenGl"
+d:Gr/view1/Theta = 45 deg
+d:Gr/view1/Phi   = 45 deg
+i:Gr/view1/WindowSizeX = 300
+i:Gr/view1/WindowSizeY = 300
+
+i:Ts/NumberOfThreads = 1
+i:Ts/Seed = 1354
+b:Ts/PauseBeforeQuit = Gr/Enable 
+b:Ts/ShowCPUTime = "True"
+

@@ -1,0 +1,132 @@
+#                                                          #
+#                 Iodine 125 - Select Seed                 #
+#                                                          #
+#                                                          #
+#                Latest version - May 2021                 #
+#                Author: Francisco Berumen                 #
+#              Contact - fberumenm@gmail.com               #
+#       https://doi.org/10.1016/j.brachy.2020.12.007       #
+#                                                          #
+
+##### MATERIAL DEFINITION ######
+sv:Ma/MatTitaniumTube/Components = 1 "Titanium"
+uv:Ma/MatTitaniumTube/Fractions  = 1 1
+d:Ma/MatTitaniumTube/Density     = 4.51 g/cm3
+
+sv:Ma/MatRadioactiveLayer/Components = 3 "Silver" "Chlorine" "Iodine"
+uv:Ma/MatRadioactiveLayer/Fractions  = 3 0.557 0.083 0.360
+d:Ma/MatRadioactiveLayer/Density     = 5.64 g/cm3
+
+sv:Ma/MatSilverRod/Components = 1 "Silver"
+uv:Ma/MatSilverRod/Fractions  = 1 1
+d:Ma/MatSilverRod/Density     = 10.5 g/cm3
+
+s:Ge/Seed/Type              = "Group"
+s:Ge/Seed/Parent            = "World"
+b:Ge/Seed/IsParallel        = "True"
+s:Ge/Seed/ParallelWorldName = "SeedsWorld"
+
+##### TITANIUM TUBE
+s:Ge/TitaniumTube/Type         = "TsCylinder"
+s:Ge/TitaniumTube/Material     = "MatTitaniumTube"
+s:Ge/TitaniumTube/Parent       = "Seed"
+d:Ge/TitaniumTube/RMin         = 0 mm
+d:Ge/TitaniumTube/RMax         = 0.4 mm
+d:Ge/TitaniumTube/HL           = 1.85 mm
+d:Ge/TitaniumTube/SPhi         = 0. deg
+d:Ge/TitaniumTube/DPhi         = 360. deg
+s:Ge/TitaniumTube/Color        = "transparentgray2"
+s:Ge/TitaniumTube/DrawingStyle = "Solid"
+b:Ge/TitaniumTube/IsParallel        = "True"
+s:Ge/TitaniumTube/ParallelWorldName = "SeedsWorld"
+
+##### TITANIUM CAP L
+s:Ge/TitaniumCapL/Type         = "TsSphere"
+s:Ge/TitaniumCapL/Material     = "MatTitaniumTube"
+s:Ge/TitaniumCapL/Parent       = "Seed"
+d:Ge/TitaniumCapL/RMin         = 0. mm
+d:Ge/TitaniumCapL/RMax         = 0.4 mm
+d:Ge/TitaniumCapL/SPhi         = 0. deg
+d:Ge/TitaniumCapL/DPhi         = 360. deg
+d:Ge/TitaniumCapL/STheta       = 0. deg
+d:Ge/TitaniumCapL/DTheta       = 90. deg
+d:Ge/TitaniumCapL/TransZ       = 1.85 mm
+s:Ge/TitaniumCapL/DrawingStyle = "Solid"
+s:Ge/TitaniumCapL/Color        = "transparentgray2"
+b:Ge/TitaniumCapL/IsParallel        = "True"
+s:Ge/TitaniumCapL/ParallelWorldName = "SeedsWorld"
+
+##### TITANIUM CAP R
+s:Ge/TitaniumCapR/Type         = "TsSphere"
+s:Ge/TitaniumCapR/Material     = "MatTitaniumTube"
+s:Ge/TitaniumCapR/Parent       = "Seed"
+d:Ge/TitaniumCapR/RMin         = 0. mm
+d:Ge/TitaniumCapR/RMax         = 0.4 mm
+d:Ge/TitaniumCapR/SPhi         = 0. deg
+d:Ge/TitaniumCapR/DPhi         = 360. deg
+d:Ge/TitaniumCapR/STheta       = 90. deg
+d:Ge/TitaniumCapR/DTheta       = 180. deg
+d:Ge/TitaniumCapR/TransZ       = -1.85 mm
+s:Ge/TitaniumCapR/DrawingStyle = "Solid"
+s:Ge/TitaniumCapR/Color        = "transparentgray2"
+b:Ge/TitaniumCapR/IsParallel        = "True"
+s:Ge/TitaniumCapR/ParallelWorldName = "SeedsWorld"
+
+##### AIR
+s:Ge/InsideAir/Type         = "TsCylinder"
+s:Ge/InsideAir/Material     = "G4_AIR"
+s:Ge/InsideAir/Parent       = "TitaniumTube"
+d:Ge/InsideAir/RMin         = 0 mm
+d:Ge/InsideAir/RMax         = Ge/TitaniumTube/RMax - 0.05 mm
+d:Ge/InsideAir/HL           = 1.85 mm
+d:Ge/InsideAir/SPhi         = 0. deg
+d:Ge/InsideAir/DPhi         = 360. deg
+s:Ge/InsideAir/Color        = "transparentgray"
+s:Ge/InsideAir/DrawingStyle = "Solid"
+b:Ge/InsideAir/IsParallel        = "True"
+s:Ge/InsideAir/ParallelWorldName = "SeedsWorld"
+
+##### RADIOACTIVE LAYER
+s:Ge/RadioactiveLayer/Type         = "TsCylinder"
+s:Ge/RadioactiveLayer/Material     = "MatRadioactiveLayer"
+s:Ge/RadioactiveLayer/Parent       = "InsideAir"
+d:Ge/RadioactiveLayer/RMin         = 0 mm
+d:Ge/RadioactiveLayer/RMax         = 0.258 mm
+d:Ge/RadioactiveLayer/HL           = 1.703 mm
+d:Ge/RadioactiveLayer/SPhi         = 0. deg
+d:Ge/RadioactiveLayer/DPhi         = 360. deg
+b:Ge/RadioactiveLayer/Invisible    = "True" 
+b:Ge/RadioactiveLayer/IsParallel        = "True"
+s:Ge/RadioactiveLayer/ParallelWorldName = "SeedsWorld"
+
+##### CYLINDRICAL SILVER ROD
+s:Ge/SilverRod/Type         = "TsCylinder"
+s:Ge/SilverRod/Material     = "MatSilverRod"
+s:Ge/SilverRod/Parent       = "RadioactiveLayer"
+d:Ge/SilverRod/RMin         = 0 mm
+d:Ge/SilverRod/RMax         = Ge/RadioactiveLayer/RMax - 0.003 mm
+d:Ge/SilverRod/HL           = Ge/RadioactiveLayer/HL - 0.003 mm
+d:Ge/SilverRod/SPhi         = 0. deg
+d:Ge/SilverRod/DPhi         = 360. deg
+s:Ge/SilverRod/Color        = "White"
+s:Ge/SilverRod/DrawingStyle = "Solid"
+b:Ge/SilverRod/IsParallel        = "True"
+s:Ge/SilverRod/ParallelWorldName = "SeedsWorld"
+
+iv:Gr/Color/transparentgray = 4 255 255 255 100
+iv:Gr/Color/transparentgray2 = 4 200 200 200 100
+
+s:So/ActiveSource/Type                       = "Volumetric"
+s:So/ActiveSource/Component                  = "RadioactiveLayer"
+sc:So/ActiveSource/ActiveMaterial            = "MatRadioactiveLayer"
+s:So/ActiveSource/BeamParticle               = "gamma"
+ic:So/ActiveSource/NumberOfHistoriesInRun    = 10
+i:So/ActiveSource/MaxNumberOfPointsToSample  = 1000000000
+s:So/ActiveSource/BeamEnergySpectrumType     = "Discrete"
+
+#### I-125 SPECTRUM ####
+dv:So/ActiveSource/BeamEnergySpectrumValues = 7 3.77 27.202 27.472 30.944 30.995 31.704 35.4922 keV
+uv:So/ActiveSource/BeamEnergySpectrumWeightsUnscaled = 7 0.149 0.401 0.740 0.0683 0.132 0.0380 0.0668
+uv:So/ActiveSource/BeamEnergySpectrumWeights = 0.626919 * So/ActiveSource/BeamEnergySpectrumWeightsUnscaled
+
+sv:Ph/Default/LayeredMassGeometryWorlds =  1 "SeedsWorld"

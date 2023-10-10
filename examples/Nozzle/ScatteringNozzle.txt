@@ -1,0 +1,549 @@
+# Scattering nozzle used in some demonstrations.
+
+includeFile = ConstantsForNozzles.txt
+
+########################################
+#1. Beam Exit Window
+#100 um thickness Mylar window
+########################################
+s:Ge/ExitWindow/Parent       = "Gantry"
+s:Ge/ExitWindow/Type         = "TsCylinder"
+s:Ge/ExitWindow/Material     = "Mylar"
+d:Ge/ExitWindow/RMin         = 0.0  mm
+d:Ge/ExitWindow/RMax         = 50.0 mm
+d:Ge/ExitWindow/HL           = 0.05 mm
+d:Ge/ExitWindow/SPhi         = 0.0   deg
+d:Ge/ExitWindow/DPhi         = 360.0 deg
+d:Ge/ExitWindow/TransX       = 0.0 mm
+d:Ge/ExitWindow/TransY       = 0.0 mm
+d:Ge/ExitWindow/TransZ       = 299.8 cm
+d:Ge/ExitWindow/RotX         = 0.0 deg
+d:Ge/ExitWindow/RotY         = 0.0 deg
+d:Ge/ExitWindow/RotZ         = 0.0 deg
+b:Ge/ExitWindow/Include      = "TRUE"
+s:Ge/ExitWindow/DrawingStyle = "Solid"
+
+d:Ge/DistanceOf_CenterExitWindow_To_TopMon1 = -30.0 mm
+d:Ge/ZPlusOf_Mon1 = Ge/ExitWindow/TransZ + Ge/DistanceOf_CenterExitWindow_To_TopMon1 cm
+
+########################################
+#2. Monitor chamber 1.
+# Filled with Nitrogen Gas, 3 layers
+# Thickness, position, Material
+#            1.0       Gold
+#            0.0 	   Aluminum
+#           -1.0       Gold
+########################################
+s:Ge/MonitorChamber1/Parent   = "Gantry"
+s:Ge/MonitorChamber1/Type     = "TsCylinder"
+s:Ge/MonitorChamber1/Material = "NiGas"
+d:Ge/MonitorChamber1/RMin     = 0.0   mm
+d:Ge/MonitorChamber1/RMax     = 100.0 mm
+d:Ge/MonitorChamber1/HL       = 15.0  mm
+d:Ge/MonitorChamber1/SPhi     = 0.0   deg
+d:Ge/MonitorChamber1/DPhi     = 360.0 deg
+d:Ge/MonitorChamber1/RotX     = 0.0 deg
+d:Ge/MonitorChamber1/RotY     = 0.0 deg
+d:Ge/MonitorChamber1/RotZ     = 0.0 deg
+d:Ge/MonitorChamber1/TransX   = 0.0 mm
+d:Ge/MonitorChamber1/TransY   = 0.0 mm
+d:Ge/MonitorChamber1/TransZ   = Ge/ZPlusOf_Mon1 - Ge/MonitorChamber1/HL mm
+b:Ge/MonitorChamber1/Include  = "TRUE"
+
+s:Ge/MonitorChamber1/Layer1/Parent   = "MonitorChamber1"
+s:Ge/MonitorChamber1/Layer1/Type     = "TsCylinder"
+s:Ge/MonitorChamber1/Layer1/Material = "Gold"
+d:Ge/MonitorChamber1/Layer1/RMin     = 0.0   mm
+d:Ge/MonitorChamber1/Layer1/RMax     = 90.0 mm
+d:Ge/MonitorChamber1/Layer1/HL       = 0.002  mm
+d:Ge/MonitorChamber1/Layer1/SPhi     = 0.0   deg
+d:Ge/MonitorChamber1/Layer1/DPhi     = 360.0 deg
+d:Ge/MonitorChamber1/Layer1/RotX     = 0.0 deg
+d:Ge/MonitorChamber1/Layer1/RotY     = 0.0 deg
+d:Ge/MonitorChamber1/Layer1/RotZ     = 0.0 deg
+d:Ge/MonitorChamber1/Layer1/TransX   = 0.0 mm
+d:Ge/MonitorChamber1/Layer1/TransY   = 0.0 mm
+d:Ge/MonitorChamber1/Layer1/TransZ   = 10.0  mm
+b:Ge/MonitorChamber1/Layer1/Include  = "TRUE"
+
+s:Ge/MonitorChamber1/Layer2/Parent   = "MonitorChamber1"
+s:Ge/MonitorChamber1/Layer2/Type     = "TsCylinder"
+s:Ge/MonitorChamber1/Layer2/Material = "Aluminum"
+d:Ge/MonitorChamber1/Layer2/RMin     = 0.0   mm
+d:Ge/MonitorChamber1/Layer2/RMax     = 90.0 mm
+d:Ge/MonitorChamber1/Layer2/HL       = 0.003  mm
+d:Ge/MonitorChamber1/Layer2/SPhi     = 0.0   deg
+d:Ge/MonitorChamber1/Layer2/DPhi     = 360.0 deg
+d:Ge/MonitorChamber1/Layer2/RotX     = 0.0 deg
+d:Ge/MonitorChamber1/Layer2/RotY     = 0.0 deg
+d:Ge/MonitorChamber1/Layer2/RotZ     = 0.0 deg
+d:Ge/MonitorChamber1/Layer2/TransX   = 0.0 mm
+d:Ge/MonitorChamber1/Layer2/TransY   = 0.0 mm
+d:Ge/MonitorChamber1/Layer2/TransZ   = 0.0  mm
+b:Ge/MonitorChamber1/Layer2/Include  = "TRUE"
+
+s:Ge/MonitorChamber1/Layer3/Parent   = "MonitorChamber1"
+s:Ge/MonitorChamber1/Layer3/Type     = "TsCylinder"
+s:Ge/MonitorChamber1/Layer3/Material = "Gold"
+d:Ge/MonitorChamber1/Layer3/RMin     = 0.0   mm
+d:Ge/MonitorChamber1/Layer3/RMax     = 90.0 mm
+d:Ge/MonitorChamber1/Layer3/HL       = 0.003  mm
+d:Ge/MonitorChamber1/Layer3/SPhi     = 0.0   deg
+d:Ge/MonitorChamber1/Layer3/DPhi     = 360.0 deg
+d:Ge/MonitorChamber1/Layer3/RotX     = 0.0 deg
+d:Ge/MonitorChamber1/Layer3/RotY     = 0.0 deg
+d:Ge/MonitorChamber1/Layer3/RotZ     = 0.0 deg
+d:Ge/MonitorChamber1/Layer3/TransX   = 0.0 mm
+d:Ge/MonitorChamber1/Layer3/TransY   = 0.0 mm
+d:Ge/MonitorChamber1/Layer3/TransZ   = -10.0  mm
+b:Ge/MonitorChamber1/Layer3/Include  = "TRUE"
+
+##################################################
+# First Scatterer:
+##################################################
+s:Ge/Scatterer1/Type    = "Group"
+s:Ge/Scatterer1/Parent  = "Gantry"
+d:Ge/Scatterer1/TransX  =  0.0 cm
+d:Ge/Scatterer1/TransY  =  0.0 cm
+d:Ge/Scatterer1/TransZ  = 280. cm
+d:Ge/Scatterer1/RotX    = 0. deg
+d:Ge/Scatterer1/RotY    = 0. deg
+d:Ge/Scatterer1/RotZ    = 0. deg
+s:Ge/Scatterer1/Message = "Constructing IBA TsScatterer1"
+
+# Center for rotation of scatterers:
+d:Ge/Scatterer1/RotationCenterY = 5.0 cm
+# Defining the in and out of beam rotation angle
+d:Ge/Scatterer1/RotZ_InBeam    	= 180.0 deg
+d:Ge/Scatterer1/RotZ_OutOfBeam 	=   0.0 deg
+
+d:Ge/Scatterer1/Lollipop1 = Ge/Scatterer1/RotZ_OutOfBeam deg
+d:Ge/Scatterer1/Lollipop2 = Ge/Scatterer1/RotZ_OutOfBeam deg
+d:Ge/Scatterer1/Lollipop3 = Ge/Scatterer1/RotZ_OutOfBeam deg
+
+# Lollipop 1:
+s:Ge/Scatterer1/L1/Type   = "Group"
+s:Ge/Scatterer1/L1/Parent = "Scatterer1"
+d:Ge/Scatterer1/L1/TransX = 0.0 cm
+d:Ge/Scatterer1/L1/TransY = Ge/Scatterer1/RotationCenterY cm
+d:Ge/Scatterer1/L1/TransZ = 0.0 cm
+d:Ge/Scatterer1/L1/RotX   = 0. deg
+d:Ge/Scatterer1/L1/RotY   = 0. deg
+d:Ge/Scatterer1/L1/RotZ   = Ge/Scatterer1/Lollipop1 deg
+
+# L1 Lead Foil:
+s:Ge/Scatterer1/L1/LeadFoil/Parent   = "Scatterer1/L1"
+s:Ge/Scatterer1/L1/LeadFoil/Type     = "TsBox"
+s:Ge/Scatterer1/L1/LeadFoil/Material = "Lead"
+d:Ge/Scatterer1/L1/LeadFoil/HLX      = 2.15 cm
+d:Ge/Scatterer1/L1/LeadFoil/HLY      = 2.15 cm
+d:Ge/Scatterer1/L1/LeadFoil/HLZ      = 0.01 cm
+d:Ge/Scatterer1/L1/LeadFoil/TransX   = 0.0 cm
+d:Ge/Scatterer1/L1/LeadFoil/TransY   = Ge/Scatterer1/RotationCenterY cm
+d:Ge/Scatterer1/L1/LeadFoil/TransZ   = 1.0 cm
+d:Ge/Scatterer1/L1/LeadFoil/RotX     = 0. deg
+d:Ge/Scatterer1/L1/LeadFoil/RotY     = 0. deg
+d:Ge/Scatterer1/L1/LeadFoil/RotZ     = 0. deg
+
+
+# Lollipop 2:
+s:Ge/Scatterer1/L2/Type   = "Group"
+s:Ge/Scatterer1/L2/Parent = "Scatterer1"
+d:Ge/Scatterer1/L2/TransX = 0.0 cm
+d:Ge/Scatterer1/L2/TransY = Ge/Scatterer1/RotationCenterY cm
+d:Ge/Scatterer1/L2/TransZ = 0.0 cm
+d:Ge/Scatterer1/L2/RotX   = 0. deg
+d:Ge/Scatterer1/L2/RotY   = 0. deg
+d:Ge/Scatterer1/L2/RotZ   = Ge/Scatterer1/Lollipop2 deg
+
+# L2 Lead Foil:
+s:Ge/Scatterer1/L2/LexanFoil/Parent   = "Scatterer1/L2"
+s:Ge/Scatterer1/L2/LexanFoil/Type     = "TsBox"
+s:Ge/Scatterer1/L2/LexanFoil/Material = "Lexan"
+d:Ge/Scatterer1/L2/LexanFoil/HLX      = 2.5 cm
+d:Ge/Scatterer1/L2/LexanFoil/HLY      = 2.5 cm
+d:Ge/Scatterer1/L2/LexanFoil/HLZ      = 0.2 cm
+d:Ge/Scatterer1/L2/LexanFoil/TransX   = 0.0 cm
+d:Ge/Scatterer1/L2/LexanFoil/TransY   = Ge/Scatterer1/RotationCenterY cm
+d:Ge/Scatterer1/L2/LexanFoil/TransZ   = 0.0 cm
+d:Ge/Scatterer1/L2/LexanFoil/RotX     = 0. deg
+d:Ge/Scatterer1/L2/LexanFoil/RotY     = 0. deg
+d:Ge/Scatterer1/L2/LexanFoil/RotZ     = 0. deg
+
+
+# Lollipop 3:
+s:Ge/Scatterer1/L3/Type   = "Group"
+s:Ge/Scatterer1/L3/Parent = "Scatterer1"
+d:Ge/Scatterer1/L3/TransX =  0.0 cm
+d:Ge/Scatterer1/L3/TransY =  Ge/Scatterer1/RotationCenterY cm
+d:Ge/Scatterer1/L3/TransZ =  0.0 cm
+d:Ge/Scatterer1/L3/RotX   = 0. deg
+d:Ge/Scatterer1/L3/RotY   = 0. deg
+d:Ge/Scatterer1/L3/RotZ   = Ge/Scatterer1/Lollipop2 deg
+
+# L2 Lead Foil:
+s:Ge/Scatterer1/L3/LeadFoil/Parent   = "Scatterer1/L3"
+s:Ge/Scatterer1/L3/LeadFoil/Type     = "TsBox"
+s:Ge/Scatterer1/L3/LeadFoil/Material = "Lead"
+d:Ge/Scatterer1/L3/LeadFoil/HLX      = 2.5 cm
+d:Ge/Scatterer1/L3/LeadFoil/HLY      = 2.5 cm
+d:Ge/Scatterer1/L3/LeadFoil/HLZ      = 0.02 cm
+d:Ge/Scatterer1/L3/LeadFoil/TransX   = 0.0 cm
+d:Ge/Scatterer1/L3/LeadFoil/TransY   = Ge/Scatterer1/RotationCenterY cm
+d:Ge/Scatterer1/L3/LeadFoil/TransZ   =-1.0 cm
+d:Ge/Scatterer1/L3/LeadFoil/RotX     = 0. deg
+d:Ge/Scatterer1/L3/LeadFoil/RotY     = 0. deg
+d:Ge/Scatterer1/L3/LeadFoil/RotZ     = 0. deg
+
+
+########################################
+#. Range modulator
+#(Copied from SpecialComponents/RangeModulator.txt
+########################################
+s:Ge/RMW_1/Type             = "TsRangeModulator"
+s:Ge/RMW_1/Material         = "Parent"
+s:Ge/RMW_1/Parent           = "Gantry"
+d:Ge/RMW_1/TransX           = 10.0 cm
+d:Ge/RMW_1/TransY           = 0.0  cm
+d:Ge/RMW_1/TransZ           = 250.0  cm
+d:Ge/RMW_1/RotX             = 0.0 deg
+d:Ge/RMW_1/RotY             = 0.0 deg
+d:Ge/RMW_1/RotZ             = 0.0 deg
+b:Ge/RMW_1/Invisible        = "TRUE"
+b:Ge/RMW_1/PrintInformation = "True"
+
+d:Ge/RMW_1/HeightOfUpper  = 150 mm
+d:Ge/RMW_1/HeightOfMiddle = 1.0 mm
+d:Ge/RMW_1/HeightOfLower  = 9.0 mm
+
+d:Ge/RMW_1/Shell/Rin              = 15.0 cm
+d:Ge/RMW_1/Shell/Rout             = 15.5 cm
+s:Ge/RMW_1/Shell/Material         = "Aluminum"
+s:Ge/RMW_1/Shell/Color            = "grey"
+s:Ge/RMW_1/Shell/DrawingStyle     = "Solid"
+i:Ge/RMW_1/Shell/VisSegsPerCircle = 360
+
+d:Ge/RMW_1/Hub/Rin              = 6.0 cm
+d:Ge/RMW_1/Hub/Rout             = 7.0 cm
+s:Ge/RMW_1/Hub/Material         = "Aluminum"
+s:Ge/RMW_1/Hub/Color            = "grey"
+s:Ge/RMW_1/Hub/DrawingStyle     = "Solid"
+i:Ge/RMW_1/Hub/VisSegsPerCircle = 360
+
+#Upper tracks
+dv:Ge/RMW_1/Upper/RadialDivisions  = 1 11.0 cm
+s:Ge/RMW_1/Upper/Track1/Pattern    = "LexanBlockT1"
+s:Ge/RMW_1/Upper/Track2/Pattern    = "NULL"
+#Middle tracks
+dv:Ge/RMW_1/Middle/RadialDivisions = 1 11.0 cm
+s:Ge/RMW_1/Middle/Track1/Pattern   = "InterfaceDisk"
+s:Ge/RMW_1/Middle/Track2/Pattern   = "HoleTrackDisk"
+#Lower tracks
+dv:Ge/RMW_1/Lower/RadialDivisions  = 1 11.0 cm
+s:Ge/RMW_1/Lower/Track1/Pattern    = "LeadBlockT1"
+s:Ge/RMW_1/Lower/Track2/Pattern    = "NULL"
+
+#A track pattern: 14 blocks of Lexan
+d:Ge/LexanBlockT1/Offset  = 0.0 deg
+dv:Ge/LexanBlockT1/Angles = 14
+  5.00 115.00 146.50 173.2 195.07
+216.15 230.14 243.00 255.5 270.60
+282.20 294.60 306.20 324.00 deg
+dv:Ge/LexanBlockT1/Heights = 14
+ 77.0  82.0  87.0  92.15 95.0
+100.4 106.0 110.2 115.3 119.5
+124.0 128.8 132.00 60.0 mm
+sv:Ge/LexanBlockT1/Materials = 14
+"Lexan" "Lexan" "Lexan" "Lexan" "Lexan"
+"Lexan" "Lexan" "Lexan" "Lexan" "Lexan"
+"Lexan" "Lexan" "Lexan" "Brass"
+
+#A track pattern of single block
+dv:Ge/InterfaceDisk/Angles    = 1 0.0 deg
+dv:Ge/InterfaceDisk/Heights   = 1 1.0 mm
+sv:Ge/InterfaceDisk/Materials = 1 "Aluminum"
+
+#A track pattern of two blocks but one block is a hole
+dv:Ge/HoleTrackDisk/Angles    = 2 90.0 110.0 deg
+dv:Ge/HoleTrackDisk/Heights   = 2  0.0  1.0 mm
+sv:Ge/HoleTrackDisk/Materials = 2 "NULL" "Aluminum"
+
+#A track pattern of 8 Lead blocks
+dv:Ge/LeadBlockT1/Angles = 9
+  5.00 115.00 146.50 173.2 195.07
+216.15 230.14 243.00 255.5 deg
+dv:Ge/LeadBlockT1/Heights = 9
+ 0.890 0.75 0.60 0.52 0.40
+ 0.30 0.16 0.070 0.0 mm
+sv:Ge/LeadBlockT1/Materials = 9
+"Lead" "Lead" "Lead" "Lead" "Lead"
+"Lead" "Lead" "Lead" "NULL"
+
+
+##################################################
+# Second Scatterer:
+##################################################
+s:Ge/Scatterer2/Type   		= "Group"
+s:Ge/Scatterer2/Parent 		= "World"
+d:Ge/Scatterer2/TransX 		=  0.0 cm
+d:Ge/Scatterer2/TransY 		=  0.0 cm
+d:Ge/Scatterer2/TransZ 		= 170. cm
+d:Ge/Scatterer2/RotX 		= 0. deg
+d:Ge/Scatterer2/RotY 		= 0. deg
+d:Ge/Scatterer2/RotZ 		= 0. deg
+s:Ge/Scatterer2/Message 	= "Constructing IBA TsScatterer2"
+
+# Scatterer 2 Brass Box (Mother Volume)
+s:Ge/Scatterer2/BrassBox/Parent		= "Scatterer2"
+s:Ge/Scatterer2/BrassBox/Type  		= "TsBox"
+s:Ge/Scatterer2/BrassBox/Material	= "Brass"
+d:Ge/Scatterer2/BrassBox/HLX 		= 30.0 cm
+d:Ge/Scatterer2/BrassBox/HLY 		= 30.0 cm
+d:Ge/Scatterer2/BrassBox/HLZ 		=  3.0 cm
+d:Ge/Scatterer2/BrassBox/TransX		=  0.0 cm
+d:Ge/Scatterer2/BrassBox/TransY		=  0.0 cm
+d:Ge/Scatterer2/BrassBox/TransZ		=  0.0 cm
+d:Ge/Scatterer2/BrassBox/RotX 		=  0. deg
+d:Ge/Scatterer2/BrassBox/RotY 		=  0. deg
+d:Ge/Scatterer2/BrassBox/RotZ 		=  0. deg
+
+# Scatter Holder Group:
+s:Ge/Scatterer2/Holder/Type   		= "Group"
+s:Ge/Scatterer2/Holder/Parent 		= "Scatterer2/BrassBox"
+d:Ge/Scatterer2/Holder/TransX 		= 10.0 cm
+d:Ge/Scatterer2/Holder/TransY 		= 10.0 cm
+d:Ge/Scatterer2/Holder/TransZ 		=  0.0 cm
+d:Ge/Scatterer2/Holder/RotX 		= 0. deg
+d:Ge/Scatterer2/Holder/RotY 		= 0. deg
+d:Ge/Scatterer2/Holder/RotZ 		= 0. deg
+
+# Setting up the rotations for selecting a scatterer, this can be made Gantry specific:
+d:Ge/Scatterer2/RotZForS1 		= 180. deg
+d:Ge/Scatterer2/RotZForS2 		=   0. deg
+
+# Scatter Hole 1
+s:Ge/Scatterer2/Hole1/Type   = "Group"
+s:Ge/Scatterer2/Hole1/Parent = "Scatterer2/Holder"
+d:Ge/Scatterer2/Hole1/TransX = 10.0 cm
+d:Ge/Scatterer2/Hole1/TransY = 10.0 cm
+d:Ge/Scatterer2/Hole1/TransZ = 0.0 cm
+d:Ge/Scatterer2/Hole1/RotX   = 0. deg
+d:Ge/Scatterer2/Hole1/RotY   = 0. deg
+d:Ge/Scatterer2/Hole1/RotZ   = 0. deg
+
+# Scatter Hole 2
+s:Ge/Scatterer2/Hole2/Type   = "Group"
+s:Ge/Scatterer2/Hole2/Parent = "Scatterer2/Holder"
+d:Ge/Scatterer2/Hole2/TransX = -10.0 cm
+d:Ge/Scatterer2/Hole2/TransY = -10.0 cm
+d:Ge/Scatterer2/Hole2/TransZ = 0.0 cm
+d:Ge/Scatterer2/Hole2/RotX   = 0. deg
+d:Ge/Scatterer2/Hole2/RotY   = 0. deg
+d:Ge/Scatterer2/Hole2/RotZ   = 0. deg
+
+# Scatterer 1 (no scattering)
+# Air Tube:  (no scattering, for pencil beam etc)
+s:Ge/Scatterer2/S1/Parent 		= "Scatterer2/Hole1"
+s:Ge/Scatterer2/S1/Type 		= "TsCylinder"
+s:Ge/Scatterer2/S1/Material     = "World"
+d:Ge/Scatterer2/S1/RMin 		=  0.0 cm
+d:Ge/Scatterer2/S1/RMax 		=  5.0 cm
+d:Ge/Scatterer2/S1/HL   		=  3.0 cm
+d:Ge/Scatterer2/S1/TransX 		=  0.0 cm
+d:Ge/Scatterer2/S1/TransY 		=  0.0 cm
+d:Ge/Scatterer2/S1/TransZ 		=  0.0 cm
+d:Ge/Scatterer2/S1/RotX 		=  0.0 deg
+d:Ge/Scatterer2/S1/RotY 		=  0.0 deg
+d:Ge/Scatterer2/S1/RotZ 		=  0.0 deg
+d:Ge/Scatterer2/S1/SPhi 		=  0.0 deg
+d:Ge/Scatterer2/S1/DPhi 		=  360.0 deg
+
+# Scatterer 2 (example second scatterer)
+# Air Hole for Scatterer 2:
+s:Ge/Scatterer2/S2/Parent 		= "Scatterer2/Hole2"
+s:Ge/Scatterer2/S2/Type 		= "TsCylinder"
+s:Ge/Scatterer2/S2/Material 	= "World"
+d:Ge/Scatterer2/S2/RMin 		=  0.0 cm
+d:Ge/Scatterer2/S2/RMax 		=  5.0 cm
+d:Ge/Scatterer2/S2/HL   		=  3.0 cm
+d:Ge/Scatterer2/S2/TransX 		=  0.0 cm
+d:Ge/Scatterer2/S2/TransY 		=  0.0 cm
+d:Ge/Scatterer2/S2/TransZ 		=  0.0 cm
+d:Ge/Scatterer2/S2/RotX 		=  0.0 deg
+d:Ge/Scatterer2/S2/RotY 		=  0.0 deg
+d:Ge/Scatterer2/S2/RotZ 		=  0.0 deg
+d:Ge/Scatterer2/S2/SPhi 		=  0.0 deg
+d:Ge/Scatterer2/S2/DPhi 		=  360.0 deg
+
+# Lead Polycone Scatterer2:
+s:Ge/Scatterer2/S2/LeadPolycone/Parent 		= "Scatterer2/S2"
+s:Ge/Scatterer2/S2/LeadPolycone/Type 		= "G4HPolycone"
+s:Ge/Scatterer2/S2/LeadPolycone/Material 	= "Lead"
+dv:Ge/Scatterer2/S2/LeadPolycone/RInner 	= 31 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 cm
+dv:Ge/Scatterer2/S2/LeadPolycone/ROuter 	= 31 0.0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0 1.1 1.2 1.3 1.4 1.5 1.6 1.7 1.8 1.9 2.0 2.1 2.2 2.3 2.4 2.5 2.6 2.7 2.8 2.9 3.0  cm
+dv:Ge/Scatterer2/S2/LeadPolycone/Z      	= 31 -0.1 -0.097 -0.094 -0.09 -0.086 -0.082 -0.078 -0.074 -0.07 -0.065 -0.06 -0.055 -0.05 -0.045 -0.04 -0.036 -0.033 -0.03 -0.027 -0.024 -0.021 -0.018 -0.015 -0.013 -0.011 -0.009 -0.007 -0.006 -0.005 -0.004 -0.003 cm
+d:Ge/Scatterer2/S2/LeadPolycone/TransX 		=  0.0 cm
+d:Ge/Scatterer2/S2/LeadPolycone/TransY 		=  0.0 cm
+d:Ge/Scatterer2/S2/LeadPolycone/TransZ 		=  0.0 cm
+d:Ge/Scatterer2/S2/LeadPolycone/RotX 		=  0.0 deg
+d:Ge/Scatterer2/S2/LeadPolycone/RotY 		=  0.0 deg
+d:Ge/Scatterer2/S2/LeadPolycone/RotZ 		=  0.0 deg
+d:Ge/Scatterer2/S2/LeadPolycone/PhiStart 	=  0.0 deg
+d:Ge/Scatterer2/S2/LeadPolycone/PhiTotal 	=  360.0 deg
+
+# Lexan Polycone Scatterer2:
+s:Ge/Scatterer2/S2/LexanPolycone/Parent 	= "Scatterer2/S2"
+s:Ge/Scatterer2/S2/LexanPolycone/Type 		= "G4HPolycone"
+s:Ge/Scatterer2/S2/LexanPolycone/Material 	= "Lexan"
+dv:Ge/Scatterer2/S2/LexanPolycone/RInner 	= 41 4.0 3.9 3.8 3.7 3.6 3.5 3.4 3.3 3.2 3.1 3.0 2.9 2.8 2.7 2.6 2.5 2.4 2.3 2.2 2.1 2.0 1.9 1.8 1.7 1.6 1.5 1.4 1.3 1.2 1.1 1.0 0.9 0.8 0.7 0.6 0.5 0.4 0.3 0.2 0.1 0.0 cm
+dv:Ge/Scatterer2/S2/LexanPolycone/ROuter 	= 41 4.0 4.0 4.0 4.0 4.0 4.0 4.0 4.0 4.0 4.0 4.0 4.0 4.0 4.0 4.0 4.0 4.0 4.0 4.0 4.0 4.0 4.0 4.0 4.0 4.0 4.0 4.0 4.0 4.0 4.0 4.0 4.0 4.0 4.0 4.0 4.0 4.0 4.0 4.0 4.0 4.0 cm
+dv:Ge/Scatterer2/S2/LexanPolycone/Z      	= 41 1.0 1.0 1.0 1.0 1.0 1.0 0.98 0.96 0.94 0.9 0.86 0.82 0.78 0.75 0.72 0.69 0.66 0.63 0.6 0.57 0.54 0.51 0.48 0.46 0.44 0.42 0.39 0.37 0.35 0.33 0.31 0.29 0.27 0.25 0.23 0.21 0.2 0.19 0.18 0.17 0.16 cm
+d:Ge/Scatterer2/S2/LexanPolycone/TransX 	=  0.0 cm
+d:Ge/Scatterer2/S2/LexanPolycone/TransY 	=  0.0 cm
+d:Ge/Scatterer2/S2/LexanPolycone/TransZ 	=  0.0 cm
+d:Ge/Scatterer2/S2/LexanPolycone/RotX 		=  0.0 deg
+d:Ge/Scatterer2/S2/LexanPolycone/RotY 		=  0.0 deg
+d:Ge/Scatterer2/S2/LexanPolycone/RotZ 		=  0.0 deg
+d:Ge/Scatterer2/S2/LexanPolycone/PhiStart 	=  0.0 deg
+d:Ge/Scatterer2/S2/LexanPolycone/PhiTotal 	= 360.0 deg
+
+##################################################
+# Snout:
+##################################################
+s:Ge/Snout/Type		= "Group"
+s:Ge/Snout/Parent	= "Gantry"
+d:Ge/Snout/TransX	= 0. m
+d:Ge/Snout/TransY	= 0. m
+d:Ge/Snout/TransZ	= 50. cm
+d:Ge/Snout/RotX		= 0. deg
+d:Ge/Snout/RotY		= 0. deg
+d:Ge/Snout/RotZ		= 0. deg
+s:Ge/Snout/Message 	= "Constructing Snout"
+
+# Snout:
+s:Ge/Snout/Block/Parent 	= "Snout"
+s:Ge/Snout/Block/Type   	= "TsBox"
+s:Ge/Snout/Block/Material 	= "Brass"
+d:Ge/Snout/Block/HLX 		= 20.0 cm
+d:Ge/Snout/Block/HLY 		= 20.0 cm
+d:Ge/Snout/Block/HLZ 		= 3.5 cm
+d:Ge/Snout/Block/TransX		= 0. cm
+d:Ge/Snout/Block/TransY		= 0. cm
+d:Ge/Snout/Block/TransZ		= 0. cm
+d:Ge/Snout/Block/RotX		= 0. deg
+d:Ge/Snout/Block/RotY		= 0. deg
+d:Ge/Snout/Block/RotZ		= 0. deg
+
+# Snout: Hole in Brass Block
+s:Ge/Snout/Hole/Parent 		= "Snout/Block"
+s:Ge/Snout/Hole/Type   		= "TsCylinder"
+s:Ge/Snout/Hole/Material	= "Brass"
+d:Ge/Snout/Hole/RMin 		=  0.0 cm
+d:Ge/Snout/Hole/RMax 		=  4.5 cm
+d:Ge/Snout/Hole/HL		    =  3.5 cm
+d:Ge/Snout/Hole/TransX 		=  0.0 cm
+d:Ge/Snout/Hole/TransY 		=  0.0 cm
+d:Ge/Snout/Hole/TransZ 		=  0.0 cm
+d:Ge/Snout/Hole/RotX 		=  0.0 deg
+d:Ge/Snout/Hole/RotY 		=  0.0 deg
+d:Ge/Snout/Hole/RotZ 		=  0.0 deg
+d:Ge/Snout/Hole/SPhi 		=  0.0 deg
+d:Ge/Snout/Hole/DPhi 		=  360.0 deg
+
+# Snout: Brass Cone
+s:Ge/Snout/BrassCone/Parent   = "Snout"
+s:Ge/Snout/BrassCone/Type     = "G4Cons"
+s:Ge/Snout/BrassCone/Material = "Brass"
+d:Ge/Snout/BrassCone/RMin1    =  3.5 cm
+d:Ge/Snout/BrassCone/RMax1    =  6.0 cm
+d:Ge/Snout/BrassCone/RMin2    =  3.8  cm
+d:Ge/Snout/BrassCone/RMax2    =  6.0 cm
+d:Ge/Snout/BrassCone/HL       =  3.5 cm
+d:Ge/Snout/BrassCone/TransX   =  0.0 cm
+d:Ge/Snout/BrassCone/TransY   =  0.0 cm
+d:Ge/Snout/BrassCone/TransZ   = -7.0 cm
+d:Ge/Snout/BrassCone/RotX     =  0.0 deg
+d:Ge/Snout/BrassCone/RotY     =  0.0 deg
+d:Ge/Snout/BrassCone/RotZ     =  0.0 deg
+d:Ge/Snout/BrassCone/SPhi     =  0.0 deg
+d:Ge/Snout/BrassCone/DPhi     =  360.0 deg
+
+##################################################
+# Aperture
+##################################################
+s:Ge/Aperture/Type        = "TsAperture"
+s:Ge/Aperture/Parent      = "Snout"
+s:Ge/Aperture/InputFile   = "ApertureFileIn.ap"
+s:Ge/Aperture/FileFormat  = "XYCoordinates"
+b:Ge/Aperture/PrintPoints = "True"
+s:Ge/Aperture/Material    = "Brass"
+d:Ge/Aperture/RMax        = 4.5 cm
+d:Ge/Aperture/HL          = 2.5 cm
+d:Ge/Aperture/TransX      = 0.0 cm
+d:Ge/Aperture/TransY      = 0.0 cm
+d:Ge/Aperture/TransZ      =-13.0 cm
+d:Ge/Aperture/RotX        = 0.0 deg
+d:Ge/Aperture/RotY        = 0.0 deg
+d:Ge/Aperture/RotZ        = 0.0 deg
+d:Ge/Aperture/LowerEdge   = Ge/Aperture/TransZ - Ge/Aperture/HL cm
+s:Ge/Aperture/Message     = "Constructing Aperture"
+
+##################################################
+# Compensator
+##################################################
+s:Ge/Compensator/Type        = "TsCompensator"
+s:Ge/Compensator/Parent      = "Snout"
+s:Ge/Compensator/Material    = "CompensatorLucite"
+d:Ge/Compensator/RMax        = 5.5 cm
+d:Ge/Compensator/TransX      = 0. cm
+d:Ge/Compensator/TransY      = 0. cm
+dc:Ge/Compensator/Thickness  = 0. cm # will be reset to actual thickness when compensator is read in
+d:Ge/Compensator/HL          = 0.5 * Ge/Compensator/Thickness cm
+d:Ge/Compensator/TransZ      = Ge/Aperture/LowerEdge - Ge/Compensator/HL cm
+d:Ge/Compensator/LowerEdge   = Ge/Compensator/TransZ - Ge/Compensator/HL cm
+d:Ge/Compensator/RotX        = 0. deg
+d:Ge/Compensator/RotY        = 0. deg
+d:Ge/Compensator/RotZ        = 0. deg
+s:Ge/Compensator/InputFile   = "CompensatorFileInRowsDepths.rc"
+s:Ge/Compensator/FileFormat  = "RowsAndDepths"
+s:Ge/Compensator/Method      = "ExtrudedSolid" # Polyhedra, ExtrudedSolid, SubtractionCylinders or UnionCylinders
+d:Ge/Compensator/XTolerance  = 1. mm
+d:Ge/Compensator/YTolerance  = 1. mm
+b:Ge/Compensator/PrintPoints = "True"
+s:Ge/Compensator/Message     = "Constructing Compensator"
+
+#########################
+# Phase space volume
+#########################
+s:Ge/ZPhaseSpaceVol/Type		= "TsBox"
+s:Ge/ZPhaseSpaceVol/Parent  	= "Snout"
+s:Ge/ZPhaseSpaceVol/Material	= "Parent"
+d:Ge/ZPhaseSpaceVol/HLX 		= 20. cm
+d:Ge/ZPhaseSpaceVol/HLY 		= 20. cm
+d:Ge/ZPhaseSpaceVol/HLZ 		=  0.05 mm
+d:Ge/ZPhaseSpaceVol/TransX 		= 0. m
+d:Ge/ZPhaseSpaceVol/TransY 		= 0. m
+d:Ge/ZPhaseSpaceVol/TransZ 		= -0.015 cm + Ge/Compensator/LowerEdge
+d:Ge/ZPhaseSpaceVol/RotX 		= 0. deg
+d:Ge/ZPhaseSpaceVol/RotY 		= 0. deg
+d:Ge/ZPhaseSpaceVol/RotZ 		= 0. deg
+
+##################################################
+# Graphics:
+##################################################
+s:Gr/ViewA/Type                             = "OpenGL"
+i:Gr/ViewA/WindowSizeX                      = 1024
+i:Gr/ViewA/WindowSizeY                      = 768
+d:Gr/ViewA/Theta                            = 30 deg
+d:Gr/ViewA/Phi                              = 20 deg
+s:Gr/ViewA/Projection                       = "Perspective"
+d:Gr/ViewA/PerspectiveAngle                 = 30 deg
+u:Gr/ViewA/Zoom                             = 4.
+u:Gr/ViewA/TransX                           = -.8
+u:Gr/ViewA/TransY                           = -.3
+b:Gr/ViewA/HiddenLineRemovalForTrajectories = "True"
+b:Gr/ViewA/IncludeAxes                      = "true"
+s:Gr/ViewA/AxesComponent                    = "Gantry"
+d:Gr/ViewA/AxesSize                         = 0.5 m
+
+i:Ts/ShowHistoryCountAtInterval = 0

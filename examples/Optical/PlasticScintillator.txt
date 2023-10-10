@@ -1,0 +1,68 @@
+# Demonstrates optical behavior in a plastic scintillator
+
+includeFile = OpticalMaterialSample.txt
+
+i:Ts/SequenceVerbosity = 1
+
+# SEQUENCE
+b:Ts/PauseBeforeQuit            = "True"
+b:Ts/ShowCPUTime                = "True"
+i:Ts/ShowHistoryCountAtInterval = 1
+
+# SCORER
+s:Sc/PhSp/Quantity                  = "PhaseSpace"
+s:Sc/PhSp/Surface                   = "Plastic/OuterCurvedSurface"
+s:Sc/PhSp/OutputType                = "ASCII"
+s:Sc/PhSp/OutputFile                = "PlasticScintillator"
+s:Sc/PhSp/IfOutputFileAlreadyExists = "Overwrite"
+b:Sc/PhSp/IncludeTimeOfFlight       = "true"
+b:Sc/PhSp/UsePDGEncoding            = "True"
+
+# VISUALIZATION
+s:Gr/view/Type        = "OpenGl"
+i:Gr/view/WindowSizeX = 600
+i:Gr/view/WindowSizeY = 600
+d:Gr/view/Theta       = 45. deg
+d:Gr/view/Phi         = 45. deg
+
+# PHYSICS LIST
+s:Ph/ListName         = "Optical"
+s:Ph/Optical/Type     = "Geant4_Modular"
+sv:Ph/Optical/Modules = 2 "g4em-standard_opt3" "g4optical"
+
+# SOURCE
+s:So/Example/Type                     = "Beam"
+s:So/Example/Component                = "BeamPosition"
+s:So/Example/BeamParticle             = "proton"
+d:So/Example/BeamEnergy               = 100 MeV
+u:So/Example/BeamEnergySpread         = 0.5
+s:So/Example/BeamPositionDistribution = "Flat"
+s:So/Example/BeamPositionCutoffShape  = "Ellipse"
+d:So/Example/BeamPositionCutoffX      = 0.5 mm
+d:So/Example/BeamPositionCutoffY      = 0.5 mm
+s:So/Example/BeamAngularDistribution  = "Flat"
+d:So/Example/BeamAngularCutoffX       = 0.2 rad
+d:So/Example/BeamAngularCutoffY       = 0.2 rad
+i:So/Example/NumberOfHistoriesInRun   = 1
+
+# GEOMETRY
+d:Ge/World/HLX      = 1 cm
+d:Ge/World/HLY      = 1 cm
+d:Ge/World/HLZ      = 1 cm
+s:Ge/World/Material = "Air"
+
+# Plastic
+s:Ge/Plastic/Parent   = "World"
+s:Ge/Plastic/Type     = "TsCylinder"
+s:Ge/Plastic/Material = "Buapfcfm"
+d:Ge/Plastic/HL       = 0.5 cm
+d:Ge/Plastic/RMin     = 0.0 cm
+d:Ge/Plastic/RMax     =	0.5 cm
+d:Ge/Plastic/SPhi     = 0 deg
+d:Ge/Plastic/DPhi     = 360 deg
+d:Ge/Plastic/TransX   = 0 mm
+d:Ge/Plastic/TransY   = 0 mm
+d:Ge/Plastic/TransZ   = 0 mm
+d:Ge/Plastic/RotX     = 0 deg
+d:Ge/Plastic/RotY     = 0 deg
+d:Ge/Plastic/RotZ     = 0 deg

@@ -1,0 +1,14 @@
+# Use scanning nozzle to paint stationary target
+
+includeFile = RasterScanningPattern.txt TargetInWaterPhantom.txt Viewer.txt
+
+sv:Ph/Default/Modules = 1 "g4em-standard_opt0"
+
+b:Ts/PauseBeforeQuit = "False"
+
+i:So/Example/NumberOfHistoriesInRun = 5
+d:So/Example/BeamEnergy             = 145.00 MeV
+
+d:Tf/TimelineEnd               = 1 s
+i:Tf/NumberOfSequentialTimes   = 100
+

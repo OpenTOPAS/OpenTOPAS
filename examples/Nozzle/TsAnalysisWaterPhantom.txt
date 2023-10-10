@@ -1,0 +1,44 @@
+# WaterPhantom used in some demonstrations.
+# 40cm long, 20 cm in x, 20 cm in y
+
+includeFile = ConstantsForNozzles.txt
+
+# Water Tank / Phantom
+s:Ge/WaterPhantom/Parent 		= "Gantry"
+s:Ge/WaterPhantom/Type   		= "TsBox"
+s:Ge/WaterPhantom/Material		= "G4_WATER"
+d:Ge/WaterPhantom/HLX 			= 10.0 cm
+d:Ge/WaterPhantom/HLY 			= 10.0 cm
+d:Ge/WaterPhantom/HLZ 			= 20.0 cm
+d:Ge/WaterPhantom/TransX		= 0.0 cm
+d:Ge/WaterPhantom/TransY		= 0.0 cm
+d:Ge/WaterPhantom/TransZ		= 0.0 cm
+d:Ge/WaterPhantom/RotX			= 0. deg
+d:Ge/WaterPhantom/RotY			= 0. deg
+d:Ge/WaterPhantom/RotZ			= 0. deg
+d:Ge/WaterPhantom/MaxStepSize 	= 0.5 mm
+
+s:Ge/ScoringCylinder3cm/Parent		= "WaterPhantom"
+s:Ge/ScoringCylinder3cm/Type		= "TsCylinder"
+s:Ge/ScoringCylinder3cm/Material	= "G4_WATER"
+d:Ge/ScoringCylinder3cm/RMin		= 0.0 cm
+d:Ge/ScoringCylinder3cm/RMax		= 3.0 cm
+d:Ge/ScoringCylinder3cm/HL		    = Ge/WaterPhantom/HLZ cm
+d:Ge/ScoringCylinder3cm/SPhi		= 0. deg
+d:Ge/ScoringCylinder3cm/DPhi		= 360. deg
+d:Ge/ScoringCylinder3cm/TransX		= 0. cm
+d:Ge/ScoringCylinder3cm/TransY		= 0. cm
+d:Ge/ScoringCylinder3cm/TransZ		= 0. cm
+d:Ge/ScoringCylinder3cm/RotX		= 0. deg
+d:Ge/ScoringCylinder3cm/RotY		= 0.0 deg
+d:Ge/ScoringCylinder3cm/RotZ		= 180. deg
+s:Ge/ScoringCylinder3cm/Color		= "blue"
+i:Ge/ScoringCylinder3cm/RBins		= 1
+i:Ge/ScoringCylinder3cm/PhiBins		= 1
+i:Ge/ScoringCylinder3cm/ZBins		= 200
+
+s:Sc/ScoringCylinder3cm/Quantity                  = "DoseToMedium"
+s:Sc/ScoringCylinder3cm/Component                 = "ScoringCylinder3cm"
+b:Sc/ScoringCylinder3cm/OutputToConsole           = "False"
+s:Sc/ScoringCylinder3cm/IfOutputFileAlreadyExists = "Overwrite"
+

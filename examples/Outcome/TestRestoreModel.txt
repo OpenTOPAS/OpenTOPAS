@@ -1,0 +1,115 @@
+# The geometry
+includeFile = LKMModelBurman.txt Phantom.txt
+
+Ge/World/HLX = 101 mm
+Ge/World/HLY = 101 mm
+Ge/World/HLZ = 101 mm
+
+# To reach ~60 Gy at maximum dose in the target
+u:Sc/ScaleFactor = 5779493.074240799
+
+# Calculates outcome from DVH
+s:Sc/OAR1/Quantity = "DoseToMedium"
+s:Sc/OAR1/Component = "WaterPhantom/OAR1"
+s:Sc/OAR1/OutputFile = "DoseAtOAR1"
+s:Sc/OAR1/OutputType = "Binary"
+s:Sc/OAR1/InputFile = "DoseAtOAR1Saved"
+s:Sc/OAR1/InputType = "Binary"
+s:Sc/OAR1/IfOutputFileAlreadyExists = "Overwrite"
+sv:Sc/OAR1/Report = 2 "sum" "cumulativevolumehistogram"
+i:Sc/OAR1/HistogramBins = 100
+d:Sc/OAR1/HistogramMin = 0 Gy
+d:Sc/OAR1/HistogramMax = 1.42E-5 Gy
+
+# Here cDVH is activated, then the outcome will be calculate from DVH.
+# For that, cDVH is internally converted to dDVH
+# Models to be calulated
+sv:Sc/OAR1/OutcomeModelName = 3 "lkb" "CriticalElement" "CriticalVolume"
+# User may wants to scale the dose distribution
+u:Sc/OAR1/OutcomeOutputScaleFactor = Sc/ScaleFactor
+# Correct for dose fractionation. Set number of fractions:
+i:Sc/OAR1/NumberOfFractions = 20
+# Optionally  set the dose per fraction and alpha/beta. Othewise
+# The values 2.0 Gy and 3.0 Gy are set by default respectively
+d:Sc/OAR1/DosePerFraction = 2.0 Gy
+d:Sc/OAR1/AlphaOverBeta = 3.0 Gy
+
+# There is an internal data base for LKB only.
+# If the organ name is not found in data base, TOPAS is stopped and
+# a list with the organs is displayed. Otherwise user can set
+# the parameters by hand: n, m and TD50
+s:Sc/OAR1/lkb/UsePresetParametersFromOrganNamed = "Kidney"
+
+# Parameters for the rest of the models are set by hand
+u:Sc/OAR1/CriticalElement/Gamma               = 2.8
+u:Sc/OAR1/CriticalElement/td50                = 28.0
+u:Sc/OAR1/CriticalVolume/mu_cr                = 0.22
+u:Sc/OAR1/CriticalVolume/sigma_mu_cr          = 0.05
+u:Sc/OAR1/CriticalVolume/d50fsu               = 59
+u:Sc/OAR1/CriticalVolume/gamma50fsu           = 0.4
+
+# From full dose distribution
+s:Sc/OAR2/Quantity = "DoseToMedium"
+s:Sc/OAR2/Component = "WaterPhantom/OAR2"
+s:Sc/OAR2/OutputFile = "DoseAtOAR2"
+s:Sc/OAR2/OutputType = "Binary"
+s:Sc/OAR2/InputFile = "DoseAtOAR2Saved"
+s:Sc/OAR2/InputType = "Binary"
+s:Sc/OAR2/IfOutputFileAlreadyExists = "Overwrite"
+
+# If DVH is not reported, then the outcome is calculated
+# from full dose distribution. In that case, all voxels
+# must to have the same volume.
+sv:Sc/OAR2/OutcomeModelName = 1 "lkb"
+u:Sc/OAR2/OutcomeOutputScaleFactor = Sc/ScaleFactor
+s:Sc/OAR2/lkb/UsePresetParametersFromOrganNamed = "colon"
+# Correct for dose fractionation
+i:Sc/OAR2/NumberOfFractions = 20
+
+s:Sc/Target/Quantity = "DoseToMedium"
+s:Sc/Target/Component = "WaterPhantom/Target"
+s:Sc/Target/OutputFile = "DoseAtTarget"
+s:Sc/Target/OutputType = "Binary"
+s:Sc/Target/InputFile = "DoseAtTargetSaved"
+s:Sc/Target/InputType = "Binary"
+s:Sc/Target/IfOutputFileAlreadyExists = "Overwrite"
+sv:Sc/Target/Report = 2 "sum" "cumulativevolumehistogram"
+i:Sc/Target/HistogramBins = 100
+d:Sc/Target/HistogramMin  = 0 Gy
+d:Sc/Target/HistogramMax  = 1.56e-5 Gy
+sv:Sc/Target/OutcomeModelName = 1 "poisson"
+u:Sc/Target/OutcomeOutputScaleFactor = Sc/ScaleFactor
+u:Sc/Target/Poisson/Gamma50 = 0.40
+u:Sc/Target/Poisson/TCD50 = 11.78
+# Correct for dose fractionation
+i:Sc/Target/NumberOfFractions = 20
+
+# Set a raw SOBP
+s:Tf/Energy/Function = "Step"
+dv:Tf/Energy/Times = 5 20 40 60 80 100 ms
+dv:Tf/Energy/Values = 5 160 155 150 145 140 MeV
+s:Tf/Histories/Function = "Step"
+dv:Tf/Histories/Times = 5 20 40 60 80 100 ms
+iv:Tf/Histories/Values = 5 6600 2500 1750 1400 1200
+
+s:So/Example/Type                     = "Beam"
+s:So/Example/Component                = "BeamPosition"
+s:So/Example/BeamParticle             = "proton"
+d:So/Example/BeamEnergy               = Tf/Energy/Value MeV
+u:So/Example/BeamEnergySpread         = 0.757504
+s:So/Example/BeamPositionDistribution = "Flat"
+s:So/Example/BeamPositionCutoffShape  = "Ellipse"
+d:So/Example/BeamPositionCutoffX      = 10 mm
+d:So/Example/BeamPositionCutoffY      = 10 mm
+s:So/Example/BeamAngularDistribution  = "None"
+i:So/Example/NumberOfHistoriesInRun   = 10 * Tf/Histories/Value
+
+# Start
+Ts/PauseBeforeQuit = "False"
+i:Tf/NumberOfSequentialTimes = 5
+d:Tf/TimelineEnd = 100 ms
+Ts/ShowHistoryCountAtInterval = 10000
+Tf/Verbosity = 1
+b:Ts/ShowCPUTime = "True"
+
+Ts/RestoreResultsFromFile = "True"

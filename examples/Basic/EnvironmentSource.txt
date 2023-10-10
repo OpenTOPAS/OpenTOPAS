@@ -1,0 +1,161 @@
+# Demonstrates Environment Source
+# The environment is a radiation field that might be experienced, for
+# example, by a spacecraft in a radiation belt, or a robot (or, indeed
+# a human) in a damaged nuclear reactor.
+
+# A notional radiation "cavity" is created enclosing all volumes in a
+# component. The cavity is a sphere of radius R.  Primary particles are
+# generated on the surface of the sphere, directed inwards, following a
+# cosine angular distribution (Lambert's cosine law) relative to the inward
+# direction. This produces an isotropic, homogeneous, "omnidirectional flux".
+
+# Even if the radiation has some directional dependency it is often the case
+# that the instrument (your detector) is rotating or moving about so the
+# flux will average to isotropic over time.
+
+# The basic definition of flux, f, which in principle can vary with
+# direction and position, is defined by dN/dt = f*da*dOmega, the
+# rate of flow of particles out of an element of area da perpendicular to
+# the direction into an element of solid angle dOmega. If the flux is
+# homogenous and isotropic, we can define the "omnidirectional flux"
+# F = 4*pi*f per unit area. It is quoted, for example, as number per cm2
+# per second.
+
+# Fluence is simply F*T, the flux F over a time period T, so quoted, for
+# example, as number per cm2.
+
+# One can derive equivalent definitions of fluence:
+# - the number of particles that enter a sphere of unit cross-sectional
+#   area;
+# - the track length per unit volume;
+# - etc. For more details see TOPAS documentation.
+
+# For N particles (histories), the fluence will be N/(pi*R^2). This is
+# printed at the end of run. It is up to you to decide if this is enough
+# for your application. Thus:
+# - to simulate flux F for time T you need pi*R^2*F*T histories;
+# - or, given N histories, you will have simulated a time period
+#   T = N/(F*pi*R^2).
+
+# A test sphere of radius r will attract N*r^2/R^2 particles.
+
+# A thin test disc of radius r will attract (N/2)*r^2/R^2 particles.
+
+# This parameter file implements:
+# - a test sphere
+# - a thin test disc
+# - a test cube
+# In all cases:
+# - the fluence is "measured" by a "Fluence" scorer (scores the sum of all
+#   track lengths divides by the volume);
+# - the number of tracks crossing a surface is scored, and can be related
+#   to the fluence by the above formulae.
+
+# All materials are set to vacuum so that flux is not attenuated
+# within the cavity.
+
+# Note: the world must be bigger than the radiation cavity, which may be
+# bigger than a box enclosing your geometry. TOPAS will tell you if you
+# need to increase the world size.
+s:Ge/World/Material = "Vacuum"
+s:Ge/World/Type     = "TsBox"
+d:Ge/World/HLX      = 5 m
+d:Ge/World/HLY      = 5 m
+d:Ge/World/HLZ      = 5 m
+
+s:Ge/TestVolumes/Type    = "Group"
+s:Ge/TestVolumes/Parent  = "World"
+dc:Ge/TestVolumes/RotZ   = 0. deg
+dc:Ge/TestVolumes/TransZ = 1 m
+
+s:Ge/TestSphere/Type      = "TsSphere"
+s:Ge/TestSphere/Parent    = "TestVolumes"
+sc:Ge/TestSphere/Material = "Vacuum"
+dc:Ge/TestSphere/RMax     = 50 cm
+dc:Ge/TestSphere/TransY   = -2 m
+dc:Ge/TestSphere/TransZ   = 0.5 m
+
+s:Ge/TestBox/Type      = "TsBox"
+s:Ge/TestBox/Parent    = "TestVolumes"
+sc:Ge/TestBox/Material = "Vacuum"
+dc:Ge/TestBox/HLX      = 0.5 m
+dc:Ge/TestBox/HLY      = 0.5 m
+dc:Ge/TestBox/HLZ      = 0.5 m
+dc:Ge/TestBox/TransY   = -2 m
+dc:Ge/TestBox/TransZ   = -1 m
+
+s:Ge/TestDisc/Type     = "TsCylinder"
+s:Ge/TestDisc/Parent   = "TestVolumes"
+sc:Ge/TestDisc/Material = "Vacuum"
+dc:Ge/TestDisc/RMax     = 50 cm
+dc:Ge/TestDisc/HL       = 1 nm
+dc:Ge/TestDisc/TransY   = 2 m
+dc:Ge/TestDisc/TransZ   = 0.5 m
+
+s:Sc/TestSphereFluenceScorer/Quantity = "Fluence"
+s:Sc/TestSphereFluenceScorer/Component = "TestSphere"
+b:Sc/TestSphereFluenceScorer/PropagateToChildren = "True"
+b:Sc/TestSphereFluenceScorer/OutputToConsole = "True"
+b:Sc/TestSphereFluenceScorer/OutputAfterRun = "True"
+s:Sc/TestSphereFluenceScorer/OutputType = "csv"
+s:Sc/TestSphereFluenceScorer/IfOutputFileAlreadyExists = "Overwrite"
+
+s:Sc/TestSphereTrackScorer/Quantity = "SurfaceTrackCount"
+s:Sc/TestSphereTrackScorer/Component = "TestSphere"
+s:Sc/TestSphereTrackScorer/Surface = "TestSphere/OuterCurvedSurface"
+b:Sc/TestSphereTrackScorer/PropagateToChildren = "True"
+b:Sc/TestSphereTrackScorer/OutputToConsole = "True"
+b:Sc/TestSphereTrackScorer/OutputAfterRun = "True"
+s:Sc/TestSphereTrackScorer/OutputType = "csv"
+s:Sc/TestSphereTrackScorer/IfOutputFileAlreadyExists = "Overwrite"
+
+s:Sc/TestBoxFluenceScorer/Quantity = "Fluence"
+s:Sc/TestBoxFluenceScorer/Component = "TestBox"
+b:Sc/TestBoxFluenceScorer/PropagateToChildren = "True"
+b:Sc/TestBoxFluenceScorer/OutputToConsole = "True"
+b:Sc/TestBoxFluenceScorer/OutputAfterRun = "True"
+s:Sc/TestBoxFluenceScorer/OutputType = "csv"
+s:Sc/TestBoxFluenceScorer/IfOutputFileAlreadyExists = "Overwrite"
+
+s:Sc/TestBoxTrackScorer/Quantity = "SurfaceTrackCount"
+s:Sc/TestBoxTrackScorer/Component = "TestBox"
+s:Sc/TestBoxTrackScorer/Surface = "TestBox/XPlusSurface"
+b:Sc/TestBoxTrackScorer/PropagateToChildren = "True"
+b:Sc/TestBoxTrackScorer/OutputToConsole = "True"
+b:Sc/TestBoxTrackScorer/OutputAfterRun = "True"
+s:Sc/TestBoxTrackScorer/OutputType = "csv"
+s:Sc/TestBoxTrackScorer/IfOutputFileAlreadyExists = "Overwrite"
+
+s:Sc/TestDiscFluenceScorer/Quantity = "Fluence"
+s:Sc/TestDiscFluenceScorer/Component = "TestDisc"
+b:Sc/TestDiscFluenceScorer/PropagateToChildren = "True"
+b:Sc/TestDiscFluenceScorer/OutputToConsole = "True"
+b:Sc/TestDiscFluenceScorer/OutputAfterRun = "True"
+s:Sc/TestDiscFluenceScorer/OutputType = "csv"
+s:Sc/TestDiscFluenceScorer/IfOutputFileAlreadyExists = "Overwrite"
+
+s:Sc/TestDiscTrackScorer/Quantity = "SurfaceTrackCount"
+s:Sc/TestDiscTrackScorer/Surface = "TestDisc/ZMinusSurface"
+s:Sc/TestDiscTrackScorer/Component = "TestDisc"
+b:Sc/TestDiscTrackScorer/PropagateToChildren = "True"
+b:Sc/TestDiscTrackScorer/OutputToConsole = "True"
+b:Sc/TestDiscTrackScorer/OutputAfterRun = "True"
+s:Sc/TestDiscTrackScorer/OutputType = "csv"
+s:Sc/TestDiscTrackScorer/IfOutputFileAlreadyExists = "Overwrite"
+
+s:So/Example/Type                     = "Environment"
+s:So/Example/Component                = "TestVolumes"
+s:So/Example/BeamParticle             = "proton"
+dc:So/Example/BeamEnergy              = 200 MeV
+ic:So/Example/NumberOfHistoriesInRun  = 1000000
+
+#i:Ts/Seed = 1
+i:Ts/NumberOfThreads = 0  # All available threads
+i:Ts/ShowHistoryCountAtInterval = 100000
+
+#s:Gr/ViewA/Type              = "OpenGL"
+#b:Gr/ViewA/IncludeStepPoints = "True"
+#b:Ts/PauseBeforeQuit = "True"
+#b:Ts/UseQt = "True"
+
+

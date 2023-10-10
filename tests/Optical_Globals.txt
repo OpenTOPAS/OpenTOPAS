@@ -1,0 +1,86 @@
+# 
+includeFile = Optical_Materials.txt
+
+# SEQUENCE
+b:Ts/PauseBeforeQuit = "False"
+b:Ts/ShowCPUTime = "True"
+i:Ts/ShowHistoryCountAtInterval= 1
+i:Ts/Seed = 123
+
+# VISUALIZATION
+b:Gr/Enable          = "False"
+
+s:Gr/view/Type       = "OpenGl"
+b:Gr/view/IncludeAxes = "True"
+d:Gr/view/AxesSize    = 4 cm
+i:Gr/view/WindowSizeX = 600
+i:Gr/view/WindowSizeY = 600
+d:Gr/view/Theta       = 45. deg
+d:Gr/view/Phi         = 45. deg
+
+# PHYSICS LIST
+s:Ph/ListName         = "Optical"
+s:Ph/Optical/Type     = "Geant4_Modular"
+sv:Ph/Optical/Modules = 7 "g4optical" "g4em-standard_opt3" "g4h-phy_QGSP_BIC_HP" "g4decay"
+"g4ion-binarycascade" "g4h-elastic_HP" "g4stopping"
+
+# SOURCE
+s:So/Default/Type                     = "Beam"
+s:So/Default/Component                = "BeamPosition"
+s:So/Default/BeamParticle             = "proton"
+d:So/Default/BeamEnergy               = 100 MeV
+u:So/Default/BeamEnergySpread         = 0.5
+s:So/Default/BeamPositionDistribution = "None"
+s:So/Default/BeamAngularDistribution  = "None"
+i:So/Default/NumberOfHistoriesInRun   = 10
+
+d:Ge/BeamPosition/TransZ              = 0.0 cm 
+d:Ge/BeamPosition/TransY              = 3.0 cm
+d:Ge/BeamPosition/RotX                = -90 deg
+
+# GEOMETRY
+d:Ge/World/HLX       = 6 cm
+d:Ge/World/HLY       = 6 cm
+d:Ge/World/HLZ       = 6 cm
+s:Ge/World/Material  = "Air"
+b:Ge/World/Invisible = "True"
+
+# Plastic
+s:Ge/Plastic/Parent       = "World"
+s:Ge/Plastic/Type         = "TsBox"
+s:Ge/Plastic/Material     = "BUAPFCFM"
+d:Ge/Plastic/HLX          = 2.0 cm 
+d:Ge/Plastic/HLY          = 2.0 cm 
+d:Ge/Plastic/HLZ          = 0.5 cm	
+s:Ge/Plastic/Color        = "yellow"
+s:Ge/Plastic/DrawingStyle = "Solid"
+
+# WLS
+s:Ge/WLS/Parent       = "World"
+s:Ge/WLS/Type         = "TsBox"
+s:Ge/WLS/Material     = "Polystyrene" 
+d:Ge/WLS/HLX          = Ge/Plastic/HLX cm 
+d:Ge/WLS/HLY          = Ge/Plastic/HLY cm 
+d:Ge/WLS/HLZ          = 1 mm 
+d:Ge/WLS/TransZ       = Ge/Plastic/HLZ + Ge/WLS/HLZ cm
+s:Ge/WLS/Color        = "magenta"
+s:Ge/WLS/DrawingStyle = "Solid"
+
+# DETECTOR
+s:Ge/PMT/Parent   = "World"
+s:Ge/PMT/Type     = "TsCylinder"
+s:Ge/PMT/Material = "Borosilicate"
+d:Ge/PMT/HL        = 0.5 mm
+d:Ge/PMT/RMax     = 2.0 cm
+d:Ge/PMT/TransZ1  = Ge/WLS/TransZ + Ge/WLS/HLZ cm
+d:Ge/PMT/TransZ   = Ge/PMT/TransZ1 + Ge/PMT/HL cm
+s:Ge/PMT/Color    = "red"
+
+s:Ge/Photocathode/Parent       = "PMT"
+s:Ge/Photocathode/Type         = "TsCylinder"
+s:Ge/Photocathode/Material     = "Parent"
+d:Ge/Photocathode/HL           = 0.2 mm
+d:Ge/Photocathode/RMax         = 1.9 cm
+s:Ge/Photocathode/Color        = "grey"
+s:Ge/Photocathode/DrawingStyle = "Solid"
+ 

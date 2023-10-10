@@ -1,0 +1,161 @@
+# A complex example showing lots of different scorers and options.
+
+d:Ge/World/HLX       = 2.0 m
+d:Ge/World/HLY       = 2.0 m
+d:Ge/World/HLZ       = 2.0 m
+b:Ge/World/Invisible = "True"
+
+s:Ge/Film/Type     = "TsBox"
+s:Ge/Film/Parent   = "World"
+s:Ge/Film/Material = "G4_WATER"
+d:Ge/Film/HLX      = 50.0 cm
+d:Ge/Film/HLY      = 50.0 cm
+d:Ge/Film/HLZ      = 1.0 cm
+d:Ge/Film/TransX   = 0. cm
+d:Ge/Film/TransY   = 0. cm
+d:Ge/Film/TransZ   = 0. cm
+d:Ge/Film/RotX     = 0. deg
+d:Ge/Film/RotY     = 0. deg
+d:Ge/Film/RotZ     = 0. deg
+s:Ge/Film/Color    = "skyblue"
+
+s:Ge/Phantom1/Type     = "TsBox"
+s:Ge/Phantom1/Parent   = "World"
+s:Ge/Phantom1/Material = "G4_WATER"
+d:Ge/Phantom1/HLX      = 30.0 cm
+d:Ge/Phantom1/HLY      = 30.0 cm
+d:Ge/Phantom1/HLZ      = 1.1 cm
+d:Ge/Phantom1/TransZ   = -30. cm
+
+s:Ge/Phantom2/Type     = "TsBox"
+s:Ge/Phantom2/Parent   = "World"
+s:Ge/Phantom2/Material = "G4_WATER"
+d:Ge/Phantom2/HLX      = 10.0 cm
+d:Ge/Phantom2/HLY      = 10.0 cm
+d:Ge/Phantom2/HLZ      = 10.0 cm
+d:Ge/Phantom2/TransZ   = -50. cm
+s:Ge/Phantom2/Color    = "red"
+i:Ge/Phantom2/XBins    = 2
+i:Ge/Phantom2/YBins    = 2
+i:Ge/Phantom2/ZBins    = 1
+
+s:Sc/PhaseSpaceAtFilm/Quantity                    = "PhaseSpace"
+b:Sc/PhaseSpaceAtFilm/OutputToConsole             = "True"
+s:Sc/PhaseSpaceAtFilm/Surface                     = "Film/ZMinusSurface"
+s:Sc/PhaseSpaceAtFilm/OutputType                  = "ASCII" # ASCII or Binary
+i:Sc/PhaseSpaceAtFilm/OutputBufferSize            = 1000
+#s:Sc/PhaseSpaceAtFilm/OnlyIncludeParticlesGoing  = "In"
+b:Sc/PhaseSpaceAtFilm/IncludeRunID                = "True"
+b:Sc/PhaseSpaceAtFilm/IncludeEventID              = "True"
+b:Sc/PhaseSpaceAtFilm/IncludeTrackID              = "True"
+b:Sc/PhaseSpaceAtFilm/IncludeTime                 = "True"
+#sv:Sc/PhaseSpaceAtFilm/OnlyIncludeParticlesNamed = 1 "Proton"
+s:Sc/PhaseSpaceAtFilm/IfOutputFileAlreadyExists   = "Increment" # Exit, Overwrite or Increment
+
+s:Sc/PhaseSpaceAtFilmb/Quantity                    = "PhaseSpace"
+b:Sc/PhaseSpaceAtFilmb/OutputToConsole             = "True"
+s:Sc/PhaseSpaceAtFilmb/Surface                     = "Film/ZMinusSurface"
+s:Sc/PhaseSpaceAtFilmb/OutputType                  = "binary" # ASCII or Binary
+i:Sc/PhaseSpaceAtFilmb/OutputBufferSize            = 1000
+#s:Sc/PhaseSpaceAtFilmb/OnlyIncludeParticlesGoing  = "In"
+#sv:Sc/PhaseSpaceAtFilmb/OnlyIncludeParticlesNamed = 1 "Proton"
+
+s:Sc/DoseAtPhantom1/Quantity                  = "DoseToMedium"
+s:Sc/DoseAtPhantom1/Component                 = "Phantom1"
+s:Sc/DoseAtPhantom1/OutputFile                = "DoseAtPhantom1"
+s:Sc/DoseAtPhantom1/OutputType                = "csv"
+b:Sc/DoseAtPhantom1/OutputToConsole           = "TRUE"
+b:Sc/DoseAtPhantom1/Visualize                 = "TRUE"
+s:Sc/DoseAtPhantom1/IfOutputFileAlreadyExists = "Increment" # Exit, Overwrite or Increment
+sv:Sc/DoseAtPhantom1/Report = 8 "Sum" "Mean" "Count_in_bin" "Second_Moment" "Variance" "Standard_Deviation" "Min" "Max"
+i:Sc/DoseAtPhantom1/ZBins = 10
+
+s:Sc/DoseAtPhantom1b/Quantity                  = "DoseToMedium"
+s:Sc/DoseAtPhantom1b/Component                 = "Phantom1"
+s:Sc/DoseAtPhantom1b/OutputFile                = "DoseAtPhantom1b"
+s:Sc/DoseAtPhantom1b/OutputType                = "binary"
+b:Sc/DoseAtPhantom1b/OutputToConsole           = "TRUE"
+b:Sc/DoseAtPhantom1b/Visualize                 = "TRUE"
+s:Sc/DoseAtPhantom1b/IfOutputFileAlreadyExists = "Increment" # Exit, Overwrite or Increment
+sv:Sc/DoseAtPhantom1b/Report = 8 "Sum" "Mean" "Count_in_bin" "Second_Moment" "Variance" "Standard_Deviation" "Min" "Max"
+
+s:Sc/EnergyDepAtPhantom1/Quantity                  = "EnergyDeposit"
+s:Sc/EnergyDepAtPhantom1/Component                 = "Phantom1"
+s:Sc/EnergyDepAtPhantom1/OutputType                = "csv"
+b:Sc/EnergyDepAtPhantom1/OutputToConsole           = "TRUE"
+b:Sc/EnergyDepAtPhantom1/Visualize                 = "TRUE"
+s:Sc/EnergyDepAtPhantom1/IfOutputFileAlreadyExists = "Increment" # Exit, Overwrite or Increment
+
+s:Sc/FluenceAtPhantom1/Quantity        = "Fluence"
+s:Sc/FluenceAtPhantom1/Component       = "Phantom1"
+s:Sc/FluenceAtPhantom1/OutputFile      = "FluenceAtPhantom1"
+s:Sc/FluenceAtPhantom1/OutputType      = "csv"
+b:Sc/FluenceAtPhantom1/OutputToConsole = "TRUE"
+b:Sc/FluenceAtPhantom1/Visualize       = "TRUE"
+
+s:Sc/EnergyFluenceAtPhantom1/Quantity                   = "EnergyFluence"
+s:Sc/EnergyFluenceAtPhantom1/Component                  = "Phantom1"
+s:Sc/EnergyFluenceAtPhantom1/OutputFile                 = "EnergyFluenceAtPhantom1"
+s:Sc/EnergyFluenceAtPhantom1/OutputType                 = "csv"
+b:Sc/EnergyFluenceAtPhantom1/OutputToConsole            = "TRUE"
+b:Sc/EnergyFluenceAtPhantom1/Visualize                  = "TRUE"
+sv:Sc/EnergyFluenceAtPhantom1/OnlyIncludeParticlesNamed = 1 "proton"
+
+s:Sc/eDoseAtPhantom1/Quantity                              = "DoseToMedium"
+s:Sc/eDoseAtPhantom1/Component                             = "Phantom1"
+sv:Sc/eDoseAtPhantom1/OnlyIncludeParticlesNamed            = 1 "e-"
+#sv:Sc/eDoseAtPhantom1/OnlyIncludeParticlesCharged         = 1 "negative" # zero or more of positive, negative or neutral
+#d:Sc/eDoseAtPhantom1/OnlyIncludeIfIncidentParticleKEAbove = 200. keV # minimum energy
+#d:Sc/eDoseAtPhantom1/OnlyIncludeIfIncidentParticleKEBelow = 250. keV # minimum energy
+#sv:Sc/eDoseAtPhantom1/OnlyIncludeParticlesFromComponent   = 1 "Phantom1"
+#sv:Sc/eDoseAtPhantom1/OnlyIncludeParticlesFromProcess     = 1 "hIoni"
+#b:Sc/eDoseAtPhantom1/InvertFilter                         = "TRUE"
+s:Sc/eDoseAtPhantom1/OutputFile                            = "eDoseAtPhantom1"
+s:Sc/eDoseAtPhantom1/OutputType                            = "csv"
+b:Sc/eDoseAtPhantom1/OutputToConsole                       = "FALSE"
+b:Sc/eDoseAtPhantom1/Visualize                             = "TRUE"
+
+s:Sc/EDepAtPhantom1/Quantity                   = "DoseToMedium"
+s:Sc/EDepAtPhantom1/Component                  = "Phantom2"
+b:Sc/EDepAtPhantom1/OutputToConsole            = "TRUE"
+sv:Sc/EDepAtPhantom1/OnlyIncludeParticlesNamed = 1 "proton"
+
+s:Sc/DoseAtPhantom2/Quantity        = "DoseToMedium"
+s:Sc/DoseAtPhantom2/Component       = "Phantom2"
+s:Sc/DoseAtPhantom2/OutputFile      = "DoseAtPhantom2"
+s:Sc/DoseAtPhantom2/OutputType      = "csv"
+b:Sc/DoseAtPhantom2/OutputToConsole = "TRUE"
+b:Sc/DoseAtPhantom2/Visualize       = "TRUE"
+
+s:Sc/EDepAtPhantom2/Quantity  = "EnergyDeposit"
+s:Sc/EDepAtPhantom2/Component = "Phantom2"
+
+s:Gr/ViewA/Type                             = "OpenGL"
+i:Gr/ViewA/WindowSizeX                      = 900
+i:Gr/ViewA/WindowSizeY                      = 900
+d:Gr/ViewA/Theta                            = 55 deg
+d:Gr/ViewA/Phi                              = 20 deg
+s:Gr/ViewA/Projection                       = "Perspective"
+d:Gr/ViewA/PerspectiveAngle                 = 30 deg
+u:Gr/ViewA/Zoom                             = 1.3
+b:Gr/ViewA/HiddenLineRemovalForTrajectories = "True"
+
+s:So/Example/Type                     = "Beam"
+s:So/Example/Component                = "BeamPosition"
+s:So/Example/BeamParticle             = "proton"
+d:So/Example/BeamEnergy               = 169.23 MeV
+u:So/Example/BeamEnergySpread         = 0.757504
+s:So/Example/BeamPositionDistribution = "Gaussian"
+s:So/Example/BeamPositionCutoffShape  = "Ellipse"
+d:So/Example/BeamPositionCutoffX      = 10. cm
+d:So/Example/BeamPositionCutoffY      = 10. cm
+d:So/Example/BeamPositionSpreadX      = 0.65 cm
+d:So/Example/BeamPositionSpreadY      = 0.65 cm
+s:So/Example/BeamAngularDistribution  = "Gaussian"
+d:So/Example/BeamAngularCutoffX       = 90. deg
+d:So/Example/BeamAngularCutoffY       = 90. deg
+d:So/Example/BeamAngularSpreadX       = 0.0032 rad
+d:So/Example/BeamAngularSpreadY       = 0.0032 rad
+i:So/Example/NumberOfHistoriesInRun   = 10
+
+b:Ts/PauseBeforeQuit = "True"

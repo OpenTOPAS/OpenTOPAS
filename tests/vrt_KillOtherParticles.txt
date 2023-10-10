@@ -1,0 +1,21 @@
+#
+includeFile = vrt_GeometricalParticleSplit_Globals.txt
+
+##########################
+# Variance reduction
+##########################
+# Test some case sensitivity
+b:Vr/UseVarianceREDUCTION                    = "true"
+b:Vr/KillOtherParticles/ActiVE               = "true"
+sv:Vr/KillOtherParticles/OnlyTRACKParticlesNamed = 2 "proton" "e-"
+sv:Vr/KillOtherParticles/HaveNoEFFECTInComponentsNamed = 1 "Phantom"
+
+s:Sc/scorer/OutputFile = "vrt_KillOtherParticles"
+
+##########################
+# Histories
+##########################
+i:Ts/Seed = 123
+i:So/Default/NumberOfHistoriesInRun = 1000
+i:Ts/ShowHistoryCountAtInterval     = 100
+b:Ts/ShowCPUTime                    = "True"

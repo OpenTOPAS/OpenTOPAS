@@ -1,0 +1,54 @@
+#
+includeFile = VRT_1.txt
+
+uvc:Vr/ParticleSplit/ForRegion/target/SplitNumber     = 1  100
+bc:Vr/ParticleSplit/UseDirectionalSplitting = "True"
+ic:So/electronBeam/NumberOfHistoriesInRun = 100
+
+s:Sc/phaseSpace/OutputFile = "productionCutsPerRegion"
+b:Sc/phaseSpace/KillAfterPhaseSpace = "True"
+
+s:Ge/Jaw/AssignToRegionNamed = "Jaws"
+s:Ge/MLC/AssignToRegionNamed = "MLC"
+
+s:Ge/FlatteningFilter1/AssignToRegionNamed = "FlatteningFilter"
+s:Ge/FlatteningFilter2/AssignToRegionNamed = "FlatteningFilter"
+
+s:Ge/Collimator_1/AssignToRegionNamed = "Collimator"
+s:Ge/Collimator_2/AssignToRegionNamed = "Collimator"
+s:Ge/Collimator_3/AssignToRegionNamed = "Collimator"
+s:Ge/Collimator_4/AssignToRegionNamed = "Collimator"
+s:Ge/Collimator_5/AssignToRegionNamed = "Collimator"
+s:Ge/Collimator_6/AssignToRegionNamed = "Collimator"
+
+# Production cuts
+# Elsewhere
+d:Ph/Default/CutForElectron = 10. mm
+d:Ph/Default/CutForPositron = 10. mm
+d:Ph/Default/CutForGamma = 10. mm
+
+# Target and collimator
+d:Ph/Default/ForRegion/Target/CutForElectron = 1. mm
+d:Ph/Default/ForRegion/Target/CutForPositron = 1. mm
+d:Ph/Default/ForRegion/Target/CutForGamma = 10 mm
+d:Ph/Default/ForRegion/Collimator/CutForElectron = 0.1 mm
+d:Ph/Default/ForRegion/Collimator/CutForPositron = 0.1 mm
+d:Ph/Default/ForRegion/Collimator/CutForGamma = 10 mm
+
+# Flattening filter
+d:Ph/Default/ForRegion/Flattening/CutForElectron = 1. mm
+d:Ph/Default/ForRegion/Flattening/CutForPositron = 1. mm
+d:Ph/Default/ForRegion/Flattening/CutForGamma = 10 mm
+
+# Jaws
+d:Ph/Default/ForRegion/Jaws/CutForElectron = 0.3 mm
+d:Ph/Default/ForRegion/Jaws/CutForPositron = 0.3 mm
+d:Ph/Default/ForRegion/Jaws/CutForGamma = 1.0 mm
+
+# MLC
+d:Ph/Default/ForRegion/MLC/CutForElectron = 0.3 mm
+d:Ph/Default/ForRegion/MLC/CutForPositron = 0.3 mm
+d:Ph/Default/ForRegion/MLC/CutForGamma = 1.0 mm
+
+b:Ts/ShowCPUTime = "True"
+

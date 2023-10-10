@@ -1,0 +1,27 @@
+# This is the top-level TOPAS parameter control file. The following files are all also read to set the simulation parameters.
+
+includeFile = MainTxHead.txt 
+
+s:Sc/phaseSpace/OutputFile = "particleSplit"
+
+# Activate VRT
+b:Vr/UseVarianceReduction = "True"
+
+# Uniform split
+b:Vr/ParticleSplit1/Active = "True"
+s:Vr/ParticleSplit/Type   = "secondarybiasing"
+svc:Vr/ParTicleSplit/ForRegion/target/processesNamed   = 1 "eBrem"
+uvc:Vr/ParticleSplit/ForRegion/target/SplitNumber     = 1  1.0
+dv:Vr/ParticleSplit/ForRegion/target/MaximumEnergies  = 1  10.0  MeV
+
+bc:Vr/ParticleSplit/UseDirectionalSplitting = "False"
+d:Vr/ParticleSplit/TransX = 0 cm
+d:Vr/ParticleSplit/TransY = 0 cm
+dc:Vr/ParticleSplit/TransZ = 0 cm
+dc:Vr/ParticleSplit/RMax   = 10 cm
+
+ic:So/electronBeam/NumberOfHistoriesInRun = 100
+
+i:Ts/ShowHistoryCountAtInterval  = 100
+b:Ts/ShowCPUTime = "True"
+

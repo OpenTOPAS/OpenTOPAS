@@ -1,0 +1,876 @@
+# Test every kind of scoring filter
+
+s:Ge/World/Material  = "Vacuum"
+d:Ge/World/HLX       = 2.0 m
+d:Ge/World/HLY       = 2.0 m
+d:Ge/World/HLZ       = 2.0 m
+b:Ge/World/Invisible = "TRUE"
+
+s:Ge/Foil/Type     = "TsBox"
+s:Ge/Foil/Parent   = "World"
+s:Ge/Foil/Material = "Lead"
+d:Ge/Foil/HLX      = 30.0 cm
+d:Ge/Foil/HLY      = 30.0 cm
+d:Ge/Foil/HLZ      = .5 cm
+d:Ge/Foil/TransX   = 0. cm
+d:Ge/Foil/TransY   = 0. cm
+d:Ge/Foil/TransZ   = 0. cm
+d:Ge/Foil/RotX     = 0. deg
+d:Ge/Foil/RotY     = 0. deg
+d:Ge/Foil/RotZ     = 0. deg
+
+s:Ge/Box/Type     = "TsBox"
+s:Ge/Box/Parent   = "World"
+s:Ge/Box/Material = "G4_WATER"
+d:Ge/Box/HLX      = 20.0 cm
+d:Ge/Box/HLY      = 20.0 cm
+d:Ge/Box/HLZ      = 20.0 cm
+d:Ge/Box/TransX   = 0. cm
+d:Ge/Box/TransY   = 0. cm
+d:Ge/Box/TransZ   = -30. cm
+d:Ge/Box/RotX     = 0. deg
+d:Ge/Box/RotY     = 0. deg
+d:Ge/Box/RotZ     = 0. deg
+
+s:Sc/OnlyIncludeParticlesOfGeneration/Quantity = "SurfaceTrackCount"
+s:Sc/OnlyIncludeParticlesOfGeneration/Surface = "Box/ZPlusSurface"
+b:Sc/OnlyIncludeParticlesOfGeneration/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeParticlesOfGeneration/OutputType = "csv"
+s:Sc/OnlyIncludeParticlesOfGeneration/IfOutputFileAlreadyExists = "Overwrite"
+s:Sc/OnlyIncludeParticlesOfGeneration/OnlyIncludeParticlesOfGeneration = "Primary"
+
+s:Sc/OnlyIncludeParticlesCharged/Quantity = "SurfaceTrackCount"
+s:Sc/OnlyIncludeParticlesCharged/Surface = "Box/ZPlusSurface"
+b:Sc/OnlyIncludeParticlesCharged/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeParticlesCharged/OutputType = "csv"
+s:Sc/OnlyIncludeParticlesCharged/IfOutputFileAlreadyExists = "Overwrite"
+sv:Sc/OnlyIncludeParticlesCharged/OnlyIncludeParticlesCharged = 1 "Positive"
+
+s:Sc/OnlyIncludeParticlesNotCharged/Quantity = "SurfaceTrackCount"
+s:Sc/OnlyIncludeParticlesNotCharged/Surface = "Box/ZPlusSurface"
+b:Sc/OnlyIncludeParticlesNotCharged/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeParticlesNotCharged/OutputType = "csv"
+s:Sc/OnlyIncludeParticlesNotCharged/IfOutputFileAlreadyExists = "Overwrite"
+sv:Sc/OnlyIncludeParticlesNotCharged/OnlyIncludeParticlesNotCharged = 1 "Positive"
+
+s:Sc/OnlyIncludeParticlesOfAtomicMass/Quantity = "SurfaceTrackCount"
+s:Sc/OnlyIncludeParticlesOfAtomicMass/Surface = "Box/ZPlusSurface"
+b:Sc/OnlyIncludeParticlesOfAtomicMass/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeParticlesOfAtomicMass/OutputType = "csv"
+s:Sc/OnlyIncludeParticlesOfAtomicMass/IfOutputFileAlreadyExists = "Overwrite"
+i:Sc/OnlyIncludeParticlesOfAtomicMass/OnlyIncludeParticlesOfAtomicMass = 1
+
+s:Sc/OnlyIncludeParticlesNotOfAtomicMass/Quantity = "SurfaceTrackCount"
+s:Sc/OnlyIncludeParticlesNotOfAtomicMass/Surface = "Box/ZPlusSurface"
+b:Sc/OnlyIncludeParticlesNotOfAtomicMass/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeParticlesNotOfAtomicMass/OutputType = "csv"
+s:Sc/OnlyIncludeParticlesNotOfAtomicMass/IfOutputFileAlreadyExists = "Overwrite"
+i:Sc/OnlyIncludeParticlesNotOfAtomicMass/OnlyIncludeParticlesNotOfAtomicMass = 1
+
+s:Sc/OnlyIncludeParticlesOfAtomicNumber/Quantity = "SurfaceTrackCount"
+s:Sc/OnlyIncludeParticlesOfAtomicNumber/Surface = "Box/ZPlusSurface"
+b:Sc/OnlyIncludeParticlesOfAtomicNumber/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeParticlesOfAtomicNumber/OutputType = "csv"
+s:Sc/OnlyIncludeParticlesOfAtomicNumber/IfOutputFileAlreadyExists = "Overwrite"
+i:Sc/OnlyIncludeParticlesOfAtomicNumber/OnlyIncludeParticlesOfAtomicNumber = 1
+
+s:Sc/OnlyIncludeParticlesNotOfAtomicNumber/Quantity = "SurfaceTrackCount"
+s:Sc/OnlyIncludeParticlesNotOfAtomicNumber/Surface = "Box/ZPlusSurface"
+b:Sc/OnlyIncludeParticlesNotOfAtomicNumber/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeParticlesNotOfAtomicNumber/OutputType = "csv"
+s:Sc/OnlyIncludeParticlesNotOfAtomicNumber/IfOutputFileAlreadyExists = "Overwrite"
+i:Sc/OnlyIncludeParticlesNotOfAtomicNumber/OnlyIncludeParticlesNotOfAtomicNumber = 1
+
+s:Sc/OnlyIncludeIfParticleOrAncestorOfAtomicMass/Quantity = "SurfaceTrackCount"
+s:Sc/OnlyIncludeIfParticleOrAncestorOfAtomicMass/Surface = "Box/ZPlusSurface"
+b:Sc/OnlyIncludeIfParticleOrAncestorOfAtomicMass/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeIfParticleOrAncestorOfAtomicMass/OutputType = "csv"
+s:Sc/OnlyIncludeIfParticleOrAncestorOfAtomicMass/IfOutputFileAlreadyExists = "Overwrite"
+i:Sc/OnlyIncludeIfParticleOrAncestorOfAtomicMass/OnlyIncludeIfParticleOrAncestorOfAtomicMass = 1
+
+s:Sc/OnlyIncludeIfParticleOrAncestorNotOfAtomicMass/Quantity = "SurfaceTrackCount"
+s:Sc/OnlyIncludeIfParticleOrAncestorNotOfAtomicMass/Surface = "Box/ZPlusSurface"
+b:Sc/OnlyIncludeIfParticleOrAncestorNotOfAtomicMass/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeIfParticleOrAncestorNotOfAtomicMass/OutputType = "csv"
+s:Sc/OnlyIncludeIfParticleOrAncestorNotOfAtomicMass/IfOutputFileAlreadyExists = "Overwrite"
+i:Sc/OnlyIncludeIfParticleOrAncestorNotOfAtomicMass/OnlyIncludeIfParticleOrAncestorNotOfAtomicMass = 1
+
+s:Sc/OnlyIncludeIfParticleOrAncestorOfAtomicNumber/Quantity = "SurfaceTrackCount"
+s:Sc/OnlyIncludeIfParticleOrAncestorOfAtomicNumber/Surface = "Box/ZPlusSurface"
+b:Sc/OnlyIncludeIfParticleOrAncestorOfAtomicNumber/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeIfParticleOrAncestorOfAtomicNumber/OutputType = "csv"
+s:Sc/OnlyIncludeIfParticleOrAncestorOfAtomicNumber/IfOutputFileAlreadyExists = "Overwrite"
+i:Sc/OnlyIncludeIfParticleOrAncestorOfAtomicNumber/OnlyIncludeIfParticleOrAncestorOfAtomicNumber = 1
+
+s:Sc/OnlyIncludeIfParticleOrAncestorNotOfAtomicNumber/Quantity = "SurfaceTrackCount"
+s:Sc/OnlyIncludeIfParticleOrAncestorNotOfAtomicNumber/Surface = "Box/ZPlusSurface"
+b:Sc/OnlyIncludeIfParticleOrAncestorNotOfAtomicNumber/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeIfParticleOrAncestorNotOfAtomicNumber/OutputType = "csv"
+s:Sc/OnlyIncludeIfParticleOrAncestorNotOfAtomicNumber/IfOutputFileAlreadyExists = "Overwrite"
+i:Sc/OnlyIncludeIfParticleOrAncestorNotOfAtomicNumber/OnlyIncludeIfParticleOrAncestorNotOfAtomicNumber = 1
+
+s:Sc/OnlyIncludeParticlesWithKEBelow/Quantity = "SurfaceTrackCount"
+s:Sc/OnlyIncludeParticlesWithKEBelow/Surface = "Box/ZPlusSurface"
+b:Sc/OnlyIncludeParticlesWithKEBelow/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeParticlesWithKEBelow/OutputType = "csv"
+s:Sc/OnlyIncludeParticlesWithKEBelow/IfOutputFileAlreadyExists = "Overwrite"
+d:Sc/OnlyIncludeParticlesWithKEBelow/OnlyIncludeParticlesWithKEBelow = 100. MeV
+
+s:Sc/OnlyIncludeParticlesWithKENotBelow/Quantity = "SurfaceTrackCount"
+s:Sc/OnlyIncludeParticlesWithKENotBelow/Surface = "Box/ZPlusSurface"
+b:Sc/OnlyIncludeParticlesWithKENotBelow/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeParticlesWithKENotBelow/OutputType = "csv"
+s:Sc/OnlyIncludeParticlesWithKENotBelow/IfOutputFileAlreadyExists = "Overwrite"
+d:Sc/OnlyIncludeParticlesWithKENotBelow/OnlyIncludeParticlesWithKENotBelow = 100. MeV
+
+s:Sc/OnlyIncludeParticlesWithKE/Quantity = "SurfaceTrackCount"
+s:Sc/OnlyIncludeParticlesWithKE/Surface = "Box/ZPlusSurface"
+b:Sc/OnlyIncludeParticlesWithKE/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeParticlesWithKE/OutputType = "csv"
+s:Sc/OnlyIncludeParticlesWithKE/IfOutputFileAlreadyExists = "Overwrite"
+d:Sc/OnlyIncludeParticlesWithKE/OnlyIncludeParticlesWithKE = 100. MeV
+
+s:Sc/OnlyIncludeParticlesWithKENot/Quantity = "SurfaceTrackCount"
+s:Sc/OnlyIncludeParticlesWithKENot/Surface = "Box/ZPlusSurface"
+b:Sc/OnlyIncludeParticlesWithKENot/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeParticlesWithKENot/OutputType = "csv"
+s:Sc/OnlyIncludeParticlesWithKENot/IfOutputFileAlreadyExists = "Overwrite"
+d:Sc/OnlyIncludeParticlesWithKENot/OnlyIncludeParticlesWithKENot = 100. MeV
+
+s:Sc/OnlyIncludeParticlesWithKEAbove/Quantity = "SurfaceTrackCount"
+s:Sc/OnlyIncludeParticlesWithKEAbove/Surface = "Box/ZPlusSurface"
+b:Sc/OnlyIncludeParticlesWithKEAbove/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeParticlesWithKEAbove/OutputType = "csv"
+s:Sc/OnlyIncludeParticlesWithKEAbove/IfOutputFileAlreadyExists = "Overwrite"
+d:Sc/OnlyIncludeParticlesWithKEAbove/OnlyIncludeParticlesWithKEAbove = 100. MeV
+
+s:Sc/OnlyIncludeParticlesWithKENotAbove/Quantity = "SurfaceTrackCount"
+s:Sc/OnlyIncludeParticlesWithKENotAbove/Surface = "Box/ZPlusSurface"
+b:Sc/OnlyIncludeParticlesWithKENotAbove/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeParticlesWithKENotAbove/OutputType = "csv"
+s:Sc/OnlyIncludeParticlesWithKENotAbove/IfOutputFileAlreadyExists = "Overwrite"
+d:Sc/OnlyIncludeParticlesWithKENotAbove/OnlyIncludeParticlesWithKENotAbove = 100. MeV
+
+s:Sc/OnlyIncludeParticlesWithInitialKEBelow/Quantity = "SurfaceTrackCount"
+s:Sc/OnlyIncludeParticlesWithInitialKEBelow/Surface = "Box/ZPlusSurface"
+b:Sc/OnlyIncludeParticlesWithInitialKEBelow/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeParticlesWithInitialKEBelow/OutputType = "csv"
+s:Sc/OnlyIncludeParticlesWithInitialKEBelow/IfOutputFileAlreadyExists = "Overwrite"
+d:Sc/OnlyIncludeParticlesWithInitialKEBelow/OnlyIncludeParticlesWithInitialKEBelow = 100. MeV
+
+s:Sc/OnlyIncludeParticlesWithInitialKENotBelow/Quantity = "SurfaceTrackCount"
+s:Sc/OnlyIncludeParticlesWithInitialKENotBelow/Surface = "Box/ZPlusSurface"
+b:Sc/OnlyIncludeParticlesWithInitialKENotBelow/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeParticlesWithInitialKENotBelow/OutputType = "csv"
+s:Sc/OnlyIncludeParticlesWithInitialKENotBelow/IfOutputFileAlreadyExists = "Overwrite"
+d:Sc/OnlyIncludeParticlesWithInitialKENotBelow/OnlyIncludeParticlesWithInitialKENotBelow = 100. MeV
+
+s:Sc/OnlyIncludeParticlesWithInitialKE/Quantity = "SurfaceTrackCount"
+s:Sc/OnlyIncludeParticlesWithInitialKE/Surface = "Box/ZPlusSurface"
+b:Sc/OnlyIncludeParticlesWithInitialKE/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeParticlesWithInitialKE/OutputType = "csv"
+s:Sc/OnlyIncludeParticlesWithInitialKE/IfOutputFileAlreadyExists = "Overwrite"
+d:Sc/OnlyIncludeParticlesWithInitialKE/OnlyIncludeParticlesWithInitialKE = 100. MeV
+
+s:Sc/OnlyIncludeParticlesWithInitialKENot/Quantity = "SurfaceTrackCount"
+s:Sc/OnlyIncludeParticlesWithInitialKENot/Surface = "Box/ZPlusSurface"
+b:Sc/OnlyIncludeParticlesWithInitialKENot/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeParticlesWithInitialKENot/OutputType = "csv"
+s:Sc/OnlyIncludeParticlesWithInitialKENot/IfOutputFileAlreadyExists = "Overwrite"
+d:Sc/OnlyIncludeParticlesWithInitialKENot/OnlyIncludeParticlesWithInitialKENot = 100. MeV
+
+s:Sc/OnlyIncludeParticlesWithInitialKEAbove/Quantity = "SurfaceTrackCount"
+s:Sc/OnlyIncludeParticlesWithInitialKEAbove/Surface = "Box/ZPlusSurface"
+b:Sc/OnlyIncludeParticlesWithInitialKEAbove/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeParticlesWithInitialKEAbove/OutputType = "csv"
+s:Sc/OnlyIncludeParticlesWithInitialKEAbove/IfOutputFileAlreadyExists = "Overwrite"
+d:Sc/OnlyIncludeParticlesWithInitialKEAbove/OnlyIncludeParticlesWithInitialKEAbove = 100. MeV
+
+s:Sc/OnlyIncludeParticlesWithInitialKENotAbove/Quantity = "SurfaceTrackCount"
+s:Sc/OnlyIncludeParticlesWithInitialKENotAbove/Surface = "Box/ZPlusSurface"
+b:Sc/OnlyIncludeParticlesWithInitialKENotAbove/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeParticlesWithInitialKENotAbove/OutputType = "csv"
+s:Sc/OnlyIncludeParticlesWithInitialKENotAbove/IfOutputFileAlreadyExists = "Overwrite"
+d:Sc/OnlyIncludeParticlesWithInitialKENotAbove/OnlyIncludeParticlesWithInitialKENotAbove = 100. MeV
+
+s:Sc/OnlyIncludeParticlesWithPrimaryKEBelow/Quantity = "SurfaceTrackCount"
+s:Sc/OnlyIncludeParticlesWithPrimaryKEBelow/Surface = "Box/ZPlusSurface"
+b:Sc/OnlyIncludeParticlesWithPrimaryKEBelow/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeParticlesWithPrimaryKEBelow/OutputType = "csv"
+s:Sc/OnlyIncludeParticlesWithPrimaryKEBelow/IfOutputFileAlreadyExists = "Overwrite"
+d:Sc/OnlyIncludeParticlesWithPrimaryKEBelow/OnlyIncludeParticlesWithPrimaryKEBelow = 100. MeV
+
+s:Sc/OnlyIncludeParticlesWithPrimaryKENotBelow/Quantity = "SurfaceTrackCount"
+s:Sc/OnlyIncludeParticlesWithPrimaryKENotBelow/Surface = "Box/ZPlusSurface"
+b:Sc/OnlyIncludeParticlesWithPrimaryKENotBelow/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeParticlesWithPrimaryKENotBelow/OutputType = "csv"
+s:Sc/OnlyIncludeParticlesWithPrimaryKENotBelow/IfOutputFileAlreadyExists = "Overwrite"
+d:Sc/OnlyIncludeParticlesWithPrimaryKENotBelow/OnlyIncludeParticlesWithPrimaryKENotBelow = 100. MeV
+
+s:Sc/OnlyIncludeParticlesWithPrimaryKE/Quantity = "SurfaceTrackCount"
+s:Sc/OnlyIncludeParticlesWithPrimaryKE/Surface = "Box/ZPlusSurface"
+b:Sc/OnlyIncludeParticlesWithPrimaryKE/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeParticlesWithPrimaryKE/OutputType = "csv"
+s:Sc/OnlyIncludeParticlesWithPrimaryKE/IfOutputFileAlreadyExists = "Overwrite"
+d:Sc/OnlyIncludeParticlesWithPrimaryKE/OnlyIncludeParticlesWithPrimaryKE = 100. MeV
+
+s:Sc/OnlyIncludeParticlesWithPrimaryKENot/Quantity = "SurfaceTrackCount"
+s:Sc/OnlyIncludeParticlesWithPrimaryKENot/Surface = "Box/ZPlusSurface"
+b:Sc/OnlyIncludeParticlesWithPrimaryKENot/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeParticlesWithPrimaryKENot/OutputType = "csv"
+s:Sc/OnlyIncludeParticlesWithPrimaryKENot/IfOutputFileAlreadyExists = "Overwrite"
+d:Sc/OnlyIncludeParticlesWithPrimaryKENot/OnlyIncludeParticlesWithPrimaryKENot = 100. MeV
+
+s:Sc/OnlyIncludeParticlesWithPrimaryKEAbove/Quantity = "SurfaceTrackCount"
+s:Sc/OnlyIncludeParticlesWithPrimaryKEAbove/Surface = "Box/ZPlusSurface"
+b:Sc/OnlyIncludeParticlesWithPrimaryKEAbove/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeParticlesWithPrimaryKEAbove/OutputType = "csv"
+s:Sc/OnlyIncludeParticlesWithPrimaryKEAbove/IfOutputFileAlreadyExists = "Overwrite"
+d:Sc/OnlyIncludeParticlesWithPrimaryKEAbove/OnlyIncludeParticlesWithPrimaryKEAbove = 100. MeV
+
+s:Sc/OnlyIncludeParticlesWithMomentumBelow/Quantity = "SurfaceTrackCount"
+s:Sc/OnlyIncludeParticlesWithMomentumBelow/Surface = "Box/ZPlusSurface"
+b:Sc/OnlyIncludeParticlesWithMomentumBelow/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeParticlesWithMomentumBelow/OutputType = "csv"
+s:Sc/OnlyIncludeParticlesWithMomentumBelow/IfOutputFileAlreadyExists = "Overwrite"
+d:Sc/OnlyIncludeParticlesWithMomentumBelow/OnlyIncludeParticlesWithMomentumBelow = 100. MeV
+
+s:Sc/OnlyIncludeParticlesWithMomentumNotBelow/Quantity = "SurfaceTrackCount"
+s:Sc/OnlyIncludeParticlesWithMomentumNotBelow/Surface = "Box/ZPlusSurface"
+b:Sc/OnlyIncludeParticlesWithMomentumNotBelow/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeParticlesWithMomentumNotBelow/OutputType = "csv"
+s:Sc/OnlyIncludeParticlesWithMomentumNotBelow/IfOutputFileAlreadyExists = "Overwrite"
+d:Sc/OnlyIncludeParticlesWithMomentumNotBelow/OnlyIncludeParticlesWithMomentumNotBelow = 100. MeV
+
+s:Sc/OnlyIncludeParticlesWithMomentum/Quantity = "SurfaceTrackCount"
+s:Sc/OnlyIncludeParticlesWithMomentum/Surface = "Box/ZPlusSurface"
+b:Sc/OnlyIncludeParticlesWithMomentum/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeParticlesWithMomentum/OutputType = "csv"
+s:Sc/OnlyIncludeParticlesWithMomentum/IfOutputFileAlreadyExists = "Overwrite"
+d:Sc/OnlyIncludeParticlesWithMomentum/OnlyIncludeParticlesWithMomentum = 100. MeV
+
+s:Sc/OnlyIncludeParticlesWithMomentumNot/Quantity = "SurfaceTrackCount"
+s:Sc/OnlyIncludeParticlesWithMomentumNot/Surface = "Box/ZPlusSurface"
+b:Sc/OnlyIncludeParticlesWithMomentumNot/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeParticlesWithMomentumNot/OutputType = "csv"
+s:Sc/OnlyIncludeParticlesWithMomentumNot/IfOutputFileAlreadyExists = "Overwrite"
+d:Sc/OnlyIncludeParticlesWithMomentumNot/OnlyIncludeParticlesWithMomentumNot = 100. MeV
+
+s:Sc/OnlyIncludeParticlesWithMomentumAbove/Quantity = "SurfaceTrackCount"
+s:Sc/OnlyIncludeParticlesWithMomentumAbove/Surface = "Box/ZPlusSurface"
+b:Sc/OnlyIncludeParticlesWithMomentumAbove/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeParticlesWithMomentumAbove/OutputType = "csv"
+s:Sc/OnlyIncludeParticlesWithMomentumAbove/IfOutputFileAlreadyExists = "Overwrite"
+d:Sc/OnlyIncludeParticlesWithMomentumAbove/OnlyIncludeParticlesWithMomentumAbove = 100. MeV
+
+s:Sc/OnlyIncludeParticlesWithMomentumNotAbove/Quantity = "SurfaceTrackCount"
+s:Sc/OnlyIncludeParticlesWithMomentumNotAbove/Surface = "Box/ZPlusSurface"
+b:Sc/OnlyIncludeParticlesWithMomentumNotAbove/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeParticlesWithMomentumNotAbove/OutputType = "csv"
+s:Sc/OnlyIncludeParticlesWithMomentumNotAbove/IfOutputFileAlreadyExists = "Overwrite"
+d:Sc/OnlyIncludeParticlesWithMomentumNotAbove/OnlyIncludeParticlesWithMomentumNotAbove = 100. MeV
+
+s:Sc/OnlyIncludeParticlesWithInitialMomentumBelow/Quantity = "SurfaceTrackCount"
+s:Sc/OnlyIncludeParticlesWithInitialMomentumBelow/Surface = "Box/ZPlusSurface"
+b:Sc/OnlyIncludeParticlesWithInitialMomentumBelow/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeParticlesWithInitialMomentumBelow/OutputType = "csv"
+s:Sc/OnlyIncludeParticlesWithInitialMomentumBelow/IfOutputFileAlreadyExists = "Overwrite"
+d:Sc/OnlyIncludeParticlesWithInitialMomentumBelow/OnlyIncludeParticlesWithInitialMomentumBelow = 100. MeV
+
+s:Sc/OnlyIncludeParticlesWithInitialMomentumNotBelow/Quantity = "SurfaceTrackCount"
+s:Sc/OnlyIncludeParticlesWithInitialMomentumNotBelow/Surface = "Box/ZPlusSurface"
+b:Sc/OnlyIncludeParticlesWithInitialMomentumNotBelow/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeParticlesWithInitialMomentumNotBelow/OutputType = "csv"
+s:Sc/OnlyIncludeParticlesWithInitialMomentumNotBelow/IfOutputFileAlreadyExists = "Overwrite"
+d:Sc/OnlyIncludeParticlesWithInitialMomentumNotBelow/OnlyIncludeParticlesWithInitialMomentumNotBelow = 100. MeV
+
+s:Sc/OnlyIncludeParticlesWithInitialMomentum/Quantity = "SurfaceTrackCount"
+s:Sc/OnlyIncludeParticlesWithInitialMomentum/Surface = "Box/ZPlusSurface"
+b:Sc/OnlyIncludeParticlesWithInitialMomentum/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeParticlesWithInitialMomentum/OutputType = "csv"
+s:Sc/OnlyIncludeParticlesWithInitialMomentum/IfOutputFileAlreadyExists = "Overwrite"
+d:Sc/OnlyIncludeParticlesWithInitialMomentum/OnlyIncludeParticlesWithInitialMomentum = 100. MeV
+
+s:Sc/OnlyIncludeParticlesWithInitialMomentumNot/Quantity = "SurfaceTrackCount"
+s:Sc/OnlyIncludeParticlesWithInitialMomentumNot/Surface = "Box/ZPlusSurface"
+b:Sc/OnlyIncludeParticlesWithInitialMomentumNot/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeParticlesWithInitialMomentumNot/OutputType = "csv"
+s:Sc/OnlyIncludeParticlesWithInitialMomentumNot/IfOutputFileAlreadyExists = "Overwrite"
+d:Sc/OnlyIncludeParticlesWithInitialMomentumNot/OnlyIncludeParticlesWithInitialMomentumNot = 100. MeV
+
+s:Sc/OnlyIncludeParticlesWithInitialMomentumAbove/Quantity = "SurfaceTrackCount"
+s:Sc/OnlyIncludeParticlesWithInitialMomentumAbove/Surface = "Box/ZPlusSurface"
+b:Sc/OnlyIncludeParticlesWithInitialMomentumAbove/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeParticlesWithInitialMomentumAbove/OutputType = "csv"
+s:Sc/OnlyIncludeParticlesWithInitialMomentumAbove/IfOutputFileAlreadyExists = "Overwrite"
+d:Sc/OnlyIncludeParticlesWithInitialMomentumAbove/OnlyIncludeParticlesWithInitialMomentumAbove = 100. MeV
+
+s:Sc/OnlyIncludeParticlesWithInitialMomentumNotAbove/Quantity = "SurfaceTrackCount"
+s:Sc/OnlyIncludeParticlesWithInitialMomentumNotAbove/Surface = "Box/ZPlusSurface"
+b:Sc/OnlyIncludeParticlesWithInitialMomentumNotAbove/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeParticlesWithInitialMomentumNotAbove/OutputType = "csv"
+s:Sc/OnlyIncludeParticlesWithInitialMomentumNotAbove/IfOutputFileAlreadyExists = "Overwrite"
+d:Sc/OnlyIncludeParticlesWithInitialMomentumNotAbove/OnlyIncludeParticlesWithInitialMomentumNotAbove = 100. MeV
+
+s:Sc/OnlyIncludeIfIncidentParticleKEBelow/Quantity = "SurfaceTrackCount"
+s:Sc/OnlyIncludeIfIncidentParticleKEBelow/Surface = "Box/ZPlusSurface"
+b:Sc/OnlyIncludeIfIncidentParticleKEBelow/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeIfIncidentParticleKEBelow/OutputType = "csv"
+s:Sc/OnlyIncludeIfIncidentParticleKEBelow/IfOutputFileAlreadyExists = "Overwrite"
+d:Sc/OnlyIncludeIfIncidentParticleKEBelow/OnlyIncludeIfIncidentParticleKEBelow = 100. MeV
+
+s:Sc/OnlyIncludeIfIncidentParticleKENotBelow/Quantity = "SurfaceTrackCount"
+s:Sc/OnlyIncludeIfIncidentParticleKENotBelow/Surface = "Box/ZPlusSurface"
+b:Sc/OnlyIncludeIfIncidentParticleKENotBelow/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeIfIncidentParticleKENotBelow/OutputType = "csv"
+s:Sc/OnlyIncludeIfIncidentParticleKENotBelow/IfOutputFileAlreadyExists = "Overwrite"
+d:Sc/OnlyIncludeIfIncidentParticleKENotBelow/OnlyIncludeIfIncidentParticleKENotBelow = 100. MeV
+
+s:Sc/OnlyIncludeIfIncidentParticleKE/Quantity = "SurfaceTrackCount"
+s:Sc/OnlyIncludeIfIncidentParticleKE/Surface = "Box/ZPlusSurface"
+b:Sc/OnlyIncludeIfIncidentParticleKE/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeIfIncidentParticleKE/OutputType = "csv"
+s:Sc/OnlyIncludeIfIncidentParticleKE/IfOutputFileAlreadyExists = "Overwrite"
+d:Sc/OnlyIncludeIfIncidentParticleKE/OnlyIncludeIfIncidentParticleKE = 100. MeV
+
+s:Sc/OnlyIncludeIfIncidentParticleKENot/Quantity = "SurfaceTrackCount"
+s:Sc/OnlyIncludeIfIncidentParticleKENot/Surface = "Box/ZPlusSurface"
+b:Sc/OnlyIncludeIfIncidentParticleKENot/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeIfIncidentParticleKENot/OutputType = "csv"
+s:Sc/OnlyIncludeIfIncidentParticleKENot/IfOutputFileAlreadyExists = "Overwrite"
+d:Sc/OnlyIncludeIfIncidentParticleKENot/OnlyIncludeIfIncidentParticleKENot = 100. MeV
+
+s:Sc/OnlyIncludeIfIncidentParticleKEAbove/Quantity = "SurfaceTrackCount"
+s:Sc/OnlyIncludeIfIncidentParticleKEAbove/Surface = "Box/ZPlusSurface"
+b:Sc/OnlyIncludeIfIncidentParticleKEAbove/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeIfIncidentParticleKEAbove/OutputType = "csv"
+s:Sc/OnlyIncludeIfIncidentParticleKEAbove/IfOutputFileAlreadyExists = "Overwrite"
+d:Sc/OnlyIncludeIfIncidentParticleKEAbove/OnlyIncludeIfIncidentParticleKEAbove = 100. MeV
+
+s:Sc/OnlyIncludeIfIncidentParticleKENotAbove/Quantity = "SurfaceTrackCount"
+s:Sc/OnlyIncludeIfIncidentParticleKENotAbove/Surface = "Box/ZPlusSurface"
+b:Sc/OnlyIncludeIfIncidentParticleKENotAbove/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeIfIncidentParticleKENotAbove/OutputType = "csv"
+s:Sc/OnlyIncludeIfIncidentParticleKENotAbove/IfOutputFileAlreadyExists = "Overwrite"
+d:Sc/OnlyIncludeIfIncidentParticleKENotAbove/OnlyIncludeIfIncidentParticleKENotAbove = 100. MeV
+
+s:Sc/OnlyIncludeIfIncidentParticleMomentumBelow/Quantity = "SurfaceTrackCount"
+s:Sc/OnlyIncludeIfIncidentParticleMomentumBelow/Surface = "Box/ZPlusSurface"
+b:Sc/OnlyIncludeIfIncidentParticleMomentumBelow/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeIfIncidentParticleMomentumBelow/OutputType = "csv"
+s:Sc/OnlyIncludeIfIncidentParticleMomentumBelow/IfOutputFileAlreadyExists = "Overwrite"
+d:Sc/OnlyIncludeIfIncidentParticleMomentumBelow/OnlyIncludeIfIncidentParticleMomentumBelow = 100. MeV
+
+s:Sc/OnlyIncludeIfIncidentParticleMomentumNotBelow/Quantity = "SurfaceTrackCount"
+s:Sc/OnlyIncludeIfIncidentParticleMomentumNotBelow/Surface = "Box/ZPlusSurface"
+b:Sc/OnlyIncludeIfIncidentParticleMomentumNotBelow/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeIfIncidentParticleMomentumNotBelow/OutputType = "csv"
+s:Sc/OnlyIncludeIfIncidentParticleMomentumNotBelow/IfOutputFileAlreadyExists = "Overwrite"
+d:Sc/OnlyIncludeIfIncidentParticleMomentumNotBelow/OnlyIncludeIfIncidentParticleMomentumNotBelow = 100. MeV
+
+s:Sc/OnlyIncludeIfIncidentParticleMomentum/Quantity = "SurfaceTrackCount"
+s:Sc/OnlyIncludeIfIncidentParticleMomentum/Surface = "Box/ZPlusSurface"
+b:Sc/OnlyIncludeIfIncidentParticleMomentum/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeIfIncidentParticleMomentum/OutputType = "csv"
+s:Sc/OnlyIncludeIfIncidentParticleMomentum/IfOutputFileAlreadyExists = "Overwrite"
+d:Sc/OnlyIncludeIfIncidentParticleMomentum/OnlyIncludeIfIncidentParticleMomentum = 100. MeV
+
+s:Sc/OnlyIncludeIfIncidentParticleMomentumNot/Quantity = "SurfaceTrackCount"
+s:Sc/OnlyIncludeIfIncidentParticleMomentumNot/Surface = "Box/ZPlusSurface"
+b:Sc/OnlyIncludeIfIncidentParticleMomentumNot/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeIfIncidentParticleMomentumNot/OutputType = "csv"
+s:Sc/OnlyIncludeIfIncidentParticleMomentumNot/IfOutputFileAlreadyExists = "Overwrite"
+d:Sc/OnlyIncludeIfIncidentParticleMomentumNot/OnlyIncludeIfIncidentParticleMomentumNot = 100. MeV
+
+s:Sc/OnlyIncludeIfIncidentParticleMomentumAbove/Quantity = "SurfaceTrackCount"
+s:Sc/OnlyIncludeIfIncidentParticleMomentumAbove/Surface = "Box/ZPlusSurface"
+b:Sc/OnlyIncludeIfIncidentParticleMomentumAbove/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeIfIncidentParticleMomentumAbove/OutputType = "csv"
+s:Sc/OnlyIncludeIfIncidentParticleMomentumAbove/IfOutputFileAlreadyExists = "Overwrite"
+d:Sc/OnlyIncludeIfIncidentParticleMomentumAbove/OnlyIncludeIfIncidentParticleMomentumAbove = 100. MeV
+
+s:Sc/OnlyIncludeIfIncidentParticleMomentumNotAbove/Quantity = "SurfaceTrackCount"
+s:Sc/OnlyIncludeIfIncidentParticleMomentumNotAbove/Surface = "Box/ZPlusSurface"
+b:Sc/OnlyIncludeIfIncidentParticleMomentumNotAbove/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeIfIncidentParticleMomentumNotAbove/OutputType = "csv"
+s:Sc/OnlyIncludeIfIncidentParticleMomentumNotAbove/IfOutputFileAlreadyExists = "Overwrite"
+d:Sc/OnlyIncludeIfIncidentParticleMomentumNotAbove/OnlyIncludeIfIncidentParticleMomentumNotAbove = 100. MeV
+
+s:Sc/OnlyIncludeParticlesFromProcess/Quantity = "SurfaceTrackCount"
+s:Sc/OnlyIncludeParticlesFromProcess/Surface = "Box/ZPlusSurface"
+b:Sc/OnlyIncludeParticlesFromProcess/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeParticlesFromProcess/OutputType = "csv"
+s:Sc/OnlyIncludeParticlesFromProcess/IfOutputFileAlreadyExists = "Overwrite"
+sv:Sc/OnlyIncludeParticlesFromProcess/OnlyIncludeParticlesFromProcess = 1 "hIoni"
+
+s:Sc/OnlyIncludeParticlesNotFromProcess/Quantity = "SurfaceTrackCount"
+s:Sc/OnlyIncludeParticlesNotFromProcess/Surface = "Box/ZPlusSurface"
+b:Sc/OnlyIncludeParticlesNotFromProcess/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeParticlesNotFromProcess/OutputType = "csv"
+s:Sc/OnlyIncludeParticlesNotFromProcess/IfOutputFileAlreadyExists = "Overwrite"
+sv:Sc/OnlyIncludeParticlesNotFromProcess/OnlyIncludeParticlesNotFromProcess = 1 "hIoni"
+
+s:Sc/OnlyIncludeIfParticleOrAncestorFromProcess/Quantity = "SurfaceTrackCount"
+s:Sc/OnlyIncludeIfParticleOrAncestorFromProcess/Surface = "Box/ZPlusSurface"
+b:Sc/OnlyIncludeIfParticleOrAncestorFromProcess/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeIfParticleOrAncestorFromProcess/OutputType = "csv"
+s:Sc/OnlyIncludeIfParticleOrAncestorFromProcess/IfOutputFileAlreadyExists = "Overwrite"
+sv:Sc/OnlyIncludeIfParticleOrAncestorFromProcess/OnlyIncludeIfParticleOrAncestorFromProcess = 1 "hIoni"
+
+s:Sc/OnlyIncludeIfParticleOrAncestorNotFromProcess/Quantity = "SurfaceTrackCount"
+s:Sc/OnlyIncludeIfParticleOrAncestorNotFromProcess/Surface = "Box/ZPlusSurface"
+b:Sc/OnlyIncludeIfParticleOrAncestorNotFromProcess/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeIfParticleOrAncestorNotFromProcess/OutputType = "csv"
+s:Sc/OnlyIncludeIfParticleOrAncestorNotFromProcess/IfOutputFileAlreadyExists = "Overwrite"
+sv:Sc/OnlyIncludeIfParticleOrAncestorNotFromProcess/OnlyIncludeIfParticleOrAncestorNotFromProcess = 1 "hIoni"
+
+s:Sc/OnlyIncludeParticlesNamed/Quantity = "SurfaceTrackCount"
+s:Sc/OnlyIncludeParticlesNamed/Surface = "Box/ZPlusSurface"
+b:Sc/OnlyIncludeParticlesNamed/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeParticlesNamed/OutputType = "csv"
+s:Sc/OnlyIncludeParticlesNamed/IfOutputFileAlreadyExists = "Overwrite"
+sv:Sc/OnlyIncludeParticlesNamed/OnlyIncludeParticlesNamed = 1 "proton"
+
+s:Sc/OnlyIncludeParticlesNotNamed/Quantity = "SurfaceTrackCount"
+s:Sc/OnlyIncludeParticlesNotNamed/Surface = "Box/ZPlusSurface"
+b:Sc/OnlyIncludeParticlesNotNamed/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeParticlesNotNamed/OutputType = "csv"
+s:Sc/OnlyIncludeParticlesNotNamed/IfOutputFileAlreadyExists = "Overwrite"
+sv:Sc/OnlyIncludeParticlesNotNamed/OnlyIncludeParticlesNotNamed = 1 "proton"
+
+s:Sc/OnlyIncludeIfParticleOrAncestorNamed/Quantity = "SurfaceTrackCount"
+s:Sc/OnlyIncludeIfParticleOrAncestorNamed/Surface = "Box/ZPlusSurface"
+b:Sc/OnlyIncludeIfParticleOrAncestorNamed/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeIfParticleOrAncestorNamed/OutputType = "csv"
+s:Sc/OnlyIncludeIfParticleOrAncestorNamed/IfOutputFileAlreadyExists = "Overwrite"
+sv:Sc/OnlyIncludeIfParticleOrAncestorNamed/OnlyIncludeIfParticleOrAncestorNamed = 1 "proton"
+
+s:Sc/OnlyIncludeIfParticleOrAncestorNotNamed/Quantity = "SurfaceTrackCount"
+s:Sc/OnlyIncludeIfParticleOrAncestorNotNamed/Surface = "Box/ZPlusSurface"
+b:Sc/OnlyIncludeIfParticleOrAncestorNotNamed/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeIfParticleOrAncestorNotNamed/OutputType = "csv"
+s:Sc/OnlyIncludeIfParticleOrAncestorNotNamed/IfOutputFileAlreadyExists = "Overwrite"
+sv:Sc/OnlyIncludeIfParticleOrAncestorNotNamed/OnlyIncludeIfParticleOrAncestorNotNamed = 1 "proton"
+
+s:Sc/OnlyIncludeParticlesFromVolume/Quantity = "SurfaceTrackCount"
+s:Sc/OnlyIncludeParticlesFromVolume/Surface = "Box/ZPlusSurface"
+b:Sc/OnlyIncludeParticlesFromVolume/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeParticlesFromVolume/OutputType = "csv"
+s:Sc/OnlyIncludeParticlesFromVolume/IfOutputFileAlreadyExists = "Overwrite"
+sv:Sc/OnlyIncludeParticlesFromVolume/OnlyIncludeParticlesFromVolume = 2 "World" "Foil"
+
+s:Sc/OnlyIncludeParticlesNotFromVolume/Quantity = "SurfaceTrackCount"
+s:Sc/OnlyIncludeParticlesNotFromVolume/Surface = "Box/ZPlusSurface"
+b:Sc/OnlyIncludeParticlesNotFromVolume/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeParticlesNotFromVolume/OutputType = "csv"
+s:Sc/OnlyIncludeParticlesNotFromVolume/IfOutputFileAlreadyExists = "Overwrite"
+sv:Sc/OnlyIncludeParticlesNotFromVolume/OnlyIncludeParticlesNotFromVolume = 2 "World" "Foil"
+
+s:Sc/OnlyIncludeParticlesFromComponent/Quantity = "SurfaceTrackCount"
+s:Sc/OnlyIncludeParticlesFromComponent/Surface = "Box/ZPlusSurface"
+b:Sc/OnlyIncludeParticlesFromComponent/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeParticlesFromComponent/OutputType = "csv"
+s:Sc/OnlyIncludeParticlesFromComponent/IfOutputFileAlreadyExists = "Overwrite"
+sv:Sc/OnlyIncludeParticlesFromComponent/OnlyIncludeParticlesFromComponent = 2 "World" "Foil"
+
+s:Sc/OnlyIncludeParticlesNotFromComponent/Quantity = "SurfaceTrackCount"
+s:Sc/OnlyIncludeParticlesNotFromComponent/Surface = "Box/ZPlusSurface"
+b:Sc/OnlyIncludeParticlesNotFromComponent/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeParticlesNotFromComponent/OutputType = "csv"
+s:Sc/OnlyIncludeParticlesNotFromComponent/IfOutputFileAlreadyExists = "Overwrite"
+sv:Sc/OnlyIncludeParticlesNotFromComponent/OnlyIncludeParticlesNotFromComponent = 2 "World" "Foil"
+
+s:Sc/OnlyIncludeParticlesFromComponentOrSubComponentsOf/Quantity = "SurfaceTrackCount"
+s:Sc/OnlyIncludeParticlesFromComponentOrSubComponentsOf/Surface = "Box/ZPlusSurface"
+b:Sc/OnlyIncludeParticlesFromComponentOrSubComponentsOf/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeParticlesFromComponentOrSubComponentsOf/OutputType = "csv"
+s:Sc/OnlyIncludeParticlesFromComponentOrSubComponentsOf/IfOutputFileAlreadyExists = "Overwrite"
+sv:Sc/OnlyIncludeParticlesFromComponentOrSubComponentsOf/OnlyIncludeParticlesFromComponentOrSubComponentsOf = 2 "World" "Foil"
+
+s:Sc/OnlyIncludeParticlesNotFromComponentOrSubComponentsOf/Quantity = "SurfaceTrackCount"
+s:Sc/OnlyIncludeParticlesNotFromComponentOrSubComponentsOf/Surface = "Box/ZPlusSurface"
+b:Sc/OnlyIncludeParticlesNotFromComponentOrSubComponentsOf/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeParticlesNotFromComponentOrSubComponentsOf/OutputType = "csv"
+s:Sc/OnlyIncludeParticlesNotFromComponentOrSubComponentsOf/IfOutputFileAlreadyExists = "Overwrite"
+sv:Sc/OnlyIncludeParticlesNotFromComponentOrSubComponentsOf/OnlyIncludeParticlesNotFromComponentOrSubComponentsOf = 2 "World" "Foil"
+
+s:Sc/OnlyIncludeIfParticleOrAncestorFromVolume/Quantity = "SurfaceTrackCount"
+s:Sc/OnlyIncludeIfParticleOrAncestorFromVolume/Surface = "Box/ZPlusSurface"
+b:Sc/OnlyIncludeIfParticleOrAncestorFromVolume/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeIfParticleOrAncestorFromVolume/OutputType = "csv"
+s:Sc/OnlyIncludeIfParticleOrAncestorFromVolume/IfOutputFileAlreadyExists = "Overwrite"
+sv:Sc/OnlyIncludeIfParticleOrAncestorFromVolume/OnlyIncludeIfParticleOrAncestorFromVolume = 2 "World" "Foil"
+
+s:Sc/OnlyIncludeIfParticleOrAncestorNotFromVolume/Quantity = "SurfaceTrackCount"
+s:Sc/OnlyIncludeIfParticleOrAncestorNotFromVolume/Surface = "Box/ZPlusSurface"
+b:Sc/OnlyIncludeIfParticleOrAncestorNotFromVolume/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeIfParticleOrAncestorNotFromVolume/OutputType = "csv"
+s:Sc/OnlyIncludeIfParticleOrAncestorNotFromVolume/IfOutputFileAlreadyExists = "Overwrite"
+sv:Sc/OnlyIncludeIfParticleOrAncestorNotFromVolume/OnlyIncludeIfParticleOrAncestorNotFromVolume = 2 "World" "Foil"
+
+s:Sc/OnlyIncludeIfParticleOrAncestorFromComponent/Quantity = "SurfaceTrackCount"
+s:Sc/OnlyIncludeIfParticleOrAncestorFromComponent/Surface = "Box/ZPlusSurface"
+b:Sc/OnlyIncludeIfParticleOrAncestorFromComponent/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeIfParticleOrAncestorFromComponent/OutputType = "csv"
+s:Sc/OnlyIncludeIfParticleOrAncestorFromComponent/IfOutputFileAlreadyExists = "Overwrite"
+sv:Sc/OnlyIncludeIfParticleOrAncestorFromComponent/OnlyIncludeIfParticleOrAncestorFromComponent = 2 "World" "Foil"
+
+s:Sc/OnlyIncludeIfParticleOrAncestorNotFromComponent/Quantity = "SurfaceTrackCount"
+s:Sc/OnlyIncludeIfParticleOrAncestorNotFromComponent/Surface = "Box/ZPlusSurface"
+b:Sc/OnlyIncludeIfParticleOrAncestorNotFromComponent/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeIfParticleOrAncestorNotFromComponent/OutputType = "csv"
+s:Sc/OnlyIncludeIfParticleOrAncestorNotFromComponent/IfOutputFileAlreadyExists = "Overwrite"
+sv:Sc/OnlyIncludeIfParticleOrAncestorNotFromComponent/OnlyIncludeIfParticleOrAncestorNotFromComponent = 2 "World" "Foil"
+
+s:Sc/OnlyIncludeIfParticleOrAncestorFromComponentOrSubComponentsOf/Quantity = "SurfaceTrackCount"
+s:Sc/OnlyIncludeIfParticleOrAncestorFromComponentOrSubComponentsOf/Surface = "Box/ZPlusSurface"
+b:Sc/OnlyIncludeIfParticleOrAncestorFromComponentOrSubComponentsOf/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeIfParticleOrAncestorFromComponentOrSubComponentsOf/OutputType = "csv"
+s:Sc/OnlyIncludeIfParticleOrAncestorFromComponentOrSubComponentsOf/IfOutputFileAlreadyExists = "Overwrite"
+sv:Sc/OnlyIncludeIfParticleOrAncestorFromComponentOrSubComponentsOf/OnlyIncludeIfParticleOrAncestorFromComponentOrSubComponentsOf = 2 "World" "Foil"
+
+s:Sc/OnlyIncludeIfParticleOrAncestorNotFromComponentOrSubComponentsOf/Quantity = "SurfaceTrackCount"
+s:Sc/OnlyIncludeIfParticleOrAncestorNotFromComponentOrSubComponentsOf/Surface = "Box/ZPlusSurface"
+b:Sc/OnlyIncludeIfParticleOrAncestorNotFromComponentOrSubComponentsOf/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeIfParticleOrAncestorNotFromComponentOrSubComponentsOf/OutputType = "csv"
+s:Sc/OnlyIncludeIfParticleOrAncestorNotFromComponentOrSubComponentsOf/IfOutputFileAlreadyExists = "Overwrite"
+sv:Sc/OnlyIncludeIfParticleOrAncestorNotFromComponentOrSubComponentsOf/OnlyIncludeIfParticleOrAncestorNotFromComponentOrSubComponentsOf = 2 "World" "Foil"
+
+s:Sc/OnlyIncludeIfParticleInteractedInVolume/Quantity = "SurfaceTrackCount"
+s:Sc/OnlyIncludeIfParticleInteractedInVolume/Surface = "Box/ZPlusSurface"
+b:Sc/OnlyIncludeIfParticleInteractedInVolume/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeIfParticleInteractedInVolume/OutputType = "csv"
+s:Sc/OnlyIncludeIfParticleInteractedInVolume/IfOutputFileAlreadyExists = "Overwrite"
+sv:Sc/OnlyIncludeIfParticleInteractedInVolume/OnlyIncludeIfParticleInteractedInVolume = 2 "World" "Foil"
+
+s:Sc/OnlyIncludeIfParticleNotInteractedInVolume/Quantity = "SurfaceTrackCount"
+s:Sc/OnlyIncludeIfParticleNotInteractedInVolume/Surface = "Box/ZPlusSurface"
+b:Sc/OnlyIncludeIfParticleNotInteractedInVolume/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeIfParticleNotInteractedInVolume/OutputType = "csv"
+s:Sc/OnlyIncludeIfParticleNotInteractedInVolume/IfOutputFileAlreadyExists = "Overwrite"
+sv:Sc/OnlyIncludeIfParticleNotInteractedInVolume/OnlyIncludeIfParticleNotInteractedInVolume = 2 "World" "Foil"
+
+s:Sc/OnlyIncludeIfParticleInteractedInComponent/Quantity = "SurfaceTrackCount"
+s:Sc/OnlyIncludeIfParticleInteractedInComponent/Surface = "Box/ZPlusSurface"
+b:Sc/OnlyIncludeIfParticleInteractedInComponent/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeIfParticleInteractedInComponent/OutputType = "csv"
+s:Sc/OnlyIncludeIfParticleInteractedInComponent/IfOutputFileAlreadyExists = "Overwrite"
+sv:Sc/OnlyIncludeIfParticleInteractedInComponent/OnlyIncludeIfParticleInteractedInComponent = 2 "World" "Foil"
+
+s:Sc/OnlyIncludeIfParticleNotInteractedInComponent/Quantity = "SurfaceTrackCount"
+s:Sc/OnlyIncludeIfParticleNotInteractedInComponent/Surface = "Box/ZPlusSurface"
+b:Sc/OnlyIncludeIfParticleNotInteractedInComponent/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeIfParticleNotInteractedInComponent/OutputType = "csv"
+s:Sc/OnlyIncludeIfParticleNotInteractedInComponent/IfOutputFileAlreadyExists = "Overwrite"
+sv:Sc/OnlyIncludeIfParticleNotInteractedInComponent/OnlyIncludeIfParticleNotInteractedInComponent = 2 "World" "Foil"
+
+s:Sc/OnlyIncludeIfParticleInteractedInComponentOrSubComponentsOf/Quantity = "SurfaceTrackCount"
+s:Sc/OnlyIncludeIfParticleInteractedInComponentOrSubComponentsOf/Surface = "Box/ZPlusSurface"
+b:Sc/OnlyIncludeIfParticleInteractedInComponentOrSubComponentsOf/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeIfParticleInteractedInComponentOrSubComponentsOf/OutputType = "csv"
+s:Sc/OnlyIncludeIfParticleInteractedInComponentOrSubComponentsOf/IfOutputFileAlreadyExists = "Overwrite"
+sv:Sc/OnlyIncludeIfParticleInteractedInComponentOrSubComponentsOf/OnlyIncludeIfParticleInteractedInComponentOrSubComponentsOf = 2 "World" "Foil"
+
+s:Sc/OnlyIncludeIfParticleNotInteractedInComponentOrSubComponentsOf/Quantity = "SurfaceTrackCount"
+s:Sc/OnlyIncludeIfParticleNotInteractedInComponentOrSubComponentsOf/Surface = "Box/ZPlusSurface"
+b:Sc/OnlyIncludeIfParticleNotInteractedInComponentOrSubComponentsOf/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeIfParticleNotInteractedInComponentOrSubComponentsOf/OutputType = "csv"
+s:Sc/OnlyIncludeIfParticleNotInteractedInComponentOrSubComponentsOf/IfOutputFileAlreadyExists = "Overwrite"
+sv:Sc/OnlyIncludeIfParticleNotInteractedInComponentOrSubComponentsOf/OnlyIncludeIfParticleNotInteractedInComponentOrSubComponentsOf = 2 "World" "Foil"
+
+s:Sc/OnlyIncludeIfParticleOrAncestorInteractedInVolume/Quantity = "SurfaceTrackCount"
+s:Sc/OnlyIncludeIfParticleOrAncestorInteractedInVolume/Surface = "Box/ZPlusSurface"
+b:Sc/OnlyIncludeIfParticleOrAncestorInteractedInVolume/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeIfParticleOrAncestorInteractedInVolume/OutputType = "csv"
+s:Sc/OnlyIncludeIfParticleOrAncestorInteractedInVolume/IfOutputFileAlreadyExists = "Overwrite"
+sv:Sc/OnlyIncludeIfParticleOrAncestorInteractedInVolume/OnlyIncludeIfParticleOrAncestorInteractedInVolume = 2 "World" "Foil"
+
+s:Sc/OnlyIncludeIfParticleOrAncestorNotInteractedInVolume/Quantity = "SurfaceTrackCount"
+s:Sc/OnlyIncludeIfParticleOrAncestorNotInteractedInVolume/Surface = "Box/ZPlusSurface"
+b:Sc/OnlyIncludeIfParticleOrAncestorNotInteractedInVolume/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeIfParticleOrAncestorNotInteractedInVolume/OutputType = "csv"
+s:Sc/OnlyIncludeIfParticleOrAncestorNotInteractedInVolume/IfOutputFileAlreadyExists = "Overwrite"
+sv:Sc/OnlyIncludeIfParticleOrAncestorNotInteractedInVolume/OnlyIncludeIfParticleOrAncestorNotInteractedInVolume = 2 "World" "Foil"
+
+s:Sc/OnlyIncludeIfParticleOrAncestorInteractedInComponent/Quantity = "SurfaceTrackCount"
+s:Sc/OnlyIncludeIfParticleOrAncestorInteractedInComponent/Surface = "Box/ZPlusSurface"
+b:Sc/OnlyIncludeIfParticleOrAncestorInteractedInComponent/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeIfParticleOrAncestorInteractedInComponent/OutputType = "csv"
+s:Sc/OnlyIncludeIfParticleOrAncestorInteractedInComponent/IfOutputFileAlreadyExists = "Overwrite"
+sv:Sc/OnlyIncludeIfParticleOrAncestorInteractedInComponent/OnlyIncludeIfParticleOrAncestorInteractedInComponent = 2 "World" "Foil"
+
+s:Sc/OnlyIncludeIfParticleOrAncestorNotInteractedInComponent/Quantity = "SurfaceTrackCount"
+s:Sc/OnlyIncludeIfParticleOrAncestorNotInteractedInComponent/Surface = "Box/ZPlusSurface"
+b:Sc/OnlyIncludeIfParticleOrAncestorNotInteractedInComponent/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeIfParticleOrAncestorNotInteractedInComponent/OutputType = "csv"
+s:Sc/OnlyIncludeIfParticleOrAncestorNotInteractedInComponent/IfOutputFileAlreadyExists = "Overwrite"
+sv:Sc/OnlyIncludeIfParticleOrAncestorNotInteractedInComponent/OnlyIncludeIfParticleOrAncestorNotInteractedInComponent = 2 "World" "Foil"
+
+s:Sc/OnlyIncludeIfParticleOrAncestorInteractedInComponentOrSubComponentsOf/Quantity = "SurfaceTrackCount"
+s:Sc/OnlyIncludeIfParticleOrAncestorInteractedInComponentOrSubComponentsOf/Surface = "Box/ZPlusSurface"
+b:Sc/OnlyIncludeIfParticleOrAncestorInteractedInComponentOrSubComponentsOf/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeIfParticleOrAncestorInteractedInComponentOrSubComponentsOf/OutputType = "csv"
+s:Sc/OnlyIncludeIfParticleOrAncestorInteractedInComponentOrSubComponentsOf/IfOutputFileAlreadyExists = "Overwrite"
+sv:Sc/OnlyIncludeIfParticleOrAncestorInteractedInComponentOrSubComponentsOf/OnlyIncludeIfParticleOrAncestorInteractedInComponentOrSubComponentsOf = 2 "World" "Foil"
+
+s:Sc/OnlyIncludeIfParticleOrAncestorNotInteractedInComponentOrSubComponentsOf/Quantity = "SurfaceTrackCount"
+s:Sc/OnlyIncludeIfParticleOrAncestorNotInteractedInComponentOrSubComponentsOf/Surface = "Box/ZPlusSurface"
+b:Sc/OnlyIncludeIfParticleOrAncestorNotInteractedInComponentOrSubComponentsOf/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeIfParticleOrAncestorNotInteractedInComponentOrSubComponentsOf/OutputType = "csv"
+s:Sc/OnlyIncludeIfParticleOrAncestorNotInteractedInComponentOrSubComponentsOf/IfOutputFileAlreadyExists = "Overwrite"
+sv:Sc/OnlyIncludeIfParticleOrAncestorNotInteractedInComponentOrSubComponentsOf/OnlyIncludeIfParticleOrAncestorNotInteractedInComponentOrSubComponentsOf = 2 "World" "Foil"
+
+s:Sc/OnlyIncludeIfParticleLastInteractedInVolume/Quantity = "SurfaceTrackCount"
+s:Sc/OnlyIncludeIfParticleLastInteractedInVolume/Surface = "Box/ZPlusSurface"
+b:Sc/OnlyIncludeIfParticleLastInteractedInVolume/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeIfParticleLastInteractedInVolume/OutputType = "csv"
+s:Sc/OnlyIncludeIfParticleLastInteractedInVolume/IfOutputFileAlreadyExists = "Overwrite"
+s:Sc/OnlyIncludeIfParticleLastInteractedInVolume/OnlyIncludeIfParticleLastInteractedInVolume = "Foil"
+
+s:Sc/OnlyIncludeIfParticleNotLastInteractedInVolume/Quantity = "SurfaceTrackCount"
+s:Sc/OnlyIncludeIfParticleNotLastInteractedInVolume/Surface = "Box/ZPlusSurface"
+b:Sc/OnlyIncludeIfParticleNotLastInteractedInVolume/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeIfParticleNotLastInteractedInVolume/OutputType = "csv"
+s:Sc/OnlyIncludeIfParticleNotLastInteractedInVolume/IfOutputFileAlreadyExists = "Overwrite"
+s:Sc/OnlyIncludeIfParticleNotLastInteractedInVolume/OnlyIncludeIfParticleNotLastInteractedInVolume = "Foil"
+
+s:Sc/OnlyIncludeIfParticleLastInteractedInComponent/Quantity = "SurfaceTrackCount"
+s:Sc/OnlyIncludeIfParticleLastInteractedInComponent/Surface = "Box/ZPlusSurface"
+b:Sc/OnlyIncludeIfParticleLastInteractedInComponent/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeIfParticleLastInteractedInComponent/OutputType = "csv"
+s:Sc/OnlyIncludeIfParticleLastInteractedInComponent/IfOutputFileAlreadyExists = "Overwrite"
+s:Sc/OnlyIncludeIfParticleLastInteractedInComponent/OnlyIncludeIfParticleLastInteractedInComponent = "Foil"
+
+s:Sc/OnlyIncludeIfParticleNotLastInteractedInComponent/Quantity = "SurfaceTrackCount"
+s:Sc/OnlyIncludeIfParticleNotLastInteractedInComponent/Surface = "Box/ZPlusSurface"
+b:Sc/OnlyIncludeIfParticleNotLastInteractedInComponent/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeIfParticleNotLastInteractedInComponent/OutputType = "csv"
+s:Sc/OnlyIncludeIfParticleNotLastInteractedInComponent/IfOutputFileAlreadyExists = "Overwrite"
+s:Sc/OnlyIncludeIfParticleNotLastInteractedInComponent/OnlyIncludeIfParticleNotLastInteractedInComponent = "Foil"
+
+s:Sc/OnlyIncludeIfParticleLastInteractedInComponentOrSubComponentsOf/Quantity = "SurfaceTrackCount"
+s:Sc/OnlyIncludeIfParticleLastInteractedInComponentOrSubComponentsOf/Surface = "Box/ZPlusSurface"
+b:Sc/OnlyIncludeIfParticleLastInteractedInComponentOrSubComponentsOf/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeIfParticleLastInteractedInComponentOrSubComponentsOf/OutputType = "csv"
+s:Sc/OnlyIncludeIfParticleLastInteractedInComponentOrSubComponentsOf/IfOutputFileAlreadyExists = "Overwrite"
+s:Sc/OnlyIncludeIfParticleLastInteractedInComponentOrSubComponentsOf/OnlyIncludeIfParticleLastInteractedInComponentOrSubComponentsOf = "Foil"
+
+s:Sc/OnlyIncludeIfParticleNotLastInteractedInComponentOrSubComponentsOf/Quantity = "SurfaceTrackCount"
+s:Sc/OnlyIncludeIfParticleNotLastInteractedInComponentOrSubComponentsOf/Surface = "Box/ZPlusSurface"
+b:Sc/OnlyIncludeIfParticleNotLastInteractedInComponentOrSubComponentsOf/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeIfParticleNotLastInteractedInComponentOrSubComponentsOf/OutputType = "csv"
+s:Sc/OnlyIncludeIfParticleNotLastInteractedInComponentOrSubComponentsOf/IfOutputFileAlreadyExists = "Overwrite"
+s:Sc/OnlyIncludeIfParticleNotLastInteractedInComponentOrSubComponentsOf/OnlyIncludeIfParticleNotLastInteractedInComponentOrSubComponentsOf = "Foil"
+
+s:Sc/OnlyIncludeIfParticleTraversedVolume/Quantity = "SurfaceTrackCount"
+s:Sc/OnlyIncludeIfParticleTraversedVolume/Surface = "Box/ZPlusSurface"
+b:Sc/OnlyIncludeIfParticleTraversedVolume/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeIfParticleTraversedVolume/OutputType = "csv"
+s:Sc/OnlyIncludeIfParticleTraversedVolume/IfOutputFileAlreadyExists = "Overwrite"
+sv:Sc/OnlyIncludeIfParticleTraversedVolume/OnlyIncludeIfParticleTraversedVolume = 2 "World" "Foil"
+
+s:Sc/OnlyIncludeIfParticleNotTraversedVolume/Quantity = "SurfaceTrackCount"
+s:Sc/OnlyIncludeIfParticleNotTraversedVolume/Surface = "Box/ZPlusSurface"
+b:Sc/OnlyIncludeIfParticleNotTraversedVolume/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeIfParticleNotTraversedVolume/OutputType = "csv"
+s:Sc/OnlyIncludeIfParticleNotTraversedVolume/IfOutputFileAlreadyExists = "Overwrite"
+sv:Sc/OnlyIncludeIfParticleNotTraversedVolume/OnlyIncludeIfParticleNotTraversedVolume = 2 "World" "Foil"
+
+s:Sc/OnlyIncludeIfParticleTraversedComponent/Quantity = "SurfaceTrackCount"
+s:Sc/OnlyIncludeIfParticleTraversedComponent/Surface = "Box/ZPlusSurface"
+b:Sc/OnlyIncludeIfParticleTraversedComponent/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeIfParticleTraversedComponent/OutputType = "csv"
+s:Sc/OnlyIncludeIfParticleTraversedComponent/IfOutputFileAlreadyExists = "Overwrite"
+sv:Sc/OnlyIncludeIfParticleTraversedComponent/OnlyIncludeIfParticleTraversedComponent = 2 "World" "Foil"
+
+s:Sc/OnlyIncludeIfParticleNotTraversedComponent/Quantity = "SurfaceTrackCount"
+s:Sc/OnlyIncludeIfParticleNotTraversedComponent/Surface = "Box/ZPlusSurface"
+b:Sc/OnlyIncludeIfParticleNotTraversedComponent/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeIfParticleNotTraversedComponent/OutputType = "csv"
+s:Sc/OnlyIncludeIfParticleNotTraversedComponent/IfOutputFileAlreadyExists = "Overwrite"
+sv:Sc/OnlyIncludeIfParticleNotTraversedComponent/OnlyIncludeIfParticleNotTraversedComponent = 2 "World" "Foil"
+
+s:Sc/OnlyIncludeIfParticleTraversedComponentOrSubComponentsOf/Quantity = "SurfaceTrackCount"
+s:Sc/OnlyIncludeIfParticleTraversedComponentOrSubComponentsOf/Surface = "Box/ZPlusSurface"
+b:Sc/OnlyIncludeIfParticleTraversedComponentOrSubComponentsOf/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeIfParticleTraversedComponentOrSubComponentsOf/OutputType = "csv"
+s:Sc/OnlyIncludeIfParticleTraversedComponentOrSubComponentsOf/IfOutputFileAlreadyExists = "Overwrite"
+sv:Sc/OnlyIncludeIfParticleTraversedComponentOrSubComponentsOf/OnlyIncludeIfParticleTraversedComponentOrSubComponentsOf = 2 "World" "Foil"
+
+s:Sc/OnlyIncludeIfParticleNotTraversedComponentOrSubComponentsOf/Quantity = "SurfaceTrackCount"
+s:Sc/OnlyIncludeIfParticleNotTraversedComponentOrSubComponentsOf/Surface = "Box/ZPlusSurface"
+b:Sc/OnlyIncludeIfParticleNotTraversedComponentOrSubComponentsOf/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeIfParticleNotTraversedComponentOrSubComponentsOf/OutputType = "csv"
+s:Sc/OnlyIncludeIfParticleNotTraversedComponentOrSubComponentsOf/IfOutputFileAlreadyExists = "Overwrite"
+sv:Sc/OnlyIncludeIfParticleNotTraversedComponentOrSubComponentsOf/OnlyIncludeIfParticleNotTraversedComponentOrSubComponentsOf = 2 "World" "Foil"
+
+s:Sc/OnlyIncludeIfParticleOrAncestorTraversedVolume/Quantity = "SurfaceTrackCount"
+s:Sc/OnlyIncludeIfParticleOrAncestorTraversedVolume/Surface = "Box/ZPlusSurface"
+b:Sc/OnlyIncludeIfParticleOrAncestorTraversedVolume/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeIfParticleOrAncestorTraversedVolume/OutputType = "csv"
+s:Sc/OnlyIncludeIfParticleOrAncestorTraversedVolume/IfOutputFileAlreadyExists = "Overwrite"
+sv:Sc/OnlyIncludeIfParticleOrAncestorTraversedVolume/OnlyIncludeIfParticleOrAncestorTraversedVolume = 2 "World" "Foil"
+
+s:Sc/OnlyIncludeIfParticleOrAncestorNotTraversedVolume/Quantity = "SurfaceTrackCount"
+s:Sc/OnlyIncludeIfParticleOrAncestorNotTraversedVolume/Surface = "Box/ZPlusSurface"
+b:Sc/OnlyIncludeIfParticleOrAncestorNotTraversedVolume/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeIfParticleOrAncestorNotTraversedVolume/OutputType = "csv"
+s:Sc/OnlyIncludeIfParticleOrAncestorNotTraversedVolume/IfOutputFileAlreadyExists = "Overwrite"
+sv:Sc/OnlyIncludeIfParticleOrAncestorNotTraversedVolume/OnlyIncludeIfParticleOrAncestorNotTraversedVolume = 2 "World" "Foil"
+
+s:Sc/OnlyIncludeIfParticleOrAncestorTraversedComponent/Quantity = "SurfaceTrackCount"
+s:Sc/OnlyIncludeIfParticleOrAncestorTraversedComponent/Surface = "Box/ZPlusSurface"
+b:Sc/OnlyIncludeIfParticleOrAncestorTraversedComponent/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeIfParticleOrAncestorTraversedComponent/OutputType = "csv"
+s:Sc/OnlyIncludeIfParticleOrAncestorTraversedComponent/IfOutputFileAlreadyExists = "Overwrite"
+sv:Sc/OnlyIncludeIfParticleOrAncestorTraversedComponent/OnlyIncludeIfParticleOrAncestorTraversedComponent = 2 "World" "Foil"
+
+s:Sc/OnlyIncludeIfParticleOrAncestorNotTraversedComponent/Quantity = "SurfaceTrackCount"
+s:Sc/OnlyIncludeIfParticleOrAncestorNotTraversedComponent/Surface = "Box/ZPlusSurface"
+b:Sc/OnlyIncludeIfParticleOrAncestorNotTraversedComponent/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeIfParticleOrAncestorNotTraversedComponent/OutputType = "csv"
+s:Sc/OnlyIncludeIfParticleOrAncestorNotTraversedComponent/IfOutputFileAlreadyExists = "Overwrite"
+sv:Sc/OnlyIncludeIfParticleOrAncestorNotTraversedComponent/OnlyIncludeIfParticleOrAncestorNotTraversedComponent = 2 "World" "Foil"
+
+s:Sc/OnlyIncludeIfParticleOrAncestorTraversedComponentOrSubComponentsOf/Quantity = "SurfaceTrackCount"
+s:Sc/OnlyIncludeIfParticleOrAncestorTraversedComponentOrSubComponentsOf/Surface = "Box/ZPlusSurface"
+b:Sc/OnlyIncludeIfParticleOrAncestorTraversedComponentOrSubComponentsOf/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeIfParticleOrAncestorTraversedComponentOrSubComponentsOf/OutputType = "csv"
+s:Sc/OnlyIncludeIfParticleOrAncestorTraversedComponentOrSubComponentsOf/IfOutputFileAlreadyExists = "Overwrite"
+sv:Sc/OnlyIncludeIfParticleOrAncestorTraversedComponentOrSubComponentsOf/OnlyIncludeIfParticleOrAncestorTraversedComponentOrSubComponentsOf = 2 "World" "Foil"
+
+s:Sc/OnlyIncludeIfParticleOrAncestorNotTraversedComponentOrSubComponentsOf/Quantity = "SurfaceTrackCount"
+s:Sc/OnlyIncludeIfParticleOrAncestorNotTraversedComponentOrSubComponentsOf/Surface = "Box/ZPlusSurface"
+b:Sc/OnlyIncludeIfParticleOrAncestorNotTraversedComponentOrSubComponentsOf/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeIfParticleOrAncestorNotTraversedComponentOrSubComponentsOf/OutputType = "csv"
+s:Sc/OnlyIncludeIfParticleOrAncestorNotTraversedComponentOrSubComponentsOf/IfOutputFileAlreadyExists = "Overwrite"
+sv:Sc/OnlyIncludeIfParticleOrAncestorNotTraversedComponentOrSubComponentsOf/OnlyIncludeIfParticleOrAncestorNotTraversedComponentOrSubComponentsOf = 2 "World" "Foil"
+
+s:Sc/OnlyIncludeIfParticleLastTraversedVolume/Quantity = "SurfaceTrackCount"
+s:Sc/OnlyIncludeIfParticleLastTraversedVolume/Surface = "Box/ZPlusSurface"
+b:Sc/OnlyIncludeIfParticleLastTraversedVolume/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeIfParticleLastTraversedVolume/OutputType = "csv"
+s:Sc/OnlyIncludeIfParticleLastTraversedVolume/IfOutputFileAlreadyExists = "Overwrite"
+s:Sc/OnlyIncludeIfParticleLastTraversedVolume/OnlyIncludeIfParticleLastTraversedVolume = "Foil"
+
+s:Sc/OnlyIncludeIfParticleNotLastTraversedVolume/Quantity = "SurfaceTrackCount"
+s:Sc/OnlyIncludeIfParticleNotLastTraversedVolume/Surface = "Box/ZPlusSurface"
+b:Sc/OnlyIncludeIfParticleNotLastTraversedVolume/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeIfParticleNotLastTraversedVolume/OutputType = "csv"
+s:Sc/OnlyIncludeIfParticleNotLastTraversedVolume/IfOutputFileAlreadyExists = "Overwrite"
+s:Sc/OnlyIncludeIfParticleNotLastTraversedVolume/OnlyIncludeIfParticleNotLastTraversedVolume = "Foil"
+
+s:Sc/OnlyIncludeIfParticleLastTraversedComponent/Quantity = "SurfaceTrackCount"
+s:Sc/OnlyIncludeIfParticleLastTraversedComponent/Surface = "Box/ZPlusSurface"
+b:Sc/OnlyIncludeIfParticleLastTraversedComponent/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeIfParticleLastTraversedComponent/OutputType = "csv"
+s:Sc/OnlyIncludeIfParticleLastTraversedComponent/IfOutputFileAlreadyExists = "Overwrite"
+s:Sc/OnlyIncludeIfParticleLastTraversedComponent/OnlyIncludeIfParticleLastTraversedComponent = "Foil"
+
+s:Sc/OnlyIncludeIfParticleNotLastTraversedComponent/Quantity = "SurfaceTrackCount"
+s:Sc/OnlyIncludeIfParticleNotLastTraversedComponent/Surface = "Box/ZPlusSurface"
+b:Sc/OnlyIncludeIfParticleNotLastTraversedComponent/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeIfParticleNotLastTraversedComponent/OutputType = "csv"
+s:Sc/OnlyIncludeIfParticleNotLastTraversedComponent/IfOutputFileAlreadyExists = "Overwrite"
+s:Sc/OnlyIncludeIfParticleNotLastTraversedComponent/OnlyIncludeIfParticleNotLastTraversedComponent = "Foil"
+
+s:Sc/OnlyIncludeIfParticleLastTraversedComponentOrSubComponentsOf/Quantity = "SurfaceTrackCount"
+s:Sc/OnlyIncludeIfParticleLastTraversedComponentOrSubComponentsOf/Surface = "Box/ZPlusSurface"
+b:Sc/OnlyIncludeIfParticleLastTraversedComponentOrSubComponentsOf/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeIfParticleLastTraversedComponentOrSubComponentsOf/OutputType = "csv"
+s:Sc/OnlyIncludeIfParticleLastTraversedComponentOrSubComponentsOf/IfOutputFileAlreadyExists = "Overwrite"
+s:Sc/OnlyIncludeIfParticleLastTraversedComponentOrSubComponentsOf/OnlyIncludeIfParticleLastTraversedComponentOrSubComponentsOf = "Foil"
+
+s:Sc/OnlyIncludeIfParticleNotLastTraversedComponentOrSubComponentsOf/Quantity = "SurfaceTrackCount"
+s:Sc/OnlyIncludeIfParticleNotLastTraversedComponentOrSubComponentsOf/Surface = "Box/ZPlusSurface"
+b:Sc/OnlyIncludeIfParticleNotLastTraversedComponentOrSubComponentsOf/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeIfParticleNotLastTraversedComponentOrSubComponentsOf/OutputType = "csv"
+s:Sc/OnlyIncludeIfParticleNotLastTraversedComponentOrSubComponentsOf/IfOutputFileAlreadyExists = "Overwrite"
+s:Sc/OnlyIncludeIfParticleNotLastTraversedComponentOrSubComponentsOf/OnlyIncludeIfParticleNotLastTraversedComponentOrSubComponentsOf = "Foil"
+
+s:Sc/OnlyIncludeIfInMaterial/Quantity = "SurfaceTrackCount"
+s:Sc/OnlyIncludeIfInMaterial/Surface = "Box/ZPlusSurface"
+b:Sc/OnlyIncludeIfInMaterial/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeIfInMaterial/OutputType = "csv"
+s:Sc/OnlyIncludeIfInMaterial/IfOutputFileAlreadyExists = "Overwrite"
+sv:Sc/OnlyIncludeIfInMaterial/OnlyIncludeIfInMaterial = 1 "Lead"
+
+s:Sc/OnlyIncludeIfNotInMaterial/Quantity = "SurfaceTrackCount"
+s:Sc/OnlyIncludeIfNotInMaterial/Surface = "Box/ZPlusSurface"
+b:Sc/OnlyIncludeIfNotInMaterial/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeIfNotInMaterial/OutputType = "csv"
+s:Sc/OnlyIncludeIfNotInMaterial/IfOutputFileAlreadyExists = "Overwrite"
+sv:Sc/OnlyIncludeIfNotInMaterial/OnlyIncludeIfNotInMaterial = 1 "Lead"
+
+s:Sc/OnlyIncludeIfIncidentParticlesNamed/Quantity = "EnergyDeposit"
+s:Sc/OnlyIncludeIfIncidentParticlesNamed/Component = "Box"
+b:Sc/OnlyIncludeIfIncidentParticlesNamed/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeIfIncidentParticlesNamed/OutputType = "csv"
+s:Sc/OnlyIncludeIfIncidentParticlesNamed/IfOutputFileAlreadyExists = "Overwrite"
+sv:Sc/OnlyIncludeIfIncidentParticlesNamed/OnlyIncludeIfIncidentParticlesNamed = 1 "proton"
+
+s:Sc/OnlyIncludeIfIncidentParticlesNotNamed/Quantity = "EnergyDeposit"
+s:Sc/OnlyIncludeIfIncidentParticlesNotNamed/Component = "Box"
+b:Sc/OnlyIncludeIfIncidentParticlesNotNamed/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeIfIncidentParticlesNotNamed/OutputType = "csv"
+s:Sc/OnlyIncludeIfIncidentParticlesNotNamed/IfOutputFileAlreadyExists = "Overwrite"
+sv:Sc/OnlyIncludeIfIncidentParticlesNotNamed/OnlyIncludeIfIncidentParticlesNotNamed = 1 "proton"
+
+s:Sc/OnlyIncludeIfIncidentParticlesFromProcess/Quantity = "EnergyDeposit"
+s:Sc/OnlyIncludeIfIncidentParticlesFromProcess/Component = "Box"
+b:Sc/OnlyIncludeIfIncidentParticlesFromProcess/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeIfIncidentParticlesFromProcess/OutputType = "csv"
+s:Sc/OnlyIncludeIfIncidentParticlesFromProcess/IfOutputFileAlreadyExists = "Overwrite"
+sv:Sc/OnlyIncludeIfIncidentParticlesFromProcess/OnlyIncludeIfIncidentParticlesFromProcess = 1 "hIoni"
+
+s:Sc/OnlyIncludeIfIncidentParticlesNotFromProcess/Quantity = "EnergyDeposit"
+s:Sc/OnlyIncludeIfIncidentParticlesNotFromProcess/Component = "Box"
+b:Sc/OnlyIncludeIfIncidentParticlesNotFromProcess/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeIfIncidentParticlesNotFromProcess/OutputType = "csv"
+s:Sc/OnlyIncludeIfIncidentParticlesNotFromProcess/IfOutputFileAlreadyExists = "Overwrite"
+sv:Sc/OnlyIncludeIfIncidentParticlesNotFromProcess/OnlyIncludeIfIncidentParticlesNotFromProcess = 1 "hIoni"
+
+s:Sc/OnlyIncludeIfIncidentParticlesOfGeneration/Quantity = "EnergyDeposit"
+s:Sc/OnlyIncludeIfIncidentParticlesOfGeneration/Component = "Box"
+b:Sc/OnlyIncludeIfIncidentParticlesOfGeneration/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeIfIncidentParticlesOfGeneration/OutputType = "csv"
+s:Sc/OnlyIncludeIfIncidentParticlesOfGeneration/IfOutputFileAlreadyExists = "Overwrite"
+s:Sc/OnlyIncludeIfIncidentParticlesOfGeneration/OnlyIncludeIfIncidentParticlesOfGeneration = "Primary"
+
+s:Sc/OnlyIncludeParticlesWithTimeOfFlightBelow/Quantity = "EnergyDeposit"
+s:Sc/OnlyIncludeParticlesWithTimeOfFlightBelow/Component = "Box"
+b:Sc/OnlyIncludeParticlesWithTimeOfFlightBelow/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeParticlesWithTimeOfFlightBelow/OutputType = "csv"
+s:Sc/OnlyIncludeParticlesWithTimeOfFlightBelow/IfOutputFileAlreadyExists = "Overwrite"
+d:Sc/OnlyIncludeParticlesWithTimeOfFlightBelow/OnlyIncludeParticlesWithTimeOfFlightBelow = 14. ns
+
+s:Sc/OnlyIncludeParticlesWithTimeOfFlightAbove/Quantity = "EnergyDeposit"
+s:Sc/OnlyIncludeParticlesWithTimeOfFlightAbove/Component = "Box"
+b:Sc/OnlyIncludeParticlesWithTimeOfFlightAbove/OutputToConsole = "TRUE"
+s:Sc/OnlyIncludeParticlesWithTimeOfFlightAbove/OutputType = "csv"
+s:Sc/OnlyIncludeParticlesWithTimeOfFlightAbove/IfOutputFileAlreadyExists = "Overwrite"
+d:Sc/OnlyIncludeParticlesWithTimeOfFlightAbove/OnlyIncludeParticlesWithTimeOfFlightAbove = 14. ns
+
+s:Gr/ViewA/Type = "OpenGL"
+i:Gr/ViewA/WindowSizeX = 900
+i:Gr/ViewA/WindowSizeY = 900
+
+s:So/Example/Type                     = "Beam"
+s:So/Example/Component                = "BeamPosition"
+s:So/Example/BeamParticle             = "proton"
+d:So/Example/BeamEnergy               = 169.23 MeV
+u:So/Example/BeamEnergySpread         = 0.757504
+s:So/Example/BeamPositionDistribution = "Gaussian"
+s:So/Example/BeamPositionCutoffShape  = "Ellipse"
+d:So/Example/BeamPositionCutoffX      = 10. cm
+d:So/Example/BeamPositionCutoffY      = 10. cm
+d:So/Example/BeamPositionSpreadX      = 0.65 cm
+d:So/Example/BeamPositionSpreadY      = 0.65 cm
+s:So/Example/BeamAngularDistribution  = "Gaussian"
+d:So/Example/BeamAngularCutoffX       = 90. deg
+d:So/Example/BeamAngularCutoffY       = 90. deg
+d:So/Example/BeamAngularSpreadX       = 0.0032 rad
+d:So/Example/BeamAngularSpreadY       = 0.0032 rad
+i:So/Example/NumberOfHistoriesInRun   = 1
+
+b:Ts/PauseBeforeQuit = "True"

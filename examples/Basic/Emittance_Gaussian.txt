@@ -1,0 +1,75 @@
+s:Ge/World/Material = "Vacuum"
+
+#--- Beam
+s:So/Example/Component                = "BeamPosition"
+s:So/Example/BeamParticle             = "proton"
+d:So/Example/BeamEnergy               = 94.00 MeV
+u:So/Example/BeamEnergySpread         = 1.0
+i:So/Example/NumberOfHistoriesInRun   = 10000
+
+#----- Primary: Emittance beam
+s:So/Example/Type           = "Emittance"
+
+#1. Bivariate Gaussian: X,X',correlation and Y,Y',correlation
+s:So/Example/Distribution   = "BiGaussian"
+d:So/Example/SigmaX         = 2.0 mm
+u:So/Example/SigmaXprime    = 0.0032  #32 mrad
+u:So/Example/CorrelationX   = -0.8
+d:So/Example/SigmaY         = 2.0 mm
+u:So/Example/SigmaYPrime    = 0.0032
+u:So/Example/CorrelationY   = 0.4
+
+# Beam position (S)
+s:Ge/BeamPosition/Parent   = "World"
+s:Ge/BeamPosition/Type     = "Group"
+d:Ge/BeamPosition/TransX   = 0. m
+d:Ge/BeamPosition/TransY   = 0. m
+d:Ge/BeamPosition/TransZ   = 3.001 m
+#flipped cause the beam flies 0 to +z.
+d:Ge/BeamPosition/RotX     = 180. deg
+d:Ge/BeamPosition/RotY     = 0. deg
+d:Ge/BeamPosition/RotZ     = 0. deg
+
+#---- Verbosity
+i:Ts/TrackingVerbosity = 0
+
+#---- Sequence
+b:Ge/CheckForUnusedComponents = "False"
+b:Ts/ShowCPUTime = "true"
+i:Ts/ShowHistoryCountAtInterval = 1000
+i:Ts/Seed = 10
+
+#--- Physics --
+sv:Ph/Default/Modules = 1 "g4em-standard_opt0"
+
+#---- Constants
+d:Ge/MyBeamSizeInX = 20.0 cm
+d:Ge/MyBeamSizeInY = 20.0 cm
+
+#--- Beam Box
+s:Ge/PlaneAtBeamPosition/Type      = "TsBox"
+s:Ge/PlaneAtBeamPosition/Material  = "Vacuum"
+s:Ge/PlaneAtBeamPosition/Parent    = "World"
+d:Ge/PlaneAtBeamPosition/HLX       = 0.5 cm + Ge/MyBeamSizeInX
+d:Ge/PlaneAtBeamPosition/HLY       = 0.5 cm + Ge/MyBeamSizeInY
+d:Ge/PlaneAtBeamPosition/HLZ       = 0.05 mm
+d:Ge/PlaneAtBeamPosition/TransX    = 0. m
+d:Ge/PlaneAtBeamPosition/TransY    = 0. m
+d:Ge/PlaneAtBeamPosition/TransZ    = 3.0 m - Ge/PlaneAtBeamPosition/HLZ
+d:Ge/PlaneAtBeamPosition/RotX      = 0. deg
+d:Ge/PlaneAtBeamPosition/RotY      = 0. deg
+d:Ge/PlaneAtBeamPosition/RotZ      = 0. deg
+
+#--- Phase space scoring at Beam geometry
+s:Sc/Beam/Quantity                  = "PhaseSpace"
+b:Sc/Beam/OutputToConsole           = "True"
+s:Sc/Beam/Surface                   = "PlaneAtBeamPosition/ZPlusSurface"
+s:Sc/Beam/OutputType                = "ASCII"
+i:Sc/Beam/OutputBufferSize          = 1000
+b:Sc/Beam/IncludeRunID              = "True"
+b:Sc/Beam/IncludeEventID            = "True"
+b:Sc/Beam/IncludeTrackID            = "True"
+b:Sc/Beam/IncludeTime               = "True"
+b:Sc/Beam/IncludeSeed               = "True"
+s:Sc/Beam/IfOutputFileAlreadyExists = "Overwrite"
+s:Sc/Beam/OutputFile                = "BeamGaussian"

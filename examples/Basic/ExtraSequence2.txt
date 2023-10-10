@@ -1,0 +1,9 @@
+dc:Ge/BeamExitWindow/TransX =    0. cm
+dc:Ge/BeamExitWindow/TransY = -100. cm
+dc:Ge/BeamExitWindow/TransZ = -100. cm
+dc:Ge/BeamExitWindow/RotX   = 45. deg
+dc:Ge/BeamExitWindow/RotY   =  0. deg
+dc:Ge/BeamExitWindow/RotZ   =  0. deg
+
+dc:So/Example/BeamEnergy               = 100. MeV
+ic:So/Example/NumberOfHistoriesInRun   = 1000

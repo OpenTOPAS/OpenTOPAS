@@ -1,0 +1,113 @@
+//
+// ********************************************************************
+// *                                                                  *
+// * Copyright 2022 The TOPAS Collaboration                           *
+// *                                                                  *
+// * Permission is hereby granted, free of charge, to any person      *
+// * obtaining a copy of this software and associated documentation   *
+// * files (the "Software"), to deal in the Software without          *
+// * restriction, including without limitation the rights to use,     *
+// * copy, modify, merge, publish, distribute, sublicense, and/or     *
+// * sell copies of the Software, and to permit persons to whom the   *
+// * Software is furnished to do so, subject to the following         *
+// * conditions:                                                      *
+// *                                                                  *
+// * The above copyright notice and this permission notice shall be   *
+// * included in all copies or substantial portions of the Software.  *
+// *                                                                  *
+// * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,  *
+// * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES  *
+// * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND         *
+// * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT      *
+// * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,     *
+// * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING     *
+// * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR    *
+// * OTHER DEALINGS IN THE SOFTWARE.                                  *
+// *                                                                  *
+// ********************************************************************
+//
+
+#ifndef TsExtensionManager_hh
+#define TsExtensionManager_hh
+
+#include "globals.hh"
+#include <vector>
+
+class TsParameterManager;
+class TsMaterialManager;
+class TsGeometryManager;
+class TsFilterManager;
+class TsSourceManager;
+class TsScoringManager;
+
+class TsGeneratorManager;
+class TsVGeometryComponent;
+class TsVImagingToMaterial;
+class TsVMagneticField;
+class TsVElectroMagneticField;
+class TsVFilter;
+class TsSource;
+class TsVGenerator;
+class TsVScorer;
+class TsVHistogram;
+class TsVNtuple;
+class TsVOutcomeModel;
+class VPhysicsCreator;
+class G4VPhysicalVolume;
+class G4VUserPhysicsList;
+class G4VPhysicsConstructor;
+
+class G4Run;
+class G4Event;
+class G4Material;
+
+class TsExtensionManager
+{
+public:
+	TsExtensionManager(TsParameterManager* pM);
+	~TsExtensionManager();
+
+	TsVGeometryComponent* InstantiateComponent(TsParameterManager* pM, TsMaterialManager* mM, TsGeometryManager* gM,
+											   TsVGeometryComponent* pgc, G4VPhysicalVolume* pv, G4String childCompType, G4String childName);
+
+	TsVImagingToMaterial* InstantiateImagingToMaterial(TsParameterManager* pM, TsVGeometryComponent* geometryComponent, std::vector<G4Material*>* materialList, G4String converterName);
+
+	TsVMagneticField* InstantiateMagneticField(TsParameterManager* pM, TsGeometryManager* gM,
+											   TsVGeometryComponent* geometryComponent, G4String magneticFieldType);
+
+	TsVElectroMagneticField* InstantiateElectroMagneticField(TsParameterManager* pM, TsGeometryManager* gM,
+											   TsVGeometryComponent* geometryComponent, G4String ElectroMagneticFieldType);
+
+	TsVFilter* InstantiateFilter(TsParameterManager* pM, TsMaterialManager* mM, TsGeometryManager* gM,
+								 TsFilterManager* fM, TsVGenerator* generator, TsVScorer* scorer, TsVFilter* parentFilter);
+
+	TsSource* InstantiateParticleSource(TsParameterManager* pM, TsSourceManager* psM, G4String sourceType, G4String sourceName);
+
+	TsVGenerator* InstantiateParticleGenerator(TsParameterManager* pM, TsGeometryManager* gM, TsGeneratorManager* pgM, G4String sourceType, G4String sourceName);
+
+	TsVScorer* InstantiateScorer(TsParameterManager* pM, TsMaterialManager* mM, TsGeometryManager* gM, TsScoringManager* scM,
+								 G4String currentScorerName, G4String quantityName,
+								 G4String quantityNameLower, G4String outFileName, G4bool isSubScorer);
+
+	// TsVHistogram* InstantiateHistogramFile(TsParameterManager* pM, G4String fileName, G4String fileMode, G4String fileType);
+
+	// TsVNtuple* InstantiateNtupleFile(TsParameterManager* pM, G4String fileName, G4String fileMode, G4String fileType, TsVNtuple *masterFile);
+
+	TsVOutcomeModel* InstantiateOutcomeModel(TsParameterManager* pM, G4String parmPrefix, G4String modelName);
+
+	G4VUserPhysicsList* InstantiatePhysicsList(TsParameterManager* pM, G4String physicsListName);
+
+	// G4VPhysicsConstructor* InstantiatePhysicsModule(TsParameterManager* pM, G4String physicsModuleName);
+	VPhysicsCreator* InstantiatePhysicsModule(TsParameterManager*, G4String);
+
+	void BeginSession(TsParameterManager* pM);
+	void BeginRun(TsParameterManager* pM);
+	void BeginHistory(TsParameterManager* pM, const G4Run*, const G4Event*);
+	void EndHistory(TsParameterManager* pM, const G4Run*, const G4Event*);
+	void EndRun(TsParameterManager* pM);
+	void EndSession(TsParameterManager* pM);
+
+private:
+	G4bool HaveFilterNamed(TsParameterManager* pM, TsVGenerator* generator, TsVScorer* scorer, G4String filterName);
+};
+#endif

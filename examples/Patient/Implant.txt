@@ -1,0 +1,83 @@
+# Demonstrates use of a DICOM file.
+# You must unzip DICOM_Box.zip before you run this example.
+# Reads in and displays a simple test DICOM that represents
+# a box of water in air
+# and uses Layered Mass Geometry to overlay a titanium sphere "implant"
+# onto this DICOM geomtry.
+# The display writes very slowly to the screen.
+# This will be improved in an upcoming new release.
+# Until then, one useful trick is that if you iconize the graphics window,
+# then un-inconize it when drawing is done, the drawing will go much faster.
+
+includeFile = HUtoMaterialSchneider.txt
+
+s:Ge/World/Material  = "Vacuum"
+d:Ge/World/HLX       = 2.0 m
+d:Ge/World/HLY       = 2.0 m
+d:Ge/World/HLZ       = 2.0 m
+b:Ge/World/Invisible = "TRUE"
+
+s:Ge/Patient/Parent         = "World"
+s:Ge/Patient/Material       = "G4_WATER"
+d:Ge/Patient/TransX         = 0. m
+d:Ge/Patient/TransY         = 0. m
+d:Ge/Patient/TransZ         = 0. m
+d:Ge/Patient/RotX           = 0. deg
+d:Ge/Patient/RotY           = 0. deg
+d:Ge/Patient/RotZ           = 0. deg
+s:Ge/Patient/Type           = "TsDicomPatient"
+s:Ge/Patient/DicomDirectory = "DICOM_Box"
+
+# Specify which slices to show.
+# Comment this out or set to zero to show all slices.
+# Set to -1 to show only center slice.
+# Set to -2 to show first, center and last slice.
+#iv:Ge/Patient/ShowSpecificSlicesX = 1 -2
+#iv:Ge/Patient/ShowSpecificSlicesY = 1 -2
+iv:Ge/Patient/ShowSpecificSlicesZ = 1 -2
+
+# Overlay implant in a parallel world using Layered Mass Geometry.
+s:Ge/Implant/Type       = "TsSphere"
+s:Ge/Implant/Parent     = "Patient"
+b:Ge/Implant/IsParallel = "True"
+s:Ge/Implant/Material   = "Titanium"
+d:Ge/Implant/RMin       = 0. cm
+d:Ge/Implant/RMax       = 5.0 cm
+d:Ge/Implant/SPhi       = 0.0 deg
+d:Ge/Implant/DPhi       = 360. deg
+d:Ge/Implant/STheta     = 0 deg
+d:Ge/Implant/DTheta     = 180 deg
+d:Ge/Implant/TransX     = 0. cm
+d:Ge/Implant/TransY     = 0. cm
+d:Ge/Implant/TransZ     = 15. cm
+d:Ge/Implant/RotX       = 0. deg
+d:Ge/Implant/RotY       = 0.0 deg
+d:Ge/Implant/RotZ       = 0. deg
+s:Ge/Implant/Color      = "yellow"
+
+sv:Ph/Default/Modules = 1 "g4em-standard_opt0"
+sv:Ph/Default/LayeredMassGeometryWorlds = 1 "Implant"
+
+s:So/Example/Type                     = "Beam"
+s:So/Example/Component                = "BeamPosition"
+s:So/Example/BeamParticle             = "proton"
+d:So/Example/BeamEnergy               = 30. MeV
+u:So/Example/BeamEnergySpread         = 0.757504
+s:So/Example/BeamPositionDistribution = "Flat"
+s:So/Example/BeamPositionCutoffShape  = "Ellipse"
+d:So/Example/BeamPositionCutoffX      = 5 cm
+d:So/Example/BeamPositionCutoffY      = 20 cm
+s:So/Example/BeamAngularDistribution  = "None"
+i:So/Example/NumberOfHistoriesInRun   = 300
+
+# Graphics
+s:Gr/ViewA/Type           = "OpenGL"
+sv:Gr/ViewA/VisibleWorlds = 1 "All"
+
+# Graphics options to handle complex voxel geometries
+i:Gr/ShowOnlyOutlineIfVoxelCountExceeds = 2100000
+i:Gr/SwitchOGLtoOGLIifVoxelCountExceeds = 210
+
+i:Ts/ShowHistoryCountAtInterval = 5000
+
+b:Ts/PauseBeforeQuit = "False"

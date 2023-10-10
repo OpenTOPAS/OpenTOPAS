@@ -1,0 +1,129 @@
+# A dipole magnet has field strength changing over time
+# such that magnet is sweeping back and forth.
+# At the same time, the nozzle that contains this magnet is rotating.
+
+d:Ge/World/HLX       = 2.0 m
+d:Ge/World/HLY       = 2.0 m
+d:Ge/World/HLZ       = 2.0 m
+b:Ge/World/Invisible = "TRUE"
+
+# Nozzle (a group of components)
+s:Ge/Nozzle/Type   = "Group"
+s:Ge/Nozzle/Parent = "World"
+d:Ge/Nozzle/TransX = 0. m
+d:Ge/Nozzle/TransY = 0. m
+d:Ge/Nozzle/TransZ = 0. m
+d:Ge/Nozzle/RotX   = 0. deg
+d:Ge/Nozzle/RotY   = 0. deg
+d:Ge/Nozzle/RotZ   = Tf/MagnetRotation/Value deg
+
+s:Tf/MagnetRotation/Function           = "Linear deg"
+d:Tf/MagnetRotation/Rate               = 2. deg/ms
+d:Tf/MagnetRotation/StartValue         = -0. deg
+d:Tf/MagnetRotation/RepetitionInterval = 80.0 ms
+
+##########################################
+# Dipole for stiring beam direction!
+##########################################
+
+s:Ge/VBox2/Dipole/Type          = "TsBox"
+s:Ge/VBox2/Dipole/Parent        = "Nozzle"
+s:Ge/VBox2/Dipole/Material      = "G4_AIR"
+d:Ge/VBox2/Dipole/HLX           = 10 cm
+d:Ge/VBox2/Dipole/HLY           = 10 cm
+d:Ge/VBox2/Dipole/HLZ           = 20 cm
+d:Ge/VBox2/Dipole/TransX        = 0.0 cm
+d:Ge/VBox2/Dipole/TransY        = 0.0 cm
+d:Ge/VBox2/Dipole/TransZ        = 90.0 cm + Ge/VBox2/Dipole/HLZ
+d:Ge/VBox2/Dipole/RotX          = 0.0 deg
+d:Ge/VBox2/Dipole/RotY          = 0.0 deg
+d:Ge/VBox2/Dipole/RotZ          = 0.0 deg
+s:Ge/VBox2/Dipole/Field = "DipoleMagnet"
+u:Ge/VBox2/Dipole/MagneticFieldDirectionX    = 1.0
+u:Ge/VBox2/Dipole/MagneticFieldDirectionY    = 0.0
+u:Ge/VBox2/Dipole/MagneticFieldDirectionZ    = 0.0
+d:Ge/VBox2/Dipole/MagneticFieldStrength      = Tf/BField1st/Value tesla
+
+##########################################
+# Vacuum window for phase space!
+##########################################
+# Vacuum Window: Target !
+s:Ge/VacFilm/Type     = "TsCylinder"
+s:Ge/VacFilm/Parent   = "World"
+s:Ge/VacFilm/Material = "G4_WATER"
+d:Ge/VacFilm/RMin     = 0.0 cm
+d:Ge/VacFilm/RMax     = 100.0 cm
+d:Ge/VacFilm/HL       = 1.0 cm
+d:Ge/VacFilm/SPhi     = 0. deg
+d:Ge/VacFilm/DPhi     = 360. deg
+d:Ge/VacFilm/TransX   = 0. cm
+d:Ge/VacFilm/TransY   = 0. cm
+d:Ge/VacFilm/TransZ   = 0. cm
+d:Ge/VacFilm/RotX     = 0. deg
+d:Ge/VacFilm/RotY     = 0.0 deg
+d:Ge/VacFilm/RotZ     = 0. deg
+s:Ge/VacFilm/Color    = "skyblue"
+
+#s:Sc/Plane1/Quantity         = "PhaseSpace"
+#s:Sc/Plane1/Surface          = "VacFilm/ZMinusSurface"
+#s:Sc/Plane1/OutputType       = "ASCII"
+#i:Sc/Plane1/OutputBufferSize = 1000
+
+##########################################
+# Ps source
+##########################################
+d:Ge/BeamPosition/TransZ = Ge/World/HLZ cm
+d:Ge/BeamPosition/RotX   = 180. deg
+
+s:Ge/World/Material = "Vacuum"
+
+s:So/Example/Type                     = "Beam"
+s:So/Example/Component                = "BeamPosition"
+s:So/Example/BeamParticle             = "e+"
+d:So/Example/BeamEnergy               = 40.0 MeV
+u:So/Example/BeamEnergySpread         = 5.
+s:So/Example/BeamPositionDistribution = "Gaussian"
+s:So/Example/BeamPositionCutoffShape  = "Ellipse"
+d:So/Example/BeamPositionCutoffX      = 5.0 cm
+d:So/Example/BeamPositionCutoffY      = 5.0 cm
+d:So/Example/BeamPositionSpreadX      = 0.65 cm
+d:So/Example/BeamPositionSpreadY      = 0.65 cm
+s:So/Example/BeamAngularDistribution  = "Gaussian"
+d:So/Example/BeamAngularCutoffX       = 90. deg
+d:So/Example/BeamAngularCutoffY       = 90. deg
+d:So/Example/BeamAngularSpreadX       = 0.005 rad
+d:So/Example/BeamAngularSpreadY       = 0.005 rad
+i:So/Example/NumberOfHistoriesInRun   = 500
+
+s:Tf/BField1st/Function = "Step"
+dv:Tf/BField1st/Times   = 2 10.0 20.0 ms
+dv:Tf/BField1st/Values  = 2 Tf/BField1stLeft/Value Tf/BField1stRight/Value tesla
+
+s:Tf/BField1stLeft/Function            = "Linear tesla"
+d:Tf/BField1stLeft/Rate                = 0.064 tesla/ms
+d:Tf/BField1stLeft/StartValue          = -0.32 tesla
+d:Tf/BField1stLeft/RepetitionInterval  = 10.0 ms
+
+s:Tf/BField1stRight/Function           = "Linear tesla"
+d:Tf/BField1stRight/Rate               = -0.064 tesla/ms
+d:Tf/BField1stRight/StartValue         = 0.32 tesla
+d:Tf/BField1stRight/RepetitionInterval = 10.0 ms
+
+s:Tf/SmallBox/Function           = "Linear tesla"
+d:Tf/SmallBox/Rate               = 0.1 tesla/ms
+d:Tf/SmallBox/StartValue         = 0.0 tesla
+d:Tf/SmallBox/RepetitionInterval = 70. ms
+
+d:Tf/TimelineEnd                    = 40.0 ms
+i:Tf/NumberOfSequentialTimes        = 10
+
+s:Gr/ViewA/Type             = "OpenGL"
+i:Gr/ViewA/WindowSizeX      = 1024
+i:Gr/ViewA/WindowSizeY      = 768
+d:Gr/ViewA/Theta            = 55 deg
+d:Gr/ViewA/Phi              = 20 deg
+s:Gr/ViewA/Projection       = "Perspective"
+d:Gr/ViewA/PerspectiveAngle = 30 deg
+u:Gr/ViewA/Zoom             = 1.4
+u:Gr/ViewA/TransX           = -.2
+b:Gr/ViewA/HiddenLineRemovalForTrajectories = "True"

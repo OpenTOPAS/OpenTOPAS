@@ -1,0 +1,157 @@
+includeFile = GlobalParameters.txt
+
+#--- Source
+s:So/Default/Type                     = "Beam"
+s:So/Default/Component                = "BeamPosition"
+s:So/Default/BeamParticle             = "proton"
+d:So/Default/BeamEnergy               = 150. MeV
+u:So/Default/BeamEnergySpread         = 0.
+s:So/Default/BeamPositionDistribution = "None"
+s:So/Default/BeamAngularDistribution  = "None"
+i:So/Default/NumberOfHistoriesInRun   = 1000
+
+
+#--- Target (upper surface at isocenter)
+s:Ge/Foil/Type     = "TsBox"
+s:Ge/Foil/Material = "Lead"
+s:Ge/Foil/Parent   = "IsoCoordination"
+d:Ge/Foil/HLX      = 25. cm
+d:Ge/Foil/HLY      = 25. cm
+d:Ge/Foil/HLZ      = .5 cm
+d:Ge/Foil/TransX   = 0. cm
+d:Ge/Foil/TransY   = 0. cm
+d:Ge/Foil/TransZ   = Ge/Foil/HLZ + 1. cm
+d:Ge/Foil/RotX     = 0. deg
+d:Ge/Foil/RotY     = 0. deg
+d:Ge/Foil/RotZ     = 0. deg
+
+s:Ge/Phantom/Type            = "TsBox"
+s:Ge/Phantom/Material        = "G4_WATER"
+s:Ge/Phantom/Parent          = "IsoCoordination"
+d:Ge/Phantom/HLX             = 25. cm
+d:Ge/Phantom/HLY             = 25. cm
+d:Ge/Phantom/HLZ             = 10. cm
+d:Ge/Phantom/TransX          = 0. m
+d:Ge/Phantom/TransY          = 0. m
+d:Ge/Phantom/TransZ          = -1.0 * Ge/Phantom/HLZ cm
+d:Ge/Phantom/RotX            = 180. deg   # rotate so +z means increasing depth
+d:Ge/Phantom/RotY            = 0. deg
+d:Ge/Phantom/RotZ            = 0. deg
+i:Ge/Phantom/ZBins           = 20
+s:Ge/Phantom/UpstreamSurface = "Phantom/ZMinusSurface"
+
+
+#--- Scoring
+s:Sc/Scorer01/Quantity                                     = "SurfaceTrackCount"
+s:Sc/Scorer01/Surface                                      = Ge/Phantom/UpstreamSurface
+s:Sc/Scorer01/IfOutputFileAlreadyExists                    = "Overwrite"
+s:Sc/Scorer01/OutputFile                                   = "All"
+
+s:Sc/Scorer02/Quantity                                     = "SurfaceTrackCount"
+s:Sc/Scorer02/Surface                                      = Ge/Phantom/UpstreamSurface
+s:Sc/Scorer02/IfOutputFileAlreadyExists                    = "Overwrite"
+s:Sc/Scorer02/OnlyIncludeParticlesOfGeneration             = "Primary"
+s:Sc/Scorer02/OutputFile                                   = "Primaries"
+
+s:Sc/Scorer03/Quantity                                     = "SurfaceTrackCount"
+s:Sc/Scorer03/Surface                                      = Ge/Phantom/UpstreamSurface
+s:Sc/Scorer03/IfOutputFileAlreadyExists                    = "Overwrite"
+s:Sc/Scorer03/OnlyIncludeParticlesOfGeneration             = "Primary"
+b:Sc/Scorer03/InvertFilter                                 = "True"
+s:Sc/Scorer03/OutputFile                                   = "Secondaries"
+
+s:Sc/Scorer04/Quantity                                     = "SurfaceTrackCount"
+s:Sc/Scorer04/Surface                                      = Ge/Phantom/UpstreamSurface
+s:Sc/Scorer04/IfOutputFileAlreadyExists                    = "Overwrite"
+sv:Sc/Scorer04/OnlyIncludeParticlesCharged                 = 1 "Neutral"
+s:Sc/Scorer04/OutputFile                                   = "Neutrals"
+
+s:Sc/Scorer05/Quantity                                     = "SurfaceTrackCount"
+s:Sc/Scorer05/Surface                                      = Ge/Phantom/UpstreamSurface
+s:Sc/Scorer05/IfOutputFileAlreadyExists                    = "Overwrite"
+i:Sc/Scorer05/OnlyIncludeParticlesOfAtomicMass             = 1
+s:Sc/Scorer05/OutputFile                                   = "AtomicMass"
+
+s:Sc/Scorer06/Quantity                                     = "SurfaceTrackCount"
+s:Sc/Scorer06/Surface                                      = Ge/Phantom/UpstreamSurface
+s:Sc/Scorer06/IfOutputFileAlreadyExists                    = "Overwrite"
+i:Sc/Scorer06/OnlyIncludeParticlesOfAtomicNumber           = 1
+s:Sc/Scorer06/OutputFile                                   = "AtomicNumber"
+
+s:Sc/Scorer07/Quantity                                     = "SurfaceTrackCount"
+s:Sc/Scorer07/Surface                                      = Ge/Phantom/UpstreamSurface
+s:Sc/Scorer07/IfOutputFileAlreadyExists                    = "Overwrite"
+d:Sc/Scorer07/OnlyIncludeParticlesWithInitialKEAbove       = 100 MeV
+s:Sc/Scorer07/OutputFile                                   = "KineticEnergy"
+
+s:Sc/Scorer08/Quantity                                     = "SurfaceTrackCount"
+s:Sc/Scorer08/Surface                                      = Ge/Phantom/UpstreamSurface
+s:Sc/Scorer08/IfOutputFileAlreadyExists                    = "Overwrite"
+d:Sc/Scorer08/OnlyIncludeParticlesWithInitialMomentumAbove = 100 MeV
+s:Sc/Scorer08/OutputFile                                   = "Momentum"
+
+s:Sc/Scorer09/Quantity                                     = "SurfaceTrackCount"
+s:Sc/Scorer09/Surface                                      = Ge/Phantom/UpstreamSurface
+s:Sc/Scorer09/IfOutputFileAlreadyExists                    = "Overwrite"
+d:Sc/Scorer09/OnlyIncludeIfIncidentParticleKEAbove         = 100 MeV
+s:Sc/Scorer09/OutputFile                                   = "IncidentKineticEnergy"
+
+s:Sc/Scorer10/Quantity                                     = "SurfaceTrackCount"
+s:Sc/Scorer10/Surface                                      = Ge/Phantom/UpstreamSurface
+s:Sc/Scorer10/IfOutputFileAlreadyExists                    = "Overwrite"
+d:Sc/Scorer10/OnlyIncludeIfIncidentParticleMomentumAbove   = 100 MeV
+s:Sc/Scorer10/OutputFile                                   = "IncidentMomentum"
+
+s:Sc/Scorer11/Quantity                                     = "SurfaceTrackCount"
+s:Sc/Scorer11/Surface                                      = Ge/Phantom/UpstreamSurface
+s:Sc/Scorer11/IfOutputFileAlreadyExists                    = "Overwrite"
+sv:Sc/Scorer11/OnlyIncludeParticlesFromProcess             = 1 "hIoni"
+s:Sc/Scorer11/OutputFile                                   = "Ionization"
+
+s:Sc/Scorer12/Quantity                                     = "SurfaceTrackCount"
+s:Sc/Scorer12/Surface                                      = Ge/Phantom/UpstreamSurface
+s:Sc/Scorer12/IfOutputFileAlreadyExists                    = "Overwrite"
+sv:Sc/Scorer12/OnlyIncludeIfParticleOrAncestorFromProcess  = 1 "eBrem"
+s:Sc/Scorer12/OutputFile                                   = "BremsstrahlungAndDescendants"
+
+s:Sc/Scorer13/Quantity                                     = "SurfaceTrackCount"
+s:Sc/Scorer13/Surface                                      = Ge/Phantom/UpstreamSurface
+s:Sc/Scorer13/IfOutputFileAlreadyExists                    = "Overwrite"
+sv:Sc/Scorer13/OnlyIncludeParticlesNamed                   = 1 "e-"
+s:Sc/Scorer13/OutputFile                                   = "Electrons"
+
+s:Sc/Scorer14/Quantity                                     = "SurfaceTrackCount"
+s:Sc/Scorer14/Surface                                      = Ge/Phantom/UpstreamSurface
+s:Sc/Scorer14/IfOutputFileAlreadyExists                    = "Overwrite"
+sv:Sc/Scorer14/OnlyIncludeIfParticleOrAncestorNamed        = 1 "neutron"
+s:Sc/Scorer14/OutputFile                                   = "NeutronsAndDescendants"
+
+s:Sc/Scorer15/Quantity                                     = "SurfaceTrackCount"
+s:Sc/Scorer15/Surface                                      = Ge/Phantom/UpstreamSurface
+s:Sc/Scorer15/IfOutputFileAlreadyExists                    = "Overwrite"
+sv:Sc/Scorer15/OnlyIncludeIfParticleOrAncestorFromVolume   = 1 "Foil"
+s:Sc/Scorer15/OutputFile                                   = "OriginateInFoil"
+
+s:Sc/Scorer16/Quantity                                     = "SurfaceTrackCount"
+s:Sc/Scorer16/Surface                                      = Ge/Phantom/UpstreamSurface
+s:Sc/Scorer16/IfOutputFileAlreadyExists                    = "Overwrite"
+sv:Sc/Scorer16/OnlyIncludeIfParticleNotInteractedInVolume  = 1 "Foil"
+s:Sc/Scorer16/OutputFile                                   = "IgnoredFoil"
+
+s:Sc/Scorer17/Quantity                                     = "SurfaceTrackCount"
+s:Sc/Scorer17/Surface                                      = Ge/Phantom/UpstreamSurface
+s:Sc/Scorer17/IfOutputFileAlreadyExists                    = "Overwrite"
+sv:Sc/Scorer17/OnlyIncludeIfParticleTraversedVolume        = 1 "Foil"
+s:Sc/Scorer17/OutputFile                                   = "TraversedFoil"
+
+s:Sc/Scorer18/Quantity                                     = "SurfaceTrackCount"
+s:Sc/Scorer18/Surface                                      = Ge/Phantom/UpstreamSurface
+s:Sc/Scorer18/IfOutputFileAlreadyExists                    = "Overwrite"
+sv:Sc/Scorer18/OnlyIncludeIfInMaterial                     = 1 "Lead"
+s:Sc/Scorer18/OutputFile                                   = "Lead"
+
+s:Sc/Scorer19/Quantity                                     = "SurfaceTrackCount"
+s:Sc/Scorer19/Surface                                      = Ge/Phantom/UpstreamSurface
+s:Sc/Scorer19/IfOutputFileAlreadyExists                    = "Overwrite"
+s:Sc/Scorer19/OnlyIncludeParticlesGoing                    = "Out"
+s:Sc/Scorer19/OutputFile                                   = "Backscatter"

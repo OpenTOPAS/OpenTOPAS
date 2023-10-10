@@ -1,0 +1,159 @@
+#                                                          #
+#               I 125 - Theragenic AgX 100                 #
+#                                                          #
+#                                                          #
+#                Latest version - May 2021                 #
+#                  Author: Audran Poher                    #
+#              Contact - fberumenm@gmail.com               #
+#       https://doi.org/10.1016/j.brachy.2020.12.007       #
+#                                                          #
+
+##### MATERIALS #####
+sv:Ma/MatRadioactiveLayer/Components = 2 "Silver" "Iodine"
+uv:Ma/MatRadioactiveLayer/Fractions  = 2 0.45946 0.54054
+d:Ma/MatRadioactiveLayer/Density     = 5.675 g/cm3
+
+sv:Ma/MatSilverRod/Components = 1 "Silver"
+uv:Ma/MatSilverRod/Fractions  = 1 1
+d:Ma/MatSilverRod/Density     = 10.49 g/cm3
+
+#=====================
+#Cylinder of Titanium
+#=====================
+
+s:Ge/TitaniumCylinder/Type         = "TsCylinder"
+s:Ge/TitaniumCylinder/Parent       = "World"
+s:Ge/TitaniumCylinder/Material     = "G4_Ti"
+d:Ge/TitaniumCylinder/RMin         = 0.35 mm
+d:Ge/TitaniumCylinder/RMax         = 0.40 mm
+d:Ge/TitaniumCylinder/SPhi         = 180. deg
+d:Ge/TitaniumCylinder/DPhi         = 360. deg
+d:Ge/TitaniumCylinder/HL           = 1.85 mm
+d:Ge/TitaniumCylinder/TransX       = 0. mm
+d:Ge/TitaniumCylinder/TransY       = 0. mm
+d:Ge/TitaniumCylinder/TransZ       = 0. mm
+d:Ge/TitaniumCylinder/RotX         = 0. deg
+d:Ge/TitaniumCylinder/RotY         = 0. deg
+d:Ge/TitaniumCylinder/RotZ         = 0. deg
+s:Ge/TitaniumCylinder/Color        = "blue"
+s:Ge/TitaniumCylinder/DrawingStyle = "FullWireFrame"
+
+#===============================
+#Left half-sphere of Titanium 
+#===============================
+
+s:Ge/TitaniumLeftCap/Type         = "TsSphere"
+s:Ge/TitaniumLeftCap/Parent       = "World"
+s:Ge/TitaniumLeftCap/Material     = "G4_Ti"
+d:Ge/TitaniumLeftCap/RMin         = 0. mm
+d:Ge/TitaniumLeftCap/RMax         = 0.4 mm
+d:Ge/TitaniumLeftCap/SPhi         = 0. deg
+d:Ge/TitaniumLeftCap/DPhi         = 360. deg
+d:Ge/TitaniumLeftCap/STheta       = 0. deg
+d:Ge/TitaniumLeftCap/DTheta       = 90. deg
+d:Ge/TitaniumLeftCap/TransX       = 0. mm
+d:Ge/TitaniumLeftCap/TransY       = 0. mm
+d:Ge/TitaniumLeftCap/TransZ       = 1.85 mm
+d:Ge/TitaniumLeftCap/RotX         = 0. deg
+d:Ge/TitaniumLeftCap/RotY         = 0. deg
+d:Ge/TitaniumLeftCap/RotZ         = 0. deg
+s:Ge/TitaniumLeftCap/DrawingStyle = "FullWireFrame"
+s:Ge/TitaniumLeftCap/Color        = "blue"
+
+#================================
+#Right half-sphere of titanium
+#================================
+
+s:Ge/TitaniumRightCap/Type         = "TsSphere"
+s:Ge/TitaniumRightCap/Parent       = "World"
+s:Ge/TitaniumRightCap/Material     = "G4_Ti"
+d:Ge/TitaniumRightCap/RMin         = 0. mm
+d:Ge/TitaniumRightCap/RMax         = 0.4 mm
+d:Ge/TitaniumRightCap/SPhi         = 0. deg
+d:Ge/TitaniumRightCap/DPhi         = 360. deg
+d:Ge/TitaniumRightCap/STheta       = 0. deg
+d:Ge/TitaniumRightCap/DTheta       = 90. deg
+d:Ge/TitaniumRightCap/TransX       = 0. mm
+d:Ge/TitaniumRightCap/TransY       = 0. mm
+d:Ge/TitaniumRightCap/TransZ       = -1.85 mm
+d:Ge/TitaniumRightCap/RotX         = 180. deg
+d:Ge/TitaniumRightCap/RotY         = 0. deg
+d:Ge/TitaniumRightCap/RotZ         = 0. deg
+s:Ge/TitaniumRightCap/DrawingStyle = "FullWireFrame"
+s:Ge/TitaniumRightCap/Color        = "blue"
+
+#====================
+#Dry Air cylinder
+#====================
+
+s:Ge/DryAirCylinder/Type         = "TsCylinder"
+s:Ge/DryAirCylinder/Parent       = "World"
+s:Ge/DryAirCylinder/Material     = "G4_AIR"
+d:Ge/DryAirCylinder/RMin         = 0. mm
+d:Ge/DryAirCylinder/RMax         = 0.35 mm
+d:Ge/DryAirCylinder/SPhi         = 0. deg
+d:Ge/DryAirCylinder/DPhi         = 360. deg
+d:Ge/DryAirCylinder/HL           = 1.85 mm
+d:Ge/DryAirCylinder/TransX       = 0. mm
+d:Ge/DryAirCylinder/TransY       = 0. mm
+d:Ge/DryAirCylinder/TransZ       = 0. mm
+d:Ge/DryAirCylinder/RotX         = 0. deg
+d:Ge/DryAirCylinder/RotY         = 0. deg
+d:Ge/DryAirCylinder/RotZ         = 0. deg
+s:Ge/DryAirCylinder/DrawingStyle = "FullWireFrame"
+s:Ge/DryAirCylinder/Color        = "white"
+
+#========================
+#Active Source of I_125.
+#========================
+
+s:Ge/ActiveSource/Type         = "TsCylinder"
+s:Ge/ActiveSource/Parent       = "DryAirCylinder"
+s:Ge/ActiveSource/Material     = "MatRadioactiveLayer"
+d:Ge/ActiveSource/RMin         = 0. mm
+d:Ge/ActiveSource/RMax         = 0.295 mm
+d:Ge/ActiveSource/SPhi         = 180. deg
+d:Ge/ActiveSource/DPhi         = 360. deg
+d:Ge/ActiveSource/HL           = 1.75 mm
+d:Ge/ActiveSource/TransX       = 0. mm
+d:Ge/ActiveSource/TransY       = 0. mm
+d:Ge/ActiveSource/TransZ       = 0. mm
+d:Ge/ActiveSource/RotX         = 0. deg
+d:Ge/ActiveSource/RotY         = 0. deg
+d:Ge/ActiveSource/RotZ         = 0. deg
+s:Ge/ActiveSource/Color        = "yellow"
+s:Ge/ActiveSource/DrawingStyle = "FullWireFrame"
+
+s:So/ActiveSource/Type                      = "Volumetric"
+s:So/ActiveSource/Component                 = "ActiveSource"
+sc:So/ActiveSource/ActiveMaterial           = "MatRadioactiveLayer"
+s:So/ActiveSource/BeamParticle              = "gamma"
+i:So/ActiveSource/MaxNumberOfPointsToSample = 1000000000
+s:So/ActiveSource/BeamEnergySpectrumType    = "Discrete"
+ic:So/ActiveSource/NumberOfHistoriesInRun   = 10
+
+##### SPECTRUM ######
+dv:So/ActiveSource/BeamEnergySpectrumValues = 7 3.77 27.202 27.472 30.944 30.995 31.704 35.3922 keV
+uv:So/ActiveSource/BeamEnergySpectrumWeightsUnscaled = 7 0.149 0.401 0.740 0.0683 0.132 0.0380 0.0668
+uv:So/ActiveSource/BeamEnergySpectrumWeights = 0.6269199 * So/ActiveSource/BeamEnergySpectrumWeightsUnscaled
+
+#=====================
+#Silver X-Ray Marquer
+#=====================
+
+s:Ge/SilverXRayMarker/Type         = "TsCylinder"
+s:Ge/SilverXRayMarker/Parent       = "ActiveSource"
+s:Ge/SilverXRayMarker/Material     = "MatSilverRod"
+d:Ge/SilverXRayMarker/RMin         = 0. mm
+d:Ge/SilverXRayMarker/RMax         = 0.293 mm
+d:Ge/SilverXRayMarker/SPhi         = 180. deg
+d:Ge/SilverXRayMarker/DPhi         = 360. deg
+d:Ge/SilverXRayMarker/HL           = 1.748 mm
+d:Ge/SilverXRayMarker/TransX       = 0. mm
+d:Ge/SilverXRayMarker/TransY       = 0. mm
+d:Ge/SilverXRayMarker/TransZ       = 0. mm
+d:Ge/SilverXRayMarker/RotX         = 0. deg
+d:Ge/SilverXRayMarker/RotY         = 0. deg
+d:Ge/SilverXRayMarker/RotZ         = 0. deg
+s:Ge/SilverXRayMarker/Color        = "red"
+s:Ge/SilverXRayMarker/DrawingStyle = "FullWireFrame"

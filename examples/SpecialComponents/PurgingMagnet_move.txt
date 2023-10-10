@@ -1,0 +1,176 @@
+# A purging magnet, with a non-uniform field,
+# defined by the Opera3D format file, PurgMag3D.TABLE
+# is moved through a beam, such that the beam encounters
+# different areas of the field map at different times.
+# The effect is seen as a change over time of beam deflection.
+
+d:Ge/World/HLX       = 1.5 m
+d:Ge/World/HLY       = 1.5 m
+d:Ge/World/HLZ       = 1.5 m
+s:Ge/World/Material  = "Vacuum"
+b:Ge/World/Invisible = "True"
+
+sv:Ma/Iron/Components  = 1 "Iron"
+uv:Ma/Iron/Fractions   = 1 1.0
+d:Ma/Iron/Density      = 7.87 g/cm3
+s:Ma/Iron/DefaultColor = "skyblue"
+
+# Nozzle (a group of components)
+s:Ge/Nozzle/Type   = "Group"
+s:Ge/Nozzle/Parent = "World"
+d:Ge/Nozzle/TransX = 0. m
+d:Ge/Nozzle/TransY = 0. m
+d:Ge/Nozzle/TransZ = 0. m
+d:Ge/Nozzle/RotX   = 0. deg
+d:Ge/Nozzle/RotY   = 0. deg
+d:Ge/Nozzle/RotZ   = 0. deg
+
+d:Ge/BeamPosition/TransZ = 15. cm
+d:Ge/BeamPosition/RotX   = 180. deg
+
+s:So/Example/Type                     = "Beam"
+s:So/Example/Component                = "BeamPosition"
+s:So/Example/BeamParticle             = "e-"
+d:So/Example/BeamEnergy               = 50.0 MeV
+u:So/Example/BeamEnergySpread         = 0.0
+s:So/Example/BeamPositionDistribution = "None"
+s:So/Example/BeamAngularDistribution  = "None"
+
+s:Ge/MagGroup/Type    = "Group"
+s:Ge/MagGroup/Parent  = "Nozzle"
+d:Ge/MagGroup/TransX  = 0. m
+d:Ge/MagGroup/TransY  = 0. m
+d:Ge/MagGroup/TransZ  = 0. m
+#Topas will crash, it the following is used
+#d:Ge/MagGroup/TransZ = Tf/BackStep/Value mm
+d:Ge/MagGroup/RotX    = 0. deg
+d:Ge/MagGroup/RotY    = 0. deg
+d:Ge/MagGroup/RotZ    = 0. deg
+
+s:Ge/V3DBox/Field3D/Type          = "TsBox"
+s:Ge/V3DBox/Field3D/Field = "MappedMagnet"
+s:Ge/V3DBox/Field3D/MagneticField3DTable       = "PurgMag3D.TABLE"
+# ---> ... done reading
+# ---> assumed the order:  x, y, z, Bx, By, Bz
+# ---> Min values x,y,z: -5 -5 -26 cm
+# ---> Max values x,y,z: 5 17 10 cm
+#
+#After reordering if neccesary
+# ---> Min values x,y,z: -5 -5 -26 cm
+# ---> Max values x,y,z: 5 17 10 cm
+# ---> Dif values x,y,z (range): 10 22 36 cm in z
+
+s:Ge/V3DBox/Field3D/Parent   = "MagGroup"
+s:Ge/V3DBox/Field3D/Material = "Vacuum"
+d:Ge/V3DBox/Field3D/HLX      = 5 cm
+d:Ge/V3DBox/Field3D/HLY      = 17 cm
+d:Ge/V3DBox/Field3D/HLZ 	 = 26 cm
+d:Ge/V3DBox/Field3D/TransX   = 0.0 mm
+d:Ge/V3DBox/Field3D/TransY   = 0.0 mm
+d:Ge/V3DBox/Field3D/TransZ   = Tf/BackForward/Value mm
+#d:Ge/V3DBox/Field3D/TransZ   = Tf/BackStep/Value mm
+#d:Ge/V3DBox/Field3D/TransZ   = 4.4 mm
+d:Ge/V3DBox/Field3D/RotX     = 0.0 deg
+d:Ge/V3DBox/Field3D/RotY     = 0.0 deg
+d:Ge/V3DBox/Field3D/RotZ     = 0.0 deg
+b:Ge/V3DBox/Field3D/Include  = "TRUE"
+
+d:Ge/Constants/SSD = -50.0 cm
+
+s:Ge/MeasureVolume/Type     = "TsBox"
+s:Ge/MeasureVolume/Parent   = "World"
+s:Ge/MeasureVolume/Material = "World"
+d:Ge/MeasureVolume/HLX      = 140.0 cm
+d:Ge/MeasureVolume/HLY      = 140.0 cm
+d:Ge/MeasureVolume/HLZ 	 	= 0.5   cm
+d:Ge/MeasureVolume/TransX   = 0.0 cm
+d:Ge/MeasureVolume/TransY   = 0.0 cm
+#-1*(SSD + HLZ)
+d:Ge/MeasureVolume/TransZ   = -50.5 cm
+d:Ge/MeasureVolume/RotX     = 0.0 deg
+d:Ge/MeasureVolume/RotY     = 0.0 deg
+d:Ge/MeasureVolume/RotZ     = 0.0 deg
+
+s:Ge/Gap1/Type     = "G4Trd"
+s:Ge/Gap1/Parent   = "Nozzle"
+#s:Ge/Gap1/Parent   = V3DBox
+s:Ge/Gap1/Material = "Iron"
+d:Ge/Gap1/HLX1     = 5.0 cm
+d:Ge/Gap1/HLX2     = 9.185 cm
+d:Ge/Gap1/HLY1     = 5.0 cm
+d:Ge/Gap1/HLY2     = 5.0 cm
+d:Ge/Gap1/HLZ 	   = 5.725 cm
+d:Ge/Gap1/TransX   = -9.55 cm
+d:Ge/Gap1/TransY   = 0.0 cm
+d:Ge/Gap1/TransZ   = -6.89 cm
+d:Ge/Gap1/RotX     = 0.0 deg
+d:Ge/Gap1/RotY     = 0.0 deg
+d:Ge/Gap1/RotZ     = 0.0 deg
+s:Ge/Gap1/DrawingStyle = "FullWireFrame"
+b:Ge/Gap1/Include  = "FALSE"
+
+s:Ge/Gap2/Type     = "G4Trd"
+s:Ge/Gap2/Parent   = "Nozzle"
+#s:Ge/Gap2/Parent   = "V3DBox"
+s:Ge/Gap2/Material = "Iron"
+d:Ge/Gap2/HLX1     = 5.0 cm
+d:Ge/Gap2/HLX2     = 9.185 cm
+d:Ge/Gap2/HLY1     = 5.0 cm
+d:Ge/Gap2/HLY2     = 5.0 cm
+d:Ge/Gap2/HLZ 	   = 5.725 cm
+d:Ge/Gap2/TransX   = 9.55 cm
+d:Ge/Gap2/TransY   = 0.0 cm
+d:Ge/Gap2/TransZ   = -6.89 cm
+d:Ge/Gap2/RotX     = 0.0 deg
+d:Ge/Gap2/RotY     = 0.0 deg
+d:Ge/Gap2/RotZ     = 0.0 deg
+b:Ge/Gap2/Include  = "FALSE"
+s:Ge/Gap2/DrawingStyle = "FullWireFrame"
+
+#1. Available steppers:
+s:Ge/V3DBox/Field3D/Stepper = "ExplictEuler"
+#ExplicitEuler (default)
+#ImplicitEuler
+#SimpleRunge
+#SimpleHeum
+#HelixExplicitEuler
+#HelixImplicitEuler
+#HelixSimpleRunge
+#CashKarpRKF45
+#RKG3_Stepper
+
+#2. StepMinimum (1.0 mm by default)
+d:Ge/V3DBox/Field3D/StepMinimum = 1.0 mm
+
+#3. DeltaChord  (0.1 mm by default)
+d:Ge/V3DBox/Field3D/DeltaChord = 0.1 mm
+
+Ph/Default/Modules = 1 "g4em-standard_opt0"
+
+s:Tf/BackStep/Function           = "Linear mm"
+d:Tf/BackStep/RepetitionInterval = 100.0 ms
+d:Tf/BackStep/Rate               = 3 mm/ms
+d:Tf/BackStep/StartValue         = 0.0 mm
+
+s:Tf/ForwardStep/Function           = "Linear mm"
+d:Tf/ForwardStep/RepetitionInterval = 100.0 ms
+d:Tf/ForwardStep/Rate               = -3 mm/ms
+d:Tf/ForwardStep/StartValue         = 300.0 mm
+
+s:Tf/BackForward/Function = "step"
+dv:Tf/BackForward/Times   = 2 100.0 200.0 ms
+dv:Tf/BackForward/Values  = 2 Tf/BackStep/Value Tf/ForwardStep/Value mm
+
+s:Gr/ViewA/Type             = "OpenGL"
+i:Gr/ViewA/WindowSizeX      = 1024
+i:Gr/ViewA/WindowSizeY      = 768
+d:Gr/ViewA/Theta            = 55 deg
+d:Gr/ViewA/Phi              = 20 deg
+s:Gr/ViewA/Projection       = "Perspective"
+d:Gr/ViewA/PerspectiveAngle = 30 deg
+u:Gr/ViewA/Zoom             = 2.
+b:Gr/ViewA/HiddenLineRemovalForTrajectories = "True"
+
+i:So/Example/NumberOfHistoriesInRun = 4
+d:Tf/TimelineEnd             = 200.0 ms
+i:Tf/NumberOfSequentialTimes = 200

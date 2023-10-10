@@ -1,0 +1,48 @@
+#                                                          #
+#                   Example: LDR source                    #
+#                                                          #
+#                                                          #
+#                Latest version - May 2021                 #
+#                Author: Francisco Berumen                 #
+#              Contact - fberumenm@gmail.com               #
+#       https://doi.org/10.1016/j.brachy.2020.12.007       #
+#                                                          #
+
+##### Import one of the following LDR sources ##### 
+includeFile = ./LDR/Cs131_IsoRay-CS-1-Rev2.txt
+#includeFile = ./LDR/I125_BardSTM1251.txt
+#includeFile = ./LDR/I125_Best2301.txt
+#includeFile = ./LDR/I125_IsoAid_IAI-125A.txt
+#includeFile = ./LDR/I125_OncoSeed6711.txt
+#includeFile = ./LDR/I125_SelectSeed.txt
+#includeFile = ./LDR/I125_SL-125.txt
+#includeFile = ./LDR/I125_Theragenic-AgX100.txt
+#includeFile = ./LDR/Pd103_Best2335.txt
+#includeFile = ./LDR/Pd103_IAPd103A.txt
+#includeFile = ./LDR/Pd103_Theraseed200Heavy.txt
+#includeFile = ./LDR/Pd103_Theraseed200Light.txt
+
+##### Extra parameters for Theraseed200 models
+##### User can define the material of both caps
+#s:Ge/EnvironmentLeftCap/Material  = Ge/World/Material
+#s:Ge/EnvironmentRightCap/Material = Ge/World/Material
+
+##### Water phantom of 50 cm side #####
+d:Ge/World/HLX = 25 cm
+d:Ge/World/HLY = 25 cm
+d:Ge/World/HLZ = 25 cm
+s:Ge/World/Material = "G4_WATER"
+
+##### Physics #####
+sv:Ph/Default/Modules = 1 "g4em-standard_opt0"
+
+##### Graphics #####
+b:Gr/Enable          = "T"
+b:Ts/PauseBeforeQuit = "T"
+
+s:Gr/View/Type        = "OpenGL"
+u:Gr/View/Zoom        = 75.
+d:Gr/View/Phi         = 20 deg
+d:Gr/View/Theta       = 90 deg
+b:Gr/View/IncludeAxes = "T"
+d:Gr/View/AxesSize    = 5 mm

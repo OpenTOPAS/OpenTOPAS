@@ -1,0 +1,198 @@
+########################
+# Time features
+########################
+s:Tf/Phi/Function            = "Linear deg"
+d:Tf/Phi/Rate                = 90. deg/ms
+d:Tf/Phi/StartValue          = 45 deg
+d:Tf/Phi/RepetitionInterval  = 4. ms
+d:Tf/TimelineEnd             = 4. ms
+i:Tf/NumberOfSequentialTimes = 4
+
+########################
+#  Geometry
+########################
+d:Ge/World/HLX       = 1.0 m
+d:Ge/World/HLY       = 1.0 m
+d:Ge/World/HLZ       = 1.0 m
+b:Ge/World/Invisible = "TRUE"
+
+#########################
+# Phantom
+#########################
+s:Ge/Phantom/Type      = "TsSphere"
+s:Ge/Phantom/Parent    = "World"
+s:Ge/Phantom/Material  = "G4_WATER"
+s:Ge/Phantom/Color     = "blue"
+d:Ge/Phantom/RMin      = 0.0 cm
+d:Ge/Phantom/RMax      = 10.0 cm
+d:Ge/Phantom/SPhi      = 0.0 deg
+d:Ge/Phantom/DPhi      = 360 deg
+d:Ge/Phantom/STheta    = 0 deg
+d:Ge/Phantom/DTheta    = 180 deg
+d:Ge/Phantom/TransX    = 0 cm
+d:Ge/Phantom/TransY    = 0 cm
+d:Ge/Phantom/TransZ    = 0 cm
+d:Ge/Phantom/RotX      = 0 deg
+d:Ge/Phantom/RotY      = 0 deg
+d:Ge/Phantom/RotZ      = 0 deg
+
+#########################
+# Nozzle
+#########################
+s:Ge/Nozzle/Type   = "Group"
+s:Ge/Nozzle/Parent = "World"
+d:Ge/Nozzle/TransX = 0. cm
+d:Ge/Nozzle/TransY = 0. cm
+d:Ge/Nozzle/TransZ = 0. cm
+d:Ge/Nozzle/RotX   = Tf/Phi/Value deg
+d:Ge/Nozzle/RotY   = 0 deg
+d:Ge/Nozzle/RotZ   = 0 deg
+s:Ge/Nozzle/Color  = "blue"
+
+#########################
+# Scatterers
+#########################
+s:Ge/Scatterer1/Type      = "TsBox"
+s:Ge/Scatterer1/Parent    = "Nozzle"
+s:Ge/Scatterer1/Material  = "Lead"
+d:Ge/Scatterer1/HLX       = 2.0 cm
+d:Ge/Scatterer1/HLY       = 2.0 cm
+d:Ge/Scatterer1/HLZ       = 0.25 cm
+d:Ge/Scatterer1/TransX    = 0. cm
+d:Ge/Scatterer1/TransY    = 0. cm
+d:Ge/Scatterer1/TransZ    = -50 cm + Ge/Scatterer1/HLZ
+d:Ge/Scatterer1/RotX      = 0 deg
+d:Ge/Scatterer1/RotY      = 0 deg
+d:Ge/Scatterer1/RotZ      = 0 deg
+s:Ge/Scatterer1/Color     = "red"
+
+s:Ge/Scatterer2/Type      = "TsBox"
+s:Ge/Scatterer2/Parent    = "Nozzle"
+s:Ge/Scatterer2/Material  = "Lead"
+d:Ge/Scatterer2/HLX       = 4.0 cm
+d:Ge/Scatterer2/HLY       = 4.0 cm
+d:Ge/Scatterer2/HLZ       = 0.25 cm
+d:Ge/Scatterer2/TransX    = 0. cm
+d:Ge/Scatterer2/TransY    = 0. cm
+d:Ge/Scatterer2/TransZtmp = -1.0 * Ge/Scatterer2/HLZ cm
+d:Ge/Scatterer2/TransZ    = -40 cm + Ge/Scatterer2/TransZTmp
+d:Ge/Scatterer2/RotX      = 0 deg
+d:Ge/Scatterer2/RotY      = 0 deg
+d:Ge/Scatterer2/RotZ      = 0 deg
+s:Ge/Scatterer2/Color     = "red"
+
+#########################
+# Gemetry for vrt
+#########################
+s:Ge/VrtParallelWorld/Type       = "TsBox"
+s:Ge/VrtParallelWorld/Parent     = "Nozzle"
+d:Ge/VrtParallelWorld/HLX        = 15 cm
+d:Ge/VrtParallelWorld/HLY        = 15 cm
+d:Ge/VrtParallelWorld/HLZ        = 80 cm
+d:Ge/VrtParallelWorld/TransX     = 0 cm
+d:Ge/VrtParallelWorld/TransY     = 0 cm
+d:Ge/VrtParallelWorld/TransZ     = -40 cm
+d:Ge/VrtParallelWorld/RotX       = 0 deg
+d:Ge/VrtParallelWorld/RotY       = 0 deg
+d:Ge/VrtParallelWorld/RotZ       = 0 deg
+b:Ge/VrtParallelWorld/IsParallel = "true"
+
+s:Ge/subComponent1/Type       = "TsBox"
+s:Ge/subComponent1/Parent     = "VrtParallelWorld"
+d:Ge/subComponent1/HLX        = 0.9 * Ge/VrtParallelWorld/HLX cm
+d:Ge/subComponent1/HLY        = 0.9 * Ge/VrtParallelWorld/HLY cm
+d:Ge/subComponent1/HLZ        = 5.0 cm
+d:Ge/subComponent1/TransX     = 0 cm
+d:Ge/subComponent1/TransY     = 0 cm
+d:Ge/subComponent1/TransZ     = -5.0 cm
+d:Ge/subComponent1/RotX       = 0 deg
+d:Ge/subComponent1/RotY       = 0 deg
+d:Ge/subComponent1/RotZ       = 0 deg
+b:Ge/subComponent1/IsParallel = "true"
+
+s:Ge/subComponent2/Type       = "TsBox"
+s:Ge/subComponent2/Parent     = "VrtParallelWorld"
+d:Ge/subComponent2/HLX        = 0.9 * Ge/VrtParallelWorld/HLX cm
+d:Ge/subComponent2/HLY        = 0.9 * Ge/VrtParallelWorld/HLX cm
+d:Ge/subComponent2/HLZ        = 35.0 cm
+d:Ge/subComponent2/TransX     = 0 cm
+d:Ge/subComponent2/TransY     = 0 cm
+d:Ge/subComponent2/TransZTmp  = Ge/subComponent1/TransZ + Ge/subComponent1/HLZ cm
+d:Ge/subComponent2/TransZ     = Ge/subComponent2/TransZTmp + Ge/subComponent2/HLZ cm
+d:Ge/subComponent2/RotX       = 0 deg
+d:Ge/subComponent2/RotY       = 0 deg
+d:Ge/subComponent2/RotZ       = 0 deg
+b:Ge/subComponent2/IsParallel = "true"
+
+##########################
+# Variance reduction
+##########################
+b:Vr/UseVarianceReduction                    = "true"
+b:Vr/ParticleSplit/Active                    = "true"
+sv:Vr/ParticleSplit/ParticleName             = 1 "proton"
+s:Vr/ParticleSplit/Component                 = "VrtParallelWorld"
+sv:Vr/ParticleSplit/SubComponents            = 2 "subComponent1" "subComponent2"
+s:Vr/ParticleSplit/Type                      = "GeometricalParticleSplit"
+iv:Vr/ParticleSplit/SplitNumber              = 2 4 4
+bv:Vr/ParticleSplit/Symmetric                = 2 "false" "true"
+d:Vr/ParticleSplit/RussianRoulette/ROIRadius = 2.5 cm
+d:Vr/ParticleSplit/RussianRoulette/ROITrans  = 20 cm
+bv:Vr/ParticleSplit/RussianRoulette          = 2 "true" "true"
+s:Vr/ParticleSplit/SplitAxis                 = "zaxis"
+
+##########################
+# Beam settings
+##########################
+s:So/Example/Type                     = "Beam"
+s:So/Example/Component                = "BeamPosition"
+s:So/Example/BeamParticle             = "proton"
+d:So/Example/BeamEnergy               = 170 MeV
+u:So/Example/BeamEnergySpread         = 0.757504
+s:So/Example/BeamPositionDistribution = "Gaussian"
+s:So/Example/BeamPositionCutoffShape  = "Ellipse"
+d:So/Example/BeamPositionCutoffX      = 0.15 cm
+d:So/Example/BeamPositionCutoffY      = 0.15 cm
+d:So/Example/BeamPositionSpreadX      = 0.65 cm
+d:So/Example/BeamPositionSpreadY      = 0.65 cm
+s:So/Example/BeamAngularDistribution  = "Gaussian"
+d:So/Example/BeamAngularCutoffX       = 90. deg
+d:So/Example/BeamAngularCutoffY       = 90. deg
+d:So/Example/BeamAngularSpreadX       = 0.0032 rad
+d:So/Example/BeamAngularSpreadY       = 0.0032 rad
+
+s:Ge/BeamPosition/Parent = "Nozzle"
+d:Ge/BeamPosition/RotX   = 0 deg
+d:Ge/BeamPosition/TransZ = -60. cm
+
+##########################
+# Scorer
+##########################
+s:Sc/scorer/Quantity                  = "DoseToMedium"
+s:Sc/scorer/Component                 = "Phantom"
+sv:Sc/scorer/Report                   = 3 "Sum" "Mean" "Variance"
+s:Sc/scorer/OutputType                = "CSV"
+s:Sc/scorer/IfOutputFileAlreadyExists = "Overwrite"
+
+##########################
+# Histories
+##########################
+i:So/Example/NumberOfHistoriesInRun = 100
+i:Ts/ShowHistoryCountAtInterval     = 100
+b:Ts/PauseBeforeQuit                = "False"
+
+##########################
+# Visualization
+##########################
+s:Gr/viewer/Type                = "OpenGl"
+u:Gr/viewer/Zoom                = 0.5
+i:Gr/viewer/WindowSizeX         = 900
+i:Gr/viewer/WindowSizeY         = 900
+i:Gr/viewer/WindowPosX          = 0
+i:Gr/viewer/WindowPosY          = 0
+s:Gr/viewer/Projection          = "Orthogonal"
+d:Gr/viewer/Theta               = -90. deg
+d:Gr/viewer/Phi                 = 0. deg
+b:Gr/viewer/IncludeAxes         = "true"
+s:Gr/viewer/AxesComponent       = "World"
+sv:Gr/OnlyIncludeParticlesNamed = 1 "proton"
+d:Gr/viewer/AxesSize            = 20 cm

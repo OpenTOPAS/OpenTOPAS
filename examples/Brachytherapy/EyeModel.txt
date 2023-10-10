@@ -1,0 +1,125 @@
+b:Ge/World/Invisible = "True"
+
+s:Ge/Eye/Type     = "TsEye"
+s:Ge/Eye/Material = "G4_WATER"
+s:Ge/Eye/Parent   = "World"
+sc:Ge/Eye/DrawingStyle = "Solid"
+bc:Ge/Eye/Invisible = "True"
+
+s:Ge/Eye/Tumor/Material = "Tumor"
+sc:Ge/Eye/Tumor/DrawingStyle = "Solid"
+bc:Ge/Eye/Tumor/Invisible = "False"
+dc:Ge/Eye/Tumor/Radius = 6. mm
+dc:Ge/Eye/Tumor/Offset = 12.7 mm
+dc:Ge/Eye/Tumor/RotX = 80. deg
+dc:Ge/Eye/Tumor/RotY = 30. deg
+
+s:Ge/Eye/Sclera/Material = "Sclera"
+sc:Ge/Eye/Sclera/DrawingStyle = "Solid"
+bc:Ge/Eye/Sclera/Invisible = "False"
+dc:Ge/Eye/Sclera/Radius = 12. mm
+dc:Ge/Eye/Sclera/Offset = 5.318260783 mm
+
+s:Ge/Eye/Vitreous/Material = "Vitreous"
+sc:Ge/Eye/Vitreous/DrawingStyle = "Solid"
+bc:Ge/Eye/Vitreous/Invisible = "False"
+dc:Ge/Eye/Vitreous/RMajor = 11.7 mm
+dc:Ge/Eye/Vitreous/RMinor = 11. mm
+dc:Ge/Eye/Vitreous/FrontCut = 21. mm
+
+s:Ge/Eye/Aqueous/Material = "Aqueous"
+sc:Ge/Eye/Aqueous/DrawingStyle = "Solid"
+bc:Ge/Eye/Aqueous/Invisible = "False"
+dc:Ge/Eye/Aqueous/Radius = 6.5 mm
+dc:Ge/Eye/Aqueous/Offset = 6.098260783 mm
+dc:Ge/Eye/Aqueous/LensOffset = 0.799857953 mm
+dc:Ge/Eye/Aqueous/BackCut = 4. mm
+
+s:Ge/Eye/Cornea/Material = "Cornea"
+sc:Ge/Eye/Cornea/DrawingStyle = "Solid"
+bc:Ge/Eye/Cornea/Invisible = "False"
+dc:Ge/Eye/Cornea/FrontRadius = 7.8 mm
+dc:Ge/Eye/Cornea/BackRadius = 6.5 mm
+dc:Ge/Eye/Cornea/Offset = 0.78 mm
+
+s:Ge/Eye/Iris/Material = "Iris"
+sc:Ge/Eye/Iris/DrawingStyle = "Solid"
+bc:Ge/Eye/Iris/Invisible = "False"
+dc:Ge/Eye/Iris/InnerRadius = 2.5 mm
+dc:Ge/Eye/Iris/OuterRadius = 5.85 mm
+dc:Ge/Eye/Iris/Length = 0.3 mm
+dc:Ge/Eye/Iris/FrontOffset = 4.181739217 mm
+dc:Ge/Eye/Iris/BackOffset = 9.5 mm
+
+s:Ge/Eye/Lens/Material = "Lens"
+sc:Ge/Eye/Lens/DrawingStyle = "Solid"
+bc:Ge/Eye/Lens/Invisible = "False"
+dc:Ge/Eye/Lens/FrontRadius = 10. mm
+dc:Ge/Eye/Lens/BackRadius = 6. mm
+dc:Ge/Eye/Lens/FrontOffset = 12.46557753 mm
+dc:Ge/Eye/Lens/BackOffset = 11.665719575 mm
+
+s:Ge/Eye/OpticNerve/Material = "OpticNerve"
+sc:Ge/Eye/OpticNerve/DrawingStyle = "Solid"
+bc:Ge/Eye/OpticNerve/Invisible = "False"
+dvc:Ge/Eye/OpticNerve/Z = 8 0. 0.   5.15 5.15 5.58 5.58 5.92 5.92 mm
+dvc:Ge/Eye/OpticNerve/R = 8 0. 1.75 1.75 1.25 1.25 0.75 0.75 0.   mm
+dc:Ge/Eye/OpticNerve/OffsetX = 16.175 mm
+dc:Ge/Eye/OpticNerve/OffsetY = 1.62 mm
+dc:Ge/Eye/OpticNerve/OffsetZ = 4.17 mm
+dc:Ge/Eye/OpticNerve/AngleX = 6. deg
+dc:Ge/Eye/OpticNerve/AngleY = 281.41 deg
+
+iv:Gr/Color/TransparentRed = 4 255 0 0 50
+iv:Gr/Color/TransparentYellow = 4 255 255 0 50
+iv:Gr/Color/TransparentBlue = 4 0 0 128 128
+
+sv:Ma/Cornea/Components = 5 "Hydrogen" "Carbon" "Nitrogen" "Oxygen" "Sulfur"
+uv:Ma/Cornea/Fractions = 5 0.1016 0.1199 0.0364 0.7411 0.0010
+d:Ma/Cornea/Density = 1.050 g/cm3
+s:Ma/Cornea/DefaultColor = "TransparentRed"
+
+sv:Ma/Sclera/Components = 5 "Hydrogen" "Carbon" "Nitrogen" "Oxygen" "Sulfur"
+uv:Ma/Sclera/Fractions = 5 0.097 0.1696 0.0499 0.6831 0.0003
+d:Ma/Sclera/Density = 1.050 g/cm3
+s:Ma/Sclera/DefaultColor = "TransparentRed"
+
+sv:Ma/Vitreous/Components = 5 "Hydrogen" "Oxygen" "Sodium" "Chlorine" "Potassium"
+uv:Ma/Vitreous/Fractions = 5 0.1109 0.8804 0.0038 0.0045 0.0004
+d:Ma/Vitreous/Density = 1.0071 g/cm3
+s:Ma/Vitreous/DefaultColor = "TransparentYellow"
+
+sv:Ma/Aqueous/Components = 5 "Hydrogen" "Carbon" "Oxygen" "Sodium" "Chlorine"
+uv:Ma/Aqueous/Fractions = 5 0.1110 0.0010 0.8810 0.0030 0.0040
+d:Ma/Aqueous/Density = 1.0035 g/cm3
+s:Ma/Aqueous/DefaultColor = "TransparentBlue"
+
+sv:Ma/Lens/Components = 8 "Hydrogen" "Carbon" "Nitrogen" "Oxygen" "Sodium" "Phosphorus" "Sulfur" "Chlorine"
+uv:Ma/Lens/Fractions = 8  0.096 0.195 0.057 0.646 0.001 0.001 0.003 0.001
+d:Ma/Lens/Density = 1.07 g/cm3
+s:Ma/Lens/DefaultColor = "Green"
+
+sv:Ma/OpticNerve/Components = 9 "Hydrogen" "Carbon" "Nitrogen" "Oxygen" "Sodium" "Phosphorus" "Sulfur" "Chlorine" "Potassium"
+uv:Ma/OpticNerve/Fractions = 9  0.1060 0.1940 0.0250 0.6610 0.0020 0.0040 0.0020 0.0030 0.0030
+d:Ma/OpticNerve/Density = 1.040 g/cm3
+s:Ma/OpticNerve/DefaultColor = "TransparentRed"
+
+sv:Ma/Iris/Components = 9 "Hydrogen" "Carbon" "Nitrogen" "Oxygen" "Sodium" "Phosphorus" "Sulfur" "Chlorine" "Potassium"
+uv:Ma/Iris/Fractions = 9  0.1020 0.1430 0.0340 0.7100 0.0010 0.0020 0.0030 0.0010 0.0040
+d:Ma/Iris/Density = 1.050 g/cm3
+s:Ma/Iris/DefaultColor = "Blue"
+
+sv:Ma/Tumor/Components = 9 "Hydrogen" "Carbon" "Nitrogen" "Oxygen" "Sodium" "Phosphorus" "Sulfur" "Chlorine" "Potassium"
+uv:Ma/Tumor/Fractions = 9  0.0940 0.2120 0.0560 0.6150 0.0025 0.0051 0.0064 0.0039 0.0051
+d:Ma/Tumor/Density = 1.040 g/cm3
+s:Ma/Tumor/DefaultColor = "White"
+
+Ph/Default/Modules = 1 "g4em-standard_opt0"
+
+So/Demo/NumberOfHistoriesInRun = 10
+
+s:Gr/ViewA/Type             = "OpenGL"
+Ts/UseQt = "True"
+
+
+

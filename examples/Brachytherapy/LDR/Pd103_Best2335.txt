@@ -1,0 +1,329 @@
+#                                                          #
+#                 Pd 103 - Best 2335 Seed                  #
+#                                                          #
+#                                                          #
+#                Latest version - May 2021                 #
+#        Authors: Audran Poher and Francisco Berumen       #
+#              Contact - fberumenm@gmail.com               #
+#       https://doi.org/10.1016/j.brachy.2020.12.007       #
+#                                                          #
+
+##### MATERIAL DEFINITION ######
+sv:Ma/MatPolymer/Components = 4 "Carbon" "Hydrogen" "Oxygen" "Nitrogen"
+uv:Ma/MatPolymer/Fractions  = 4 0.8973 0.0785 0.0168 0.0074
+d:Ma/MatPolymer/Density     = 1.0 g/cm3
+
+####### SHIELDING
+s:Ge/Seed/Type              = "Group"
+s:Ge/Seed/Parent            = "World"
+b:Ge/Seed/IsParallel        = "True"
+s:Ge/Seed/ParallelWorldName = "SeedsWorld"
+
+##### TITANIUM TUBE
+s:Ge/TitaniumTube/Type         = "TsCylinder"
+s:Ge/TitaniumTube/Material     = "Titanium"
+s:Ge/TitaniumTube/Parent       = "Seed"
+d:Ge/TitaniumTube/RMin         = 0 mm
+d:Ge/TitaniumTube/RMax         = 0.4 mm
+d:Ge/TitaniumTube/HL           = 2.1 mm
+d:Ge/TitaniumTube/SPhi         = 0. deg
+d:Ge/TitaniumTube/DPhi         = 360. deg
+s:Ge/TitaniumTube/Color        = "transparent1"
+s:Ge/TitaniumTube/DrawingStyle = "Solid"
+b:Ge/TitaniumTube/IsParallel        = "True"
+s:Ge/TitaniumTube/ParallelWorldName = "SeedsWorld"
+
+##### TITANIUM CAP L
+s:Ge/TitaniumCapL/Type         = "TsSphere"
+s:Ge/TitaniumCapL/Material     = "Titanium"
+s:Ge/TitaniumCapL/Parent       = "Seed"
+d:Ge/TitaniumCapL/RMin         = 0. mm
+d:Ge/TitaniumCapL/RMax         = 0.4 mm
+d:Ge/TitaniumCapL/SPhi         = 0. deg
+d:Ge/TitaniumCapL/DPhi         = 360. deg
+d:Ge/TitaniumCapL/STheta       = 0. deg
+d:Ge/TitaniumCapL/DTheta       = 90. deg
+d:Ge/TitaniumCapL/TransZ       = 2.1 mm
+s:Ge/TitaniumCapL/DrawingStyle = "Solid"
+s:Ge/TitaniumCapL/Color        = "transparent1"
+b:Ge/TitaniumCapL/IsParallel        = "True"
+s:Ge/TitaniumCapL/ParallelWorldName = "SeedsWorld"
+
+##### TITANIUM CAP R
+s:Ge/TitaniumCapR/Type         = "TsSphere"
+s:Ge/TitaniumCapR/Material     = "Titanium"
+s:Ge/TitaniumCapR/Parent       = "Seed"
+d:Ge/TitaniumCapR/RMin         = 0. mm
+d:Ge/TitaniumCapR/RMax         = 0.4 mm
+d:Ge/TitaniumCapR/SPhi         = 0. deg
+d:Ge/TitaniumCapR/DPhi         = 360. deg
+d:Ge/TitaniumCapR/STheta       = 90. deg
+d:Ge/TitaniumCapR/DTheta       = 180. deg
+d:Ge/TitaniumCapR/TransZ       = -2.1 mm
+s:Ge/TitaniumCapR/DrawingStyle = "Solid"
+s:Ge/TitaniumCapR/Color        = "transparent1"
+b:Ge/TitaniumCapR/IsParallel        = "True"
+s:Ge/TitaniumCapR/ParallelWorldName = "SeedsWorld"
+
+##### AIR TUBE
+s:Ge/AirTube/Type         = "TsCylinder"
+s:Ge/AirTube/Material     = "Air"
+s:Ge/AirTube/Parent       = "TitaniumTube"
+d:Ge/AirTube/RMin         = 0 mm
+d:Ge/AirTube/RMax         = 0.32 mm
+d:Ge/AirTube/HL           = 2.1 mm
+d:Ge/AirTube/SPhi         = 0. deg
+d:Ge/AirTube/DPhi         = 360. deg
+s:Ge/AirTube/Color        = "transparent2"
+s:Ge/AirTube/DrawingStyle = "Solid"
+b:Ge/AirTube/IsParallel        = "True"
+s:Ge/AirTube/ParallelWorldName = "SeedsWorld"
+
+##### AIR CAP L
+s:Ge/AirCapL/Type         = "TsSphere"
+s:Ge/AirCapL/Material     = "Air"
+s:Ge/AirCapL/Parent       = "TitaniumCapL"
+d:Ge/AirCapL/RMin         = 0. mm
+d:Ge/AirCapL/RMax         = 0.32 mm
+d:Ge/AirCapL/SPhi         = 0. deg
+d:Ge/AirCapL/DPhi         = 360. deg
+d:Ge/AirCapL/STheta       = 0. deg
+d:Ge/AirCapL/DTheta       = 90. deg
+s:Ge/AirCapL/DrawingStyle = "Solid"
+s:Ge/AirCapL/Color        = "transparent2"
+b:Ge/AirCapL/IsParallel        = "True"
+s:Ge/AirCapL/ParallelWorldName = "SeedsWorld"
+
+##### AIR CAP R
+s:Ge/AirCapR/Type         = "TsSphere"
+s:Ge/AirCapR/Material     = "Air"
+s:Ge/AirCapR/Parent       = "TitaniumCapR"
+d:Ge/AirCapR/RMin         = 0. mm
+d:Ge/AirCapR/RMax         = 0.32 mm
+d:Ge/AirCapR/SPhi         = 0. deg
+d:Ge/AirCapR/DPhi         = 360. deg
+d:Ge/AirCapR/STheta       = 90. deg
+d:Ge/AirCapR/DTheta       = 180. deg
+s:Ge/AirCapR/DrawingStyle = "Solid"
+s:Ge/AirCapR/Color        = "transparent2"
+b:Ge/AirCapR/IsParallel        = "True"
+s:Ge/AirCapR/ParallelWorldName = "SeedsWorld"
+
+##### TUNGSTEN MARKER
+s:Ge/Marker/Type         = "TsCylinder"
+s:Ge/Marker/Material     = "G4_W"
+s:Ge/Marker/Parent       = "AirTube"
+d:Ge/Marker/RMin         = 0 mm
+d:Ge/Marker/RMax         = 0.25 mm
+d:Ge/Marker/HL           = 0.6 mm
+d:Ge/Marker/SPhi         = 0. deg
+d:Ge/Marker/DPhi         = 360. deg
+s:Ge/Marker/Color        = "blue"
+s:Ge/Marker/DrawingStyle = "Solid"
+b:Ge/Marker/IsParallel        = "True"
+s:Ge/Marker/ParallelWorldName = "SeedsWorld"
+
+###### ACTIVE SOURCE
+s:Ge/ActiveSource/Type              = "Group"
+s:Ge/ActiveSource/Parent            = "World"
+b:Ge/ActiveSource/IsParallel        = "True"
+s:Ge/ActiveSource/ParallelWorldName = "ActiveSourceWorld"
+
+##### SPHERICAL POLYMER 1
+s:Ge/Sphere1/Type         = "TsSphere"
+s:Ge/Sphere1/Material     = "G4_Pd"
+s:Ge/Sphere1/Parent       = "ActiveSource"
+d:Ge/Sphere1/RMin         = 0. mm
+d:Ge/Sphere1/RMax         = 0.2801 mm 
+d:Ge/Sphere1/SPhi         = 0. deg
+d:Ge/Sphere1/DPhi         = 360. deg
+d:Ge/Sphere1/STheta       = 0. deg
+d:Ge/Sphere1/DTheta       = 180. deg
+d:Ge/Sphere1/TransZ       = 2.1 mm
+s:Ge/Sphere1/DrawingStyle = "Solid"
+s:Ge/Sphere1/Color        = "green"
+b:Ge/Sphere1/IsParallel        = "True"
+s:Ge/Sphere1/ParallelWorldName = "ActiveSourceWorld"
+
+s:Ge/Sphere1Polymer/Type         = "TsSphere"
+s:Ge/Sphere1Polymer/Material     = "MatPolymer"
+s:Ge/Sphere1Polymer/Parent       = "Sphere1"
+d:Ge/Sphere1Polymer/RMin         = 0. mm
+d:Ge/Sphere1Polymer/RMax         = 0.28 mm 
+d:Ge/Sphere1Polymer/SPhi         = 0. deg
+d:Ge/Sphere1Polymer/DPhi         = 360. deg
+d:Ge/Sphere1Polymer/STheta       = 0. deg
+d:Ge/Sphere1Polymer/DTheta       = 180. deg
+s:Ge/Sphere1Polymer/DrawingStyle = "Solid"
+s:Ge/Sphere1Polymer/Color        = "green"
+b:Ge/Sphere1Polymer/IsParallel        = "True"
+s:Ge/Sphere1Polymer/ParallelWorldName = "ActiveSourceWorld"
+
+##### SPHERICAL POLYMER 2
+s:Ge/Sphere2/Type         = "TsSphere"
+s:Ge/Sphere2/Material     = "G4_Pd"
+s:Ge/Sphere2/Parent       = "ActiveSource"
+d:Ge/Sphere2/RMin         = 0. mm
+d:Ge/Sphere2/RMax         = 0.2801 mm 
+d:Ge/Sphere2/SPhi         = 0. deg
+d:Ge/Sphere2/DPhi         = 360. deg
+d:Ge/Sphere2/STheta       = 0. deg
+d:Ge/Sphere2/DTheta       = 180. deg
+d:Ge/Sphere2/TransZ       = 1.5 mm
+s:Ge/Sphere2/DrawingStyle = "Solid"
+s:Ge/Sphere2/Color        = "green"
+b:Ge/Sphere2/IsParallel        = "True"
+s:Ge/Sphere2/ParallelWorldName = "ActiveSourceWorld"
+
+s:Ge/Sphere2Polymer/Type         = "TsSphere"
+s:Ge/Sphere2Polymer/Material     = "MatPolymer"
+s:Ge/Sphere2Polymer/Parent       = "Sphere2"
+d:Ge/Sphere2Polymer/RMin         = 0. mm
+d:Ge/Sphere2Polymer/RMax         = 0.28 mm 
+d:Ge/Sphere2Polymer/SPhi         = 0. deg
+d:Ge/Sphere2Polymer/DPhi         = 360. deg
+d:Ge/Sphere2Polymer/STheta       = 0. deg
+d:Ge/Sphere2Polymer/DTheta       = 180. deg
+s:Ge/Sphere2Polymer/DrawingStyle = "Solid"
+s:Ge/Sphere2Polymer/Color        = "green"
+b:Ge/Sphere2Polymer/IsParallel        = "True"
+s:Ge/Sphere2Polymer/ParallelWorldName = "ActiveSourceWorld"
+
+##### SPHERICAL POLYMER 3
+s:Ge/Sphere3/Type         = "TsSphere"
+s:Ge/Sphere3/Material     = "G4_Pd"
+s:Ge/Sphere3/Parent       = "ActiveSource"
+d:Ge/Sphere3/RMin         = 0. mm
+d:Ge/Sphere3/RMax         = 0.2801 mm 
+d:Ge/Sphere3/SPhi         = 0. deg
+d:Ge/Sphere3/DPhi         = 360. deg
+d:Ge/Sphere3/STheta       = 0. deg
+d:Ge/Sphere3/DTheta       = 180. deg
+d:Ge/Sphere3/TransZ       = 0.9 mm
+s:Ge/Sphere3/DrawingStyle = "Solid"
+s:Ge/Sphere3/Color        = "green"
+b:Ge/Sphere3/IsParallel        = "True"
+s:Ge/Sphere3/ParallelWorldName = "ActiveSourceWorld"
+
+s:Ge/Sphere3Polymer/Type         = "TsSphere"
+s:Ge/Sphere3Polymer/Material     = "MatPolymer"
+s:Ge/Sphere3Polymer/Parent       = "Sphere3"
+d:Ge/Sphere3Polymer/RMin         = 0. mm
+d:Ge/Sphere3Polymer/RMax         = 0.28 mm 
+d:Ge/Sphere3Polymer/SPhi         = 0. deg
+d:Ge/Sphere3Polymer/DPhi         = 360. deg
+d:Ge/Sphere3Polymer/STheta       = 0. deg
+d:Ge/Sphere3Polymer/DTheta       = 180. deg
+s:Ge/Sphere3Polymer/DrawingStyle = "Solid"
+s:Ge/Sphere3Polymer/Color        = "green"
+b:Ge/Sphere3Polymer/IsParallel        = "True"
+s:Ge/Sphere3Polymer/ParallelWorldName = "ActiveSourceWorld"
+
+##### SPHERICAL POLYMER 4
+s:Ge/Sphere4/Type         = "TsSphere"
+s:Ge/Sphere4/Material     = "G4_Pd"
+s:Ge/Sphere4/Parent       = "ActiveSource"
+d:Ge/Sphere4/RMin         = 0. mm
+d:Ge/Sphere4/RMax         = 0.2801 mm 
+d:Ge/Sphere4/SPhi         = 0. deg
+d:Ge/Sphere4/DPhi         = 360. deg
+d:Ge/Sphere4/STheta       = 0. deg
+d:Ge/Sphere4/DTheta       = 180. deg
+d:Ge/Sphere4/TransZ       = -0.9 mm
+s:Ge/Sphere4/DrawingStyle = "Solid"
+s:Ge/Sphere4/Color        = "green"
+b:Ge/Sphere4/IsParallel        = "True"
+s:Ge/Sphere4/ParallelWorldName = "ActiveSourceWorld"
+
+s:Ge/Sphere4Polymer/Type         = "TsSphere"
+s:Ge/Sphere4Polymer/Material     = "MatPolymer"
+s:Ge/Sphere4Polymer/Parent       = "Sphere4"
+d:Ge/Sphere4Polymer/RMin         = 0. mm
+d:Ge/Sphere4Polymer/RMax         = 0.28 mm 
+d:Ge/Sphere4Polymer/SPhi         = 0. deg
+d:Ge/Sphere4Polymer/DPhi         = 360. deg
+d:Ge/Sphere4Polymer/STheta       = 0. deg
+d:Ge/Sphere4Polymer/DTheta       = 180. deg
+s:Ge/Sphere4Polymer/DrawingStyle = "Solid"
+s:Ge/Sphere4Polymer/Color        = "green"
+b:Ge/Sphere4Polymer/IsParallel        = "True"
+s:Ge/Sphere4Polymer/ParallelWorldName = "ActiveSourceWorld"
+
+##### SPHERICAL POLYMER 5
+s:Ge/Sphere5/Type         = "TsSphere"
+s:Ge/Sphere5/Material     = "G4_Pd"
+s:Ge/Sphere5/Parent       = "ActiveSource"
+d:Ge/Sphere5/RMin         = 0. mm
+d:Ge/Sphere5/RMax         = 0.2801 mm 
+d:Ge/Sphere5/SPhi         = 0. deg
+d:Ge/Sphere5/DPhi         = 360. deg
+d:Ge/Sphere5/STheta       = 0. deg
+d:Ge/Sphere5/DTheta       = 180. deg
+d:Ge/Sphere5/TransZ       = -1.5 mm
+s:Ge/Sphere5/DrawingStyle = "Solid"
+s:Ge/Sphere5/Color        = "green"
+b:Ge/Sphere5/IsParallel        = "True"
+s:Ge/Sphere5/ParallelWorldName = "ActiveSourceWorld"
+
+s:Ge/Sphere5Polymer/Type         = "TsSphere"
+s:Ge/Sphere5Polymer/Material     = "MatPolymer"
+s:Ge/Sphere5Polymer/Parent       = "Sphere5"
+d:Ge/Sphere5Polymer/RMin         = 0. mm
+d:Ge/Sphere5Polymer/RMax         = 0.28 mm 
+d:Ge/Sphere5Polymer/SPhi         = 0. deg
+d:Ge/Sphere5Polymer/DPhi         = 360. deg
+d:Ge/Sphere5Polymer/STheta       = 0. deg
+d:Ge/Sphere5Polymer/DTheta       = 180. deg
+s:Ge/Sphere5Polymer/DrawingStyle = "Solid"
+s:Ge/Sphere5Polymer/Color        = "green"
+b:Ge/Sphere5Polymer/IsParallel        = "True"
+s:Ge/Sphere5Polymer/ParallelWorldName = "ActiveSourceWorld"
+
+##### SPHERICAL POLYMER 6
+s:Ge/Sphere6/Type         = "TsSphere"
+s:Ge/Sphere6/Material     = "G4_Pd"
+s:Ge/Sphere6/Parent       = "ActiveSource"
+d:Ge/Sphere6/RMin         = 0. mm
+d:Ge/Sphere6/RMax         = 0.2801 mm 
+d:Ge/Sphere6/SPhi         = 0. deg
+d:Ge/Sphere6/DPhi         = 360. deg
+d:Ge/Sphere6/STheta       = 0. deg
+d:Ge/Sphere6/DTheta       = 180. deg
+d:Ge/Sphere6/TransZ       = -2.1 mm
+s:Ge/Sphere6/DrawingStyle = "Solid"
+s:Ge/Sphere6/Color        = "green"
+b:Ge/Sphere6/IsParallel        = "True"
+s:Ge/Sphere6/ParallelWorldName = "ActiveSourceWorld"
+
+s:Ge/Sphere6Polymer/Type         = "TsSphere"
+s:Ge/Sphere6Polymer/Material     = "MatPolymer"
+s:Ge/Sphere6Polymer/Parent       = "Sphere6"
+d:Ge/Sphere6Polymer/RMin         = 0. mm
+d:Ge/Sphere6Polymer/RMax         = 0.28 mm 
+d:Ge/Sphere6Polymer/SPhi         = 0. deg
+d:Ge/Sphere6Polymer/DPhi         = 360. deg
+d:Ge/Sphere6Polymer/STheta       = 0. deg
+d:Ge/Sphere6Polymer/DTheta       = 180. deg
+s:Ge/Sphere6Polymer/DrawingStyle = "Solid"
+s:Ge/Sphere6Polymer/Color        = "green"
+b:Ge/Sphere6Polymer/IsParallel        = "True"
+s:Ge/Sphere6Polymer/ParallelWorldName = "ActiveSourceWorld"
+
+iv:Gr/Color/transparent1 = 4 255 255 255 50
+iv:Gr/Color/transparent2 = 4 255 255 255 120
+
+s:So/ActiveSource/Type                       = "Volumetric"
+s:So/ActiveSource/Component                  = "ActiveSource"
+sc:So/ActiveSource/ActiveMaterial            = "G4_Pd"
+s:So/ActiveSource/BeamParticle               = "gamma"
+i:So/ActiveSource/MaxNumberOfPointsToSample  = 1000000000
+s:So/ActiveSource/BeamEnergySpectrumType     = "Discrete"
+b:So/ActiveSource/RecursivelyIncludeChildren = "T"
+ic:So/ActiveSource/NumberOfHistoriesInRun    = 10
+
+#### Pd-103 SPECTRUM ####
+dv:So/ActiveSource/BeamEnergySpectrumValues = 15 2.7 20.074 20.216 22.699 22.724 23.172 39.748 53.29 62.41 241.88 294.98 317.72 357.45 443.79 497.08 keV
+uv:So/ActiveSource/BeamEnergySpectrumWeightsUnscaled = 15 0.0873 0.224 0.425 0.0354 0.0685 0.0164 0.000683 0.0000003 0.0000104 0.000000005 0.000028 0.00000015 0.000221 0.00000015 0.0000396
+uv:So/ActiveSource/BeamEnergySpectrumWeights = 1.1660684279 * So/ActiveSource/BeamEnergySpectrumWeightsUnscaled
+
+sv:Ph/Default/LayeredMassGeometryWorlds =  2 "SeedsWorld" "ActiveSourceWorld"

@@ -1,0 +1,101 @@
+# Demonstrates use of a DICOM file.
+# You must unzip synthetic_lung.tar.bz2 before you run this example.
+# Reads in and displays a simple test DICOM that represents
+# three different time phases of a simplified lung phantom.
+# This phantom consists of a tumor in a cylinder of water in a tube of air.
+
+includeFile = HUtoMaterialSchneider.txt
+
+# Geometry
+s:Ge/World/Material  = "Vacuum"
+d:Ge/World/HLX       = 2.0 m
+d:Ge/World/HLY       = 2.0 m
+d:Ge/World/HLZ       = 2.0 m
+b:Ge/World/Invisible = "TRUE"
+
+s:Ge/Patient/Parent               = "World"
+s:Ge/Patient/Material             = "G4_WATER"
+d:Ge/Patient/TransX               = 0. cm # -8. cm
+d:Ge/Patient/TransY               = 0. cm # -8. cm
+d:Ge/Patient/TransZ               = 0. m
+d:Ge/Patient/RotX                 = 90. deg
+d:Ge/Patient/RotY                 = 0. deg
+d:Ge/Patient/RotZ                 = 0. deg
+s:Ge/Patient/Type                 = "TsDicomPatient"
+s:Ge/Patient/DicomDirectory       = Tf/ImageName/Value
+#b:Ge/Patient/PreLoadAllMaterials  = "True"
+
+# Specify which slices to show.
+# Comment this out or set to zero to show all slices.
+# Set to -1 to show only center slice.
+# Set to -2 to show first, center and last slice.
+#iv:Ge/Patient/ShowSpecificSlicesX = 1 -2
+iv:Ge/Patient/ShowSpecificSlicesY = 1 -1
+#iv:Ge/Patient/ShowSpecificSlicesZ = 1 -2
+
+# Time feature, load different CTs at different times
+s:Tf/ImageName/Function = "Step"
+dv:Tf/ImageName/Times   = 3 10 20 30 ms
+sv:Tf/ImageName/Values  = 3 "synthetic_lung/lung-1" "synthetic_lung/lung-2" "synthetic_lung/lung-3"
+
+d:Tf/TimelineEnd = 120.0 ms
+i:Tf/NumberOfSequentialTimes = 12
+i:Tf/Verbosity = 1
+
+s:Tf/Zoom/Function           = "Step"
+dv:Tf/Zoom/Times             = 3 30 60 180 ms
+uv:Tf/Zoom/Values            = 3 1.4 3. 9.
+d:Tf/Zoom/RepetitionInterval = 360. ms
+
+s:Tf/Pan/Function            = "Step"
+dv:Tf/Pan/Times              = 3 30 60 180 ms
+uv:Tf/Pan/Values             = 3 0. .1 .1
+d:Tf/Pan/RepetitionInterval  = 360. ms
+
+s:Tf/PanY/Function           = "Step"
+dv:Tf/PanY/Times             = 3 30 60 180 ms
+uv:Tf/PanY/Values            = 3 0. -.05 -.05
+d:Tf/PanY/RepetitionInterval = 360. ms
+
+# Uncomment to enable scoring
+s:Sc/DoseAtPhantom/Quantity                  = "DoseToMedium"
+s:Sc/DoseAtPhantom/Component                 = "Patient"
+b:Sc/DoseAtPhantom/OutputToConsole           = "False"
+s:Sc/DoseAtPhantom/IfOutputFileAlreadyExists = "Overwrite"
+s:Sc/DoseAtPhantom/OutputType                = "DICOM"
+b:Sc/DoseAtPhantom/DICOMOutput32BitsPerPixel = "False"
+
+# Uncomment to split scoring by ImageName
+#s:Sc/DoseAtPhantom/SplitByTimeFeature = "ImageName"
+
+s:So/Example/Type                     = "Beam"
+s:So/Example/Component                = "BeamPosition"
+s:So/Example/BeamParticle             = "proton"
+d:So/Example/BeamEnergy               = 120. MeV
+u:So/Example/BeamEnergySpread         = 0.757504
+s:So/Example/BeamPositionDistribution = "Flat"
+s:So/Example/BeamPositionCutoffShape  = "Ellipse"
+d:So/Example/BeamPositionCutoffX      = 0.5 cm
+d:So/Example/BeamPositionCutoffY      = 0.5 cm
+s:So/Example/BeamAngularDistribution  = "None"
+i:So/Example/NumberOfHistoriesInRun   = 100
+
+sv:Ph/Default/Modules = 1 "g4em-standard_opt0"
+
+# Graphics
+b:Gr/ViewA/HiddenLineRemovalForTrajectories = "True"
+s:Gr/ViewA/Type        = "OpenGL"
+i:Gr/ViewA/WindowSizeX = 900
+i:Gr/ViewA/WindowSizeY = 900
+d:Gr/ViewA/Theta       = 45 deg
+d:Gr/ViewA/Phi         = 45 deg
+u:Gr/ViewA/Zoom        = Tf/Zoom/Value
+u:Gr/ViewA/TransX      = Tf/Pan/Value
+u:Gr/ViewA/TransY      = Tf/PanY/Value
+
+# Extra graphics options to handle complex voxel geometries
+i:Gr/ShowOnlyOutlineIfVoxelCountExceeds = 2100000
+
+i:Ts/ShowHistoryCountAtInterval = 5000
+
+b:Ts/PauseBeforeQuit = "False"

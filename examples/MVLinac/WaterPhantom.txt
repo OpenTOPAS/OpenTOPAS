@@ -1,0 +1,26 @@
+# Rectangular parallelopiped filled with water, aligned with IEC fixed Z axis Zf.
+# WaterPhantom has voxels for scoring.
+#######################################################################################
+
+includeFile = LinacDefaults.txt #Values in LinacDafaults.txt overriden in Field.txt
+
+# Scorer - Dose distribution in 40 cm x 40 cm x 40 cm water box at 100 cm SSD
+s:Sc/Dose/Quantity                  = "DoseToWater"
+s:Sc/Dose/Component                 = "WaterPhantom"
+s:Sc/Dose/IfOutputFileAlreadyExists = "Exit" # "Exit", "Overwrite" or "Increment"
+s:Sc/Dose/OutputType                = "CSV"
+
+
+# Isocenter scoring volume (thin plane for scoring fluence)
+s:Ge/WaterPhantom/Parent            = "IEC_S"
+s:Ge/WaterPhantom/Type              = "TsBox"
+s:Ge/WaterPhantom/Material          = "G4_WATER"
+d:Ge/WaterPhantom/HLX               = 20. cm 
+d:Ge/WaterPhantom/HLY               = 20. cm 
+d:Ge/WaterPhantom/HLZ               = 20. cm 
+i:Ge/WaterPhantom/XBins             = 80
+i:Ge/WaterPhantom/YBins             = 80
+i:Ge/WaterPhantom/ZBins             = 80
+d:Ge/WaterPhantom/TransZ            = -20. cm 
+s:Ge/WaterPhantom/DrawingStyle      = "Solid"
+s:Ge/WaterPhantom/Color             = "skyblue"

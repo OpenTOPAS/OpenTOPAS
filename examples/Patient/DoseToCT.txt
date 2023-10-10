@@ -1,0 +1,87 @@
+# Demonstrates scoring in a DICOM file.
+# You must unzip DICOM_Box.zip before you run this example.
+# Reads in and displays a simple test DICOM that represents
+# a box of water in air.
+# Can optionally display patient from XiO input file.
+# If Graphics is enabled, the display writes very slowly to the screen.
+# This will be improved in an upcoming new release.
+# Until then, one useful trick is that if you iconize the graphics window,
+# then un-inconize it when drawing is done, the drawing will go much faster.
+
+includeFile = HUtoMaterialSchneider.txt
+
+s:Ge/World/Material    = "Vacuum"
+d:Ge/World/HLX         = 2.0 m
+d:Ge/World/HLY         = 2.0 m
+d:Ge/World/HLZ         = 2.0 m
+b:Ge/World/Invisible   = "TRUE"
+
+s:Ge/Patient/Parent   = "World"
+s:Ge/Patient/Material = "G4_WATER"
+d:Ge/Patient/TransX   = 0. m
+d:Ge/Patient/TransY   = 0. m
+d:Ge/Patient/TransZ   = 0. m
+d:Ge/Patient/RotX     = 0. deg
+d:Ge/Patient/RotY     = 0. deg
+d:Ge/Patient/RotZ     = 0. deg
+
+# Specify which slices to show.
+# Comment this out or set to zero to show all slices.
+# Set to -1 to show only center slice.
+# Set to -2 to show first, center and last slice.
+#iv:Ge/Patient/ShowSpecificSlicesX = 1 -2
+#iv:Ge/Patient/ShowSpecificSlicesY = 1 -2
+iv:Ge/Patient/ShowSpecificSlicesZ = 1 -2
+
+# Can read either DICOM or XiO input files.
+# To change input format, change which
+# Ge/Patient/Type file is commented out below.
+
+# Additional needed for DICOM input
+s:Ge/Patient/Type           = "TsDicomPatient"
+s:Ge/Patient/DicomDirectory = "DICOM_Box"
+
+# Additional needed for XiO input
+#s:Ge/Patient/Type             = "TsXiOPatient"
+s:Ge/Patient/InputDirectory   = "./"
+s:Ge/Patient/InputFile        = "XIO_Example.dat"
+i:Ge/Patient/NumberOfVoxelsX  = 25
+i:Ge/Patient/NumberOfVoxelsY  = 25
+iv:Ge/Patient/NumberOfVoxelsZ = 2 3 7
+d:Ge/Patient/VoxelSizeX       = 2.0 mm
+d:Ge/Patient/VoxelSizeY       = 2.0 mm
+dv:Ge/Patient/VoxelSizeZ      = 2 5. 2.5 mm
+
+s:Sc/DoseOnCTGrid/Quantity                  = "DoseToMedium"
+s:Sc/DoseOnCTGrid/Component                 = "Patient"
+b:Sc/DoseOnCTGrid/OutputToConsole           = "True"
+s:Sc/DoseOnCTGrid/IfOutputFileAlreadyExists = "Overwrite"
+s:Sc/DoseOnCTGrid/OutputType                = "DICOM"
+b:Sc/DoseOnCTGrid/DICOMOutput32BitsPerPixel = "True"
+
+s:So/Example/Type                     = "Beam"
+s:So/Example/Component                = "BeamPosition"
+s:So/Example/BeamParticle             = "proton"
+d:So/Example/BeamEnergy               = 30. MeV
+u:So/Example/BeamEnergySpread         = 0.757504
+s:So/Example/BeamPositionDistribution = "Flat"
+s:So/Example/BeamPositionCutoffShape  = "Ellipse"
+d:So/Example/BeamPositionCutoffX      = 5. cm
+d:So/Example/BeamPositionCutoffY      = 20. cm
+s:So/Example/BeamAngularDistribution  = "None"
+i:So/Example/NumberOfHistoriesInRun   = 500
+
+# Uncomment to activate graphics
+s:Gr/ViewA/Type           = "OpenGL"
+sv:Gr/ViewA/VisibleWorlds = 1 "All"
+i:Gr/ViewA/WindowSizeX    = 900
+i:Gr/ViewA/WindowSizeY    = 900
+d:Gr/ViewA/Theta          = 70 deg
+d:Gr/ViewA/Phi            = 10 deg
+
+# Extra graphics options to handle complex voxel geometries
+i:Gr/ShowOnlyOutlineIfVoxelCountExceeds = 210000000
+
+i:Ts/ShowHistoryCountAtInterval = 100
+
+b:Ts/PauseBeforeQuit = "True"

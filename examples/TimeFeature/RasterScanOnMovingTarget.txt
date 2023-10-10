@@ -1,0 +1,255 @@
+# TOPAS Time Feature Example to paint a moving target with a scanning beam.
+
+# This is the completed form of the example, after all steps have been completed.
+# Sometimes a later step required commenting out a line from an earlier step
+# (to avoid setting the same parameter twice in this same file).
+# So if you're taking just a subset of this example, you may need to uncomment
+# some of the lines.
+
+# Step 1: Create a simple target and visualize it
+
+# Create the Target as a box of water, 260 cm in X and Y, 2 cm total depth. 
+# Place this into the world translated 200 cm from center in Z.
+s:Ge/Target/Type = "TsBox"
+s:Ge/Target/Parent = "World"
+s:Ge/Target/Material = "G4_WATER"
+d:Ge/Target/HLX = 130. cm
+d:Ge/Target/HLY = 130. cm
+d:Ge/Target/HLZ = 1. cm
+d:Ge/Target/TransZ = -200. cm
+
+# Create an OpenGL graphics view with rotations of 70 deg Theta and
+# 10 deg Phi and zoom factor of 5.
+# You will notice the Theta line commented out here because we set it differently
+# at a later step. If you're just running this step, uncomment this line.
+s:Gr/MyView/Type = "OpenGL"
+#d:Gr/MyView/Theta = 70. deg
+d:Gr/MyView/Phi = 10. deg
+u:Gr/MyView/Zoom = 5
+
+# For particle source, use the built-in demonstration source.
+# Set it to make 200 histories per run.
+i:So/Demo/NumberOfHistoriesInRun = 200
+Ts/ShowHistoryCountAtInterval = 100
+
+# Turn on PauseBeforeQuit so we have a chance to see the graphics.
+b:Ts/PauseBeforeQuit = "True"
+
+# Run. You should see 50 particle histories.
+# Most of the created particles should hit the center of the target.
+
+# MacOS 10.15 users will find that the Qt GUI starts up automatically.
+# To generate particles, hit the Run button above the parameter control widget.
+
+
+# Step 2: Make the simulation start faster
+
+# Simplify the physics so that the simulation starts faster.
+sv:Ph/Default/Modules = 1 "g4em-standard_opt0"
+
+# Run. You should see that the simulation starts very fast.
+# This happens at the expense of losing scattering accuracy and losing
+# all hadronic physics.
+# Remember to change back to full physics if you need high accuracy.
+
+
+# Step 3: Improve the visualization
+
+# Make the target solid.
+s:Ge/Target/DrawingStyle = "Solid"
+
+# Make trajectories disappear when they enter this solid.
+b:Gr/MyView/HiddenLineRemovalForTrajectories = "True"
+
+# Run. You should see a solid target and trajectories disappear into the target.
+
+
+# Step 4: Simplify further by removing most of the scatter from the simulation
+# and removing random variation in the beam model.
+
+# Change World material to Vacuum
+s:Ge/World/Material = "Vacuum"
+
+# Change Beam to have no energy spread (BeamEnergySpread).
+u:So/Demo/BeamEnergySpread = 0.
+
+# Change Beam's initial profile to be 4.cm radius (BeamPositionCutoffX and Y).
+d:So/Demo/BeamPositionCutoffX = 4. cm
+d:So/Demo/BeamPositionCutoffY = 4. cm
+
+# Change Beam's distribution within this profile to be flat
+# (BeamPositionDistribution to Flat rather than Gaussian).
+s:So/Demo/BeamPositionDistribution = "Flat"
+
+# Turn off angular divergence of the beam (BeamAngularDistribution to None).
+s:So/Demo/BeamAngularDistribution = "None"
+
+# Run. You should no longer see delta rays produced in the air.
+# There may still be a rare scatter, as Geant4, like nature,
+# does not have the concept of an absolutely perfect vacuum.
+# The beam should now be distributed in a uniform circular profile.
+
+
+# Step 5: Create the components that will become our two bending magnets
+
+# Create a Group Component that will represent our scanning nozzle.
+# Place this into the World offset 100 cm to the left.
+s:Ge/Nozzle/Type = "Group"
+s:Ge/Nozzle/Parent = "World"
+d:Ge/Nozzle/TransZ = 100. cm
+
+# Make two cylinders of vacuum, one just before center of the Nozzle, one just after.
+# Make each of them 20cm total length, 30 cm radius.
+s:Ge/BendingMagnetX/Type = "TsCylinder"
+s:Ge/BendingMagnetX/Parent = "Nozzle"
+s:Ge/BendingMagnetX/Material = "Vacuum"
+d:Ge/BendingMagnetX/HL = 40. cm
+dc:Ge/BendingMagnetX/RMax = 30. cm
+d:Ge/BendingMagnetX/TransZ = Ge/BendingMagnetX/HL cm
+
+s:Ge/BendingMagnetY/Type = "TsCylinder"
+s:Ge/BendingMagnetY/Parent = "Nozzle"
+s:Ge/BendingMagnetY/Material = "Vacuum"
+d:Ge/BendingMagnetY/HL = 40. cm
+dc:Ge/BendingMagnetY/RMax = 70. cm
+d:Ge/BendingMagnetY/TransZ = -1. * Ge/BendingMagnetY/HL cm
+
+# Run. Notice that it's hard to tell the magnets apart as they are the same color.
+# Since we have not specified color, the color was based on the material.
+# since they are both Vacuum, they came out the same color.
+
+
+# Step 6: Color the X magnet Red and the Y magnet Yellow
+s:Ge/BendingMagnetX/Color = "Red"
+s:Ge/BendingMagnetY/Color = "Yellow"
+
+# Run. You should see that the bending mangets now each have their own color.
+
+
+# Step 7: Give each magnet a dipole magnetic field
+
+# Make each magnet have the appropriate field direction cosines.
+# Set the X bending magnet to -.8 tesla and the X bending magnet to -1. tesla.
+# Make the field strength be a Changeable parameter (use "dc:" instead of "d:").
+
+s:Ge/BendingMagnetX/Field = "DipoleMagnet"
+u:Ge/BendingMagnetX/MagneticFieldDirectionX = 0.0
+u:Ge/BendingMagnetX/MagneticFieldDirectionY = 1.0
+u:Ge/BendingMagnetX/MagneticFieldDirectionZ = 0.0
+#dc:Ge/BendingMagnetX/MagneticFieldStrength = -.8 tesla
+
+s:Ge/BendingMagnetY/Field = "DipoleMagnet"
+u:Ge/BendingMagnetY/MagneticFieldDirectionX = 1.0
+u:Ge/BendingMagnetY/MagneticFieldDirectionY = 0.0
+u:Ge/BendingMagnetY/MagneticFieldDirectionZ = 0.0
+#dc:Ge/BendingMagnetY/MagneticFieldStrength = -1. tesla
+
+# Turn on the Qt GUI
+# MacOS 10.15 users do not need to do this since on that system the
+# Qt GUI starts up automatically.
+# To generate particles, hit the Run button above the parameter control widget.
+#b:Ts/UseQt = "True"
+
+# You should see that the beam has been bent in both the X and Y direction.
+# Study the effect of various magnetic field strengths by adjusting the
+# field strengths in the GUI and hitting the GUI's run button after each change.
+# The combination of these two fields controls where the beam hits the target.
+
+
+# Step 8: Make a time feature control the strength of BendingMagnetX
+
+# Create a time feature that creates an increasing magnetic field.
+s:Tf/XFieldIncreasing/Function           = "Linear tesla"
+d:Tf/XFieldIncreasing/Rate               = 0.16 tesla/ms
+d:Tf/XFieldIncreasing/StartValue         = -.8 tesla
+d:Tf/XFieldIncreasing/RepetitionInterval = 11.0 ms
+
+# Use this time feature to control the X magnet.
+#d:Ge/BendingMagnetX/MagneticFieldStrength = Tf/XFieldIncreasing/Value tesla
+
+# Declare that the simulation should contain 11 runs.
+i:Tf/NumberOfSequentialTimes = 110
+
+# Specify an end time for the run sequence.
+d:Tf/TimelineEnd = 110. ms
+
+# Set verbosity to get more information about the runs.
+i:Tf/Verbosity = 2
+
+# Run. You should see that the beam sweeps from left to right and the repeats.
+
+
+# Step 9: Make the scan go the opposite direction
+
+# Create a time feature that creates a decreasing magnetic field.
+s:Tf/XFieldDecreasing/Function           = "Linear tesla"
+d:Tf/XFieldDecreasing/Rate               = -0.16 tesla/ms
+d:Tf/XFieldDecreasing/StartValue         = .8 tesla
+d:Tf/XFieldDecreasing/RepetitionInterval = 11.0 ms
+
+# Use this time feature to control the X magnet.
+#d:Ge/BendingMagnetX/MagneticFieldStrength = Tf/XFieldDecreasing/Value tesla
+
+# Run. You should see that the beam sweeps from right to left and the repeats.
+
+
+# Step 10: Use a Step time feature to make the scan alternate directions
+
+# Use a Step function and have the value come first from
+# Tf/XFieldIncreasing/Value and then from Tf/XFieldIncreasing/Value.
+s:Tf/XFieldAlternating/Function = "Step"
+dv:Tf/XFieldAlternating/Times   = 2 11. 22. ms
+dv:Tf/XFieldAlternating/Values  = 2 Tf/XFieldIncreasing/Value Tf/XFieldDecreasing/Value tesla
+
+# Use this time feature to control the X magnet
+#d:Ge/BendingMagnetX/MagneticFieldStrength = Tf/XFieldAlternating/Value tesla
+
+# Run. You should see that the beam sweeps back and forth.
+# It is alternately being driven by Tf/XFieldIncreasing and Tf/XFieldDecreasing.
+
+
+# Step 11: Complete the raster scan pattern by controlling the Y magnet
+
+# Create a field that increases every 11 ms (each time the X scan is completed).
+s:Tf/YFieldDecreasing/Function = "Step"
+dv:Tf/YFieldDecreasing/Times   = 10 11. 22. 33. 44. 55. 66. 77. 88. 99. 110. ms
+dv:Tf/YFieldDecreasing/Values  = 10 -1. -.8 -.6 -.4 -.2 0. .2 .4 .6 .8 tesla
+
+# Use this time feature to control the Y magnet.
+d:Ge/BendingMagnetY/MagneticFieldStrength = Tf/YFieldDecreasing/Value tesla
+
+# Run. You should see that the beam moves downward at the end of each
+# horizontal sweep. This combination of horizontal and vertical scanning is
+# called "raster scanning."
+
+
+# Step 12: Simulate patient motion by making the target move horizontally
+# in a sinusoidal motion
+
+# Use a Sine function time feature.
+s:Tf/HorizontalMoveSine/Function           = "Sine"
+d:Tf/HorizontalMoveSine/RepetitionInterval = 110. ms
+d:Tf/HorizontalMoveSine/Rate               = 6. deg/ms
+d:Tf/HorizontalMoveSine/StartValue         = -90. deg
+
+# Use this time feature to control the Target
+dc:Ge/Target/TransX = 100.0 cm * Tf/HorizontalMoveSine/Value
+
+# Adjust the graphics view so it is easier to see the target motion.
+d:Gr/MyView/Theta = 20. deg
+
+# Run. You will see that the beam is sometimes missing the target.
+
+
+# Step 13: Make the beam compensate to stay on the target
+
+# Create a new parameter to hold amplitude of necessary beam magnet adjustment.
+d:FieldAdjustment = .6 tesla * Tf/HorizontalMoveSine/Value
+
+# Add this adjustment to the value that was controlling the simple X scan.
+d:Ge/BendingMagnetX/MagneticFieldStrength = Tf/XFieldAlternating/Value + FieldAdjustment tesla
+
+# As an additional diagnostic, ask for parameters to be printed out at each run:
+b:Ts/DumpNonDefaultParameters = "True"
+
+# Run. You will see that the raster scan now stays on the target as the target moves.

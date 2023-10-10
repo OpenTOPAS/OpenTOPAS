@@ -1,0 +1,52 @@
+########################
+# Importance sampling and particle split: Parallel geometry
+########################
+includeFile = vrt_Shielding_Globals.txt
+
+d:Ge/World/HLX = 3.0 m
+d:Ge/World/HLY = 3.0 m
+d:Ge/World/HLZ = 3.0 m
+
+#########################
+# Gemetry for vrt
+#########################
+
+s:Ge/VrtParallelWorld/Type       = "TsBox"
+s:Ge/VrtParallelWorld/Parent     = "World"
+d:Ge/VrtParallelWorld/HLX        = 3.0 m
+d:Ge/VrtParallelWorld/HLY        = 3.0 m
+d:Ge/VrtParallelWorld/HLZ        = 3.0 m
+d:Ge/VrtParallelWorld/TransX     = 0 cm
+d:Ge/VrtParallelWorld/TransY     = 0 cm
+d:Ge/VrtParallelWorld/TransZ     = 0 cm
+d:Ge/VrtParallelWorld/RotX       = 0 deg
+d:Ge/VrtParallelWorld/RotY       = 0 deg
+d:Ge/VrtParallelWorld/RotZ       = 0 deg
+b:Ge/VrtParallelWorld/IsParallel = "true"
+
+s:Ge/vrtWorld = "VrtParallelWorld"
+
+b:Ge/Scorer/IsParallel = "False"
+s:Ge/Scorer/Material   = "G4_CONCRETE"
+s:Sc/Scorer/OutputFile = "vrt_Shielding_ImpSamp_Parallel"
+
+#########################
+# VRT
+#########################
+b:Vr/UseVarianceRedUctioN         = "true"
+b:Vr/ParticleSplit/Active         = "true"
+sv:Vr/ParticleSplit/ParticlENamE  = 3 "neutron" "proton" "gamma"
+s:Vr/ParticleSplit/ComPonent      = "VrtParallelWorld"
+sv:Vr/ParticleSplit/SUBComponents = 10
+"subComponent1" "subComponent2"
+"subComponent3" "subComponent4"
+"subComponent5" "subComponent6"
+"subComponent7" "subComponent8"
+"subComponent9" "subComponent10"
+s:Vr/ParticleSplit/TypE = "ImportanceSampling"
+uv:Vr/ParticleSplit/ImportANceValues = 10 2 4 8 16 32 64 128 256 512 1024
+
+i:Ts/Seed = 123
+i:So/Default/NumberOfHistoriesInRun = 10000
+i:Ts/ShowHistoryCountAtInterval     = 1000
+b:Ts/ShowCPUTime                    = "True"

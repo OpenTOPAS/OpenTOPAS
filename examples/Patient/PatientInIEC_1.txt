@@ -1,0 +1,211 @@
+
+####################################################
+# Geometry parameters from plan
+####################################################
+#for plan
+d:Ge/Gantry_Angle = 0.0 deg
+d:Ge/Couch_Angle  = 0.0 deg
+
+###################################################
+# Coordination
+###################################################o
+# World: Fixed coordination in IEC
+s:Ge/World/Material  = "G4_AIR"
+d:Ge/World/HLX       = 0.6 m
+d:Ge/World/HLY       = 0.6 m
+d:Ge/World/HLZ       = 0.6 m
+
+# IEC_G: Gantry
+s:Ge/IEC_G/Parent  = "World"
+s:Ge/IEC_G/Type    = "Group"
+d:Ge/IEC_G/RotX    = 0. deg
+dc:Ge/IEC_G/RotY    = 0. deg  # Here !!!
+d:Ge/IEC_G/RotZ    = 0. deg
+d:Ge/IEC_G/TransX  = 0. m
+d:Ge/IEC_G/TransY  = 0. m
+d:Ge/IEC_G/TransZ  = 0. m
+
+# IEC_S: Patient support
+s:Ge/IEC_S/Parent  = "World"
+s:Ge/IEC_S/Type    = "Group"
+d:Ge/IEC_S/RotX    = 0. deg
+d:Ge/IEC_S/RotY    = 0. deg
+dc:Ge/IEC_S/RotZ    = 0.0 deg # Here !!!
+d:Ge/IEC_S/TransX  = 0. m
+d:Ge/IEC_S/TransY  = 0. m
+d:Ge/IEC_S/TransZ  = 0. m
+
+# DICOM_to_IEC
+s:Ge/DICOM_to_IEC/Type   = "Group"
+s:Ge/DICOM_to_IEC/Parent = "IEC_S"
+d:Ge/DICOM_to_IEC/TransX = 0 mm
+d:Ge/DICOM_to_IEC/TransY = 0 mm
+d:Ge/DICOM_to_IEC/TransZ = 0 mm
+dc:Ge/DICOM_to_IEC/RotX   = 0.0 deg
+d:Ge/DICOM_to_IEC/RotY   = 0.0  deg
+d:Ge/DICOM_to_IEC/RotZ   = 0.0  deg
+
+
+###################################################
+##----  Beam setup   ----#
+####################################################
+
+#Beam is on Gantry coordination
+Ge/BeamPosition/Parent = "IEC_G"
+Ge/BeamPosition/TransZ = 25.0 cm
+
+s:So/Example/Type                     = "Beam"
+s:So/Example/Component                = "BeamPosition"
+s:So/Example/BeamParticle             = "proton"
+d:So/Example/BeamEnergy               = 60.23 MeV
+u:So/Example/BeamEnergySpread         = 0.757504
+s:So/Example/BeamPositionDistribution = "Gaussian"
+s:So/Example/BeamPositionCutoffShape  = "Ellipse"
+d:So/Example/BeamPositionCutoffX      = 1. cm
+d:So/Example/BeamPositionCutoffY      = 1. cm
+d:So/Example/BeamPositionSpreadX      = 0.2 cm
+d:So/Example/BeamPositionSpreadY      = 0.2 cm
+s:So/Example/BeamAngularDistribution  = "Gaussian"
+d:So/Example/BeamAngularCutoffX       = 90. deg
+d:So/Example/BeamAngularCutoffY       = 90. deg
+d:So/Example/BeamAngularSpreadX       = 0.0032 rad
+d:So/Example/BeamAngularSpreadY       = 0.0032 rad
+i:So/Example/NumberOfHistoriesInRun   = 10
+
+###################################################
+# Visualization
+####################################################
+
+s:Gr/ViewA/Type        = "OpenGL"
+i:Gr/ViewA/WindowSizeX = 900
+i:Gr/ViewA/WindowSizeY = 900
+d:Gr/ViewA/Theta       = 265 deg
+d:Gr/ViewA/Phi         = -90 deg
+i:Gr/ShowOnlyOutlineIfVoxelCountExceeds = 1000000
+
+s:Gr/ViewA/AxesComponent  = "World"
+b:Gr/ViewA/IncludeAxes    = "true"
+d:Gr/ViewA/AxesSize       = 30.0 cm
+u:Gr/ViewA/Zoom           = 1.5
+
+s:Gr/ViewA/Projection       = "Perspective"
+d:Gr/ViewA/PerspectiveAngle = 10 deg
+
+i:Ts/NumberOfThreads = 1
+
+#Ts/UseQT="T"
+
+####################################################
+##------ Patient CT  -----
+####################################################
+
+# img-center
+s:Ge/patient/Type   = "Group"
+s:Ge/patient/Parent = "DICOM_to_IEC"
+d:Ge/patient/TransX = 0.0 mm
+d:Ge/patient/TransY = 0.0 mm
+d:Ge/patient/TransZ = 0.0 mm
+d:Ge/patient/RotX   = 0.0 deg   
+d:Ge/patient/RotY   = 0.0 deg 
+d:Ge/patient/RotZ   = 0.0 deg
+
+# Sphere
+s:Ge/patient_head/Type                 = "TsSphere"
+s:Ge/patient_head/Parent               = "patient"
+s:Ge/patient_head/Material             = "Air"
+d:Ge/patient_head/TransZ               = 22 cm
+d:Ge/patient_head/RMax                 = 5 cm
+s:Ge/patient_head/DrawingStyle         = "FullWireFrame"
+s:Ge/patient_head/Color                = "grass"
+
+#
+s:Ge/patient_body/Type                    = "G4Trd"
+s:Ge/patient_body/Parent                  = "patient"
+s:Ge/patient_body/Material                = "Air"
+d:Ge/patient_body/TransX                  = 0 cm
+d:Ge/patient_body/TransY                  = 0 cm
+d:Ge/patient_body/TransZ                  = 0 cm
+d:Ge/patient_body/RotX                    = 0 deg
+d:Ge/patient_body/RotY                    = 0 deg
+d:Ge/patient_body/RotZ                    = 0 deg
+d:Ge/patient_body/HLX1                    = 6. cm
+d:Ge/patient_body/HLX2                    = 10. cm
+d:Ge/patient_body/HLY1                    = 2. cm
+d:Ge/patient_body/HLY2                    = 2. cm
+d:Ge/patient_body/HLZ                     = 15 cm
+s:Ge/patient_body/Color                   = "violet"
+
+#prescription-isocenter in body
+s:Ge/patient_iso/Type                 = "TsSphere"
+s:Ge/patient_iso/Parent               = "patient_body"
+s:Ge/patient_iso/Material             = "Air"
+d:Ge/patient_iso/RMax                 = 6.6 mm #2-sigma
+s:Ge/patient_iso/DrawingStyle         = "solid"
+s:Ge/patient_iso/Color                = "grass"
+# Isocenter
+d:Ge/patient_iso/TransX               = 5.0 cm  # here !!!
+d:Ge/patient_iso/TransY               = 0.0 cm  # here !!!
+d:Ge/patient_iso/TransZ               = 10.0 cm # here !!!
+
+
+# Left arm
+s:Ge/patient_larm/Type               = "TsCylinder"
+s:Ge/patient_larm/Parent             = "patient"
+s:Ge/patient_larm/Material           = "Air"
+d:Ge/patient_larm/RMax               = 15 mm
+d:Ge/patient_larm/HL                 = 7 cm
+s:Ge/patient_larm/Color              = "red"
+s:Ge/patient_larm/DrawingStyle       = "solid"
+
+d:Ge/patient_larm/TransX             = 17.5 cm 
+d:Ge/patient_larm/TransY             = 0 cm    
+d:Ge/patient_larm/TransZ             = 12 cm   
+
+d:Ge/patient_larm/RotX             = 0  deg
+d:Ge/patient_larm/RotY             = 80 deg
+d:Ge/patient_larm/RotZ             = 0 deg
+
+# right arm
+s:Ge/patient_rarm/Type               = "TsCylinder"
+s:Ge/patient_rarm/Parent             = "patient"
+s:Ge/patient_rarm/Material           = "Air"
+d:Ge/patient_rarm/RMax               = Ge/patient_larm/RMax mm
+d:Ge/patient_rarm/HL                 = Ge/patient_larm/HL cm
+s:Ge/patient_rarm/Color              = "lightblue"
+s:Ge/patient_rarm/DrawingStyle       = "solid"
+
+d:Ge/patient_rarm/TransX             = -1.0 * Ge/patient_larm/TransX  cm
+d:Ge/patient_rarm/TransY             = 0 cm
+d:Ge/patient_rarm/TransZ             = Ge/patient_larm/TransZ cm
+
+d:Ge/patient_rarm/RotX             = 0  deg
+d:Ge/patient_rarm/RotY             = -1.0 * Ge/patient_larm/RotY deg 
+d:Ge/patient_rarm/RotZ             = 0 deg
+
+# Left leg
+s:Ge/patient_lleg/Type               = "TsCylinder"
+s:Ge/patient_lleg/Parent             = "patient"
+s:Ge/patient_lleg/Material           = "Air"
+d:Ge/patient_lleg/RMax               = 15 mm
+d:Ge/patient_lleg/HL                 = 7 cm
+s:Ge/patient_lleg/Color              = "red"
+s:Ge/patient_lleg/DrawingStyle       = "solid"
+
+d:Ge/patient_lleg/TransX             = 3 cm
+d:Ge/patient_lleg/TransY             = 0 cm
+d:Ge/patient_lleg/TransZ             = -23 cm
+
+# right leg
+s:Ge/patient_rleg/Type               = "TsCylinder"
+s:Ge/patient_rleg/Parent             = "patient"
+s:Ge/patient_rleg/Material           = "Air"
+d:Ge/patient_rleg/RMax               = Ge/patient_lleg/RMax mm
+d:Ge/patient_rleg/HL                 = Ge/patient_lleg/HL cm
+s:Ge/patient_rleg/Color              = "lightblue"
+s:Ge/patient_rleg/DrawingStyle       = "solid"
+
+d:Ge/patient_rleg/TransX             = -1.0 * Ge/patient_lleg/TransX  cm
+d:Ge/patient_rleg/TransY             = 0 cm
+d:Ge/patient_rleg/TransZ             = Ge/patient_lleg/TransZ cm
+
+Ts/PauseBeforeQuit = "True"

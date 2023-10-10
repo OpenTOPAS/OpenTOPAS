@@ -1,0 +1,55 @@
+# Example demonsrating how to use a Group component to position
+# isotropic and beam particle sources.
+
+s:Ge/MyBox/Type     = "TsBox"
+sc:Ge/MyBox/Material = "G4_WATER"
+sc:Ge/MyBox/Parent   = "World"
+dc:Ge/MyBox/HLX      = 1.5 m
+dc:Ge/MyBox/HLY      = 1. m
+dc:Ge/MyBox/HLZ      = 1. m
+dc:Ge/MyBox/TransX   = 0. m
+dc:Ge/MyBox/TransY   = 0. m
+dc:Ge/MyBox/TransZ   = 0. m
+dc:Ge/MyBox/RotX     = 0. deg
+dc:Ge/MyBox/RotY     = 0. deg
+dc:Ge/MyBox/RotZ     = 0. deg
+sc:Ge/MyBox/Color    = "blue"
+sc:Ge/MyBox/DrawingStyle = "WireFrame"
+
+s:Ge/BeamGroup/Type    = "Group"
+sc:Ge/BeamGroup/Parent = "World"
+dc:Ge/BeamGroup/RotX   = -90. deg
+dc:Ge/BeamGroup/RotY   = 0. deg
+dc:Ge/BeamGroup/RotZ   = 0. deg
+dc:Ge/BeamGroup/TransY   = 3. m
+
+s:So/IsotropicFromGroup/Type                     = "Isotropic"
+sc:So/IsotropicFromGroup/Component                = "BeamGroup"
+sc:So/IsotropicFromGroup/BeamParticle             = "gamma"
+dc:So/IsotropicFromGroup/BeamEnergy               = 169.23 MeV
+uc:So/IsotropicFromGroup/BeamEnergySpread         = 0.757504
+ic:So/IsotropicFromGroup/NumberOfHistoriesInRun   = 10
+
+s:So/BeamFromGroup/Type                     = "Beam"
+sc:So/BeamFromGroup/Component                = "BeamGroup"
+sc:So/BeamFromGroup/BeamParticle             = "e-"
+dc:So/BeamFromGroup/BeamEnergy               = 169.23 MeV
+uc:So/BeamFromGroup/BeamEnergySpread         = 0.757504
+sc:So/BeamFromGroup/BeamPositionDistribution = "Gaussian"
+sc:So/BeamFromGroup/BeamPositionCutoffShape  = "Ellipse"
+dc:So/BeamFromGroup/BeamPositionCutoffX      = 10. cm
+dc:So/BeamFromGroup/BeamPositionCutoffY      = 10. cm
+dc:So/BeamFromGroup/BeamPositionSpreadX      = 0.65 cm
+dc:So/BeamFromGroup/BeamPositionSpreadY      = 0.65 cm
+sc:So/BeamFromGroup/BeamAngularDistribution  = "Gaussian"
+dc:So/BeamFromGroup/BeamAngularCutoffX       = 90. deg
+dc:So/BeamFromGroup/BeamAngularCutoffY       = 90. deg
+dc:So/BeamFromGroup/BeamAngularSpreadX       = 0.0032 rad
+dc:So/BeamFromGroup/BeamAngularSpreadY       = 0.0032 rad
+ic:So/BeamFromGroup/NumberOfHistoriesInRun   = 0
+
+sv:Ph/Default/Modules = 1 "g4em-standard_opt0"
+
+s:Gr/ViewA/Type = "OpenGL"
+
+Ts/UseQt = "True"

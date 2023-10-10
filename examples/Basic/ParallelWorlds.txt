@@ -1,0 +1,49 @@
+# Demonstrates use of parallel worlds.
+
+d:Ge/World/HLX       = 2.0 m
+d:Ge/World/HLY       = 2.0 m
+d:Ge/World/HLZ       = 2.0 m
+b:Ge/World/Invisible = "True"
+
+s:Ge/BoxInMassWorld/Parent   = "World"
+s:Ge/BoxInMassWorld/Type     = "TsBox"
+sc:Ge/BoxInMassWorld/Material = "G4_WATER"
+dc:Ge/BoxInMassWorld/HLX      = 7.0 cm
+dc:Ge/BoxInMassWorld/HLY      = 7.0 cm
+dc:Ge/BoxInMassWorld/HLZ      = 9.0 cm
+sc:Ge/BoxInMassWorld/DrawingStyle = "WireFrame"
+ic:Ge/BoxInMassWorld/XBins    = 2
+ic:Ge/BoxInMassWorld/YBins    = 2
+ic:Ge/BoxInMassWorld/ZBins    = 2
+sc:Ge/BoxInMassWorld/Color = "Blue"
+
+s:Ge/BoxInParallelWorld/Parent   = "World"
+s:Ge/BoxInParallelWorld/Type     = "TsBox"
+b:Ge/BoxInParallelWorld/IsParallel = "True"
+dc:Ge/BoxInParallelWorld/HLX      = 7.0 cm
+dc:Ge/BoxInParallelWorld/HLY      = 7.0 cm
+dc:Ge/BoxInParallelWorld/HLZ      = 9.0 cm
+sc:Ge/BoxInParallelWorld/DrawingStyle = "WireFrame"
+ic:Ge/BoxInParallelWorld/XBins    = 3
+ic:Ge/BoxInParallelWorld/YBins    = 3
+ic:Ge/BoxInParallelWorld/ZBins    = 3
+sc:Ge/BoxInParallelWorld/Color = "Magenta"
+
+s:Ge/Sphere/Parent   = "World"
+s:Ge/Sphere/Type     = "TsSphere"
+b:Ge/Sphere/IsParallel = "True"
+dc:Ge/Sphere/RMax      = 2.0 cm
+sc:Ge/Sphere/DrawingStyle = "WireFrame"
+ic:Ge/Sphere/XBins    = 3
+ic:Ge/Sphere/YBins    = 3
+ic:Ge/Sphere/ZBins    = 3
+dc:Ge/Sphere/TransX = 3. cm
+dc:Ge/Sphere/TransY = 3. cm
+dc:Ge/Sphere/TransZ = 3. cm
+sc:Ge/Sphere/Color = "Green"
+
+sv:Ph/Default/Modules = 1 "g4em-standard_opt0"
+
+s:Gr/ViewA/Type = "OpenGL"
+
+Ts/UseQt = "True"

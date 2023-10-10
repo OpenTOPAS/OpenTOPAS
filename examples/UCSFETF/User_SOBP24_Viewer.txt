@@ -1,0 +1,21 @@
+includeFile = UCSF_Beamline_Propeller24.txt Viewer.txt 
+
+Ge/WaterColumn/Thickness = 0.0 mm
+b:Ge/World/Invisible = "True"
+
+Tf/TimelineEnd = Tf/TimeOfPropellerRotation ms
+Tf/NumberOfSequentialTimes = Tf/UCSF_NbTimes 
+So/Default/NumberOfHistoriesInRun  = 2 * Tf/UCSF_NbHistoriesInRun
+
+Gr/ViewA/Zoom =3.
+u:Gr/ViewA/TransX = -0.2
+Ts/PauseBeforeSequence = "False"
+Ph/Default/Modules =1 "g4em-standard_opt0"
+
+Ge/Nozzle/TransZ  = -150.0 cm
+
+i:Gr/ViewA/WindowSizeX = 1024
+i:Gr/ViewA/WindowSizeY = 768
+d:Gr/ViewA/Theta = 40 deg
+d:Gr/ViewA/Phi   = 15 deg
+b:Gr/ViewA/CopyOpenGLToEPS = "False"

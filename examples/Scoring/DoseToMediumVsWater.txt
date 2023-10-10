@@ -1,0 +1,101 @@
+# Demonstrates dose to medium versus dose to water.
+
+s:Ge/World/Material  = "Vacuum"
+d:Ge/World/HLX       = 2.0 m
+d:Ge/World/HLY       = 2.0 m
+d:Ge/World/HLZ       = 2.0 m
+b:Ge/World/Invisible = "True"
+
+s:Ge/WaterBox/Type     = "TsBox"
+s:Ge/WaterBox/Parent   = "World"
+s:Ge/WaterBox/Material = "G4_WATER"
+d:Ge/WaterBox/HLX      = 10.0 cm
+d:Ge/WaterBox/HLY      = 10.0 cm
+d:Ge/WaterBox/HLZ      = 2.0 cm
+d:Ge/WaterBox/TransX   = 0. cm
+d:Ge/WaterBox/TransY   = 0. cm
+d:Ge/WaterBox/TransZ   = 10. cm
+d:Ge/WaterBox/RotX     = 0. deg
+d:Ge/WaterBox/RotY     = 0. deg
+d:Ge/WaterBox/RotZ     = 0. deg
+s:Ge/WaterBox/Color    = "blue"
+
+s:Ge/LeadBox/Type     = "TsBox"
+s:Ge/LeadBox/Parent   = "World"
+s:Ge/LeadBox/Material = "Lead"
+d:Ge/LeadBox/HLX      = 10.0 cm
+d:Ge/LeadBox/HLY      = 10.0 cm
+d:Ge/LeadBox/HLZ      = 5.0 cm
+d:Ge/LeadBox/TransX   = 0. cm
+d:Ge/LeadBox/TransY   = 0. cm
+d:Ge/LeadBox/TransZ   = 0. cm
+d:Ge/LeadBox/RotX     = 0. deg
+d:Ge/LeadBox/RotY     = 0. deg
+d:Ge/LeadBox/RotZ     = 0. deg
+s:Ge/LeadBox/Color    = "blue"
+
+s:Sc/1WaterBoxDoseToMedium/Quantity                         = "DoseToMedium"
+s:Sc/1WaterBoxDoseToMedium/Component                        = "WaterBox"
+b:Sc/1WaterBoxDoseToMedium/OutputToConsole                  = "TRUE"
+s:Sc/1WaterBoxDoseToMedium/IfOutputFileAlreadyExists        = "Overwrite"
+
+s:Sc/2WaterBoxDoseToWater/Quantity                          = "DoseToWater"
+s:Sc/2WaterBoxDoseToWater/Component                         = "WaterBox"
+b:Sc/2WaterBoxDoseToWater/OutputToConsole                   = "TRUE"
+s:Sc/2WaterBoxDoseToWater/IfOutputFileAlreadyExists         = "Overwrite"
+
+s:Sc/3WaterBoxDoseToMaterialWater/Quantity                  = "DoseToMaterial"
+s:Sc/3WaterBoxDoseToMaterialWater/Material                  = "G4_WATER"
+s:Sc/3WaterBoxDoseToMaterialWater/Component                 = "WaterBox"
+b:Sc/3WaterBoxDoseToMaterialWater/OutputToConsole           = "TRUE"
+s:Sc/3WaterBoxDoseToMaterialWater/IfOutputFileAlreadyExists = "Overwrite"
+
+s:Sc/4WaterBoxDoseToMaterialLead/Quantity                   = "DoseToMaterial"
+s:Sc/4WaterBoxDoseToMaterialLead/Material                   = "Lead"
+s:Sc/4WaterBoxDoseToMaterialLead/Component                  = "WaterBox"
+b:Sc/4WaterBoxDoseToMaterialLead/OutputToConsole            = "TRUE"
+s:Sc/4WaterBoxDoseToMaterialLead/IfOutputFileAlreadyExists  = "Overwrite"
+
+s:Sc/5LeadBoxDoseToMedium/Quantity                          = "DoseToMedium"
+s:Sc/5LeadBoxDoseToMedium/Component                         = "LeadBox"
+b:Sc/5LeadBoxDoseToMedium/OutputToConsole                   = "TRUE"
+s:Sc/5LeadBoxDoseToMedium/IfOutputFileAlreadyExists         = "Overwrite"
+
+s:Sc/6LeadBoxBoxDoseToWater/Quantity                        = "DoseToWater"
+s:Sc/6LeadBoxBoxDoseToWater/Component                       = "LeadBox"
+b:Sc/6LeadBoxBoxDoseToWater/OutputToConsole                 = "TRUE"
+s:Sc/6LeadBoxBoxDoseToWater/IfOutputFileAlreadyExists       = "Overwrite"
+
+s:Sc/7LeadBoxDoseToMaterialWater/Quantity                   = "DoseToMaterial"
+s:Sc/7LeadBoxDoseToMaterialWater/Material                   = "G4_WATER"
+s:Sc/7LeadBoxDoseToMaterialWater/Component                  = "LeadBox"
+b:Sc/7LeadBoxDoseToMaterialWater/OutputToConsole            = "TRUE"
+s:Sc/7LeadBoxDoseToMaterialWater/IfOutputFileAlreadyExists  = "Overwrite"
+
+s:Sc/8LeadBoxDoseToMaterialLead/Quantity                    = "DoseToMaterial"
+s:Sc/8LeadBoxDoseToMaterialLead/Material                    = "Lead"
+s:Sc/8LeadBoxDoseToMaterialLead/Component                   = "LeadBox"
+b:Sc/8LeadBoxDoseToMaterialLead/OutputToConsole             = "TRUE"
+s:Sc/8LeadBoxDoseToMaterialLead/IfOutputFileAlreadyExists   = "Overwrite"
+
+s:So/Example/Type                     = "Beam"
+s:So/Example/Component                = "BeamPosition"
+s:So/Example/BeamParticle             = "gamma"
+d:So/Example/BeamEnergy               = 169.23 MeV
+u:So/Example/BeamEnergySpread         = 0.757504
+s:So/Example/BeamPositionDistribution = "Gaussian"
+s:So/Example/BeamPositionCutoffShape  = "Ellipse"
+d:So/Example/BeamPositionCutoffX      = 10. cm
+d:So/Example/BeamPositionCutoffY      = 10. cm
+d:So/Example/BeamPositionSpreadX      = 0.65 cm
+d:So/Example/BeamPositionSpreadY      = 0.65 cm
+s:So/Example/BeamAngularDistribution  = "Gaussian"
+d:So/Example/BeamAngularCutoffX       = 90. deg
+d:So/Example/BeamAngularCutoffY       = 90. deg
+d:So/Example/BeamAngularSpreadX       = 0.0032 rad
+d:So/Example/BeamAngularSpreadY       = 0.0032 rad
+i:So/Example/NumberOfHistoriesInRun   = 10
+
+s:Gr/ViewA/Type = "OpenGL"
+
+b:Ts/PauseBeforeQuit = "True"

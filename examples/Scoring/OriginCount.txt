@@ -1,0 +1,75 @@
+# Demonstrates use of the OriginCount scorer.
+# Counts number of electrons and gammas produced in the
+# inner and outer cones of a flattening filter.
+
+s:Gr/MyViewA/Type = "OpenGL"
+Ts/UseQt = "True"
+
+d:Ge/World/HLX = 10. cm
+d:Ge/World/HLY = 10. cm
+d:Ge/World/HLZ = 10. cm
+
+s:Ge/FlatteningFilter/Type = "Group"
+s:Ge/FlatteningFilter/Parent = "World"
+d:Ge/FlatteningFilter/RotY = 180. deg
+
+# Inner section is implemented as a Solid Polycone
+s:Ge/InnerCone/Type              = "G4SPolycone"
+s:Ge/InnerCone/Parent            = "FlatteningFilter"
+sc:Ge/InnerCone/Material          = "G4_Ti"
+s:Ge/InnerCone/Color             = "grey"
+s:Ge/InnerCone/DrawingStyle      = "Solid"
+dv:Ge/InnerCone/R                = 7 0 9 9 6 5 2  0 mm
+dv:Ge/InnerCone/Z                = 7 0 0 1 2 6 8 10 mm
+
+# Outer section is implemented as a Hollow Polycone
+s:Ge/OuterCone/Type              = "G4HPolycone"
+s:Ge/OuterCone/Parent            = "FlatteningFilter"
+sc:Ge/OuterCone/Material          = "G4_Ti"
+s:Ge/OuterCone/Color             = "brown"
+s:Ge/OuterCone/DrawingStyle      = "Solid"
+dv:Ge/OuterCone/ROuter           = 4 15 15 15 15 mm
+dv:Ge/OuterCone/RInner           = 4  9  9 10 13 mm
+dv:Ge/OuterCone/Z                = 4  0  1  2  3 mm
+
+s:So/Example/Type                     = "Beam"
+s:So/Example/Component                = "BeamPosition"
+sc:So/Example/BeamParticle             = "e-"
+dc:So/Example/BeamEnergy               = 20. MeV
+u:So/Example/BeamEnergySpread         = 0.757504
+s:So/Example/BeamPositionDistribution = "Gaussian"
+s:So/Example/BeamPositionCutoffShape  = "Ellipse"
+d:So/Example/BeamPositionCutoffX      = 10. cm
+d:So/Example/BeamPositionCutoffY      = 10. cm
+d:So/Example/BeamPositionSpreadX      = 0.65 cm
+d:So/Example/BeamPositionSpreadY      = 0.65 cm
+s:So/Example/BeamAngularDistribution  = "Gaussian"
+d:So/Example/BeamAngularCutoffX       = 90. deg
+d:So/Example/BeamAngularCutoffY       = 90. deg
+d:So/Example/BeamAngularSpreadX       = 0.0032 rad
+d:So/Example/BeamAngularSpreadY       = 0.0032 rad
+ic:So/Example/NumberOfHistoriesInRun   = 10
+
+s:Sc/CountInnerE/Quantity = "OriginCount"
+s:Sc/CountInnerE/Component = "InnerCone"
+b:Sc/CountInnerE/OutputToConsole = "True"
+s:Sc/CountInnerE/IfOutputFileAlreadyExists = "Overwrite"
+sv:Sc/CountInnerE/OnlyIncludeParticlesNamed = 1 "e-"
+
+s:Sc/CountInnerG/Quantity = "OriginCount"
+s:Sc/CountInnerG/Component = "InnerCone"
+b:Sc/CountInnerG/OutputToConsole = "True"
+s:Sc/CountInnerG/IfOutputFileAlreadyExists = "Overwrite"
+sv:Sc/CountInnerG/OnlyIncludeParticlesNamed = 1 "gamma"
+
+s:Sc/CountOuterE/Quantity = "OriginCount"
+s:Sc/CountOuterE/Component = "OuterCone"
+b:Sc/CountOuterE/OutputToConsole = "True"
+s:Sc/CountOuterE/IfOutputFileAlreadyExists = "Overwrite"
+sv:Sc/CountOuterE/OnlyIncludeParticlesNamed = 1 "e-"
+
+s:Sc/CountOuterG/Quantity = "OriginCount"
+s:Sc/CountOuterG/Component = "OuterCone"
+b:Sc/CountOuterG/OutputToConsole = "True"
+s:Sc/CountOuterG/IfOutputFileAlreadyExists = "Overwrite"
+sv:Sc/CountOuterG/OnlyIncludeParticlesNamed = 1 "gamma"

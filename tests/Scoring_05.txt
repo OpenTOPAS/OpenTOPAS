@@ -1,0 +1,24 @@
+includeFile = Scoring_01.txt
+
+#--- Target
+i:Ge/Phantom/ZBins = 1
+
+
+#--- Scoring
+s:Ge/ScoringVolume/Type       = "TsBox"
+s:Ge/ScoringVolume/Parent     = "Phantom"
+b:Ge/ScoringVolume/IsParallel = "True"
+d:Ge/ScoringVolume/HLX        = 10. cm
+d:Ge/ScoringVolume/HLY        = 10. cm
+d:Ge/ScoringVolume/HLZ        = 10. cm
+d:Ge/ScoringVolume/TransX     = 0. cm
+d:Ge/ScoringVolume/TransY     = 0. cm
+d:Ge/ScoringVolume/TransZ     = Ge/ScoringVolume/HLZ - Ge/Phantom/HLZ cm
+d:Ge/ScoringVolume/RotX       = 0. deg
+d:Ge/ScoringVolume/RotY       = 0. deg
+d:Ge/ScoringVolume/RotZ       = 0. deg
+i:Ge/ScoringVolume/ZBins      = 40
+
+
+#--- Scoring
+s:Sc/Dose/Component = "ScoringVolume"

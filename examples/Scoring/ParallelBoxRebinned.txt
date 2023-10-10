@@ -1,0 +1,85 @@
+# Score in a variety of x, y and z divisions.
+# Topas creates parallel worlds as needed to accomplish this.
+
+d:Ge/World/HLX       = 2.0 m
+d:Ge/World/HLY       = 2.0 m
+d:Ge/World/HLZ       = 2.0 m
+b:Ge/World/Invisible = "TRUE"
+
+s:Ge/MassWorldBox/Parent     = "World"
+s:Ge/MassWorldBox/Type       = "Group"
+s:Ge/MassWorldBox/Material   = "G4_WATER"
+b:Ge/MassWorldBox/IsParallel = "FALSE"
+d:Ge/MassWorldBox/HLX        = 9.0 cm
+d:Ge/MassWorldBox/HLY        = 9.0 cm
+d:Ge/MassWorldBox/HLZ        = 9.0 cm
+s:Ge/MassWorldBox/Color      = "blue"
+
+s:Ge/ParallelWorldBox/Parent     = "MassWorldBox"
+s:Ge/ParallelWorldBox/Type       = "TsBox"
+b:Ge/ParallelWorldBox/IsParallel = "TRUE"
+d:Ge/ParallelWorldBox/HLX        = 6.0 cm
+d:Ge/ParallelWorldBox/HLY        = 5.0 cm
+d:Ge/ParallelWorldBox/HLZ        = 4.0 cm
+s:Ge/ParallelWorldBox/Color      = "green"
+i:Ge/ParallelWorldBox/XBins      = 1
+i:Ge/ParallelWorldBox/YBins      = 2
+i:Ge/ParallelWorldBox/ZBins      = 3
+
+s:Sc/Score2by3by4/Quantity                         = "DoseToMedium"
+sv:Sc/Score2by3by4/OnlyIncludeParticlesFromProcess = 1 "eBrem"
+s:Sc/Score2by3by4/Component                        = "ParallelWorldBox"
+b:Sc/Score2by3by4/OutputToConsole                  = "TRUE"
+s:Sc/Score2by3by4/IfOutputFileAlreadyExists        = "Overwrite"
+i:Sc/Score2by3by4/XBins                            = 2
+i:Sc/Score2by3by4/YBins                            = 3
+i:Sc/Score2by3by4/ZBins                            = 4
+
+s:Sc/Score3by4by5/Quantity                         = "DoseToMedium"
+sv:Sc/Score3by4by5/OnlyIncludeParticlesFromProcess = 1 "hIoni"
+s:Sc/Score3by4by5/Component                        = "ParallelWorldBox"
+b:Sc/Score3by4by5/OutputToConsole                  = "TRUE"
+s:Sc/Score3by4by5/IfOutputFileAlreadyExists        = "Overwrite"
+i:Sc/Score3by4by5/XBins                            = 3
+i:Sc/Score3by4by5/YBins                            = 4
+i:Sc/Score3by4by5/ZBins                            = 5
+
+s:Sc/Score4by5by6/Quantity                         = "DoseToMedium"
+sv:Sc/Score4by5by6/OnlyIncludeParticlesFromProcess = 1 "hIoni"
+s:Sc/Score4by5by6/Component                        = "ParallelWorldBox"
+b:Sc/Score4by5by6/OutputToConsole                  = "TRUE"
+s:Sc/Score4by5by6/IfOutputFileAlreadyExists        = "Overwrite"
+i:Sc/Score4by5by6/XBins                            = 4
+i:Sc/Score4by5by6/YBins                            = 5
+i:Sc/Score4by5by6/ZBins                            = 6
+
+s:Gr/ViewA/Type                             = "OpenGL"
+i:Gr/ViewA/WindowSizeX                      = 1024
+i:Gr/ViewA/WindowSizeY                      = 768
+d:Gr/ViewA/Theta                            = 55 deg
+d:Gr/ViewA/Phi                              = 20 deg
+s:Gr/ViewA/Projection                       = "Perspective"
+d:Gr/ViewA/PerspectiveAngle                 = 30 deg
+u:Gr/ViewA/Zoom                             = 50.
+b:Gr/ViewA/HiddenLineRemovalForTrajectories = "True"
+
+s:So/Example/Type                     = "Beam"
+s:So/Example/Component                = "BeamPosition"
+s:So/Example/BeamParticle             = "proton"
+d:So/Example/BeamEnergy               = 169.23 MeV
+u:So/Example/BeamEnergySpread         = 0.757504
+s:So/Example/BeamPositionDistribution = "Gaussian"
+s:So/Example/BeamPositionCutoffShape  = "Ellipse"
+d:So/Example/BeamPositionCutoffX      = 10. cm
+d:So/Example/BeamPositionCutoffY      = 10. cm
+d:So/Example/BeamPositionSpreadX      = 0.65 cm
+d:So/Example/BeamPositionSpreadY      = 0.65 cm
+s:So/Example/BeamAngularDistribution  = "Gaussian"
+d:So/Example/BeamAngularCutoffX       = 90. deg
+d:So/Example/BeamAngularCutoffY       = 90. deg
+d:So/Example/BeamAngularSpreadX       = 0.0032 rad
+d:So/Example/BeamAngularSpreadY       = 0.0032 rad
+i:So/Example/NumberOfHistoriesInRun   = 200
+
+i:Ts/ShowHistoryCountAtInterval = 10
+b:Ts/PauseBeforeQuit = "True"

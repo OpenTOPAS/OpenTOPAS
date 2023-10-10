@@ -1,0 +1,79 @@
+# Demonstrates use of Volumetric Source
+# Source is a group component,
+# allowing many different shapes to create a single source.
+# Shapes do not even have to be congiguous.
+# Several offsets are included as a full test of geometry.
+# World is set to lead so that particles stop as
+# soon as they leave the source.
+# This makes it easy to see particle starting positions
+
+s:Ge/World/Material = "G4_Pb"
+
+s:Ge/OffsetGroup/Type     = "Group"
+s:Ge/OffsetGroup/Parent   = "World"
+dc:Ge/OffsetGroup/RotX = 0. deg
+dc:Ge/OffsetGroup/TransY = 2. m
+
+s:Ge/ActiveSource/Type     = "Group"
+s:Ge/ActiveSource/Parent   = "OffsetGroup"
+dc:Ge/OffsetGroup/RotZ = 0. deg
+dc:Ge/ActiveSource/TransZ = 1. m
+
+s:Ge/SourceCylinder/Type     = "TsCylinder"
+s:Ge/SourceCylinder/Parent   = "ActiveSource"
+sc:Ge/SourceCylinder/Material = "G4_Pb"
+dc:Ge/SourceCylinder/RMax     = 50.0 mm
+dc:Ge/SourceCylinder/HL       = 200.0 mm
+
+s:Ge/Inner/Type     = "TsCylinder"
+s:Ge/Inner/Parent   = "SourceCylinder"
+s:Ge/Inner/Material = "G4_Ir"
+d:Ge/Inner/RMax     = 20.0 mm
+d:Ge/Inner/HL = 150.0 mm
+
+s:Ge/SourceCapPlusZ/Type     = "TsSphere"
+s:Ge/SourceCapPlusZ/Parent   = "ActiveSource"
+sc:Ge/SourceCapPlusZ/Material = "G4_Ir"
+dc:Ge/SourceCapPlusZ/RMax     = 50.0 mm
+dc:Ge/SourceCapPlusZ/STheta   = 0 deg
+dc:Ge/SourceCapPlusZ/DTheta   = 90 deg
+dc:Ge/SourceCapPlusZ/TransZ   = 200. mm
+
+s:Ge/SourceCapMinusZ/Type     = "TsSphere"
+s:Ge/SourceCapMinusZ/Parent   = "ActiveSource"
+sc:Ge/SourceCapMinusZ/Material = "G4_Ir"
+dc:Ge/SourceCapMinusZ/RMax     = 50.0 mm
+dc:Ge/SourceCapMinusZ/STheta   = 90 deg
+dc:Ge/SourceCapMinusZ/DTheta.  = 90 deg
+dc:Ge/SourceCapMinusZ/TransZ = -200. mm
+
+s:Ge/SourceExtraBit/Type     = "TsSphere"
+s:Ge/SourceExtraBit/Parent   = "ActiveSource"
+sc:Ge/SourceExtraBit/Material = "G4_Ir"
+dc:Ge/SourceExtraBit/RMax     = 50.0 mm
+dc:Ge/SourceExtraBit/TransY = -2000. mm
+dc:Ge/SourceExtraBit/TransZ = 500. mm
+
+s:So/Example/Type                     = "Volumetric"
+s:So/Example/Component                = "ActiveSource"
+sc:So/Example/ActiveMaterial		= "G4_Ir"
+s:So/Example/BeamParticle             = "e-"
+ic:So/Example/NumberOfHistoriesInRun   = 500
+b:So/Example/RecursivelyIncludeChildren = "True"
+ic:So/Example/MaxNumberOfPointsToSample = 10000000
+
+s:So/Example/BeamEnergySpectrumType       = "Continuous"
+dv:So/Example/BeamEnergySpectrumValues    = 117 0.0614 0.0615 0.0616 0.0629 0.063 0.0631 0.065 0.0651 0.0652 0.0667 0.0668 0.0669 0.071 0.0711 0.0712 0.0713 0.0714 0.0715 0.0733 0.0734 0.0735 0.0753 0.0754 0.0755 0.0756 0.0757 0.0758 0.0777 0.0778 0.0779 0.1103 0.1104 0.1105 0.1362 0.1363 0.1364 0.1769 0.177 0.1771 0.2012 0.2013 0.2014 0.2057 0.2058 0.2059 0.2802 0.2803 0.2804 0.2832 0.2833 0.2834 0.2959 0.296 0.2961 0.3084 0.3085 0.3086 0.3164 0.3165 0.3166 0.3291 0.3292 0.3293 0.3744 0.3745 0.3746 0.4164 0.4165 0.4166 0.4204 0.4205 0.4206 0.468 0.4681 0.4682 0.4845 0.4846 0.4847 0.4852 0.4853 0.4854 0.489 0.4891 0.4892 0.5885 0.5886 0.5887 0.5934 0.5935 0.5936 0.5993 0.5994 0.5995 0.6043 0.6044 0.6045 0.6124 0.6125 0.6126 0.7038 0.7039 0.704 0.7657 0.7658 0.7659 0.8844 0.8845 0.8846 1.0614 1.0615 1.0616 1.0898 1.0899 1.089 1.3781 1.3782 1.3783 MeV
+
+uv:So/Example/BeamEnergySpectrumWeightsUnscaled   = 117
+1e-08 0.412 1e-08 1e-08 0.7039 1e-08 1e-08 1.1309 1e-08 1e-08 1.9178 1e-08 1e-08 0.0827 1e-08 1e-08 0.16 1e-08 1e-08 0.056 1e-08 1e-08 0.2292 1e-08 1e-08 0.4408 1e-08 1e-08 0.157 1e-08 1e-08 0.0042 1e-08 1e-08 0.086 1e-08 1e-08 0.0018 1e-08 1e-08 0.1624 1e-08 1e-08 1.1468 1e-08 1e-08 0.0039 1e-08 1e-08 0.0913 1e-08 1e-08 12.3498 1e-08 1e-08 12.7626 1e-08 1e-08 35.566 1e-08 1e-08 0.006 1e-08 1e-08 0.2493 1e-08 1e-08 0.2877 1e-08 1e-08 0.0237 1e-08 1e-08 20.5587 1e-08 1e-08 1.0942 1e-08 1e-08 0.001 1e-08 1e-08 0.1504 1e-08 1e-08 1.9423 1e-08 1e-08 0.0181 1e-08 1e-08 0.0017 1e-08 1e-08 3.5361 1e-08 1e-08 2.2962 1e-08 1e-08 0.0018 1e-08 1e-08 0.0006 1e-08 1e-08 0.1251 1e-08 1e-08 0.0228 1e-08 1e-08 0.0005 1e-08 1e-08 0.0005 1e-8
+
+# Scale these values to give total weight of 1.
+uv:So/Example/BeamEnergySpectrumWeights   = .0102269 * So/Example/BeamEnergySpectrumWeightsUnscaled
+
+i:Ts/ShowHistoryCountAtInterval = 100
+
+s:Gr/ViewA/Type              = "OpenGL"
+b:Gr/ViewA/IncludeStepPoints = "True"
+b:Ts/PauseBeforeQuit = "True"
+b:Ts/UseQt = "True"

@@ -1,0 +1,15 @@
+includeFile = Scoring_01.txt
+
+#--- Target
+s:Ge/Phantom/Type      = "TsSphere"
+d:Ge/Phantom/RMax      = 10. cm
+i:Ge/Phantom/RBins     = 3
+i:Ge/Phantom/PhiBins   = 3
+i:Ge/Phantom/ThetaBins = 3
+
+
+#--- Scoring
+s:Sc/SurfaceCurrent/Quantity                  = "SurfaceCurrent"
+s:Sc/SurfaceCurrent/Component                 = "Phantom"
+s:Sc/SurfaceCurrent/IfOutputFileAlreadyExists = "Overwrite"
+s:Sc/SurfaceCurrent/Surface                   = "Phantom/OuterCurvedSurface"

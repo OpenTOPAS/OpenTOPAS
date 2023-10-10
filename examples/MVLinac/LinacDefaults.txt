@@ -1,0 +1,10 @@
+# The LinacDefaults parameter control file is the final includeFile in the chain 
+# Parameters provided in this file are intended to be overridden 
+# See FullTxHead.txt, FixedTxHead.txt, and Field.txt
+#
+############################# Parameter Descriptions #################################
+# Linac geometry fixed components
+# SAD: Source axis distance (distance from nominal source position to isocenter)
+#######################################################################################
+
+d:Ge/SAD = 100. cm

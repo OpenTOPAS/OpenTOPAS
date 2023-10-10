@@ -1,0 +1,31 @@
+#Parameter obtained from Burman  et. al. Int. J. Radiation Oncology Biol. Phys. Vol 21  pp 123-135. (1991)
+#          Organ                         n        m       TD50                  Endpoint
+uv:Sc/LKBValues/Bladder            = 3  0.5      0.11     80.0   #   Symptomatic bladder constracture and volume loss 
+uv:Sc/LKBValues/BrachialPexus      = 3  0.03     0.12     75.0   #   Clinically apparent nerve damage 
+uv:Sc/LKBValues/Brain              = 3  0.25     0.15     60.0   #   Necrosis/infarction 
+uv:Sc/LKBValues/BrainStem          = 3  0.16     0.14     65.0   #   Necrosis/infarction 
+uv:Sc/LKBValues/CaudaEquina        = 3  0.03     0.12     75.0   #   Clinically apparent nerve damage 
+uv:Sc/LKBValues/Colon              = 3  0.17     0.11     55.0   #   Obstruction/perforation/ulceration/fistula 
+uv:Sc/LKBValues/Ear1               = 3  0.01     0.15     40.0   #   Acute serous otitis 
+uv:Sc/LKBValues/Ear2               = 3  0.01     0.095    65.0   #   Chronic serous otitis 
+uv:Sc/LKBValues/Esophagus          = 3  0.06     0.11     68.0   #   Clinical stricture/perforation 
+uv:Sc/LKBValues/FemoralHeadAndNeck = 3  0.25     0.12     65.0   #   Necrosis 
+uv:Sc/LKBValues/Heart              = 3  0.35     0.10     48.0   #   Pericarditis 
+uv:Sc/LKBValues/Kidney             = 3  0.70     0.10     28.0   #   Clinical nephritis 
+uv:Sc/LKBValues/Larynx1            = 3  0.11     0.075    80.0   #   Cartilage necrosis 
+uv:Sc/LKBValues/Larynx2            = 3  0.08     0.17     70.0   #   Laryngeal edema 
+uv:Sc/LKBValues/Lens               = 3  0.30     0.27     18.0   #   Cataract requiring intervention 
+uv:Sc/LKBValues/Liver              = 3  0.32     0.15     40.0   #   Liver failure 
+uv:Sc/LKBValues/Lung               = 3  0.87     0.18     24.5   #   Pheumonitis 
+uv:Sc/LKBValues/OpticNerve         = 3  0.25     0.14     65.0   #   Blindness 
+uv:Sc/LKBValues/OpticChiasma       = 3  0.25     0.14     65.0   #   Blindness 
+uv:Sc/LKBValues/Parotid            = 3  0.70     0.18     46.0   #   Xerostomia 
+uv:Sc/LKBValues/Rectum             = 3  0.12     0.15     80.0   #   Severe proctitis/necrosis stenosis/fistula 
+uv:Sc/LKBValues/Retina             = 3  0.20     0.19     65.0   #   Blindness 
+uv:Sc/LKBValues/RigCage            = 3  0.10     0.21     68.0   #   Pathologic fracture 
+uv:Sc/LKBValues/Skin               = 3  0.10     0.12     70.0   #   Necrosis/ulceration 
+uv:Sc/LKBValues/SmallIntestine     = 3  0.15     0.16     55.0   #   Obstruction/perforation 
+uv:Sc/LKBValues/SpinalCord         = 3  0.175    0.11     66.5   #   Myelitis/necrosis 
+uv:Sc/LKBValues/Stomach            = 3  0.15     0.14     65.0   #   Ulceration/perforation 
+uv:Sc/LKBValues/Thyroid            = 3  0.22     0.26     80.0   #   Clinical thyroiditis 
+uv:Sc/LKBValues/TMJointAndMandible = 3  0.07     0.10     72.0   #   Marked limitation of joint function 

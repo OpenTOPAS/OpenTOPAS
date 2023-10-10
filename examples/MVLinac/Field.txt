@@ -1,0 +1,86 @@
+# Field.txt contains values for specific source and geometry parameters.
+# The parameters settings in this file override parameter settings in the files in the
+# includeFile statement below and in LinacDefaults.txt.
+#
+# Use this parameter control file to set field and patient specific parameters. 
+# See Main.txt for additional documentation.
+# 
+# Reference for geometry: Jabbari et al, J Med Signal Sens 3(3):172-179
+# References for electron source incident on x-ray target: 
+#   Sawkey and Faddegon, Med Phys 36(3):698-707 (2009)
+#   Sawkey and Faddegon, Med Phys 36(12):5622-32 (2009)
+# The beam angular divergence from the 36(3) reference is for the manufacture specified 
+# water cooling channel thickness.
+
+########################## Key Parameters In Field.txt ###############################
+# Parameters marked with "^" are set to be changeable in the TOPAS GUI
+# Geometry parameters for one field, including...
+# SAD: Source axis distance (distance from nominal source position to isocenter)
+# ^IEC_G/RotY_G: IEC gantry rotation angle
+# ^IEC_B/RotZ_B: IEC secondary collimator (jaw and MLC) rotation angle
+# Jaw/RotZ: Jaw orientation, dependent on direction of jaw travel along IEC_B
+# MLC/RotZ: MLC orientation, dependent on direction of leaf travel along IEC_B
+# ^NegativeFieldSetting: Jaw or MLC leaf position on negative side (IEC X1), projected to isocenter
+# ^PositiveFieldSetting: Jaw or MLC leaf position on positive side (IEC X2), projected to isocenter
+# LeafWidths: Width of each leaf as projected to isocenter, same width on opposing bank
+#
+# Source parameters, including...
+# BeamEnergySpread: Standard deviation of energy spread in percent 
+# NumberOfHistoriesInRun: Total number of source particles to run for simulation
+# ShowHistoryCountAtInterval: Number of histories between report of histories run
+# Bremsstrahlung splitting used for variance reduction - see user manual
+######################################################################################
+
+includeFile = Jaws.txt MLC.txt WaterPhantom.txt  
+
+# Graphics
+# Use Gr/Enable to show geometry for a few histories, otherwise set "False" 
+#b:Gr/Enable                                  = "True"
+b:Gr/Enable                                   = "False"
+# Use Ts/UseQT to start TOPAS GUI for a few histories, otherwise set "False" 
+#b:Ts/UseQT                                   = "True"
+b:Ts/UseQT                                    = "False"
+
+# Random number seed for simulation of this field
+i:Ts/Seed                                     = 10
+
+# SAD: Source axis distance (nominal distance from x-ray target to gantry rotation axis)
+d:Ge/SAD				      = 100. cm
+
+# Source just upstream of beam limiting devices (jaws, MLC)
+s:So/MySource/Type                            = "PhaseSpace"
+s:So/MySource/Component                       = "IEC_G"
+s:So/MySource/PhaseSPaceFileName              = "PhaseSpaceFixed"
+b:So/MySource/PhaseSpaceIncludeEmptyHistories = "True"
+
+i:Ts/ShowHistoryCountAtInterval               = 100000
+
+# Linac geometry field-dependent components
+# IEC gantry rotation angle (in the opposite sense of RotY)
+dc:Ge/IEC_G/RotY_G                           = 0. deg
+d:Ge/IEC_G/RotY                              = -1 * Ge/IEC_G/RotY_G deg
+
+# IEC collimator rotation angle (in the opposite sense of RotZ)
+dc:Ge/IEC_B/RotZ_B                           = 0. deg
+d:Ge/IEC_B/RotZ                              = -1 * Ge/IEC_B/RotZ_B deg 
+
+# Asymmetric jaw field settings along IEC coordinates X or Y, projected to isocenter
+# Default 20 cm wide field at plane of isocenter (at SAD)
+dc:Ge/Jaw/NegativeFieldSetting  = -10 cm #Field setting along negative IEC_B axis
+dc:Ge/Jaw/PositiveFieldSetting  = 10 cm #Field setting along positive IEC_B axis
+d:Ge/Jaw/RotZ = Ge/Jaw/JawRotZforTravelAlongIECX deg # Set to JawRotZforTravelAlongIECX or JawRotZforTravelAlongIECY
+
+# MLC orientation, leaf widths and positions, projected to isocenter
+# Default 20 cm wide, 50 cm long field at plane of isocenter (at SAD) with all leaves open
+d:Ge/MLC/RotZ = Ge/MLC/MLCRotZforTravelAlongIECY deg #  Set to MLCRotZforTravelAlongIECX or MLCRotZforTravelAlongIECY
+# MLC orientation, leaf widths and positions, projected to isocenter for 20 cm x 50 cm field
+# IEC leaf number depends on direction of leaf motion: For Xb leaf 1 is first, Yb leaf 1 is last
+dv:Ge/MLC/LeafWidths           = 42 5. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 5. cm
+dv:Ge/MLC/NegativeFieldSetting = 42 -10. -10. -10. -10. -10. -10. -10. -10. -10. -10. -10. -10. -10. -10. -10. -10. -10. -10. -10. -10. -10. -10. -10. -10. -10. -10. -10. -10. -10. -10. -10. -10. -10. -10. -10. -10. -10. -10. -10. -10. -10. -10. cm
+dv:Ge/MLC/PositiveFieldSetting = 42 10. 10. 10. 10. 10. 10. 10. 10. 10. 10. 10. 10. 10. 10. 10. 10. 10. 10. 10. 10. 10. 10. 10. 10. 10. 10. 10. 10. 10. 10. 10. 10. 10. 10. 10. 10. 10. 10. 10. 10. 10. 10. cm
+
+# Patient and couch field-dependent components
+# IEC couch rotation angle (in the opposite sense of RotZ)
+dc:Ge/IEC_S/RotZ_S                           = 0.0 deg
+d:Ge/IEC_S/RotZ                              = -1 * Ge/IEC_S/RotZ_S deg
+

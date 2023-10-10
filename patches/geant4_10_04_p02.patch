@@ -1,0 +1,57 @@
+diff -Naur geant4.10.04.p02/source/geometry/solids/specific/src/G4TessellatedSolid.cc geant4.10.04.p02_patched/source/geometry/solids/specific/src/G4TessellatedSolid.cc
+--- geant4.10.04.p02/source/geometry/solids/specific/src/G4TessellatedSolid.cc	2018-05-25 06:21:28.000000000 -0700
++++ geant4.10.04.p02_patched/source/geometry/solids/specific/src/G4TessellatedSolid.cc	2018-12-10 15:06:47.000000000 -0800
+@@ -1682,20 +1682,22 @@
+                                           const G4ThreeVector& v)const
+ {
+   G4double dist = DistanceToInCore(p,v,kInfinity);
+-#ifdef G4SPECSDEBUG
++//#ifdef G4SPECSDEBUG
+   if (dist < kInfinity)
+   {
+     if (Inside(p + dist*v) != kSurface)
+     {
+       std::ostringstream message;
+-      message << "Invalid response from facet in solid '" << GetName() << "',"
++//      message << "Invalid response from facet in solid '" << GetName() << "',"
++      message << "Calculation error in G4TessellatedSolid::DistanceToIn from facet in solid '" << GetName() << "',"
+               << G4endl
+               << "at point: " << p <<  "and direction: " << v;
+       G4Exception("G4TessellatedSolid::DistanceToIn(p,v)",
+-                  "GeomSolids1002", JustWarning, message);
++//                  "GeomSolids1002", JustWarning, message);
++                  "G4T0001", EventMustBeAborted, message);
+     }
+   }
+-#endif
++//#endif
+   return dist;
+ }
+ 
+@@ -1744,20 +1746,22 @@
+     *norm = n;
+     *validNorm = valid;
+   }
+-#ifdef G4SPECSDEBUG
++//#ifdef G4SPECSDEBUG
+   if (dist < kInfinity)
+   {
+     if (Inside(p + dist*v) != kSurface)
+     {
+       std::ostringstream message;
+-      message << "Invalid response from facet in solid '" << GetName() << "',"
++//      message << "Invalid response from facet in solid '" << GetName() << "',"
++      message << "Calculation error in G4TessellatedSolid::DistanceToOut from facet in solid '" << GetName() << "',"
+               << G4endl
+               << "at point: " << p <<  "and direction: " << v;
+       G4Exception("G4TessellatedSolid::DistanceToOut(p,v,..)",
+-                  "GeomSolids1002", JustWarning, message);
++//                  "GeomSolids1002", JustWarning, message);
++                  "G4T0001", EventMustBeAborted, message);
+     }
+   }
+-#endif
++//#endif
+   return dist;
+ }
+ 

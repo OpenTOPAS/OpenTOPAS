@@ -1,0 +1,46 @@
+# Demonstrate effect of setting a scorer inactive
+
+s:Ge/Box/Type     = "TsBox"
+s:Ge/Box/Parent   = "World"
+s:Ge/Box/Material = "G4_WATER"
+d:Ge/Box/HLX      = 1. m
+d:Ge/Box/HLY      = 1. m
+d:Ge/Box/HLZ      = .4 m
+
+s:Sc/WasActive/Quantity                    = "Fluence"
+s:Sc/WasActive/Component                   = "Box"
+s:Sc/WasActive/IfOutputFileAlreadyExists   = "Overwrite"
+b:Sc/WasActive/OutputToConsole             = "True"
+
+s:Sc/WasInActive/Quantity                  = "Fluence"
+s:Sc/WasInActive/Component                 = "Box"
+s:Sc/WasInActive/IfOutputFileAlreadyExists = "Overwrite"
+b:Sc/WasInActive/OutputToConsole           = "True"
+b:Sc/WasInActive/Active                    = "False"
+
+s:Gr/MyOGL/Type        = "OpenGL"
+i:Gr/MyOGL/WindowSizeX = 600
+i:Gr/MyOGL/WindowSizeY = 600
+i:Gr/MyOGL/WindowPosX  = 0
+i:Gr/MyOGL/WindowPosY  = 0
+
+s:So/Example/Type                     = "Beam"
+s:So/Example/Component                = "BeamPosition"
+s:So/Example/BeamParticle             = "proton"
+d:So/Example/BeamEnergy               = 169.23 MeV
+u:So/Example/BeamEnergySpread         = 0.757504
+s:So/Example/BeamPositionDistribution = "Gaussian"
+s:So/Example/BeamPositionCutoffShape  = "Ellipse"
+d:So/Example/BeamPositionCutoffX      = 10. cm
+d:So/Example/BeamPositionCutoffY      = 10. cm
+d:So/Example/BeamPositionSpreadX      = 0.65 cm
+d:So/Example/BeamPositionSpreadY      = 0.65 cm
+s:So/Example/BeamAngularDistribution  = "Gaussian"
+d:So/Example/BeamAngularCutoffX       = 90. deg
+d:So/Example/BeamAngularCutoffY       = 90. deg
+d:So/Example/BeamAngularSpreadX       = 0.0032 rad
+d:So/Example/BeamAngularSpreadY       = 0.0032 rad
+i:So/Example/NumberOfHistoriesInRun   = 100
+
+i:Ts/ShowHistoryCountAtInterval = 10
+b:Ts/PauseBeforeQuit = "True"

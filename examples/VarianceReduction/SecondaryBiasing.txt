@@ -1,0 +1,85 @@
+#
+i:Ts/NumberOfThreads = 2
+
+# Secondary biasing occurs in the region
+# of this component
+s:Ge/target/Parent   = "World"
+s:Ge/target/Material = "Lead"
+s:Ge/target/Type     = "TsBox"
+d:Ge/target/HLX      = 1.5 cm
+d:Ge/target/HLY      = 1.5 cm
+d:Ge/target/HLZ      = 0.5 cm
+s:Ge/target/Color    = "yellow"
+# Set the region
+s:Ge/target/AssignToRegionNaMed = "targetregion"
+
+# Component for scoring
+s:Ge/scorer/Parent   = "World"
+s:Ge/scorer/Material = "G4_WATER"
+s:Ge/scorer/Type     = "TsCylinder"
+d:Ge/scorer/RMax     = 5 cm
+d:Ge/scorer/HL       = 0.05 mm
+d:Ge/scorer/SPhi     = 0 deg
+d:Ge/scorer/DPhi     = 360 deg
+d:Ge/scorer/TransZ   = 1 m + Ge/scorer/HL
+s:Ge/scorer/Color    = "yellow"
+i:Ge/scorer/RBins    = 20
+i:Ge/scorer/PhiBins  = 1
+i:Ge/scorer/ZBins    = 1
+
+s:Sc/scorer/Quantity   = "EnergyFluence"
+s:Sc/scorer/Component  = "scorer"
+s:Sc/scorer/OutputFile = "secondaryBiasing"
+s:Sc/scorer/IfOutputFileAlreadyExists = "Overwrite"
+
+# VISUALIZATION
+s:Gr/view/Type        = "OpenGl"
+i:Gr/view/WindowSizeX = 600
+i:Gr/view/WindowSizeY = 600
+d:Gr/view/Phi         = 0 deg
+d:Gr/view/Theta       = 270 deg
+u:Gr/view/Zoom        = 5
+
+b:Ts/PauseBeforeQuit = "True"
+
+# SOURCE
+s:So/Example/Type                     = "Beam"
+s:So/Example/Component                = "BeamPosition"
+s:So/Example/BeamParticle             = "e-"
+d:So/Example/BeamEnergy               = 6 MeV
+u:So/Example/BeamEnergySpread         = 0.1
+s:So/Example/BeamPositionDistribution = "None"
+s:So/Example/BeamAngularDistribution  = "Gaussian"
+d:So/Example/BeamAngularCutoffX       = 90. deg
+d:So/Example/BeamAngularCutoffY       = 90. deg
+d:So/Example/BeamAngularSpreadX       = 0.0032 rad
+d:So/Example/BeamAngularSpreadY       = 0.0032 rad
+
+Ge/BeamPosition/Parent = "World"
+Ge/BeamPosition/TransX = 0.0 cm
+Ge/BeamPosition/TransZ = -1.0 * Ge/target/HLZ cm
+Ge/BeamPosition/TransY = 0.0 mm
+Ge/BeamPosition/RotX   = 0 deg
+
+# GEOMETRY
+d:Ge/World/HLX      = 16.1 cm
+d:Ge/World/HLY      = 16.1 cm
+d:Ge/World/HLZ      = 1.5 m
+s:Ge/World/Material = "Air"
+
+sv:Ph/Default/Modules = 1 "g4em-standard_opt3"
+
+i:So/Example/NumberOfHistoriesInRun = 1000
+i:Ts/ShowHistoryCountAtInterval = 100
+b:Ts/ShowCPUTime = "True"
+
+#Secondary biasing
+b:Vr/UseVarianceReduction = "True"
+b:Vr/BremsstrahlungSplit/Active = "True"
+s:Vr/BremsstrahlungSplit/Type   = "secondarybiasing"
+# The secondary particles produced in this process will
+# be split  100 times if their energies are below of 6 MeV
+sv:Vr/ParTicleSplit1/forregion/targetregion/processesNamed   = 1 "eBrem"
+uv:Vr/BremsstrahlungSplit/ForRegion/targetregion/SplitNumber      = 1   100.
+dv:Vr/BremsstrahlungSplit/ForRegion/targetregion/MaximumEnergies  = 1   6  MeV
+

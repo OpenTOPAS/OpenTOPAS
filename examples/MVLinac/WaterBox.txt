@@ -1,0 +1,17 @@
+# Rectangular parallelopiped filled with water, aligned with IEC fixed Z axis Zf
+#######################################################################################
+
+includeFile = LinacDefaults.txt #Values in LinacDafaults.txt may be overriden
+
+s:Ge/WaterPhantom/Parent            = "IEC_S"
+s:Ge/WaterPhantom/Type              = "TsBox"
+s:Ge/WaterPhantom/Material          = "G4_WATER"
+d:Ge/WaterPhantom/HLX               = 20. cm 
+d:Ge/WaterPhantom/HLY               = 20. cm 
+d:Ge/WaterPhantom/HLZ               = 20. cm 
+i:Ge/WaterPhantom/XBins             = 1
+i:Ge/WaterPhantom/YBins             = 1
+i:Ge/WaterPhantom/ZBins             = 1
+d:Ge/WaterPhantom/TransZ            = -20. cm 
+s:Ge/WaterPhantom/DrawingStyle      = "Solid"
+s:Ge/WaterPhantom/Color             = "skyblue"

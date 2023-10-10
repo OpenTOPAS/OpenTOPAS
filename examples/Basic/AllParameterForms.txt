@@ -1,0 +1,165 @@
+# Demonstrates all allowed parameter forms
+# and dumps results to TsDumpParameters.html
+
+b:Ts/DumpNonDefaultParameters = "True"
+
+sv:Ph/Default/Modules = 1 "Transportation_Only"
+
+# Parameters used in expressions below
+d:A_Double1          = 100. cm
+d:A_Double5          = 500. cm
+d:A_Double10         = 1000. cm
+d:A_Double20         = 2000. cm
+u:A_Unitless1        = 1.
+u:A_Unitless5        = 5.
+u:A_Unitless10       = 10.
+u:A_Unitless20       = 20.
+i:A_Integer1         = 1
+i:A_Integer5         = 5
+i:A_Integer10        = 10
+i:A_Integer20        = 20
+s:A_StringTen        = "Ten"
+b:A_BooleanTrue      = "True"
+dv:A_DoubleVector1   = 3 1. 1. 1. m
+uv:A_UnitlessVector1 = 3 1. 1. 1.
+iv:A_IntegerVector1  = 3 1 1 1
+sv:A_StringVector1   = 3 "One" "One" "One"
+
+# Double parameters: correct answer is always 10m
+d:A_DoubleFromValue               = 10. m
+d:A_DoubleFromValuePlusDouble     = 0. m + A_Double10
+d:A_DoubleFromValueMinusDouble    = 20. m - A_Double10
+d:A_DoubleFromValueTimesUnitless  = 10. m * A_Unitless1
+d:A_DoubleFromValueTimesInteger   = 10. m * A_Integer1
+d:A_DoubleFromValueTimesDouble    = 1. * A_Double10 m
+d:A_DoubleFromDouble              = A_Double10 m
+d:A_DoubleFromDoubleTimesValue    = A_Double10 m * 1.
+d:A_DoubleFromDoubleTimesUnitless = A_Double10 m * A_Unitless1
+d:A_DoubleFromDoubleTimesInteger  = A_Double10 m * A_Integer1
+d:A_DoubleFromUnitlessTimesValue  = A_Unitless1 * 10. m
+d:A_DoubleFromIntegerTimesValue   = A_Integer1 * 10. m
+d:A_DoubleFromDoublePlusValue     = A_Double10 + 0. m
+d:A_DoubleFromDoubleMinusValue    = A_Double20 - 10. m
+d:A_DoubleFromDoublePlusDouble    = A_Double5 + A_Double5 m
+d:A_DoubleFromDoubleMinusDouble   = A_Double20 - A_Double10 m
+
+# Unitless parameters: correct answer is always 10
+u:A_UnitlessFromValue                 = 10.
+u:A_UnitlessFromValuePlusUnitless     = 0. + A_Unitless10
+u:A_UnitlessFromValueMinusUnitless    = 20. - A_Unitless10
+u:A_UnitlessFromValueTimesUnitless    = 1. * A_Unitless10
+u:A_UnitlessFromValuePlusInteger      = 0. + A_Integer10
+u:A_UnitlessFromValueMinusInteger     = 20. - A_Integer10
+u:A_UnitlessFromValueTimesInteger     = 1. * A_Integer10
+u:A_UnitlessFromUnitless              = A_Unitless10
+u:A_UnitlessFromInteger               = A_Integer10
+u:A_UnitlessFromUnitlessPlusValue     = A_Unitless10 + 0.
+u:A_UnitlessFromUnitlessMinusValue    = A_Unitless20 - 10.
+u:A_UnitlessFromUnitlessTimesValue    = A_Unitless10 * 1.
+u:A_UnitlessFromIntegerPlusValue      = A_Integer10 + 0.
+u:A_UnitlessFromIntegerMinusValue     = A_Integer20 - 10.
+u:A_UnitlessFromIntegerTimesValue     = A_Integer10 * 1.
+u:A_UnitlessFromUnitlessPlusUnitless  = A_Unitless5 + A_Unitless5
+u:A_UnitlessFromUnitlessMinusUnitless = A_Unitless20 - A_Unitless10
+u:A_UnitlessFromUnitlessTimesUnitless = A_Unitless10 * A_Unitless1
+u:A_UnitlessFromUnitlessPlusInteger   = A_Unitless5 + A_Integer5
+u:A_UnitlessFromUnitlessMinusInteger  = A_Unitless20 - A_Integer10
+u:A_UnitlessFromUnitlessTimesInteger  = A_Unitless10 * A_Integer1
+u:A_UnitlessFromIntegerPlusUnitless   = A_Integer5 + A_Unitless5
+u:A_UnitlessFromIntegerMinusUnitless  = A_Integer20 - A_Unitless10
+u:A_UnitlessFromIntegerTimesUnitless  = A_Integer10 * A_Unitless1
+u:A_UnitlessFromIntegerPlusInteger    = A_Integer5 + A_Integer5
+u:A_UnitlessFromIntegerMinusInteger   = A_Integer20 - A_Integer10
+u:A_UnitlessFromIntegerTimesInteger   = A_Integer10 * A_Integer1
+
+# Integer parameters: correct answer is always 10
+i:A_IntegerFromValue               = 10
+i:A_IntegerFromValuePlusInteger    = 0 + A_Integer10
+i:A_IntegerFromValueMinusInteger   = 20 - A_Integer10
+i:A_IntegerFromValueTimesInteger   = 1 * A_Integer10
+i:A_InteterFromInteger             = A_Integer10
+i:A_IntegerFromIntegerPlusValue    = A_Integer10 + 0
+i:A_IntegerFromIntegerMinusValue   = A_Integer20 - 10
+i:A_IntegerFromIntegerTimesValue   = A_Integer10 * 1
+i:A_IntegerFromIntegerPlusInteger  = A_Integer5 + A_Integer5
+i:A_IntegerFromIntegerMinusInteger = A_Integer20 - A_Integer10
+i:A_IntegerFromIntegerTimesInteger = A_Integer10 * A_Integer1
+
+# Boolean parameters: correct answer is always 1 (= True)
+b:A_BooleanFromValue               = "True"
+b:A_BooleanFromBoolean             = A_BooleanFromValue
+b:A_BooleanFromBooleanTimesBoolean = A_BooleanFromValue * A_BooleanTrue
+
+# String parameters: correct answer is always Ten, 10
+# or some combination of the two such as TenTen, Ten10, 1010, etc.
+s:A_StringFromValue              = "Ten"
+s:A_StringFromValuePlusInteger   = "Ten" + A_Integer10
+s:A_StringFromValuePlusString    = "Ten" + A_StringTen
+s:A_StringFromInteger            = A_Integer10
+s:A_StringFromString             = A_StringTen
+s:A_StringFromIntegerPlusValue   = A_Integer10 + "Ten"
+s:A_StringFromStringPlusValue    = A_StringTen + "Ten"
+s:A_StringFromIntegerPlusInteger = A_Integer10 + A_Integer10
+s:A_StringFromIntegerPlusString  = A_Integer10 + A_StringTen
+s:A_StringFromStringPlusInteger  = A_StringTen + A_Integer10
+s:A_StringFromStringPlusString   = A_StringTen + A_StringTen
+
+# Double Vectors: correct answer is always 10. 5. 1. m
+dv:A_DoubleVectorFromValue                     = 3 10. 5. 1. m
+dv:A_DoubleVectorFromValuePlusDouble           = 3 9. 4. 0. m + A_Double1
+dv:A_DoubleVectorFromValueMinusDouble          = 3 11. 6. 2. m - A_Double1
+dv:A_DoubleVectorFromValuePlusDoubleVector     = 3 9. 4. 0. m + A_DoubleVector1
+dv:A_DoubleVectorFromValueMinusDoubleVector    = 3 11. 6. 2. m - A_DoubleVector1
+dv:A_DoubleVectorFromValueTimesUnitless        = 3 10. 5. 1. m * A_Unitless1
+dv:A_DoubleVectorFromValueTimesInteger         = 3 10. 5. 1. m * A_Integer1
+dv:A_DoubleVectorFromValueTimesUnitlessVector  = 3 10. 5. 1. m * A_UnitlessVector1
+dv:A_DoubleVectorFromValueTimesIntegerVector   = 3 10. 5. 1. m * A_IntegerVector1
+dv:A_DoubleVectorFromValueTimesDouble          = 3 10. 5. 1. * A_Double1 m
+dv:A_DoubleVectorFromValueTimesDoubleVector    = 3 10. 5. 1. * A_DoubleVector1 m
+dv:A_DoubleVectorFromDoubleVector              = A_DoubleVectorFromValue m
+dv:A_DoubleVectorFromScaleTimesDoubleVector    = 1. * A_DoubleVectorFromValue m
+dv:A_DoubleVectorFromIntegerTimesDoubleVector  = A_IntegerFromValue * A_DoubleVectorFromValue m
+dv:A_DoubleVectorFromUnitlessTimesDoubleVector = A_UnitlessFromValue * A_DoubleVectorFromValue m
+
+# Unitless Vectors: correct answer is always 10 5 1
+uv:A_UnitlessVectorFromValue                       = 3 10. 5. 1.
+uv:A_UnitlessVectorFromValuePlusUnitless           = 3 9. 4. 0. + A_Unitless1
+uv:A_UnitlessVectorFromValueMinusUnitless          = 3 11. 6. 2. - A_Unitless1
+uv:A_UnitlessVectorFromValueTimesUnitless          = 3 10. 5. 1. * A_Unitless1
+uv:A_UnitlessVectorFromValuePlusInteger            = 3 9. 4. 0. + A_Integer1
+uv:A_UnitlessVectorFromValueMinusInteger           = 3 11. 6. 2. - A_Integer1
+uv:A_UnitlessVectorFromValueTimesInteger           = 3 10. 5. 1. * A_Integer1
+uv:A_UnitlessVectorFromValuePlusUnitlessVector     = 3 9. 4. 0. + A_UnitlessVector1
+uv:A_UnitlessVectorFromValueMinusUnitlessVector    = 3 11. 6. 2. - A_UnitlessVector1
+uv:A_UnitlessVectorFromValueTimesUnitlessVector    = 3 10. 5. 1. * A_UnitlessVector1
+uv:A_UnitlessVectorFromValuePlusIntegerVector      = 3 9. 4. 0. + A_IntegerVector1
+uv:A_UnitlessVectorFromValueMinusIntegerVector     = 3 11. 6. 2. - A_IntegerVector1
+uv:A_UnitlessVectorFromValueTimesIntegerVector     = 3 10. 5. 1. * A_IntegerVector1
+uv:A_UnitlessVectorFromUnitlessVector              = A_UnitlessVectorFromValue
+uv:A_UnitlessVectorFromScaleTimesUnitlessVector    = 1. * A_UnitlessVectorFromValue
+uv:A_UnitlessVectorFromUnitlessTimesUnitlessVector = A_UnitlessFromValue * A_UnitlessVectorFromValue
+uv:A_UnitlessVectorFromIntegerTimesUnitlessVector  = A_IntegerFromValue * A_UnitlessVectorFromValue
+
+# Integer Vectors: correct answer is always 10 5 1
+iv:A_IntegerVectorFromValue                     = 3 10 5 1
+iv:A_IntegerVectorFromValuePlusInteger          = 3 9 4 0 + A_Integer1
+iv:A_IntegerVectorFromValueMinusInteger         = 3 11 6 2 - A_Integer1
+iv:A_IntegerVectorFromValueTimesInteger         = 3 10 5 1 * A_Integer1
+iv:A_IntegerVectorFromValuePlusIntegerVector    = 3 9 4 0 + A_IntegerVector1
+iv:A_IntegerVectorFromValueMinusIntegerVector   = 3 11 6 2 - A_IntegerVector1
+iv:A_IntegerVectorFromValueTimesIntegerVector   = 3 10 5 1 * A_IntegerVector1
+iv:A_IntegerVectorFromIntegerVector             = A_IntegerVectorFromValue
+iv:A_IntegerVectorFromScaleTimesIntegerVector   = 1 * A_IntegerVectorFromValue
+iv:A_IntegerVectorFromIntegerTimesIntegerVector = A_IntegerFromValue * A_IntegerVectorFromValue
+
+# Boolean Vectors: correct answer is always 1 0 1 (= True False True)
+bv:A_BooleanVectorFromValue         = 3 "True" "False" "True"
+bv:A_BooleanVectorFromBooleanVector = A_BooleanVectorFromValue
+
+# String Vectors: correct answers vary by case
+sv:A_StringVectorFromValue                  = 3 "Ten" "Five" "One"
+sv:A_StringVectorFromValuePlusInteger       = 3 "Ten" "Five" "One" + A_Integer10
+sv:A_StringVectorFromValuePlusString        = 3 "Ten" "Five" "One" + A_StringTen
+sv:A_StringVectorFromStringVector           = A_StringVectorFromValue
+sv:A_StringVectorFromValuePlusIntegerVector = 3 "Ten" "Five" "One" + A_IntegerVector1
+sv:A_StringVectorFromValuePlusStringVector  = 3 "Ten" "Five" "One" + A_StringVector1

@@ -1,0 +1,15 @@
+# PatientInIEC_2_time_feature : we rotate patient and gantry simulatenously using TimeFeature
+
+includeFile = PatientInIEC_2.txt
+
+# Gantry
+s:Tf/rotation/Function           = "Linear deg"
+d:Tf/rotation/Rate               = 5 deg/ms
+d:Tf/rotation/StartValue         = 0.0 deg
+d:Tf/rotation/RepetitionInterval = 60. ms
+
+Ge/IEC_G/RotY         = Tf/rotation/Value deg 
+Ge/IEC_S/RotZ         = Tf/rotation/Value deg # step3: 60 deg ?
+
+d:Tf/TimelineEnd             = 60.0 ms
+i:Tf/NumberOfSequentialTimes = 60

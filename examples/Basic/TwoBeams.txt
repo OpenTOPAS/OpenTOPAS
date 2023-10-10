@@ -1,0 +1,56 @@
+# Demonstrates ability to have more than one particle source
+
+s:Ge/World/Material = "Vacuum"
+
+# Second beam component
+s:Ge/XRayTube/Parent = "World"
+s:Ge/XRayTube/Type   = "Group"
+d:Ge/XRayTube/TransX = 200. cm
+d:Ge/XRayTube/TransY = 0. m
+d:Ge/XRayTube/TransZ = 0. m
+d:Ge/XRayTube/RotX   = 0. deg
+d:Ge/XRayTube/RotY   = 90. deg
+d:Ge/XRayTube/RotZ   = 0. deg
+
+# Second beam source
+s:So/Imaging/Type                     = "Beam"
+s:So/Imaging/Component                = "XRayTube"
+s:So/Imaging/BeamParticle             = "gamma"
+d:So/Imaging/BeamEnergy               = 100. keV
+u:So/Imaging/BeamEnergySpread         = 0.
+s:So/Imaging/BeamPositionCutoffShape  = "Ellipse"
+s:So/Imaging/BeamPositionDistribution = "Flat"
+d:So/Imaging/BeamPositionCutoffX      = 7. cm
+d:So/Imaging/BeamPositionCutoffY      = 21. cm
+s:So/Imaging/BeamAngularDistribution  = "None"
+i:So/Imaging/NumberOfHistoriesInRun   = 5
+
+s:So/Therapy/Type                     = "Beam"
+s:So/Therapy/Component                = "BeamPosition"
+s:So/Therapy/BeamParticle             = "proton"
+d:So/Therapy/BeamEnergy               = 169.23 MeV
+u:So/Therapy/BeamEnergySpread         = 0.757504
+s:So/Therapy/BeamPositionDistribution = "Gaussian"
+s:So/Therapy/BeamPositionCutoffShape  = "Ellipse"
+d:So/Therapy/BeamPositionCutoffX      = 10. cm
+d:So/Therapy/BeamPositionCutoffY      = 10. cm
+d:So/Therapy/BeamPositionSpreadX      = 0.65 cm
+d:So/Therapy/BeamPositionSpreadY      = 0.65 cm
+s:So/Therapy/BeamAngularDistribution  = "Gaussian"
+d:So/Therapy/BeamAngularCutoffX       = 90. deg
+d:So/Therapy/BeamAngularCutoffY       = 90. deg
+d:So/Therapy/BeamAngularSpreadX       = 0.0032 rad
+d:So/Therapy/BeamAngularSpreadY       = 0.0032 rad
+i:So/Therapy/NumberOfHistoriesInRun   = 10
+
+s:Gr/ViewA/Type             = "OpenGL"
+i:Gr/ViewA/WindowSizeX      = 1024
+i:Gr/ViewA/WindowSizeY      = 768
+b:Gr/ViewA/IncludeAxes      = "True"
+d:Gr/ViewA/Theta            = 55 deg
+d:Gr/ViewA/Phi              = 20 deg
+s:Gr/ViewA/Projection       = "Perspective"
+d:Gr/ViewA/PerspectiveAngle = 30 deg
+u:Gr/ViewA/Zoom             = 2.
+
+b:Ts/PauseBeforeQuit = "True"

@@ -1,0 +1,49 @@
+includeFile = VRT_2.txt 
+
+b:Sc/phaseSpace/KillAfterPhaseSpace         = "True"
+Sc/phaseSpace/OutputFile = "limitRegion"
+
+s:Ge/VrtParallelWorld/Parent = "World"
+s:Ge/VrtParallelWorld/Type = "TsBox"
+b:Ge/VrtParallelWorld/IsParallel = "True"
+d:Ge/VrtParallelWorld/HLX = Ge/World/HLX cm
+d:Ge/VrtParallelWorld/HLY = Ge/World/HLY cm
+d:Ge/VrtParallelWorld/HLZ = Ge/World/HLZ cm
+
+s:Ge/impCell1/Parent = "VrtParallelWorld"
+s:Ge/impCell1/Type = "TsBox"
+b:Ge/impCell1/IsParallel = "True"
+d:Ge/impCell1/HLX = Ge/World/HLX cm
+d:Ge/impCell1/HLY = Ge/World/HLY cm
+d:Ge/impCell1/HLZ = Ge/World/HLZ cm
+
+d:Ge/impCell2/PhiStart = 0. deg
+d:Ge/impCell2/PhiTotal = 360 deg
+d:Ge/impCell2/RotX = 0. deg
+d:Ge/impCell2/RotY = 0. deg
+d:Ge/impCell2/RotZ = 45 deg
+d:Ge/impCell2/TransX = 0. mm
+d:Ge/impCell2/TransY = 0. mm
+d:Ge/impCell2/TransZ = 0. mm
+dv:Ge/impCell2/ROuter = 4 Ge/World/HLX Ge/World/HLX Ge/World/HLX Ge/World/HLX mm 
+dv:Ge/impCell2/RInner = 4 240 240 45 45 mm 
+dv:Ge/impCell2/Z = 4 -400 803 896 Ge/World/HLZ mm
+i:Ge/impCell2/NSides = 4
+s:Ge/impCell2/Parent = "impCell1"
+s:Ge/impCell2/Type = "G4HPolyhedra"
+s:Ge/impCell2/Color = "transparentred"
+s:Ge/impCell2/DrawingStyle = "Solid"
+b:Ge/impCell2/IsParallel = "True"
+
+iv:Gr/Color/TransparentRed = 4 255 0 0 100
+
+# Importance sampling
+b:Vr/ImportanceSampling/Active         = "true"
+sv:Vr/ImportanceSampling/ParticleName  = 2 "gamma" "e-"
+s:Vr/ImportanceSampling/Component      = "VrtParallelWorld"
+sv:Vr/ImportanceSampling/SubComponents = 2 "impCell1"  "impCell2"
+s:Vr/ImportanceSampling/Type = "ImportanceSampling"
+uvc:Vr/ImportanceSampling/ImportanceValues = 2 1 1
+
+b:Ts/ShowCPUTime = "True"
+

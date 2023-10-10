@@ -1,0 +1,66 @@
+# Write phase space in TOPAS Binary form
+
+b:Ge/World/Invisible = "TRUE"
+
+s:Ge/VacFilm/Type     = "TsBox"
+s:Ge/VacFilm/Parent   = "World"
+s:Ge/VacFilm/Material = "G4_WATER"
+d:Ge/VacFilm/HLX      = 50.0 cm
+d:Ge/VacFilm/HLY      = 50.0 cm
+d:Ge/VacFilm/HLZ      = 1.0 cm
+d:Ge/VacFilm/TransX   = 0. cm
+d:Ge/VacFilm/TransY   = 0. cm
+d:Ge/VacFilm/TransZ   = 0. cm
+d:Ge/VacFilm/RotX     = 0. deg
+d:Ge/VacFilm/RotY     = 0. deg
+d:Ge/VacFilm/RotZ     = 0. deg
+s:Ge/VacFilm/Color    = "skyblue"
+
+s:Sc/PhaseSpaceAtVacFilm/Quantity                    = "PhaseSpace"
+b:Sc/PhaseSpaceAtVacFilm/OutputToConsole             = "True"
+s:Sc/PhaseSpaceAtVacFilm/Surface                     = "VacFilm/ZMinusSurface"
+s:Sc/PhaseSpaceAtVacFilm/OutputType                  = "Binary" # ASCII, Binary, Limited or ROOT
+s:Sc/PhaseSpaceAtVacFilm/OutputFile                  = "BinaryOutput"
+i:Sc/PhaseSpaceAtVacFilm/OutputBufferSize            = 1000
+#s:Sc/PhaseSpaceAtVacFilm/OnlyIncludeParticlesGoing  = "In"
+b:Sc/PhaseSpaceAtVacFilm/IncludeTOPASTime            = "True"
+b:Sc/PhaseSpaceAtVacFilm/IncludeTimeOfFlight         = "True"
+b:Sc/PhaseSpaceAtVacFilm/IncludeRunID                = "True"
+b:Sc/PhaseSpaceAtVacFilm/IncludeEventID              = "True"
+b:Sc/PhaseSpaceAtVacFilm/IncludeTrackID              = "True"
+b:Sc/PhaseSpaceAtVacFilm/IncludeParentID             = "True"
+b:Sc/PhaseSpaceAtVacFilm/IncludeVertexInfo           = "True"
+b:Sc/PhaseSpaceAtVacFilm/IncludeSeed                 = "True"
+#sv:Sc/PhaseSpaceAtVacFilm/OnlyIncludeParticlesNamed = 1 "Proton"
+s:Sc/PhaseSpaceAtVacFilm/IfOutputFileAlreadyExists   = "Overwrite"
+
+s:Gr/ViewA/Type             = "OpenGL"
+i:Gr/ViewA/WindowSizeX      = 900
+i:Gr/ViewA/WindowSizeY      = 900
+d:Gr/ViewA/Theta            = 55 deg
+d:Gr/ViewA/Phi              = 20 deg
+s:Gr/ViewA/Projection       = "Perspective"
+d:Gr/ViewA/PerspectiveAngle = 30 deg
+u:Gr/ViewA/Zoom             = 1.3
+b:Gr/ViewA/HiddenLineRemovalForTrajectories = "True"
+
+s:So/Example/Type                     = "Beam"
+s:So/Example/Component                = "BeamPosition"
+s:So/Example/BeamParticle             = "proton"
+d:So/Example/BeamEnergy               = 169.23 MeV
+u:So/Example/BeamEnergySpread         = 0.757504
+s:So/Example/BeamPositionDistribution = "Gaussian"
+s:So/Example/BeamPositionCutoffShape  = "Ellipse"
+d:So/Example/BeamPositionCutoffX      = 10. cm
+d:So/Example/BeamPositionCutoffY      = 10. cm
+d:So/Example/BeamPositionSpreadX      = 0.65 cm
+d:So/Example/BeamPositionSpreadY      = 0.65 cm
+s:So/Example/BeamAngularDistribution  = "Gaussian"
+d:So/Example/BeamAngularCutoffX       = 90. deg
+d:So/Example/BeamAngularCutoffY       = 90. deg
+d:So/Example/BeamAngularSpreadX       = 0.0032 rad
+d:So/Example/BeamAngularSpreadY       = 0.0032 rad
+i:So/Example/NumberOfHistoriesInRun   = 100
+
+i:Ts/ShowHistoryCountAtInterval = 10
+b:Ts/PauseBeforeQuit = "True"

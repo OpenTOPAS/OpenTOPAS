@@ -1,0 +1,332 @@
+#                                                          #
+#                     I 125 - Best 2301                    #
+#                                                          #
+#                                                          #
+#                Latest version - May 2021                 #
+#                  Author: Audran Poher                    #
+#              Contact - fberumenm@gmail.com               #
+#       https://doi.org/10.1016/j.brachy.2020.12.007       #
+#                                                          #
+
+##### MATERIALS ######
+sv:Ma/MatOrganicMatrix/Components = 2 "Hydrogen" "Carbon"
+uv:Ma/MatOrganicMatrix/Fractions = 2 0.077 0.923
+d:Ma/MatOrganicMatrix/Density    = 1.06 g/cm3
+
+sv:Ma/Tungsten/Components = 1 "Tungsten"
+uv:Ma/Tungsten/Fractions  = 1 1 
+d:Ma/Tungsten/Density     = 19.3 g/cm3
+
+##### SOURCE #####
+s:So/ActiveSource/Type                       = "Volumetric"
+s:So/ActiveSource/Component                  = "ActiveSourceGeometry"
+sc:So/ActiveSource/ActiveMaterial            = "MatOrganicMatrix"
+s:So/ActiveSource/BeamParticle               = "gamma"
+b:So/ActiveSource/RecursivelyIncludeChildren = "T"
+i:So/ActiveSource/MaxNumberOfPointsToSample  = 1000000000
+s:So/ActiveSource/BeamEnergySpectrumType     = "Discrete"
+ic:So/ActiveSource/NumberOfHistoriesInRun    = 10
+
+##### SPECTRUM #####
+dv:So/ActiveSource/BeamEnergySpectrumValues = 7 3.77 27.202 27.472 30.944 30.995 31.704 35.3922 keV
+uv:So/ActiveSource/BeamEnergySpectrumWeightsUnscaled = 7 0.149 0.401 0.740 0.0683 0.132 0.0380 0.0668
+uv:So/ActiveSource/BeamEnergySpectrumWeights = 0.6269199 * So/ActiveSource/BeamEnergySpectrumWeightsUnscaled
+
+##### SOURCE GEOMETRY #####
+s:Ge/ActiveSourceGeometry/Type              = "Group"
+s:Ge/ActiveSourceGeometry/Parent            = "World"
+b:Ge/ActiveSourceGeometry/IsParallel        = "True"
+s:Ge/ActiveSourceGeometry/ParallelWorldName = "ActiveSourceWorld"
+
+#====================
+#Organic cylinder
+#====================
+
+s:Ge/OrganicCylinder/Type         = "TsCylinder"
+s:Ge/OrganicCylinder/Parent       = "ActiveSourceGeometry"
+s:Ge/OrganicCylinder/Material     = "MatOrganicMatrix"
+d:Ge/OrganicCylinder/RMin         = 0.125 mm
+d:Ge/OrganicCylinder/RMax         = 0.225 mm
+d:Ge/OrganicCylinder/SPhi         = 0. deg
+d:Ge/OrganicCylinder/DPhi         = 360. deg
+d:Ge/OrganicCylinder/HL           = 1.75 mm
+d:Ge/OrganicCylinder/TransX       = 0. mm
+d:Ge/OrganicCylinder/TransY       = 0. mm
+d:Ge/OrganicCylinder/TransZ       = 0. mm
+d:Ge/OrganicCylinder/RotX         = 0. deg
+d:Ge/OrganicCylinder/RotY         = 0. deg
+d:Ge/OrganicCylinder/RotZ         = 0. deg
+s:Ge/OrganicCylinder/DrawingStyle = "FullWireFrame"
+s:Ge/OrganicCylinder/Color        = "pink"
+b:Ge/OrganicCylinder/IsParallel   = "T"
+s:Ge/OrganicCylinder/ParallelWorldName = "ActiveSourceWorld"
+
+#===============================
+#Left cap of organic matrix 
+#===============================
+
+s:Ge/OrganicLeftCap/Type         = "TsSphere"
+s:Ge/OrganicLeftCap/Parent       = "ActiveSourceGeometry"
+s:Ge/OrganicLeftCap/Material     = "MatOrganicMatrix"
+d:Ge/OrganicLeftCap/RMin         = 0.125 mm
+d:Ge/OrganicLeftCap/RMax         = 0.225 mm
+d:Ge/OrganicLeftCap/SPhi         = 0. deg
+d:Ge/OrganicLeftCap/DPhi         = 360. deg
+d:Ge/OrganicLeftCap/STheta       = 0. deg
+d:Ge/OrganicLeftCap/DTheta       = 90. deg
+d:Ge/OrganicLeftCap/TransX       = 0. mm
+d:Ge/OrganicLeftCap/TransY       = 0. mm
+d:Ge/OrganicLeftCap/TransZ       = 1.75 mm
+d:Ge/OrganicLeftCap/RotX         = 0. deg
+d:Ge/OrganicLeftCap/RotY         = 0. deg
+d:Ge/OrganicLeftCap/RotZ         = 0. deg
+s:Ge/OrganicLeftCap/DrawingStyle = "FullWireFrame"
+s:Ge/OrganicLeftCap/Color        = "pink"
+b:Ge/OrganicLeftCap/IsParallel   = "T"
+s:Ge/OrganicLeftCap/ParallelWorldName = "ActiveSourceWorld"
+
+#===============================
+#Right cap of organic matrix 
+#===============================
+
+s:Ge/OrganicRightCap/Type         = "TsSphere"
+s:Ge/OrganicRightCap/Parent       = "ActiveSourceGeometry"
+s:Ge/OrganicRightCap/Material     = "MatOrganicMatrix"
+d:Ge/OrganicRightCap/RMin         = 0.125 mm
+d:Ge/OrganicRightCap/RMax         = 0.225 mm
+d:Ge/OrganicRightCap/SPhi         = 0. deg
+d:Ge/OrganicRightCap/DPhi         = 360. deg
+d:Ge/OrganicRightCap/STheta       = 0. deg
+d:Ge/OrganicRightCap/DTheta       = 90. deg
+d:Ge/OrganicRightCap/TransX       = 0. mm
+d:Ge/OrganicRightCap/TransY       = 0. mm
+d:Ge/OrganicRightCap/TransZ       = -1.75 mm
+d:Ge/OrganicRightCap/RotX         = 180. deg
+d:Ge/OrganicRightCap/RotY         = 0. deg
+d:Ge/OrganicRightCap/RotZ         = 0. deg
+s:Ge/OrganicRightCap/DrawingStyle = "FullWireFrame"
+s:Ge/OrganicRightCap/Color        = "pink"
+b:Ge/OrganicRightCap/IsParallel   = "T"
+s:Ge/OrganicRightCap/ParallelWorldName = "ActiveSourceWorld"
+
+#====================
+#Tungsten cylinder
+#====================
+
+s:Ge/TungstenCylinder/Type         = "TsCylinder"
+s:Ge/TungstenCylinder/Parent       = "ActiveSourceGeometry"
+s:Ge/TungstenCylinder/Material     = "Tungsten"
+d:Ge/TungstenCylinder/RMin         = 0. mm
+d:Ge/TungstenCylinder/RMax         = 0.125 mm
+d:Ge/TungstenCylinder/SPhi         = 0. deg
+d:Ge/TungstenCylinder/DPhi         = 360. deg
+d:Ge/TungstenCylinder/HL           = 1.75 mm
+d:Ge/TungstenCylinder/TransX       = 0. mm
+d:Ge/TungstenCylinder/TransY       = 0. mm
+d:Ge/TungstenCylinder/TransZ       = 0. mm
+d:Ge/TungstenCylinder/RotX         = 0. deg
+d:Ge/TungstenCylinder/RotY         = 0. deg
+d:Ge/TungstenCylinder/RotZ         = 0. deg
+s:Ge/TungstenCylinder/DrawingStyle = "FullWireFrame"
+s:Ge/TungstenCylinder/Color        = "grey"
+b:Ge/TungstenCylinder/IsParallel   = "T"
+s:Ge/TungstenCylinder/ParallelWorldName = "ActiveSourceWorld"
+
+#===============================
+#Left cap of Tungsten 
+#===============================
+
+s:Ge/TungstenLeftCap/Type         = "TsSphere"
+s:Ge/TungstenLeftCap/Parent       = "ActiveSourceGeometry"
+s:Ge/TungstenLeftCap/Material     = "Tungsten"
+d:Ge/TungstenLeftCap/RMin         = 0. mm
+d:Ge/TungstenLeftCap/RMax         = 0.125 mm
+d:Ge/TungstenLeftCap/SPhi         = 0. deg
+d:Ge/TungstenLeftCap/DPhi         = 360. deg
+d:Ge/TungstenLeftCap/STheta       = 0. deg
+d:Ge/TungstenLeftCap/DTheta       = 90. deg
+d:Ge/TungstenLeftCap/TransX       = 0. mm
+d:Ge/TungstenLeftCap/TransY       = 0. mm
+d:Ge/TungstenLeftCap/TransZ       = 1.75 mm
+d:Ge/TungstenLeftCap/RotX         = 0. deg
+d:Ge/TungstenLeftCap/RotY         = 0. deg
+d:Ge/TungstenLeftCap/RotZ         = 0. deg
+s:Ge/TungstenLeftCap/DrawingStyle = "FullWireFrame"
+s:Ge/TungstenLeftCap/Color        = "grey"
+b:Ge/TungstenLeftCap/IsParallel   = "T"
+s:Ge/TungstenLeftCap/ParallelWorldName = "ActiveSourceWorld"
+
+#===============================
+#Right cap of Tungsten 
+#===============================
+
+s:Ge/TungstenRightCap/Type         = "TsSphere"
+s:Ge/TungstenRightCap/Parent       = "ActiveSourceGeometry"
+s:Ge/TungstenRightCap/Material     = "Tungsten"
+d:Ge/TungstenRightCap/RMin         = 0. mm
+d:Ge/TungstenRightCap/RMax         = 0.125 mm
+d:Ge/TungstenRightCap/SPhi         = 0. deg
+d:Ge/TungstenRightCap/DPhi         = 360. deg
+d:Ge/TungstenRightCap/STheta       = 0. deg
+d:Ge/TungstenRightCap/DTheta       = 90. deg
+d:Ge/TungstenRightCap/TransX       = 0. mm
+d:Ge/TungstenRightCap/TransY       = 0. mm
+d:Ge/TungstenRightCap/TransZ       = -1.75 mm
+d:Ge/TungstenRightCap/RotX         = 180. deg
+d:Ge/TungstenRightCap/RotY         = 0. deg
+d:Ge/TungstenRightCap/RotZ         = 0. deg
+s:Ge/TungstenRightCap/DrawingStyle = "FullWireFrame"
+s:Ge/TungstenRightCap/Color        = "grey"
+b:Ge/TungstenRightCap/IsParallel   = "T"
+s:Ge/TungstenRightCap/ParallelWorldName = "ActiveSourceWorld"
+
+##### SHIELDING #####
+
+s:Ge/ShieldingGeo/Type              = "Group"
+s:Ge/ShieldingGeo/Parent            = "World"
+b:Ge/ShieldingGeo/IsParallel        = "True"
+s:Ge/ShieldingGeo/ParallelWorldName = "ShieldingWorld"
+
+#=====================
+#Cylinder of Titanium
+#=====================
+
+s:Ge/TitaniumCylinder/Type         = "TsCylinder"
+s:Ge/TitaniumCylinder/Parent       = "ShieldingGeo"
+s:Ge/TitaniumCylinder/Material     = "Titanium"
+d:Ge/TitaniumCylinder/RMin         = 0.32 mm
+d:Ge/TitaniumCylinder/RMax         = 0.40 mm
+d:Ge/TitaniumCylinder/SPhi         = 180. deg
+d:Ge/TitaniumCylinder/DPhi         = 360. deg
+d:Ge/TitaniumCylinder/HL           = 2.1 mm
+d:Ge/TitaniumCylinder/TransX       = 0. mm
+d:Ge/TitaniumCylinder/TransY       = 0. mm
+d:Ge/TitaniumCylinder/TransZ       = 0. mm
+d:Ge/TitaniumCylinder/RotX         = 0. deg
+d:Ge/TitaniumCylinder/RotY         = 0. deg
+d:Ge/TitaniumCylinder/RotZ         = 0. deg
+s:Ge/TitaniumCylinder/Color        = "blue"
+s:Ge/TitaniumCylinder/DrawingStyle = "FullWireFrame"
+b:Ge/TitaniumCylinder/IsParallel   = "T"
+s:Ge/TitaniumCylinder/ParallelWorldName = "ShieldingWorld"
+
+#===============================
+#Left half-sphere of Titanium 
+#===============================
+
+s:Ge/TitaniumLeftCap/Type         = "TsSphere"
+s:Ge/TitaniumLeftCap/Parent       = "ShieldingGeo"
+s:Ge/TitaniumLeftCap/Material     = "Titanium"
+d:Ge/TitaniumLeftCap/RMin         = 0.32 mm
+d:Ge/TitaniumLeftCap/RMax         = 0.4 mm
+d:Ge/TitaniumLeftCap/SPhi         = 0. deg
+d:Ge/TitaniumLeftCap/DPhi         = 360. deg
+d:Ge/TitaniumLeftCap/STheta       = 0. deg
+d:Ge/TitaniumLeftCap/DTheta       = 90. deg
+d:Ge/TitaniumLeftCap/TransX       = 0. mm
+d:Ge/TitaniumLeftCap/TransY       = 0. mm
+d:Ge/TitaniumLeftCap/TransZ       = 2.1 mm
+d:Ge/TitaniumLeftCap/RotX         = 0. deg
+d:Ge/TitaniumLeftCap/RotY         = 0. deg
+d:Ge/TitaniumLeftCap/RotZ         = 0. deg
+s:Ge/TitaniumLeftCap/DrawingStyle = "FullWireFrame"
+s:Ge/TitaniumLeftCap/Color        = "blue"
+b:Ge/TitaniumLeftCap/IsParallel   = "T"
+s:Ge/TitaniumLeftCap/ParallelWorldName = "ShieldingWorld"
+
+#================================
+#Right half-sphere of titanium
+#================================
+
+s:Ge/TitaniumRightCap/Type         = "TsSphere"
+s:Ge/TitaniumRightCap/Parent       = "ShieldingGeo"
+s:Ge/TitaniumRightCap/Material     = "Titanium"
+d:Ge/TitaniumRightCap/RMin         = 0.32 mm
+d:Ge/TitaniumRightCap/RMax         = 0.4 mm
+d:Ge/TitaniumRightCap/SPhi         = 0. deg
+d:Ge/TitaniumRightCap/DPhi         = 360. deg
+d:Ge/TitaniumRightCap/STheta       = 0. deg
+d:Ge/TitaniumRightCap/DTheta       = 90. deg
+d:Ge/TitaniumRightCap/TransX       = 0. mm
+d:Ge/TitaniumRightCap/TransY       = 0. mm
+d:Ge/TitaniumRightCap/TransZ       = -2.1 mm
+d:Ge/TitaniumRightCap/RotX         = 180. deg
+d:Ge/TitaniumRightCap/RotY         = 0. deg
+d:Ge/TitaniumRightCap/RotZ         = 0. deg
+s:Ge/TitaniumRightCap/DrawingStyle = "FullWireFrame"
+s:Ge/TitaniumRightCap/Color        = "blue"
+b:Ge/TitaniumRightCap/IsParallel   = "T"
+s:Ge/TitaniumRightCap/ParallelWorldName = "ShieldingWorld"
+
+#===============================
+#Left cap of air 
+#===============================
+
+s:Ge/AirLeftCap/Type         = "TsSphere"
+s:Ge/AirLeftCap/Parent       = "ShieldingGeo"
+s:Ge/AirLeftCap/Material     = "G4_AIR"
+d:Ge/AirLeftCap/RMin         = 0. mm
+d:Ge/AirLeftCap/RMax         = 0.32 mm
+d:Ge/AirLeftCap/SPhi         = 0. deg
+d:Ge/AirLeftCap/DPhi         = 360. deg
+d:Ge/AirLeftCap/STheta       = 0. deg
+d:Ge/AirLeftCap/DTheta       = 90. deg
+d:Ge/AirLeftCap/TransX       = 0. mm
+d:Ge/AirLeftCap/TransY       = 0. mm
+d:Ge/AirLeftCap/TransZ       = 2.1 mm
+d:Ge/AirLeftCap/RotX         = 0. deg
+d:Ge/AirLeftCap/RotY         = 0. deg
+d:Ge/AirLeftCap/RotZ         = 0. deg
+s:Ge/AirLeftCap/DrawingStyle = "FullWireFrame"
+s:Ge/AirLeftCap/Color        = "white"
+b:Ge/AirLeftCap/IsParallel   = "T"
+s:Ge/AirLeftCap/ParallelWorldName = "ShieldingWorld"
+
+#===============================
+#Right cap of air 
+#===============================
+
+s:Ge/AirRightCap/Type         = "TsSphere"
+s:Ge/AirRightCap/Parent       = "ShieldingGeo"
+s:Ge/AirRightCap/Material     = "G4_AIR"
+d:Ge/AirRightCap/RMin         = 0. mm
+d:Ge/AirRightCap/RMax         = 0.32 mm
+d:Ge/AirRightCap/SPhi         = 0. deg
+d:Ge/AirRightCap/DPhi         = 360. deg
+d:Ge/AirRightCap/STheta       = 0. deg
+d:Ge/AirRightCap/DTheta       = 90. deg
+d:Ge/AirRightCap/TransX       = 0. mm
+d:Ge/AirRightCap/TransY       = 0. mm
+d:Ge/AirRightCap/TransZ       = -2.1 mm
+d:Ge/AirRightCap/RotX         = 180. deg
+d:Ge/AirRightCap/RotY         = 0. deg
+d:Ge/AirRightCap/RotZ         = 0. deg
+s:Ge/AirRightCap/DrawingStyle = "FullWireFrame"
+s:Ge/AirRightCap/Color        = "white"
+b:Ge/AirRightCap/IsParallel   = "T"
+s:Ge/AirRightCap/ParallelWorldName = "ShieldingWorld"
+
+#====================
+#Dry Air cylinder
+#====================
+
+s:Ge/DryAirCylinder/Type         = "TsCylinder"
+s:Ge/DryAirCylinder/Parent       = "ShieldingGeo"
+s:Ge/DryAirCylinder/Material     = "G4_AIR"
+d:Ge/DryAirCylinder/RMin         = 0. mm
+d:Ge/DryAirCylinder/RMax         = 0.32 mm
+d:Ge/DryAirCylinder/SPhi         = 0. deg
+d:Ge/DryAirCylinder/DPhi         = 360. deg
+d:Ge/DryAirCylinder/HL           = 2.1 mm
+d:Ge/DryAirCylinder/TransX       = 0. mm
+d:Ge/DryAirCylinder/TransY       = 0. mm
+d:Ge/DryAirCylinder/TransZ       = 0. mm
+d:Ge/DryAirCylinder/RotX         = 0. deg
+d:Ge/DryAirCylinder/RotY         = 0. deg
+d:Ge/DryAirCylinder/RotZ         = 0. deg
+s:Ge/DryAirCylinder/DrawingStyle = "FullWireFrame"
+s:Ge/DryAirCylinder/Color        = "white"
+b:Ge/DryAirCylinder/IsParallel   = "T"
+s:Ge/DryAirCylinder/ParallelWorldName = "ShieldingWorld"
+
+sv:Ph/Default/LayeredMassGeometryWorlds = 2 "ShieldingWorld" "ActiveSourceWorld"

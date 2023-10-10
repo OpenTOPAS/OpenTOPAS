@@ -1,0 +1,65 @@
+# Test filtering on ions
+
+s:Ge/World/Material  = "Vacuum"
+d:Ge/World/HLX       = 2.0 m
+d:Ge/World/HLY       = 2.0 m
+d:Ge/World/HLZ       = 2.0 m
+b:Ge/World/Invisible = "TRUE"
+
+s:Ge/BeamPosition/Parent = "World"
+s:Ge/BeamPosition/Type   = "Group"
+d:Ge/BeamPosition/TransX = 0.0 cm
+d:Ge/BeamPosition/TransY = 0.0 cm
+d:Ge/BeamPosition/TransZ = Ge/World/HLZ m
+d:Ge/BeamPosition/RotX   = 180. deg
+d:Ge/BeamPosition/RotY   = 0. deg
+d:Ge/BeamPosition/RotZ   = 0. deg
+
+s:Ge/Phantom/Type     = "TsBox"
+s:Ge/Phantom/Parent   = "World"
+s:Ge/Phantom/Material = "G4_WATER"
+d:Ge/Phantom/HLX      = 5.0 cm
+d:Ge/Phantom/HLY      = 5.0 cm
+d:Ge/Phantom/HLZ      = 5.0 cm
+d:Ge/Phantom/TransX   = 0. cm
+d:Ge/Phantom/TransY   = 0. cm
+d:Ge/Phantom/TransZ   = 0. cm
+d:Ge/Phantom/RotX     = 0. deg
+d:Ge/Phantom/RotY     = 0.0 deg
+d:Ge/Phantom/RotZ     = 0. deg
+s:Ge/Phantom/Color    = "blue"
+i:Ge/Phantom/XBins    = 1
+i:Ge/Phantom/YBins    = 1
+i:Ge/Phantom/ZBins    = 1
+
+s:Sc/AllOfAtomicNumber6/Quantity                           = "EnergyDeposit"
+s:Sc/AllOfAtomicNumber6/Component                          = "Phantom"
+sv:Sc/AllOfAtomicNumber6/Report                            = 3 "Mean" "Count_In_Bin" "Standard_Deviation"
+b:Sc/AllOfAtomicNumber6/OutputToConsole                    = "True"
+s:Sc/AllOfAtomicNumber6/IfOutputFileAlreadyExists          = "Overwrite"
+i:Sc/AllOfAtomicNumber6/OnlyIncludeParticlesOfAtomicNumber = 6
+
+s:Sc/IonsWithWildCards/Quantity                    = "EnergyDeposit"
+s:Sc/IonsWithWildCards/Component                   = "Phantom"
+sv:Sc/IonsWithWildCards/Report                     = 3 "Mean" "Count_In_Bin" "Standard_Deviation"
+b:Sc/IonsWithWildCards/OutputToConsole             = "True"
+s:Sc/IonsWithWildCards/IfOutputFileAlreadyExists   = "Overwrite"
+sv:Sc/IonsWithWildCards/OnlyIncludeParticlesNamed  = 1 "GenericIon(6,*,*)"
+
+s:Sc/IonsWithCharge3to5/Quantity                   = "EnergyDeposit"
+s:Sc/IonsWithCharge3to5/Component                  = "Phantom"
+sv:Sc/IonsWithCharge3to5/Report                    = 3 "Mean" "Count_In_Bin" "Standard_Deviation"
+b:Sc/IonsWithCharge3to5/OutputToConsole            = "True"
+s:Sc/IonsWithCharge3to5/IfOutputFileAlreadyExists  = "Overwrite"
+sv:Sc/IonsWithCharge3to5/OnlyIncludeParticlesNamed = 3 "GenericIon(6,12,3)" "GenericIon(6,12,4)" "GenericIon(6,12,5)"
+
+s:So/Example/Type                     = "Beam"
+s:So/Example/Component                = "BeamPosition"
+s:So/Example/BeamParticle             = "GenericIon(6,12)"
+d:So/Example/BeamEnergy               = 100.0 MeV
+u:So/Example/BeamEnergySpread         = 0.0
+s:So/Example/BeamPositionDistribution = "None"
+s:So/Example/BeamAngularDistribution  = "None"
+i:So/Example/NumberOfHistoriesInRun   = 10000
+
+i:Ts/ShowHistoryCountAtInterval = 1000

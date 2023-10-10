@@ -1,0 +1,388 @@
+# Demonstrates all of the standard Geant4 solids
+# with many parameters controllable from the Qt GUI.
+# Shows only the required parameters, omitting the optional ones
+# (the ones such as TransX or RMin that have default values).
+# Details are given in the TOPAS User Guide
+# and in chapter 4 of the Geant4 Application Developer's Guide
+# http://geant4.web.cern.ch/geant4/UserDocumentation/UsersGuides/ForApplicationDeveloper/html/ch04.html#sect.Geom.Solids
+
+# Box
+s:Ge/DemoBox/Type                    = "TsBox"
+s:Ge/DemoBox/Parent                  = "World"
+sc:Ge/DemoBox/Material                = "Air"
+dc:Ge/DemoBox/HLX                     = 30. mm
+dc:Ge/DemoBox/HLY                     = 40. mm
+dc:Ge/DemoBox/HLZ                     = 60. mm
+sc:Ge/DemoBox/Color                   = "white"
+sc:Ge/DemoBox/DrawingStyle       = "FullWireFrame"
+
+# Tubs
+s:Ge/DemoCylinder/Type               = "TsCylinder"
+s:Ge/DemoCylinder/Parent             = "World"
+sc:Ge/DemoCylinder/Material           = "Air"
+dc:Ge/DemoCylinder/TransZ             = 12 cm
+dc:Ge/DemoCylinder/RMax               = 15 mm
+dc:Ge/DemoCylinder/HL                 = 20 mm
+sc:Ge/DemoCylinder/Color              = "lightblue"
+sc:Ge/DemoCylinder/DrawingStyle       = "FullWireFrame"
+
+# CutTubs
+s:Ge/DemoCutTubs/Type                = "G4CutTubs"
+s:Ge/DemoCutTubs/Parent              = "World"
+sc:Ge/DemoCutTubs/Material            = "Air"
+dc:Ge/DemoCutTubs/TransZ              = 24 cm
+dc:Ge/DemoCutTubs/RMax                = 20 mm
+dc:Ge/DemoCutTubs/HL                  = 30 mm
+uvc:Ge/DemoCutTubs/LowNorm            = 3 0. -0.7  -0.71
+uvc:Ge/DemoCutTubs/HighNorm           = 3 0.7 0. 0.71
+sc:Ge/DemoCutTubs/Color               = "skyblue"
+sc:Ge/DemoCutTubs/DrawingStyle        = "FullWireFrame"
+
+# Cons
+s:Ge/DemoCons/Type                   = "G4Cons"
+s:Ge/DemoCons/Parent                 = "World"
+sc:Ge/DemoCons/Material               = "Air"
+dc:Ge/DemoCons/TransZ                 = 36 cm
+dc:Ge/DemoCons/RMax1                  = 10 mm
+dc:Ge/DemoCons/RMax2                  = 25 mm
+dc:Ge/DemoCons/HL                     = 40 mm
+sc:Ge/DemoCons/Color                  = "red"
+sc:Ge/DemoCons/DrawingStyle           = "FullWireFrame"
+
+# Para
+s:Ge/DemoPara/Type                   = "G4Para"
+s:Ge/DemoPara/Parent                 = "World"
+sc:Ge/DemoPara/Material               = "Air"
+dc:Ge/DemoPara/TransX                 = 0 cm
+dc:Ge/DemoPara/TransY                 = 0 cm
+dc:Ge/DemoPara/TransZ                 = 48 cm
+dc:Ge/DemoPara/RotX                   = 0 deg
+dc:Ge/DemoPara/RotY                   = 0 deg
+dc:Ge/DemoPara/RotZ                   = 0 deg
+dc:Ge/DemoPara/HLX                    = 30. mm
+dc:Ge/DemoPara/HLY                    = 40. mm
+dc:Ge/DemoPara/HLZ                    = 60. mm
+dc:Ge/DemoPara/Alpha                  = 0.3 rad
+dc:Ge/DemoPara/Theta                  = 0 rad
+dc:Ge/DemoPara/Phi                    = 0 rad
+sc:Ge/DemoPara/Color                  = "magenta"
+sc:Ge/DemoPara/DrawingStyle       = "FullWireFrame"
+
+# Trd
+s:Ge/DemoTrd/Type                    = "G4Trd"
+s:Ge/DemoTrd/Parent                  = "World"
+sc:Ge/DemoTrd/Material                = "Air"
+dc:Ge/DemoTrd/TransX                  = 0 cm
+dc:Ge/DemoTrd/TransY                  = 0 cm
+dc:Ge/DemoTrd/TransZ                  = 66 cm
+dc:Ge/DemoTrd/RotX                    = 0 deg
+dc:Ge/DemoTrd/RotY                    = 0 deg
+dc:Ge/DemoTrd/RotZ                    = 0 deg
+dc:Ge/DemoTrd/HLX1                    = 30. mm
+dc:Ge/DemoTrd/HLX2                    = 10. mm
+dc:Ge/DemoTrd/HLY1                    = 40. mm
+dc:Ge/DemoTrd/HLY2                    = 15. mm
+dc:Ge/DemoTrd/HLZ                     = 60. mm
+sc:Ge/DemoTrd/Color                   = "violet"
+sc:Ge/DemoTrd/DrawingStyle       = "FullWireFrame"
+
+# RTrap - Right Angular Wedge Trapezoid
+s:Ge/DemoRTrap/Type                  = "G4RTrap"
+s:Ge/DemoRTrap/Parent                = "World"
+sc:Ge/DemoRTrap/Material              = "Air"
+dc:Ge/DemoRTrap/TransX                = 0 cm
+dc:Ge/DemoRTrap/TransY                = 0 cm
+dc:Ge/DemoRTrap/TransZ                = 84 cm
+dc:Ge/DemoRTrap/RotX                  = 0 deg
+dc:Ge/DemoRTrap/RotY                  = 0 deg
+dc:Ge/DemoRTrap/RotZ                  = 0 deg
+dc:Ge/DemoRTrap/LZ                    = 120. mm
+dc:Ge/DemoRTrap/LY                    = 80. mm
+dc:Ge/DemoRTrap/LX                    = 60. mm
+dc:Ge/DemoRTrap/LTX                   = 30. mm
+sc:Ge/DemoRTrap/Color                 = "pink"
+sc:Ge/DemoRTrap/DrawingStyle       = "FullWireFrame"
+
+# GTrap - General Trapezoid
+s:Ge/DemoGTrap/Type                  = "G4GTrap"
+s:Ge/DemoGTrap/Parent                = "World"
+sc:Ge/DemoGTrap/Material              = "Air"
+dc:Ge/DemoGTrap/TransX                = 0 cm
+dc:Ge/DemoGTrap/TransY                = 0 cm
+dc:Ge/DemoGTrap/TransZ                = 104 cm
+dc:Ge/DemoGTrap/RotX                  = 0 deg
+dc:Ge/DemoGTrap/RotY                  = 0 deg
+dc:Ge/DemoGTrap/RotZ                  = 0 deg
+dc:Ge/DemoGTrap/HLZ                   = 60. mm
+dc:Ge/DemoGTrap/Theta                 = 20 deg
+dc:Ge/DemoGTrap/Phi                   = 5 deg
+dc:Ge/DemoGTrap/HLY1                  = 40. mm
+dc:Ge/DemoGTrap/HLX1                  = 30. mm
+dc:Ge/DemoGTrap/HLX2                  = 40. mm
+dc:Ge/DemoGTrap/Alp1                  = 10 deg
+dc:Ge/DemoGTrap/HLY2                  = 16. mm
+dc:Ge/DemoGTrap/HLX3                  = 10. mm
+dc:Ge/DemoGTrap/HLX4                  = 14. mm
+dc:Ge/DemoGTrap/Alp2                  = 10 deg
+sc:Ge/DemoGTrap/Color                 = "indigo"
+sc:Ge/DemoGTrap/DrawingStyle       = "FullWireFrame"
+
+# Sphere
+s:Ge/DemoSphere/Type                 = "TsSphere"
+s:Ge/DemoSphere/Parent               = "World"
+sc:Ge/DemoSphere/Material             = "Air"
+dc:Ge/DemoSphere/TransZ               = 124 cm
+dc:Ge/DemoSphere/RMax                 = 120 mm
+sc:Ge/DemoSphere/Color                = "grass"
+sc:Ge/DemoSphere/DrawingStyle         = "FullWireFrame"
+
+# Orb
+s:Ge/DemoOrb/Type                    = "G4Orb"
+s:Ge/DemoOrb/Parent                  = "World"
+sc:Ge/DemoOrb/Material                = "Air"
+dc:Ge/DemoOrb/TransX                  = 0 cm
+dc:Ge/DemoOrb/TransY                  = 0 cm
+dc:Ge/DemoOrb/TransZ                  = 150 cm
+dc:Ge/DemoOrb/RotX                    = 0 deg
+dc:Ge/DemoOrb/RotY                    = 0 deg
+dc:Ge/DemoOrb/RotZ                    = 0 deg
+dc:Ge/DemoOrb/R                       = 100 mm
+sc:Ge/DemoOrb/Color                   = "orange"
+sc:Ge/DemoOrb/DrawingStyle            = "FullWireFrame"
+
+# Torus
+s:Ge/DemoTorus/Type                  = "G4Torus"
+s:Ge/DemoTorus/Parent                = "World"
+sc:Ge/DemoTorus/Material              = "Air"
+dc:Ge/DemoTorus/TransZ                = 176 cm
+dc:Ge/DemoTorus/RotX                  = 0 deg
+dc:Ge/DemoTorus/RMax                  = 60 mm
+dc:Ge/DemoTorus/RTor                  = 200 mm
+sc:Ge/DemoTorus/Color                 = "purple"
+sc:Ge/DemoTorus/DrawingStyle          = "FullWireFrame"
+
+# HPolycone - Hollow Polycone
+s:Ge/DemoHPolycone/Type              = "G4HPolycone"
+s:Ge/DemoHPolycone/Parent            = "World"
+sc:Ge/DemoHPolycone/Material          = "Air"
+dc:Ge/DemoHPolycone/TransZ            = 180 cm
+dvc:Ge/DemoHPolycone/RInner           = 9 0 1. 1. 1. 2. 2. 3. .5 .2 mm
+dvc:Ge/DemoHPolycone/ROuter           = 9 0 10 10 5 5 10 10 2 2 mm
+dvc:Ge/DemoHPolycone/Z                = 9 5 7 9 11 25 27 29 31 35 mm
+sc:Ge/DemoHPolycone/Color             = "brown"
+sc:Ge/DemoHPolycone/DrawingStyle      = "FullWireFrame"
+
+# SPolycone - Solid Polycone
+s:Ge/DemoSPolycone/Type              = "G4SPolycone"
+s:Ge/DemoSPolycone/Parent            = "World"
+sc:Ge/DemoSPolycone/Material          = "Air"
+dc:Ge/DemoSPolycone/TransZ            = 186 cm
+dvc:Ge/DemoSPolycone/R                = 10 0 10 10 5 5 10 10 2 2 0 mm
+dvc:Ge/DemoSPolycone/Z                = 10 5 7 9 11 25 27 29 31 35 35 mm
+sc:Ge/DemoSPolycone/Color             = "grey"
+sc:Ge/DemoSPolycone/DrawingStyle      = "FullWireFrame"
+
+# GenericPolycone - Generic Polycone
+s:Ge/DemoGenericPolycone/Type              = "G4GenericPolycone"
+s:Ge/DemoGenericPolycone/Parent            = "World"
+sc:Ge/DemoGenericPolycone/Material          = "Air"
+dc:Ge/DemoGenericPolycone/TransZ            = 192 cm
+dvc:Ge/DemoGenericPolycone/R                = 10 0 10 10 5 5 10 10 2 2 0 mm
+dvc:Ge/DemoGenericPolycone/Z                = 10 5 7 9 11 25 27 29 31 35 35 mm
+sc:Ge/DemoGenericPolycone/Color             = "magenta"
+sc:Ge/DemoGenericPolycone/DrawingStyle      = "FullWireFrame"
+
+# HPolyhedra - Hollow Polyhedra
+s:Ge/DemoHPolyhedra/Type             = "G4HPolyhedra"
+s:Ge/DemoHPolyhedra/Parent           = "World"
+sc:Ge/DemoHPolyhedra/Material         = "Air"
+dc:Ge/DemoHPolyhedra/TransZ           = 198 cm
+ic:Ge/DemoHPolyhedra/NSides           = 3
+dvc:Ge/DemoHPolyhedra/Z               = 7 0 5 8 13 30 32 35 mm
+dvc:Ge/DemoHPolyhedra/RInner          = 7 0 2 2 3 1 1 2 mm
+dvc:Ge/DemoHPolyhedra/ROuter          = 7 0 15 15 4 4 10 10 mm
+sc:Ge/DemoHPolyhedra/Color            = "blue"
+sc:Ge/DemoHPolyhedra/DrawingStyle         = "FullWireFrame"
+
+# SPolyhedra - Solid Polyhedra
+s:Ge/DemoSPolyhedra/Type             = "G4SPolyhedra"
+s:Ge/DemoSPolyhedra/Parent           = "World"
+sc:Ge/DemoSPolyhedra/Material         = "Air"
+dc:Ge/DemoSPolyhedra/TransZ           = 204 cm
+i:Ge/DemoSPolyhedra/NSides           = 100
+dvc:Ge/DemoSPolyhedra/R               = 5 0 4 12 8 0 mm
+dvc:Ge/DemoSPolyhedra/Z               = 5 0 0 8 16 16 mm
+sc:Ge/DemoSPolyhedra/Color            = "green"
+sc:Ge/DemoSPolyhedra/DrawingStyle         = "FullWireFrame"
+
+# EllipticalTube
+s:Ge/DemoEllipticalTube/Type         = "G4EllipticalTube"
+s:Ge/DemoEllipticalTube/Parent       = "World"
+sc:Ge/DemoEllipticalTube/Material     = "Air"
+dc:Ge/DemoEllipticalTube/TransZ       = 210 cm
+dc:Ge/DemoEllipticalTube/HLX          = 5 mm
+dc:Ge/DemoEllipticalTube/HLY          = 10 mm
+dc:Ge/DemoEllipticalTube/HLZ          = 20 mm
+sc:Ge/DemoEllipticalTube/Color        = "yellow"
+sc:Ge/DemoEllipticalTube/DrawingStyle = "FullWireFrame"
+
+# Ellipsoid
+s:Ge/DemoEllipsoid/Type              = "G4Ellipsoid"
+s:Ge/DemoEllipsoid/Parent            = "World"
+sc:Ge/DemoEllipsoid/Material          = "Air"
+dc:Ge/DemoEllipsoid/TransZ            = 218 cm
+dc:Ge/DemoEllipsoid/HLX               = 10 mm
+dc:Ge/DemoEllipsoid/HLY               = 20 mm
+dc:Ge/DemoEllipsoid/HLZ               = 50 mm
+sc:Ge/DemoEllipsoid/Color             = "white"
+sc:Ge/DemoEllipsoid/DrawingStyle      = "FullWireFrame"
+
+# EllipticalCone
+s:Ge/DemoEllipticalCone/Type         = "G4EllipticalCone"
+s:Ge/DemoEllipticalCone/Parent       = "World"
+sc:Ge/DemoEllipticalCone/Material     = "Air"
+dc:Ge/DemoEllipticalCone/TransZ       = 228 cm
+dc:Ge/DemoEllipticalCone/HLX          = .4 mm
+dc:Ge/DemoEllipticalCone/HLY          = .8 mm
+dc:Ge/DemoEllipticalCone/ZMax         = 50 mm
+sc:Ge/DemoEllipticalCone/Color        = "lightblue"
+sc:Ge/DemoEllipticalCone/DrawingStyle = "FullWireFrame"
+
+# Paraboloid
+s:Ge/DemoParaboloid/Type             = "G4Paraboloid"
+s:Ge/DemoParaboloid/Parent           = "World"
+sc:Ge/DemoParaboloid/Material         = "Air"
+dc:Ge/DemoParaboloid/TransZ           = 240 cm
+dc:Ge/DemoParaboloid/HLZ              = 20 mm
+dc:Ge/DemoParaboloid/R1               = 20 mm
+dc:Ge/DemoParaboloid/R2               = 35 mm
+sc:Ge/DemoParaboloid/Color            = "skyblue"
+sc:Ge/DemoParaboloid/DrawingStyle     = "FullWireFrame"
+
+# Hype
+s:Ge/DemoHype/Type                   = "G4Hype"
+s:Ge/DemoHype/Parent                 = "World"
+sc:Ge/DemoHype/Material               = "Air"
+dc:Ge/DemoHype/TransZ                 = 254 cm
+dc:Ge/DemoHype/OR                     = 30 mm
+dc:Ge/DemoHype/OS                     = .7 rad
+dc:Ge/DemoHype/HLZ                    = 50 mm
+sc:Ge/DemoHype/Color                  = "red"
+sc:Ge/DemoHype/DrawingStyle           = "FullWireFrame"
+
+# Tet
+s:Ge/DemoTet/Type                    = "G4Tet"
+s:Ge/DemoTet/Parent                  = "World"
+sc:Ge/DemoTet/Material                = "Air"
+dc:Ge/DemoTet/TransZ                  = 268 cm
+dvc:Ge/DemoTet/Anchor                 = 3 0 0 17.3 mm
+dvc:Ge/DemoTet/P2                     = 3 0 16.3 -5.8 mm
+dvc:Ge/DemoTet/P3                     = 3 -14.1 -8.2 -5.8 mm
+dvc:Ge/DemoTet/P4                     = 3 14.1 -8.2 -5.8 mm
+sc:Ge/DemoTet/Color                   = "magenta"
+sc:Ge/DemoTet/DrawingStyle         = "FullWireFrame"
+
+# ExtrudedSolid
+s:Ge/DemoExtrudedSolid/Type          = "G4ExtrudedSolid"
+s:Ge/DemoExtrudedSolid/Parent        = "World"
+sc:Ge/DemoExtrudedSolid/Material      = "Air"
+dc:Ge/DemoExtrudedSolid/TransZ        = 276 cm
+dvc:Ge/DemoExtrudedSolid/Polygons     = 16 -30 -30 -30 30 30 30 30 -30 15 -30 15 15 -15 15 -15 -30 mm
+dc:Ge/DemoExtrudedSolid/HLZ           = 20 mm
+dvc:Ge/DemoExtrudedSolid/Off1         = 2 10. 10. mm
+uc:Ge/DemoExtrudedSolid/Scale1        = 1.
+dvc:Ge/DemoExtrudedSolid/Off2         = 2 -10. -10. mm
+uc:Ge/DemoExtrudedSolid/Scale2        = 0.6
+sc:Ge/DemoExtrudedSolid/Color         = "violet"
+sc:Ge/DemoExtrudedSolid/DrawingStyle         = "FullWireFrame"
+
+# TwistedBox
+s:Ge/DemoG4TwistedBox/Type           = "G4TwistedBox"
+s:Ge/DemoG4TwistedBox/Parent         = "World"
+sc:Ge/DemoG4TwistedBox/Material       = "Air"
+dc:Ge/DemoG4TwistedBox/TransZ         = 290 cm
+dc:Ge/DemoG4TwistedBox/Twist          = 30 deg
+dc:Ge/DemoG4TwistedBox/HLX            = 30. mm
+dc:Ge/DemoG4TwistedBox/HLY            = 40. mm
+dc:Ge/DemoG4TwistedBox/HLZ            = 60. mm
+sc:Ge/DemoG4TwistedBox/Color          = "pink"
+sc:Ge/DemoG4TwistedBox/DrawingStyle   = "FullWireFrame"
+
+# RTwistedTrap - Right Angular Wedge Twisted Trapezoid
+s:Ge/DemoRTwistedTrap/Type           = "G4RTwistedTrap"
+s:Ge/DemoRTwistedTrap/Parent         = "World"
+sc:Ge/DemoRTwistedTrap/Material       = "Air"
+dc:Ge/DemoRTwistedTrap/TransZ         = 308 cm
+dc:Ge/DemoRTwistedTrap/Twist          = 30 deg
+dc:Ge/DemoRTwistedTrap/HLX1           = 30. mm
+dc:Ge/DemoRTwistedTrap/HLX2           = 40. mm
+dc:Ge/DemoRTwistedTrap/HLY            = 40. mm
+dc:Ge/DemoRTwistedTrap/HLZ            = 60. mm
+sc:Ge/DemoRTwistedTrap/Color          = "indigo"
+sc:Ge/DemoRTwistedTrap/DrawingStyle   = "FullWireFrame"
+
+# GTwistedTrap - General Twisted Trapezoid
+s:Ge/DemoGTwistedTrap/Type           = "G4GTwistedTrap"
+s:Ge/DemoGTwistedTrap/Parent         = "World"
+sc:Ge/DemoGTwistedTrap/Material       = "Air"
+dc:Ge/DemoGTwistedTrap/TransZ         = 326 cm
+dc:Ge/DemoGTwistedTrap/Twist          = 30 deg
+dc:Ge/DemoGTwistedTrap/HLZ            = 60. mm
+dc:Ge/DemoGTwistedTrap/Theta          = 20 deg
+dc:Ge/DemoGTwistedTrap/Phi            = 5 deg
+dc:Ge/DemoGTwistedTrap/HLY1           = 40. mm
+dc:Ge/DemoGTwistedTrap/HLX1           = 30. mm
+dc:Ge/DemoGTwistedTrap/HLX2           = 40. mm
+dc:Ge/DemoGTwistedTrap/HLY2           = 16. mm
+dc:Ge/DemoGTwistedTrap/HLX3           = 10. mm
+dc:Ge/DemoGTwistedTrap/HLX4           = 14. mm
+dc:Ge/DemoGTwistedTrap/Alpha          = 10 deg
+sc:Ge/DemoGTwistedTrap/Color          = "grass"
+sc:Ge/DemoGTwistedTrap/DrawingStyle   = "FullWireFrame"
+
+# TwistedTrd
+s:Ge/DemoTwistedTrd/Type             = "G4TwistedTrd"
+s:Ge/DemoTwistedTrd/Parent           = "World"
+sc:Ge/DemoTwistedTrd/Material         = "Air"
+dc:Ge/DemoTwistedTrd/TransZ           = 342 cm
+dc:Ge/DemoTwistedTrd/HLX1             = 30. mm
+dc:Ge/DemoTwistedTrd/HLX2             = 10. mm
+dc:Ge/DemoTwistedTrd/HLY1             = 40. mm
+dc:Ge/DemoTwistedTrd/HLY2             = 15. mm
+dc:Ge/DemoTwistedTrd/HLZ              = 60. mm
+dc:Ge/DemoTwistedTrd/Twist            = 30 deg
+sc:Ge/DemoTwistedTrd/Color            = "orange"
+sc:Ge/DemoTwistedTrd/DrawingStyle     = "FullWireFrame"
+
+# GenericTrap
+s:Ge/DemoGenericTrap/Type            = "G4GenericTrap"
+s:Ge/DemoGenericTrap/Parent          = "World"
+sc:Ge/DemoGenericTrap/Material        = "Air"
+dc:Ge/DemoGenericTrap/TransZ          = 356 cm
+dc:Ge/DemoGenericTrap/HLZ             = 25 mm
+dvc:Ge/DemoGenericTrap/Vertices       = 16 -30 -30 -30 30 30 30 30 -30 -5 -20 -20 20 20 20 20 -20 mm
+sc:Ge/DemoGenericTrap/Color           = "purple"
+sc:Ge/DemoGenericTrap/DrawingStyle    = "FullWireFrame"
+
+# TwistedTubs
+s:Ge/DemoTwistedTubs/Type            = "G4TwistedTubs"
+s:Ge/DemoTwistedTubs/Parent          = "World"
+sc:Ge/DemoTwistedTubs/Material        = "Air"
+dc:Ge/DemoTwistedTubs/TransZ          = 364 cm
+dc:Ge/DemoTwistedTubs/Twist           = 60 deg
+dc:Ge/DemoTwistedTubs/EndInnerRad     = 10 mm
+dc:Ge/DemoTwistedTubs/EndOuterRad     = 15 mm
+dc:Ge/DemoTwistedTubs/HLZ             = 20 mm
+dc:Ge/DemoTwistedTubs/Phi             = 90 deg
+sc:Ge/DemoTwistedTubs/Color           = "brown"
+sc:Ge/DemoTwistedTubs/DrawingStyle    = "FullWireFrame"
+
+i:So/Demo/NumberOfHistoriesInRun   = 10
+
+b:Ge/World/Invisible = "True"
+
+sv:Ph/Default/Modules = 1 "g4em-standard_opt0"
+
+s:Gr/ViewA/Type = "OpenGL"
+
+Ts/UseQt = "True"

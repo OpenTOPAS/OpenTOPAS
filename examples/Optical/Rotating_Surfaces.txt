@@ -1,0 +1,25 @@
+# Demonstrates optical behavior on rotating surfaces
+
+includeFile = Surfaces.txt
+
+i:Ts/SequenceVerbosity = 0
+
+i:Tf/Verbosity               = 0
+d:Tf/TimelineEnd             = 60.0 ms
+i:Tf/NumberOfSequentialTimes = 40
+
+i:So/Example/NumberOfHistoriesInRun = 20
+
+d:Ge/Splitter/RotX = Tf/SplitterRot/Value deg
+
+s:Tf/SplitterRot/Function           = "Linear deg"
+d:Tf/SplitterRot/Rate               = 1. deg/ms
+d:Tf/SplitterRot/StartValue         = -57.0 deg
+d:Tf/SplitterRot/RepetitionInterval = 60. ms
+
+d:Ge/Mirror/RotX =  Tf/MirrorRot/Value deg
+
+s:Tf/MirrorRot/Function           = "Linear deg"
+d:Tf/MirrorRot/Rate               = -1. deg/ms
+d:Tf/MirrorRot/StartValue         = 100.0 deg
+d:Tf/MirrorRot/RepetitionInterval = 60. ms

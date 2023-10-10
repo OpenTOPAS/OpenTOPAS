@@ -1,0 +1,83 @@
+# Demonstrates scoring in an XCAT file.
+
+s:Ge/Patient/Type		= "TsImageCube"
+s:Ge/Patient/InputDirectory	= "./"
+s:Ge/Patient/InputFile		= "XCAT_FullMouse_86x86x161_atn_1.bin"
+s:Ge/Patient/MetaDataFile	= "XCAT_FullMouse_86x86x161_atn_1.log"
+s:Ge/Patient/ImagingToMaterialConverter = "XCAT_Attenuation" # "XCAT_Activity"
+includeFile = XCAT_Materials.txt
+
+# These parameters are only used if no MetaDataFile is provided.
+i:Ge/Patient/NumberOfVoxelsX	= 86
+i:Ge/Patient/NumberOfVoxelsY	= 86
+i:Ge/Patient/NumberOfVoxelsZ	= 161
+d:Ge/Patient/VoxelSizeX	= .5 mm
+d:Ge/Patient/VoxelSizeY	= .5 mm
+dv:Ge/Patient/VoxelSizeZ = 1 .5 mm
+
+s:Ge/Patient/DataType = "FLOAT"
+u:Ge/Patient/AttenuationForMaterial_XCAT_Air = 0.
+u:Ge/Patient/AttenuationForMaterial_XCAT_Body_(water)   =     203.8293
+u:Ge/Patient/AttenuationForMaterial_XCAT_Muscle         =     195.2515
+u:Ge/Patient/AttenuationForMaterial_XCAT_Adipose_(fat)  =     114.9825
+u:Ge/Patient/AttenuationForMaterial_XCAT_Lung           =      57.5347
+u:Ge/Patient/AttenuationForMaterial_XCAT_Spine_Bone     =     225.7159
+u:Ge/Patient/AttenuationForMaterial_XCAT_Rib_Bone       =     283.3633
+u:Ge/Patient/AttenuationForMaterial_XCAT_Blood          =     201.7046
+u:Ge/Patient/AttenuationForMaterial_XCAT_Heart          =     195.6546
+u:Ge/Patient/AttenuationForMaterial_XCAT_Kidney         =     196.5382
+u:Ge/Patient/AttenuationForMaterial_XCAT_Liver          =     197.4710
+u:Ge/Patient/AttenuationForMaterial_XCAT_Lymph          =     204.0590
+u:Ge/Patient/AttenuationForMaterial_XCAT_Pancreas       =     190.0039
+u:Ge/Patient/AttenuationForMaterial_XCAT_Spleen         =     200.6941
+u:Ge/Patient/AttenuationForMaterial_XCAT_Intestine      =     195.1612
+u:Ge/Patient/AttenuationForMaterial_XCAT_Skull          =     247.5866
+u:Ge/Patient/AttenuationForMaterial_XCAT_Cartilage      =     208.0629
+u:Ge/Patient/AttenuationForMaterial_XCAT_Brain          =     192.2248
+
+s:Ge/Patient/Parent   = "World"
+d:Ge/Patient/TransX   = 0. m
+d:Ge/Patient/TransY   = 0. m
+d:Ge/Patient/TransZ   = 0. m
+d:Ge/Patient/RotX     = 0. deg
+d:Ge/Patient/RotY     = 0. deg
+d:Ge/Patient/RotZ     = 0. deg
+
+# Specify which slices to show.
+# Comment this out or set to zero to show all slices.
+# Set to -1 to show only center slice.
+# Set to -2 to show first, center and last slice.
+#iv:Ge/Patient/ShowSpecificSlicesX = 1 -2
+#iv:Ge/Patient/ShowSpecificSlicesY = 1 -2
+iv:Ge/Patient/ShowSpecificSlicesZ = 9 1 21 41 61 81 101 121 141 161
+
+s:Ge/World/Material    = "G4_AIR"
+d:Ge/World/HLX         = .5 m
+d:Ge/World/HLY         = .5 m
+d:Ge/World/HLZ         = .5 m
+b:Ge/World/Invisible   = "TRUE"
+
+s:So/Example/Type                     = "Beam"
+s:So/Example/Component                = "BeamPosition"
+s:So/Example/BeamParticle             = "proton"
+d:So/Example/BeamEnergy               = 70. MeV
+u:So/Example/BeamEnergySpread         = 0.757504
+s:So/Example/BeamPositionDistribution = "Flat"
+s:So/Example/BeamPositionCutoffShape  = "Ellipse"
+d:So/Example/BeamPositionCutoffX      = 5. mm
+d:So/Example/BeamPositionCutoffY      = 5. mm
+s:So/Example/BeamAngularDistribution  = "None"
+i:So/Example/NumberOfHistoriesInRun   = 10
+
+s:Gr/ViewA/Type           = "OpenGL"
+i:Gr/ViewA/WindowSizeX    = 900
+i:Gr/ViewA/WindowSizeY    = 900
+d:Gr/ViewA/Theta          = 60 deg
+d:Gr/ViewA/Phi            = 10 deg
+
+# Extra graphics options to handle complex voxel geometries
+i:Gr/ShowOnlyOutlineIfVoxelCountExceeds = 210000000
+
+i:Ts/ShowHistoryCountAtInterval = 100
+
+b:Ts/PauseBeforeQuit = "True"

@@ -1,0 +1,62 @@
+########################
+# Uniform split
+########################
+includeFile = vrt_Shielding_Globals.txt
+
+d:Ge/World/HLX = 3.0 m
+d:Ge/World/HLY = 3.0 m
+d:Ge/World/HLZ = 3.0 m
+
+#########################
+# Gemetry for vrt 
+#########################
+
+d:Ge/subComponent/Thickness  = 2.5 cm
+d:Ge/subComponent/HalfLength = 10 cm
+
+s:Ge/target/Material       = "G4_Pb"
+d:Ge/target/HL             = 5 mm
+s:Ge/target/AssignToRegionNamed = "ForSplit"
+
+b:Ge/subComponent1/IsParallel = "false"
+b:Ge/subComponent2/IsParallel = "false"
+b:Ge/subComponent3/IsParallel = "false"
+b:Ge/subComponent4/IsParallel = "false"
+b:Ge/subComponent5/IsParallel = "false"
+b:Ge/subComponent6/IsParallel = "false"
+b:Ge/subComponent7/IsParallel = "false"
+b:Ge/subComponent8/IsParallel = "false"
+b:Ge/subComponent9/IsParallel = "false"
+b:Ge/subComponent10/IsParallel = "false"
+
+s:Ge/subComponent1/Material = "G4_WATER"
+s:Ge/subComponent2/Material = "G4_WATER"
+s:Ge/subComponent3/Material = "G4_WATER"
+s:Ge/subComponent4/Material = "G4_WATER"
+s:Ge/subComponent5/Material = "G4_WATER"
+s:Ge/subComponent6/Material = "G4_WATER"
+s:Ge/subComponent7/Material = "G4_WATER"
+s:Ge/subComponent8/Material = "G4_WATER"
+s:Ge/subComponent9/Material = "G4_WATER"
+s:Ge/subComponent10/Material = "G4_WATER"
+
+b:Ge/Scorer/IsParallel = "True"
+s:Sc/Scorer/OutputFile = "vrt_SecondaryBiasing_Uniform"
+
+sv:Ph/Default/Modules = 1 "g4em-penelope"
+d:So/Default/BeamEnergy = 6 MeV
+s:So/Default/BeamParticle = "e-"
+
+#########################
+# VRT
+#########################
+b:Vr/UseVarianceReduction = "True"
+b:Vr/ParticleSplit/Active = "True"
+s:Vr/ParticleSplit/Type   = "SecondaryBIasing"
+sv:Vr/ParTicleSplit/forregion/ForSplit/processesNamed   = 1 "eBrem"
+uv:Vr/ParticleSplit/FOrRegion/ForSplit/SplitNumber      = 1   100.
+dv:Vr/ParticleSplit/ForReGion/ForSplit/MaximumEnergies  = 1   6  MeV
+
+i:Ts/Seed = 123
+i:So/Default/NumberOfHistoriesInRun = 10000
+i:Ts/ShowHistoryCountAtInterval     = 1000

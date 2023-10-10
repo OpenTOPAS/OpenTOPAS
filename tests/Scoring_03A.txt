@@ -1,0 +1,4 @@
+includeFile = Scoring_03.txt
+
+#--- Scoring
+s:Sc/Dose/OutputType = "binary"

@@ -1,0 +1,168 @@
+# Beam passes through a quadrupole magnet followed by
+# a time-varying dipole magnet.
+
+d:Ge/World/HLX       = 2.0 m
+d:Ge/World/HLY       = 2.0 m
+d:Ge/World/HLZ       = 2.0 m
+b:Ge/World/Invisible = "TRUE"
+s:Ge/World/Material  = "Vacuum"
+
+# Nozzle (a group of components)
+s:Ge/Nozzle/Type   = "Group"
+s:Ge/Nozzle/Parent = "World"
+d:Ge/Nozzle/TransX = 0. m
+d:Ge/Nozzle/TransY = 0. m
+d:Ge/Nozzle/TransZ = 0. m
+d:Ge/Nozzle/RotX   = 0. deg
+d:Ge/Nozzle/RotY   = 0. deg
+d:Ge/Nozzle/RotZ   = 0. deg
+
+
+##########################################
+# Quadrupole pair for focusing beam spot
+##########################################
+s:Ge/QBox1/Quad/Type          = "TsBox"
+s:Ge/QBox1/Quad/Parent        = "Nozzle"
+s:Ge/QBox1/Quad/Material      = "G4_AIR"
+d:Ge/QBox1/Quad/HLX           = 15 cm
+d:Ge/QBox1/Quad/HLY           = 15 cm
+d:Ge/QBox1/Quad/HLZ           = 10 cm
+d:Ge/QBox1/Quad/TransX        = 0.0 cm
+d:Ge/QBox1/Quad/TransY        = 0.0 cm
+d:Ge/QBox1/Quad/TransZ        = 160  cm + Ge/QBox1/Quad/HLZ
+d:Ge/QBox1/Quad/RotX          = 0.0 deg
+d:Ge/QBox1/Quad/RotY          = 0.0 deg
+d:Ge/QBox1/Quad/RotZ          = 0.0 deg
+s:Ge/QBox1/Quad/Field = "QuadrupoleMagnet"
+d:Ge/QBox1/Quad/MagneticFieldGradientX     = .1 tesla/cm
+d:Ge/QBox1/Quad/MagneticFieldGradientY     = .1 tesla/cm
+
+s:Ge/QBox2/Quad/Type          = "TsBox"
+s:Ge/QBox2/Quad/Parent        = "Nozzle"
+s:Ge/QBox2/Quad/Material      = "G4_AIR"
+d:Ge/QBox2/Quad/HLX           = 15 cm
+d:Ge/QBox2/Quad/HLY           = 15 cm
+d:Ge/QBox2/Quad/HLZ           = 10 cm
+d:Ge/QBox2/Quad/TransX        = 0.0 cm
+d:Ge/QBox2/Quad/TransY        = 0.0 cm
+d:Ge/QBox2/Quad/TransZ        = 140  cm + Ge/QBox2/Quad/HLZ
+d:Ge/QBox2/Quad/RotX          = 0.0 deg
+d:Ge/QBox2/Quad/RotY          = 0.0 deg
+d:Ge/QBox2/Quad/RotZ          = 0.0 deg
+s:Ge/QBox2/Quad/Field = "QuadrupoleMagnet"
+d:Ge/QBox2/Quad/MagneticFieldGradientX     = .1 tesla/cm
+d:Ge/QBox2/Quad/MagneticFieldGradientY     = .1 tesla/cm
+
+##########################################
+# Dipole for stiring beam direction!
+##########################################
+s:Ge/VBox1/Dipole/Type          = "TsBox"
+s:Ge/VBox1/Dipole/Parent        = "Nozzle"
+s:Ge/VBox1/Dipole/Material      = "G4_AIR"
+d:Ge/VBox1/Dipole/HLX           = 10 cm
+d:Ge/VBox1/Dipole/HLY           = 10 cm
+d:Ge/VBox1/Dipole/HLZ           = 20 cm
+d:Ge/VBox1/Dipole/TransX        = 0.0 cm
+d:Ge/VBox1/Dipole/TransY        = 0.0 cm
+d:Ge/VBox1/Dipole/TransZ        = 50.0 cm + Ge/VBox1/Dipole/HLZ
+d:Ge/VBox1/Dipole/RotX          = 0.0 deg
+d:Ge/VBox1/Dipole/RotY          = 0.0 deg
+d:Ge/VBox1/Dipole/RotZ          = 0.0 deg
+s:Ge/VBox1/Dipole/Field = "DipoleMagnet"
+u:Ge/VBox1/Dipole/MagneticFieldDirectionX    = 0.0
+u:Ge/VBox1/Dipole/MagneticFieldDirectionY    = 1.0
+u:Ge/VBox1/Dipole/MagneticFieldDirectionZ    = 0.0
+d:Ge/VBox1/Dipole/MagneticFieldStrength      = 0.0 tesla
+
+s:Ge/VBox2/Dipole/Type          = "TsBox"
+s:Ge/VBox2/Dipole/Parent        = "Nozzle"
+s:Ge/VBox2/Dipole/Material      = "G4_AIR"
+d:Ge/VBox2/Dipole/HLX           = 10 cm
+d:Ge/VBox2/Dipole/HLY           = 10 cm
+d:Ge/VBox2/Dipole/HLZ           = 20 cm
+d:Ge/VBox2/Dipole/TransX        = 0.0 cm
+d:Ge/VBox2/Dipole/TransY        = 0.0 cm
+d:Ge/VBox2/Dipole/TransZ        = 90.0 cm + Ge/VBox2/Dipole/HLZ
+d:Ge/VBox2/Dipole/RotX          = 0.0 deg
+d:Ge/VBox2/Dipole/RotY          = 0.0 deg
+d:Ge/VBox2/Dipole/RotZ          = 0.0 deg
+s:Ge/VBox2/Dipole/Field = "DipoleMagnet"
+u:Ge/VBox2/Dipole/MagneticFieldDirectionX    = 1.0
+u:Ge/VBox2/Dipole/MagneticFieldDirectionY    = 0.0
+u:Ge/VBox2/Dipole/MagneticFieldDirectionZ    = 0.0
+d:Ge/VBox2/Dipole/MagneticFieldStrength      = Tf/BField1st/Value tesla
+
+##########################################
+# Target window
+##########################################
+# Vacuum Window: Target !
+s:Ge/VacFilm/Type         = "TsBox"
+s:Ge/VacFilm/Parent       = "World"
+s:Ge/VacFilm/Material     = "Lead"
+d:Ge/VacFilm/HLX          = 50.0 cm
+d:Ge/VacFilm/HLY          = 50.0 cm
+d:Ge/VacFilm/HLZ          = 1.0 cm
+d:Ge/VacFilm/TransX       = 0. cm
+d:Ge/VacFilm/TransY       = 0. cm
+d:Ge/VacFilm/TransZ       = -60. cm
+d:Ge/VacFilm/RotX         = 0. deg
+d:Ge/VacFilm/RotY         = 0.0 deg
+d:Ge/VacFilm/RotZ         = 0. deg
+s:Ge/VacFilm/Color        = "brown"
+s:Ge/VacFilm/DrawingStyle = "solid"
+
+##########################################
+# Ps source
+##########################################
+d:Ge/BeamPosition/TransZ = Ge/World/HLZ cm
+d:Ge/BeamPosition/RotX   = 180. deg
+
+s:So/Example/Type                     = "Beam"
+s:So/Example/Component                = "BeamPosition"
+s:So/Example/BeamParticle             = "proton"
+d:So/Example/BeamEnergy               = 40.0 MeV
+u:So/Example/BeamEnergySpread         = 0.0
+s:So/Example/BeamPositionDistribution = "Gaussian"
+s:So/Example/BeamPositionCutoffShape  = "Ellipse"
+d:So/Example/BeamPositionCutoffX      = 5.0 cm
+d:So/Example/BeamPositionCutoffY      = 5.0 cm
+d:So/Example/BeamPositionSpreadX      = 0.65 cm
+d:So/Example/BeamPositionSpreadY      = 0.65 cm
+s:So/Example/BeamAngularDistribution  = "None"
+
+s:Tf/BField1st/Function = "Step"
+dv:Tf/BField1st/Times   = 2 10.0 20.0 ms
+dv:Tf/BField1st/Values  = 2 Tf/BField1stLeft/Value Tf/BField1stRight/Value tesla
+
+s:Tf/BField1stLeft/Function            = "Linear tesla"
+d:Tf/BField1stLeft/Rate                = 0.08 tesla/ms
+d:Tf/BField1stLeft/StartValue          = -0.32 tesla
+d:Tf/BField1stLeft/RepetitionInterval  = 10.0 ms
+
+s:Tf/BField1stRight/Function           = "Linear tesla"
+d:Tf/BField1stRight/Rate               = -0.08 tesla/ms
+d:Tf/BField1stRight/StartValue         = 0.32 tesla
+d:Tf/BField1stRight/RepetitionInterval = 10.0 ms
+
+s:Tf/SmallBox/Function           = "Linear tesla"
+d:Tf/SmallBox/Rate               = 0.1 tesla/ms
+d:Tf/SmallBox/StartValue         = 0.0 tesla
+d:Tf/SmallBox/RepetitionInterval = 70. ms
+
+#Ph/Default/Modules = 1 "g4em-standard_opt0"
+
+i:So/Example/NumberOfHistoriesInRun = 10
+d:Tf/TimelineEnd             = 40.0 ms
+i:Tf/NumberOfSequentialTimes = 120
+
+s:Gr/ViewA/Type             = "OpenGL"
+i:Gr/ViewA/WindowSizeX      = 1024
+i:Gr/ViewA/WindowSizeY      = 768
+d:Gr/ViewA/Theta            = 55 deg
+d:Gr/ViewA/Phi              = 20 deg
+u:Gr/ViewA/TransX           = -.2
+s:Gr/ViewA/Projection       = "Perspective"
+d:Gr/ViewA/PerspectiveAngle = 30 deg
+u:Gr/ViewA/Zoom             = 2.0
+b:Gr/ViewA/HiddenLineRemovalForTrajectories = "True"
+b:Gr/ViewA/CopyOpenGLToEPS  = "False"

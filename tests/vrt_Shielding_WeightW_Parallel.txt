@@ -1,0 +1,57 @@
+########################
+# Weight window: Parallel geometry
+########################
+includeFile = vrt_Shielding_Globals.txt
+
+d:Ge/World/HLX = 3.0 m
+d:Ge/World/HLY = 3.0 m
+d:Ge/World/HLZ = 3.0 m
+
+#########################
+# Gemetry for vrt
+#########################
+
+s:Ge/VrtParallelWorld/Type       = "TsBox"
+s:Ge/VrtParallelWorld/Parent     = "World"
+d:Ge/VrtParallelWorld/HLX        = 3.0 m
+d:Ge/VrtParallelWorld/HLY        = 3.0 m
+d:Ge/VrtParallelWorld/HLZ        = 3.0 m
+d:Ge/VrtParallelWorld/TransX     = 0 cm
+d:Ge/VrtParallelWorld/TransY     = 0 cm
+d:Ge/VrtParallelWorld/TransZ     = 0 cm
+d:Ge/VrtParallelWorld/RotX       = 0 deg
+d:Ge/VrtParallelWorld/RotY       = 0 deg
+d:Ge/VrtParallelWorld/RotZ       = 0 deg
+b:Ge/VrtParallelWorld/IsParallel = "true"
+
+s:Ge/vrtWorld = "VrtParallelWorld"
+
+b:Ge/Scorer/IsParallel = "False"
+s:Ge/Scorer/Material   = "G4_CONCRETE"
+s:Sc/Scorer/OutputFile = "vrt_Shielding_WeightW_Parallel"
+
+#########################
+# VRT
+#########################
+b:Vr/UseVarianceReductioN         = "true"
+b:Vr/ParticleSplit/ActivE         = "true"
+sv:Vr/ParticleSplit/PartIcleName  = 1 "neutron"
+s:Vr/ParticleSplit/CompoNent      = "VrtParallelWorld"
+sv:Vr/ParticleSplit/SubCOmponents = 10
+"subComponent1" "subComponent2"
+"subComponent3" "subComponent4"
+"subComponent5" "subComponent6"
+"subComponent7" "subComponent8"
+"subComponent9" "subComponent10"
+s:Vr/ParticleSplit/Type = "WeightWindow"
+uv:Vr/ParticleSplit/WeigHtMap = 10 1.0 0.5 0.25 0.125 0.0625 0.03125 0.015625 0.0078125 0.00390625 0.001953125
+dv:Vr/ParticleSplit/EnerGyMap = 10 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 GeV
+u:Vr/ParticleSplit/UpperlimitFactor    = 1
+u:Vr/ParticleSplit/SurviValFactor      = 1
+i:Vr/ParticleSplit/MaximUmSplitNumber  = 100
+s:Vr/ParticleSplit/PlacEofAction       = "OnBoundary"
+
+i:Ts/Seed = 123
+i:So/Default/NumberOfHistoriesInRun = 10000
+i:Ts/ShowHistoryCountAtInterval     = 1000
+b:Ts/ShowCPUTime                    = "True"

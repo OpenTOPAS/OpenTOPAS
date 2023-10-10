@@ -1,0 +1,31 @@
+#Parameter obtained from Burman  et. al. Int. J. Radiation Oncology Biol. Phys. Vol 21  pp 123-135. (1991)
+#          Organ                                       m       TD50                  Endpoint
+uv:Sc/CriticalElementValues/Bladder            = 2     0.11     80.0   #   Symptomatic bladder constracture and volume loss 
+uv:Sc/CriticalElementValues/BrachialPexus      = 2     0.12     75.0   #   Clinically apparent nerve damage 
+uv:Sc/CriticalElementValues/Brain              = 2     0.15     60.0   #   Necrosis/infarction 
+uv:Sc/CriticalElementValues/BrainStem          = 2     0.14     65.0   #   Necrosis/infarction 
+uv:Sc/CriticalElementValues/CaudaEquina        = 2     0.12     75.0   #   Clinically apparent nerve damage 
+uv:Sc/CriticalElementValues/Colon              = 2     0.11     55.0   #   Obstruction/perforation/ulceration/fistula 
+uv:Sc/CriticalElementValues/Ear1               = 2     0.15     40.0   #   Acute serous otitis 
+uv:Sc/CriticalElementValues/Ear2               = 2     0.095    65.0   #   Chronic serous otitis 
+uv:Sc/CriticalElementValues/Esophagus          = 2     0.11     68.0   #   Clinical stricture/perforation 
+uv:Sc/CriticalElementValues/FemoralHeadAndNeck = 2     0.12     65.0   #   Necrosis 
+uv:Sc/CriticalElementValues/Heart              = 2     0.10     48.0   #   Pericarditis 
+uv:Sc/CriticalElementValues/Kidney             = 2     0.10     28.0   #   Clinical nephritis 
+uv:Sc/CriticalElementValues/Larynx1            = 2     0.075    80.0   #   Cartilage necrosis 
+uv:Sc/CriticalElementValues/Larynx2            = 2     0.17     70.0   #   Laryngeal edema 
+uv:Sc/CriticalElementValues/Lens               = 2     0.27     18.0   #   Cataract requiring intervention 
+uv:Sc/CriticalElementValues/Liver              = 2     0.15     40.0   #   Liver failure 
+uv:Sc/CriticalElementValues/Lung               = 2     0.18     24.5   #   Pheumonitis 
+uv:Sc/CriticalElementValues/OpticNerve         = 2     0.14     65.0   #   Blindness 
+uv:Sc/CriticalElementValues/OpticChiasma       = 2     0.14     65.0   #   Blindness 
+uv:Sc/CriticalElementValues/Parotid            = 2     0.18     46.0   #   Xerostomia 
+uv:Sc/CriticalElementValues/Rectum             = 2     0.15     80.0   #   Severe proctitis/necrosis stenosis/fistula 
+uv:Sc/CriticalElementValues/Retina             = 2     0.19     65.0   #   Blindness 
+uv:Sc/CriticalElementValues/RigCage            = 2     0.21     68.0   #   Pathologic fracture 
+uv:Sc/CriticalElementValues/Skin               = 2     0.12     70.0   #   Necrosis/ulceration 
+uv:Sc/CriticalElementValues/SmallIntestine     = 2     0.16     55.0   #   Obstruction/perforation 
+uv:Sc/CriticalElementValues/SpinalCord         = 2     0.11     66.5   #   Myelitis/necrosis 
+uv:Sc/CriticalElementValues/Stomach            = 2     0.14     65.0   #   Ulceration/perforation 
+uv:Sc/CriticalElementValues/Thyroid            = 2     0.26     80.0   #   Clinical thyroiditis 
+uv:Sc/CriticalElementValues/TMJointAndMandible = 2     0.10     72.0   #   Marked limitation of joint function 

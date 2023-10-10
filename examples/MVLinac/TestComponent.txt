@@ -1,0 +1,62 @@
+# Parameter control file for testing individual components
+# Components are displayed in the GUI
+b:Gr/Enable                                  = "True"
+b:Ts/UseQT                                   = "True"
+
+# Components are situated relative to the SAD
+# For viewing components in the GUI, set SAD small, i.e., to 0 cm
+# Note: SAD needs to be set properly for jaw and MLC leaf positions, i.e., to 100 cm
+d:Ge/SAD = 0. cm 
+#d:Ge/SAD = 100. cm 
+
+# Comment out includeFile files that you want to be left out of the GUI
+includeFile = Target.txt  
+includeFile = PrimaryCollimator.txt
+#includeFile = Flattener6MV.txt #Comment out at least one of the flatteners
+includeFile = Flattener18MV.txt #Comment out at least one of the flatteners
+#includeFile = Monitor.txt 
+#includeFile = Jaws.txt #Comment out at least one of the secondary collimators
+#includeFile = MLC.txt #Comment out at least one of the secondary collimators
+#includeFile = WaterBox.txt #Comment out at least one of the dose scoring regions
+#includeFile = WaterPhantom.txt #Comment out at least one of the dose scoring regions
+
+# Source selection (electron or x-ray) and number of histories in run
+ic:So/ElectronSource/NumberOfHistoriesInRun      = 100 
+#ic:So/XraySource/NumberOfHistoriesInRun         = 100 
+
+# Source at nominal position of target
+# Parent is the gantry with coordinates IEC_G (see Main.txt)
+s:Ge/BeamPosition/Parent                         = "IEC_G"
+dc:Ge/BeamPosition/Pos                           = -1.0 cm 
+d:Ge/BeamPosition/TransZ                         = Ge/SAD - Ge/BeamPosition/Pos cm
+
+# Electron source
+s:So/ElectronSource/Type                         = "Beam"
+s:So/ElectronSource/Component                    = "BeamPosition"
+s:So/ElectronSource/BeamParticle                 = "e-"
+d:So/ElectronSource/BeamEnergy                   = 6.51 MeV #6 MV Oncor
+u:So/ElectronSource/BeamEnergySpread             = 4.2      #10% FWHM 6 MV Oncor
+s:So/ElectronSource/BeamPositionDistribution     = "Gaussian"
+s:So/ElectronSource/BeamPositionCutoffShape      = "Ellipse"
+d:So/ElectronSource/BeamPositionCutoffX          = 1.2 mm   #2 standard deviations
+d:So/ElectronSource/BeamPositionCutoffY          = 1.2 mm
+d:So/ElectronSource/BeamPositionSpreadX          = 0.6 mm   #1.5 mm FWHM
+d:So/ElectronSource/BeamPositionSpreadY          = 0.6 mm     
+s:So/ElectronSource/BeamAngularDistribution      = "None"
+
+# Monoenergetic x-ray source 
+s:So/XraySource/Type                             = "Beam"
+s:So/XraySource/Component                        = "BeamPosition"
+s:So/XraySource/BeamParticle                     = "gamma"
+d:So/XraySource/BeamEnergy                       = 2 MeV 
+u:So/XraySource/BeamEnergySpread                 = 0.1 
+s:So/XraySource/BeamPositionDistribution         = "Gaussian"
+s:So/XraySource/BeamPositionCutoffShape          = "Ellipse"
+d:So/XraySource/BeamPositionCutoffX              = 1.2 mm   #2 standard deviations
+d:So/XraySource/BeamPositionCutoffY              = 1.2 mm
+d:So/XraySource/BeamPositionSpreadX              = 0.6 mm   #1.5 mm FWHM
+d:So/XraySource/BeamPositionSpreadY              = 0.6 mm     
+s:So/XraySource/BeamAngularDistribution          = "Flat"
+d:So/XraySource/BeamAngularCutoffX               = 14. deg  #50 cm diameter collimator
+d:So/XraySource/BeamAngularCutoffY               = 14. deg
+

@@ -1,0 +1,58 @@
+# Demonstrates use of Ts/ExtraSequences.
+# This feature allows one to have TOPAS jobs complete all of the
+# potentially time-consuming parts of Geant4 initialization and
+# then wait for additional instructions.
+#
+# After initial sequence is complete,
+# TOPAS loops, waiting for the existance of the next file in the
+# ExtraSequences list. If that file is found, TOPAS runs another
+# sequence using any parameters specified in that file.
+# If you remove the files ExtraSequence1.txt or ExtraSequence2.txt
+# from the expected directory, you can see TOPAS loop, waiting for
+# these files to be placed there.
+
+sv:Ts/ExtraSequenceFiles = 2 "ExtraSequence1.txt" "ExtraSequence2.txt"
+d:Ts/ExtraSequenceSleepInterval = 10. s
+d:Ts/ExtraSequenceSleepLimit = 3600. s
+
+s:Ge/World/Material  = "Air"
+d:Ge/World/HLX       = 2.0 m
+d:Ge/World/HLY       = 2.0 m
+d:Ge/World/HLZ       = 2.0 m
+b:Ge/World/Invisible = "True"
+
+s:Ge/BeamExitWindow/Parent = "World"
+s:Ge/BeamExitWindow/Type   = "Group"
+dc:Ge/BeamExitWindow/TransX =    0. cm
+dc:Ge/BeamExitWindow/TransY =    0. cm
+dc:Ge/BeamExitWindow/TransZ = -200. cm
+dc:Ge/BeamExitWindow/RotX   =  0. deg
+dc:Ge/BeamExitWindow/RotY   =  0. deg
+dc:Ge/BeamExitWindow/RotZ   =  0. deg
+
+s:Ge/Phantom/Type     = "TsBox"
+s:Ge/Phantom/Parent   = "World"
+s:Ge/Phantom/Material = "G4_WATER"
+d:Ge/Phantom/HLX      = 30.0 cm
+d:Ge/Phantom/HLY      = 30.0 cm
+d:Ge/Phantom/HLZ      = 30.0 cm
+
+s:Sc/DoseAtPhantom/Quantity                  = "DoseToMedium"
+s:Sc/DoseAtPhantom/Component                 = "Phantom"
+s:Sc/DoseAtPhantom/OutputFile                = "ExtraSequences"
+s:Sc/DoseAtPhantom/IfOutputFileAlreadyExists = "Overwrite"
+
+sv:Ph/Default/Modules = 1 "g4em-standard_opt0"
+
+s:So/Example/Type                     = "Beam"
+s:So/Example/Component                = "BeamExitWindow"
+s:So/Example/BeamParticle             = "proton"
+s:So/Example/BeamPositionDistribution = "None"
+s:So/Example/BeamAngularDistribution  = "None"
+dc:So/Example/BeamEnergy               = 100. MeV
+uc:So/Example/BeamEnergySpread         = 0.
+ic:So/Example/NumberOfHistoriesInRun   = 0
+
+i:Ts/ShowHistoryCountAtInterval = 1
+
+s:Gr/View/Type = "OpenGL"

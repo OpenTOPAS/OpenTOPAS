@@ -1,0 +1,146 @@
+#                                                          #
+#              MicroSelectron V2 Ir-192 source             #
+#                                                          #
+#                                                          #
+#                Latest version - May 2021                 #
+#                Author: Francisco Berumen                 #
+#              Contact - fberumenm@gmail.com               #
+#       https://doi.org/10.1016/j.brachy.2020.12.007       #
+#                                                          #
+
+##### Materials ######
+sv:Ma/CapsuleSteel/Components = 5 "Nickel" "Iron" "Manganese" "Chromium" "Silicon"
+uv:Ma/CapsuleSteel/Fractions  = 5 0.12 0.68 0.02 0.17 0.01
+d:Ma/CapsuleSteel/Density     = 8.06 g/cm3
+
+sv:Ma/CableSteel/Components = 5 "Nickel" "Iron" "Manganese" "Chromium" "Silicon"
+uv:Ma/CableSteel/Fractions  = 5 0.12 0.68 0.02 0.17 0.01
+d:Ma/CableSteel/Density     = 4.81 g/cm3
+
+##### Radioactive source #####
+s:So/ActiveSource/Type                       = "Volumetric"
+s:So/ActiveSource/Component                  = "ActiveSourceGeometry"
+sc:So/ActiveSource/ActiveMaterial            = "G4_Ir"
+s:So/ActiveSource/BeamParticle               = "gamma"
+b:So/ActiveSource/RecursivelyIncludeChildren = "T"
+ic:So/ActiveSource/NumberOfHistoriesInRun    = 10
+i:So/ActiveSource/MaxNumberOfPointsToSample  = 1000000000
+s:So/ActiveSource/BeamEnergySpectrumType     = "Discrete"
+
+##### Spectrum, NNDC Rivard 2010, 10 keV cut ######
+dv:So/ActiveSource/BeamEnergySpectrumValues = 39 61.486 63.0 65.122 66.831 71.079 71.414 73.363 75.368 75.749 77.831 110.4 136.3426 176.98 201.3112 205.79430 280.27 283.2668 295.95650 308.45507 316.50618 329.17 374.4852 416.4688 420.52 468.0688 484.5751 485.30 489.06 588.5810 593.49 599.41 604.41105 612.4621 703.87 765.8 884.5365 1061.48 1089.9 1378.20 keV
+
+uv:So/ActiveSource/BeamEnergySpectrumWeightsUnscaled = 39 0.0120 0.0205 0.0263 0.0446 0.00241 0.00466 0.00163 0.00533 0.01025 0.00365 0.000122 0.0020 0.000043 0.00473 0.0334 0.00009 0.00266 0.2872 0.2968 0.8271 0.000174 0.00726 0.00669 0.00069 0.4781 0.03187 0.000023 0.00438 0.04517 0.000421 0.000039 0.0820 0.0534 0.000053 0.000013 0.00291 0.000530 0.000012 0.000012
+
+uv:So/ActiveSource/BeamEnergySpectrumWeights = 0.43492973 * So/ActiveSource/BeamEnergySpectrumWeightsUnscaled
+
+##### SOURCE GEOMETRY #####
+s:Ge/Source/Type   = "Group"
+s:Ge/Source/Parent = "World"
+
+s:Ge/ActiveSourceGeometry/Type              = "Group"
+s:Ge/ActiveSourceGeometry/Parent            = "Source"
+b:Ge/ActiveSourceGeometry/IsParallel        = "True"
+s:Ge/ActiveSourceGeometry/ParallelWorldName = "ActiveSourceWorld"
+
+s:Ge/ActiveCylinder/Type              = "TsCylinder"
+s:Ge/ActiveCylinder/Parent            = "ActiveSourceGeometry"
+s:Ge/ActiveCylinder/Material          = "G4_Ir"
+d:Ge/ActiveCylinder/RMin              = 0 mm
+d:Ge/ActiveCylinder/RMax              = 0.325 mm
+d:Ge/ActiveCylinder/HL                = 1.74 mm
+d:Ge/ActiveCylinder/SPhi              = 0. deg
+d:Ge/ActiveCylinder/DPhi              = 360. deg
+s:Ge/ActiveCylinder/Color             = "white"
+s:Ge/ActiveCylinder/DrawingStyle      = "Solid"
+b:Ge/ActiveCylinder/IsParallel        = "True"
+s:Ge/ActiveCylinder/ParallelWorldName = "ActiveSourceWorld"
+
+s:Ge/ActiveCone1/Type              = "G4Cons"
+s:Ge/ActiveCone1/Parent            = "ActiveSourceGeometry"
+s:Ge/ActiveCone1/Material          = "G4_Ir"
+d:Ge/ActiveCone1/TransZ            = Ge/ActiveCylinder/HL + Ge/ActiveCone1/HL mm
+d:Ge/ActiveCone1/RMax1             = Ge/ActiveCylinder/RMax mm
+d:Ge/ActiveCone1/RMax2             = 0.265 mm
+d:Ge/ActiveCone1/HL                = 0.03 mm
+s:Ge/ActiveCone1/Color             = "white"
+s:Ge/ActiveCone1/DrawingStyle      = "Solid"
+b:Ge/ActiveCone1/IsParallel        = "True"
+s:Ge/ActiveCone1/ParallelWorldName = "ActiveSourceWorld"
+
+s:Ge/ActiveCone2/Type              = "G4Cons"
+s:Ge/ActiveCone2/Parent            = "ActiveSourceGeometry"
+s:Ge/ActiveCone2/Material          = "G4_Ir"
+d:Ge/ActiveCone2/TransZ            = -1 * Ge/ActiveCone1/TransZ mm
+d:Ge/ActiveCone2/RMax1             = Ge/ActiveCone1/RMax2 mm
+d:Ge/ActiveCone2/RMax2             = Ge/ActiveCone1/RMax1 mm
+d:Ge/ActiveCone2/HL                = 0.03 mm
+s:Ge/ActiveCone2/Color             = "white"
+s:Ge/ActiveCone2/DrawingStyle      = "Solid"
+b:Ge/ActiveCone2/IsParallel        = "True"
+s:Ge/ActiveCone2/ParallelWorldName = "ActiveSourceWorld"
+
+##### CAPSULE + CABLE GROUP COMPONENT #####
+s:Ge/Capsule/Type              = "Group"
+s:Ge/Capsule/Parent            = "Source"
+d:Ge/Capsule/TransZ            = -0.25 mm
+b:Ge/Capsule/IsParallel        = "True"
+s:Ge/Capsule/ParallelWorldName = "ShieldingWorld"
+iv:Gr/Color/shieldingcolor  = 4 255 255 255 80
+
+s:Ge/CapsuleCylinder/Type         = "TsCylinder"
+s:Ge/CapsuleCylinder/Material     = "CapsuleSteel"
+s:Ge/CapsuleCylinder/Parent       = "Capsule"
+d:Ge/CapsuleCylinder/RMin         = 0 mm
+d:Ge/CapsuleCylinder/RMax         = 0.45 mm
+d:Ge/CapsuleCylinder/HL           = 1.95 mm
+d:Ge/CapsuleCylinder/SPhi         = 0. deg
+d:Ge/CapsuleCylinder/DPhi         = 360. deg
+d:Ge/CapsuleCylinder/TransZ       = 0 mm
+s:Ge/CapsuleCylinder/Color        = "shieldingcolor"
+s:Ge/CapsuleCylinder/DrawingStyle = "Solid"
+b:Ge/CapsuleCylinder/IsParallel        = "True"
+s:Ge/CapsuleCylinder/ParallelWorldName = "ShieldingWorld"
+
+s:Ge/Capsulecap/Type         = "TsSphere"
+s:Ge/Capsulecap/Material     = "CapsuleSteel"
+s:Ge/Capsulecap/Parent       = "Capsule"
+d:Ge/Capsulecap/RMin         = 0. mm
+d:Ge/Capsulecap/RMax         = Ge/CapsuleCylinder/RMax mm
+d:Ge/Capsulecap/SPhi         = 0. deg
+d:Ge/Capsulecap/DPhi         = 360. deg
+d:Ge/Capsulecap/STheta       = 0. deg
+d:Ge/Capsulecap/DTheta       = 90. deg
+d:Ge/Capsulecap/TransZ       = Ge/CapsuleCylinder/HL mm
+s:Ge/Capsulecap/DrawingStyle = "Solid"
+s:Ge/Capsulecap/Color        = "shieldingcolor"
+b:Ge/Capsulecap/IsParallel        = "True"
+s:Ge/Capsulecap/ParallelWorldName = "ShieldingWorld"
+
+s:Ge/CapsuleCone/Type            = "G4Cons"
+s:Ge/CapsuleCone/Parent          = "Capsule"
+s:Ge/CapsuleCone/Material        = "CapsuleSteel"
+d:Ge/CapsuleCone/RMax1           = 0.35 mm
+d:Ge/CapsuleCone/RMax2           = Ge/CapsuleCylinder/RMax mm
+d:Ge/CapsuleCone/HL              = 0.075 mm
+d:Ge/CapsuleCone/TransZ          = -2.025 mm  
+s:Ge/CapsuleCone/Color           = "shieldingcolor"
+s:Ge/CapsuleCone/DrawingStyle    = "Solid"
+b:Ge/CapsuleCone/IsParallel        = "True"
+s:Ge/CapsuleCone/ParallelWorldName = "ShieldingWorld"
+
+s:Ge/Cable/Type         = "TsCylinder"
+s:Ge/Cable/Material     = "CableSteel"
+s:Ge/Cable/Parent       = "Capsule"
+d:Ge/Cable/RMin         = 0 mm
+d:Ge/Cable/RMax         = 0.35 mm
+d:Ge/Cable/HL           = 1.0 mm
+d:Ge/Cable/SPhi         = 0. deg
+d:Ge/Cable/DPhi         = 360. deg
+d:Ge/Cable/TransZ       = -3.1 mm  
+s:Ge/Cable/Color        = "Green"
+s:Ge/Cable/DrawingStyle = "Solid"
+b:Ge/Cable/IsParallel        = "True"
+s:Ge/Cable/ParallelWorldName = "ShieldingWorld"
+
+sv:Ph/Default/LayeredMassGeometryWorlds =  2 "ShieldingWorld" "ActiveSourceWorld"

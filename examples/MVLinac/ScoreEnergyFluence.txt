@@ -1,0 +1,26 @@
+# Scorer - Energy fluence distribution on plane through isocenter
+
+#################### Key Parameters In ScoreEnergyFluence.txt ########################
+# HLX/Y/Z: Half lengths of voxels used for scoring
+# X/YBins: Number of bins in IEC_G Xg and Yg
+# TransZ: Distance from isocenter to center of scoring region along IEC_G Zg
+#######################################################################################
+
+s:Sc/EnergyFluence/Quantity = "EnergyFluence"
+s:Sc/EnergyFluence/Component= "Isocenter"
+s:Sc/EnergyFluence/IfOutputFileAlreadyExists = "Exit" # "Exit", "Overwrite" or "Increment"
+s:Sc/EnergyFluence/OutputType = "binary"
+
+# Isocenter
+s:Ge/Isocenter/Parent = "IEC_G"
+s:Ge/Isocenter/Type   = "TsBox"
+s:Ge/Isocenter/Material = "air"
+d:Ge/Isocenter/HLX      = 30 cm 
+d:Ge/Isocenter/HLY      = 30 cm 
+d:Ge/Isocenter/HLZ      = 0.05 cm 
+i:Ge/Isocenter/XBins    = 60
+i:Ge/Isocenter/YBins    = 60
+d:Ge/Isocenter/TransZ   = 0 cm 
+s:Ge/Isocenter/DrawingStyle = "Solid"
+s:Ge/Isocenter/Color = "skyblue"
+

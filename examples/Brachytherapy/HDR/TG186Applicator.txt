@@ -1,0 +1,100 @@
+#                                                          #
+#                     TG186 APPLICATOR                     #
+#                                                          #
+#                                                          #
+#                Latest version - May 2021                 #
+#                Author: Francisco Berumen                 #
+#              Contact - fberumenm@gmail.com               #
+#       https://doi.org/10.1016/j.brachy.2020.12.007       #
+#                                                          #
+
+##### MATERIAL DEFINITION ######
+sv:Ma/StainlessSteel316L/Components = 7 "Phosphorus" "Carbon" "Silicon" "Manganese" "Nickel" "Chromium" "Iron"
+uv:Ma/StainlessSteel316L/Fractions  = 7 0.00045 0.0008 0.01 0.02 0.095 0.19 0.68375
+d:Ma/StainlessSteel316L/Density     = 8.0 g/cm3
+
+sv:Ma/DensimetD176/Components = 3 "Iron" "Nickel" "Tungsten"
+uv:Ma/DensimetD176/Fractions  = 3 0.025 0.05 0.925
+d:Ma/DensimetD176/Density     = 17.6 g/cm3
+
+sv:Ma/Air40/Components = 5 "Carbon" "Hydrogen" "Argon" "Oxygen" "Nitrogen" 
+uv:Ma/Air40/Fractions  = 5 0.000123 0.000732 0.012743 0.236077 0.750325 
+d:Ma/Air40/Density     = 1.19 mg/cm3
+
+##### APPLICATOR GEOMETRY #####
+s:Ge/PMMAcylinder/Type         = "TsCylinder"
+s:Ge/PMMAcylinder/Material     = "Lucite"
+s:Ge/PMMAcylinder/Parent       = "World"
+d:Ge/PMMAcylinder/RMin         = 0 mm
+d:Ge/PMMAcylinder/RMax         = 18.0 mm
+d:Ge/PMMAcylinder/HL           = 61.0 mm
+d:Ge/PMMAcylinder/SPhi         = 0. deg
+d:Ge/PMMAcylinder/DPhi         = 360. deg
+s:Ge/PMMAcylinder/DrawingStyle = "Solid"
+s:Ge/PMMAcylinder/Color        = "transparentblue"
+
+s:Ge/PMMAcap/Type         = "TsSphere"
+s:Ge/PMMAcap/Material     = "Lucite"
+s:Ge/PMMAcap/Parent       = "World"
+d:Ge/PMMAcap/RMin         = 0. mm
+d:Ge/PMMAcap/RMax         = 18. mm
+d:Ge/PMMAcap/SPhi         = 0. deg
+d:Ge/PMMAcap/DPhi         = 360. deg
+d:Ge/PMMAcap/STheta       = 0. deg
+d:Ge/PMMAcap/DTheta       = 90. deg
+d:Ge/PMMAcap/TransZ       = 61. mm
+s:Ge/PMMAcap/DrawingStyle = "Solid"
+s:Ge/PMMAcap/Color        = "transparentblue"
+
+s:Ge/Densimet/Type         = "TsCylinder"
+s:Ge/Densimet/Material     = "DensimetD176"
+s:Ge/Densimet/Parent       = "PMMAcylinder"
+d:Ge/Densimet/RMin         = 1.6 mm
+d:Ge/Densimet/RMax         = 12.0 mm
+d:Ge/Densimet/HL           = 61.0 mm
+d:Ge/Densimet/SPhi         = 0. deg
+d:Ge/Densimet/DPhi         = 180. deg
+d:Ge/Densimet/RotX         = 0. deg
+d:Ge/Densimet/RotY         = 0. deg
+d:Ge/Densimet/RotZ         = 90. deg
+s:Ge/Densimet/DrawingStyle = "Solid"
+s:Ge/Densimet/Color        = "transparentgreen"
+
+s:Ge/HalfcylinderAir/Type         = "TsCylinder"
+s:Ge/HalfcylinderAir/Material     = "Air40"
+s:Ge/HalfcylinderAir/Parent       = "PMMAcylinder"
+d:Ge/HalfcylinderAir/RMin         = 1.6 mm
+d:Ge/HalfcylinderAir/RMax         = 12.0 mm
+d:Ge/HalfcylinderAir/HL           = 61.0 mm
+d:Ge/HalfcylinderAir/SPhi         = 0 deg
+d:Ge/HalfcylinderAir/DPhi         = 180 deg
+d:Ge/HalfcylinderAir/RotZ         = -90. deg
+s:Ge/HalfcylinderAir/DrawingStyle = "Solid"
+s:Ge/HalfcylinderAir/Color        = "transparentred"
+
+s:Ge/StainlessCylinder/Type         = "TsCylinder"
+s:Ge/StainlessCylinder/Material     = "StainlessSteel316L"
+s:Ge/StainlessCylinder/Parent       = "PMMAcylinder"
+d:Ge/StainlessCylinder/RMin         = 0.5 mm
+d:Ge/StainlessCylinder/RMax         = 1.6 mm 
+d:Ge/StainlessCylinder/HL           = 61.0 mm
+d:Ge/StainlessCylinder/SPhi         = 0. deg
+d:Ge/StainlessCylinder/DPhi         = 360. deg
+s:Ge/StainlessCylinder/DrawingStyle = "Solid"
+s:Ge/StainlessCylinder/Color        = "transparentyellow"
+
+s:Ge/AirCylinder/Type         = "TsCylinder"
+s:Ge/AirCylinder/Material     = "Air40"
+s:Ge/AirCylinder/Parent       = "PMMAcylinder"
+d:Ge/AirCylinder/RMin         = 0.0 mm
+d:Ge/AirCylinder/RMax         = 0.5 mm
+d:Ge/AirCylinder/HL           = 61.0 mm
+d:Ge/AirCylinder/SPhi         = 0. deg
+d:Ge/AirCylinder/DPhi         = 360. deg
+s:Ge/AirCylinderDrawingStyle = "Solid"
+s:Ge/AirCylinder/Color        = "transparentred"
+
+iv:Gr/Color/transparentblue    = 4 50 50 255 80
+iv:Gr/Color/transparentgreen  = 4 0 255 0 150
+iv:Gr/Color/transparentyellow = 4 255 255 0 100
+iv:Gr/Color/transparentred    = 4 255 0 0 100

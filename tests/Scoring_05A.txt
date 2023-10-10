@@ -1,0 +1,7 @@
+includeFile = Scoring_05.txt
+
+#--- Scoring
+s:Ge/ScoringVolume/Type   = "TsCylinder"
+d:Ge/ScoringVolume/HL     = 10. cm
+d:Ge/ScoringVolume/RMax   = 10. cm
+d:Ge/ScoringVolume/TransZ = Ge/ScoringVolume/HL - Ge/Phantom/HLZ cm

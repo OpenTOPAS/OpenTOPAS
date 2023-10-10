@@ -1,0 +1,82 @@
+# Ridge filter
+
+d:Ge/World/HLX       = 0.15 m
+d:Ge/World/HLY       = 0.15 m
+d:Ge/World/HLZ       = 0.05 m
+b:Ge/World/Invisible = "True"
+
+######################################
+# RidgeFilter Group
+######################################
+
+s:Ge/RidgeGroup/Parent = "World"
+s:Ge/RidgeGroup/Type   = "Group"
+d:Ge/RidgeGroup/RotX   = 0.0 deg
+d:Ge/RidgeGroup/RotY   = 0.0 deg
+d:Ge/RidgeGroup/RotZ   = 0.0 deg
+d:Ge/RidgeGroup/TransX = 0.0 cm
+d:Ge/RidgeGroup/TransY = 0.0 cm
+d:Ge/RidgeGroup/TransZ = 0.0 cm
+
+#######################################
+# Ridge Filter
+#######################################
+s:Ge/RidgeFilterA/Type     = "TsRidgeFilter"
+s:Ge/RidgeFilterA/Parent   = "RidgeGroup"
+s:Ge/RidgeFilterA/Material = "Aluminum"
+d:Ge/RidgeFilterA/TransX   = 0.0 cm
+d:Ge/RidgeFilterA/TransY   = 0.0 cm
+d:Ge/RidgeFilterA/TransZ   = 0.0 cm
+d:Ge/RidgeFilterA/RotX     = 0.0 deg
+d:Ge/RidgeFilterA/RotY     = 0.0 deg
+d:Ge/RidgeFilterA/RotZ     = 0.0 deg
+s:Ge/RidgeFilterA/DrawingStyle 	   = "Solid"
+b:Ge/RidgeFilterA/PrintInformation = "True"
+
+# Ridge Geometry: TOPAS will connect points of x and z to build a ridge.
+# Then copy a ridge and place it using Displacement parameter
+dv:Ge/RidgeFilterA/XPoints  = 8
+0.0  0.8 1.3 1.8 2.2 2.7 3.2 4.0 mm
+dv:Ge/RidgeFilterA/ZPoints  = 8
+2.4 4.0 9.1 14.0 14.0 9.1 4.0 2.4 mm
+d:Ge/RidgeFilterA/Width         = 4.0 mm
+d:Ge/RidgeFilterA/Length        = 1.0 cm
+dv:Ge/RidgeFilterA/Displacement = 3 -5.0 0.0 5.0 mm
+
+########################################
+# Physics, Beam, and Graphic setting
+########################################
+s:So/Example/Type                     = "Beam"
+s:So/Example/Component                = "BeamPosition"
+s:So/Example/BeamParticle             = "proton"
+d:So/Example/BeamEnergy               = 230.0 MeV
+u:So/Example/BeamEnergySpread         = 0.757504
+s:So/Example/BeamPositionDistribution = "Gaussian"
+s:So/Example/BeamPositionCutoffShape  = "Ellipse"
+d:So/Example/BeamPositionCutoffX      = 10. cm
+d:So/Example/BeamPositionCutoffY      = 10. cm
+d:So/Example/BeamPositionSpreadX      = 1.0 cm
+d:So/Example/BeamPositionSpreadY      = 1.0 cm
+s:So/Example/BeamAngularDistribution  = "Gaussian"
+d:So/Example/BeamAngularCutoffX       = 90. deg
+d:So/Example/BeamAngularCutoffY       = 90. deg
+d:So/Example/BeamAngularSpreadX       = 0.0032 rad
+d:So/Example/BeamAngularSpreadY       = 0.0032 rad
+i:So/Example/NumberOfHistoriesInRun   = 10
+
+sv:Ph/Default/Modules = 1 "g4em-standard_opt0"
+b:Ts/PauseBeforeQuit = "True"
+
+s:Gr/ViewA/Type             = "OpenGL"
+i:Gr/ViewA/WindowSizeX      = 600
+i:Gr/ViewA/WindowSizeY      = 600
+d:Gr/ViewA/Theta            = 55 deg
+d:Gr/ViewA/Phi              = 20 deg
+s:Gr/ViewA/Projection       = "Orthogonal"
+d:Gr/ViewA/PerspectiveAngle = 20 deg
+u:Gr/ViewA/Zoom             = 1.6
+b:Gr/ViewA/HiddenLineRemovalForTrajectories = "True"
+
+b:Gr/ViewA/IncludeAxes   = "true"
+s:Gr/ViewA/AxesComponent = "RidgeGroup"
+d:Gr/ViewA/AxesSize      = 0.1 m

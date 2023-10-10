@@ -1,0 +1,73 @@
+# Demonstrates setting material per voxel in each of
+# the Divided Components: TsBox, TsCylinder and TsSphere.
+
+d:Ge/World/HLX       = 2.0 m
+d:Ge/World/HLY       = 2.0 m
+d:Ge/World/HLZ       = 2.0 m
+b:Ge/World/Invisible = "True"
+
+s:Ge/TestBox/Parent   = "World"
+s:Ge/TestBox/Type     = "TsBox"
+s:Ge/TestBox/Material = "G4_WATER"
+d:Ge/TestBox/HLX      = 7.0 cm
+d:Ge/TestBox/HLY      = 7.0 cm
+d:Ge/TestBox/HLZ      = 9.0 cm
+d:Ge/TestBox/TransX   = 0. cm
+d:Ge/TestBox/TransY   = 0. cm
+d:Ge/TestBox/TransZ   = 0. cm
+d:Ge/TestBox/RotX     = 0. deg
+d:Ge/TestBox/RotY     = 0. deg
+d:Ge/TestBox/RotZ     = 0. deg
+sc:Ge/TestBox/DrawingStyle = "Solid"
+i:Ge/TestBox/XBins    = 2
+i:Ge/TestBox/YBins    = 2
+i:Ge/TestBox/ZBins    = 2
+sv:Ge/TestBox/VoxelMaterials = 8 "Lucite" "Air" "Carbon" "Nickel" "Tantalum" "Lexan" "Air" "Air"
+
+s:Ge/TestCylinder/Parent   = "World"
+s:Ge/TestCylinder/Type     = "TsCylinder"
+s:Ge/TestCylinder/Material = "G4_WATER"
+d:Ge/TestCylinder/RMin     = 0.0 cm
+d:Ge/TestCylinder/RMax     = 8.0 cm
+d:Ge/TestCylinder/HL       = 10.0 cm
+d:Ge/TestCylinder/SPhi     = 0. deg
+d:Ge/TestCylinder/DPhi     = 360. deg
+d:Ge/TestCylinder/TransX   = 0. cm
+d:Ge/TestCylinder/TransY   = 0. cm
+d:Ge/TestCylinder/TransZ   = 25. cm
+d:Ge/TestCylinder/RotX     = 0. deg
+d:Ge/TestCylinder/RotY     = 0.0 deg
+d:Ge/TestCylinder/RotZ     = 0. deg
+sc:Ge/TestCylinder/DrawingStyle = "Cloud"
+i:Ge/TestCylinder/RBins    = 2
+i:Ge/TestCylinder/PhiBins  = 2
+i:Ge/TestCylinder/ZBins    = 2
+sv:Ge/TestCylinder/VoxelMaterials = 8 "G4_W" "Air" "G4_WATER" "G4_W" "Air" "G4_W" "Air" "Air"
+
+s:Ge/TestSphere/Parent    = "World"
+s:Ge/TestSphere/Type      = "TsSphere"
+s:Ge/TestSphere/Material  = "G4_WATER"
+d:Ge/TestSphere/RMin      = 0.0 cm
+d:Ge/TestSphere/RMax      = 10.0 cm
+d:Ge/TestSphere/SPhi      = 0. deg
+d:Ge/TestSphere/DPhi      = 360. deg
+d:Ge/TestSphere/STheta    = 0. deg
+d:Ge/TestSphere/DTheta    = 180. deg
+d:Ge/TestSphere/TransX    = 0. cm
+d:Ge/TestSphere/TransY    = 0. cm
+d:Ge/TestSphere/TransZ    = 50. cm
+d:Ge/TestSphere/RotX      = 0. deg
+d:Ge/TestSphere/RotY      = 0. deg
+d:Ge/TestSphere/RotZ      = 0. deg
+s:Ge/TestSphere/Color     = "blue"
+sc:Ge/TestSphere/DrawingStyle = "Cloud"
+i:Ge/TestSphere/RBins     = 2
+i:Ge/TestSphere/PhiBins   = 2
+i:Ge/TestSphere/ThetaBins = 2
+sv:Ge/TestSphere/VoxelMaterials = 8 "Air" "Air" "G4_WATER" "Air" "Air" "Air" "Air" "Air"
+
+sv:Ph/Default/Modules = 1 "g4em-standard_opt0"
+
+s:Gr/ViewA/Type = "OpenGL"
+
+Ts/UseQt = "True"

@@ -1,0 +1,10 @@
+includeFile = Primary_02.txt
+
+#--- Source
+s:So/Example/Type                     = "Beam"
+s:So/Example/BeamPositionDistribution = "None"
+s:So/Example/BeamAngularDistribution  = "Gaussian"
+d:So/Example/BeamAngularCutoffX       = 90 deg
+d:So/Example/BeamAngularCutoffY       = 90 deg
+d:So/Example/BeamAngularSpreadX       = 30 deg
+d:So/Example/BeamAngularSpreadY       = 60 deg

@@ -1,0 +1,50 @@
+# Flattening filter for Siemens Oncor 6 MV x-ray beam
+# Reference for geometry: Sawkey and Faddegon, Med Phys 36(12):5622-32, 2009
+# 
+###################### Key Parameters In Flattener6MV.txt ############################
+# Parameters set in another parameter control file...
+# SAD: Source axis distance (distance from nominal source position to isocenter)
+#
+# Parameters available for adjustment...
+# Pos: Distance along beam axis Zg from nominal target position (SAD from isocenter)
+# RInner: Inner radius of HPolycone for each layer (Vector)
+# ROuter: Outer radius of HPolycone for each layer (Vector)
+# Z: Thickness for each layer (Vector)
+#
+# Parameters calculated from above parameters...
+# TransZ: Position of center of object along Zg
+#######################################################################################
+
+includeFile = LinacDefaults.txt #Values in LinacDafaults.txt may be overriden
+
+# 6 MV Siemens Oncor flattening filter 
+# Split into central portion 1 plus outer downstream portion 2
+
+iv:Gr/Color/TransparentOrange       = 4 241 224   0 200
+
+sv:Ma/StainlessSteel/Components     = 6 "Carbon" "Silicon" "Chromium" "Manganese" "Iron" "Nickel"  
+uv:Ma/StainlessSteel/Fractions      = 6 .001 .007 .18 .01 .712 .09
+d:Ma/StainlessSteel/Density         = 7.84 g/cm3 
+s:Ma/StainlessSteel/DefaultColor    = "TransparentOrange"
+
+s:Ge/FlatteningFilter1/Parent       = "IEC_G"
+s:Ge/FlatteningFilter1/Type	    = "G4HPolycone"
+s:Ge/FlatteningFilter1/Material     = "StainlessSteel"
+d:Ge/FlatteningFilter1/Pos          = 7.91 cm
+dv:Ge/FlatteningFilter1/RInner      = 9 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 cm
+dv:Ge/FlatteningFilter1/ROuter      = 9 0.127 0.302 0.33 0.907 1.384 2.776 2.776 1.758 1.471 cm 
+dv:Ge/FlatteningFilter1/Z           = 9 0.0 -0.32 -0.371 -1.12 -1.666 -1.666 -1.768 -1.768 -2.093 cm 
+d:Ge/FlatteningFilter1/TransZ       = Ge/SAD - Ge/FlatteningFilter1/Pos cm 
+s:Ge/FlatteningFilter1/Color        = "TransparentOrange"
+s:Ge/FlatteningFilter1/DrawingStyle = "Solid" 
+
+s:Ge/FlatteningFilter2/Parent       = "IEC_G"
+s:Ge/FlatteningFilter2/Type	    = "G4HPolycone"
+s:Ge/FlatteningFilter2/Material     = "StainlessSteel"
+dv:Ge/FlatteningFilter2/RInner      = 2 1.859 2.045 cm
+dv:Ge/FlatteningFilter2/ROuter      = 2 2.776 2.776 cm 
+dv:Ge/FlatteningFilter2/Z           = 2 -1.768 -2.174 cm 
+d:Ge/FlatteningFilter2/Pos          = 7.91 cm
+d:Ge/FlatteningFilter2/TransZ       = Ge/SAD - Ge/FlatteningFilter2/Pos cm 
+s:Ge/FlatteningFilter2/Color        = "Grey"
+s:Ge/FlatteningFilter2/DrawingStyle = "Solid" 

@@ -1,0 +1,28 @@
+includeFile = GlobalParameters.txt
+
+#--- Source
+s:So/Example/Type                   = "Isotropic"
+s:So/Example/Component              = "BeamPosition"
+s:So/Example/BeamParticle           = "proton"
+d:So/Example/BeamEnergy             = 150. MeV
+u:So/Example/BeamEnergySpread       = 0.
+i:So/Example/NumberOfHistoriesInRun = 1000
+
+d:Ge/BeamPosition/TransZ = 0 cm
+
+
+#--- Target (upper surface at isocenter)
+s:Ge/Sphere/Type      = "TsSphere"
+s:Ge/Sphere/Parent    = "BeamPosition"
+s:Ge/Sphere/Material  = "Parent"
+d:Ge/Sphere/RMin      = 4. cm
+d:Ge/Sphere/RMax      = 5. cm
+i:Ge/Sphere/ThetaBins = 9
+i:Ge/Sphere/PhiBins   = 2 * Ge/Sphere/ThetaBins
+
+b:Ge/CheckForOverlaps = "False"
+
+#--- Scoring
+s:Sc/Fluence/Quantity                  = "Fluence"
+s:Sc/Fluence/Component                 = "Sphere"
+s:Sc/Fluence/IfOutputFileAlreadyExists = "Overwrite"

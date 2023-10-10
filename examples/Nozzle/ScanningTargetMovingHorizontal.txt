@@ -1,0 +1,31 @@
+# Use scanning nozzle to paint target that is moving horizontally
+
+includeFile = RasterScanningPattern.txt TargetInWaterPhantom.txt Viewer.txt
+
+i:Tf/Verbosity = 1
+
+sv:Ph/Default/Modules = 1 "g4em-standard_opt0"
+
+d:Ge/X_max   =  1.5 cm
+d:Ge/X_min   = Ge/X_max cm * -1.0
+d:Ge/X_range = Ge/X_max cm * 2.0
+
+# 1. Motion for Target
+s:Tf/HorizontalMoveSine/Function           = "Sine"
+d:Tf/HorizontalMoveSine/RepetitionInterval = 1.0 s
+d:Tf/HorizontalMoveSine/Rate               = 0.36  deg/ms
+d:Tf/HorizontalMoveSine/StartValue         = 0.0 deg
+
+d:Tf/HorizontalMove/Value = 2.0 cm * Tf/HorizontalMoveSine/Value
+d:Tf/HorizontalScan/Value = 0.15 tesla * Tf/HorizontalMoveSine/Value
+
+# 2. Compensated BField
+d:Tf/BField2ndTrackingField/Value = Tf/HorizontalScan/Value + Tf/BField2nd/Value tesla
+
+i:Tf/NumberOfSequentialTimes = 100
+d:Tf/TimelineEnd = 1 s
+
+d:Ge/PlaneAtR80/TransX = Tf/HorizontalMove/Value cm
+d:Ge/Dipole2/MagneticFieldStrength  = Tf/BField2ndTrackingField/Value tesla
+
+Ts/UseQt = "True"

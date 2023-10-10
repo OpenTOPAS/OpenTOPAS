@@ -1,0 +1,73 @@
+includeFile = GlobalParameters.txt
+
+
+# Analytical calculation
+# ----------------------
+# deflection angle is approximately theta = qBl/p
+# neglecting how curvature of path within dipole adds to period of deflection
+# where q = proton charge
+#       B = magnetic field strength (Ge/Dipole/MagneticFieldStrength)
+#       l = length of dipole (2*Ge/Dipole/HLZ)
+#       p = proton momentum
+#
+# transverse displacement is d*tan(theta)
+# where d = distance from deflection to target (Ge/Dipole/TransZ - Ge/Dipole/HLZ)
+#
+# ==> 13 cm displacement at phantom surface
+
+
+
+#--- Source
+s:So/Default/Type                     = "Beam"
+s:So/Default/BeamParticle             = "proton"
+d:So/Default/BeamEnergy               = 150.00 MeV
+u:So/Default/BeamEnergySpread         = 0.0
+s:So/Default/BeamPositionDistribution = "None"
+s:So/Default/BeamAngularDistribution  = "None"
+i:So/Default/NumberOfHistoriesInRun   = 1000
+s:So/Default/Component                = "BeamPosition"
+
+
+#--- Magnet
+s:Ge/Dipole/Type                    = "TsBox"
+s:Ge/Dipole/Field                   = "DipoleMagnet"
+s:Ge/Dipole/Parent                  = "GantryCoordination"
+s:Ge/Dipole/Material                = "Air"
+d:Ge/Dipole/HLX                     = 10 cm
+d:Ge/Dipole/HLY                     = 10 cm
+d:Ge/Dipole/HLZ                     = 20 cm
+d:Ge/Dipole/TransX                  = 0.0 cm
+d:Ge/Dipole/TransY                  = 0.0 cm
+d:Ge/Dipole/TransZ                  = 2.0 m + Ge/Dipole/HLZ
+d:Ge/Dipole/RotX                    = 0.0 deg
+d:Ge/Dipole/RotY                    = 0.0 deg
+d:Ge/Dipole/RotZ                    = 0.0 deg
+u:Ge/Dipole/MagneticFieldDirectionX = 0.0
+u:Ge/Dipole/MagneticFieldDirectionY = 1.0
+u:Ge/Dipole/MagneticFieldDirectionZ = 0.0
+d:Ge/Dipole/MagneticFieldStrength   = 0.3 tesla
+
+
+#--- Target (upper surface at isocenter)
+s:Ge/Phantom/Type            = "TsBox"
+s:Ge/Phantom/Material        = "G4_WATER"
+s:Ge/Phantom/Parent          = "IsoCoordination"
+d:Ge/Phantom/HLX             = 20.0 cm
+d:Ge/Phantom/HLY             = 20.0 cm
+d:Ge/Phantom/HLZ             = 20.0 cm
+d:Ge/Phantom/TransX          = 0. m
+d:Ge/Phantom/TransY          = 0. m
+d:Ge/Phantom/TransZ          = -1.0 * Ge/Phantom/HLZ cm
+d:Ge/Phantom/RotX            = 0. deg
+d:Ge/Phantom/RotY            = 0. deg
+d:Ge/Phantom/RotZ            = 0. deg
+i:Ge/Phantom/XBins           = 10
+i:Ge/Phantom/YBins           = 10
+i:Ge/Phantom/ZBins           = 1
+s:Ge/Phantom/UpstreamSurface = "Phantom/ZPlusSurface"
+
+
+#--- Scoring
+s:Sc/SurfaceTracks/IfOutputFileAlreadyExists = "Overwrite"
+s:Sc/SurfaceTracks/Quantity                  = "SurfaceTrackCount"
+s:Sc/SurfaceTracks/Surface                   = Ge/Phantom/UpstreamSurface

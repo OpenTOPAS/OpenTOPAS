@@ -1,0 +1,17 @@
+includeFile = TimeFeature_01.txt
+
+#--- Timeline
+b:Tf/RandomizeTimeDistribution = "True"
+
+
+#--- Source
+i:So/Default/NumberOfHistoriesInRandomJob = 5200
+u:So/Default/ProbabilityOfUsingAGivenRandomTime = Tf/BCM/Value
+
+s:Tf/BCM/Function = "Step integer"
+dv:Tf/BCM/Times   = 5     0     1   2     3   4 s
+uv:Tf/BCM/Values  = 5 0.067 0.133 0.2 0.333 1.0
+
+
+#--- Scoring
+b:Sc/PHSP/Active = "False"

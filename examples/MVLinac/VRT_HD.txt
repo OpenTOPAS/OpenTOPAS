@@ -1,0 +1,62 @@
+includeFile = VRT_3.txt
+
+Ph/Default/Modules = 1 "g4em-standard_opt4"
+# early termination of electrons 
+d:Ph/Default/LowestElectronEnergy = 189 keV
+
+b:Gr/Enable = "False"
+b:Ts/UseQT = "False"
+
+So/electronBeam/NumberOfHistoriesInRun = 10 * Ts/ShowHistoryCountAtInterval
+Ts/ShowHistoryCountAtInterval          = 100000
+
+# Multithreading
+i:Ts/NumberOfThreads = 0
+i:Ts/Seed = 1
+
+# Uniform splitting
+Vr/ParTicleSplit/ForRegion/target/processesNamed   = 1 "eBrem" 
+Vr/ParticleSplit/ForRegion/target/SplitNumber      = 1  1000
+Vr/ParticleSplit/ForRegion/target/MaximumEnergies  = 1  10.0 MeV 
+
+# Directional brem
+Vr/ParticleSplit/UseDirectionalSplitting = "True"
+Vr/ParticleSplit/TransX = 0 cm
+Vr/ParticleSplit/TransY = 0 cm
+Vr/ParticleSplit/TransZ = 0.0 cm
+Vr/ParticleSplit/RMax   = 10.0 cm
+
+# Trimming
+Vr/ImportanceSampling/ImportanceValues = 2 1000 1
+
+# Scoring
+Sc/phaseSpace/OutputFile = "VarianceReduction"
+Sc/phaseSpace/KillAfterPhaseSpace = "False"
+
+s:Sc/Dose/Quantity                  = "DoseToMedium"
+s:Sc/Dose/Component                 = "ScoringRegion"
+s:Sc/Dose/IfOutputFileAlreadyExists = "Overwrite"
+s:Sc/Dose/OutputType                = "Binary"
+u:Sc/Dose/OnlyIncludeParticlesWithWeightBelow = 1
+
+s:Sc/DoseFat/Quantity                  = "DoseToMedium"
+s:Sc/DoseFat/Component                 = "ScoringRegion"
+s:Sc/DoseFat/IfOutputFileAlreadyExists = "Overwrite"
+s:Sc/DoseFat/OutputType                = "Binary"
+
+# Scoring in a voxelized slice improves speed 
+s:Ge/ScoringRegion/Parent = "WaterPhantom"
+s:Ge/ScoringRegion/Type   = "TsBox"
+s:Ge/ScoringRegion/Material = "G4_WATER"
+d:Ge/ScoringRegion/HLX   = 100 mm 
+d:Ge/ScoringRegion/HLY   = 2.5 mm 
+d:Ge/ScoringRegion/HLZ   = 100 mm
+i:Ge/ScoringRegion/XBins  = 40
+i:Ge/ScoringRegion/YBins  = 1
+i:Ge/ScoringRegion/ZBins  = 80
+s:Ge/ScoringRegion/Color = "red"
+d:Ge/ScoringRegion/TransZ = Ge/WaterPhantom/HLZ - Ge/ScoringRegion/HLZ cm
+s:Ge/ScoringRegion/DrawingStyle = "Solid"
+
+b:Ts/ShowCPUTime = "True"
+

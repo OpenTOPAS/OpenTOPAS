@@ -1,0 +1,7 @@
+# Demonstrates how to have two separate jobs share everything
+# except the seed and output file.
+
+includeFile = BatchJobShared.txt
+
+i:Ts/Seed = 2
+s:Sc/DoseAtPhantom/OutputFile = "DoseAtPhantomForSeed" + Ts/Seed

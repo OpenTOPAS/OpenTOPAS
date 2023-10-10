@@ -1,0 +1,95 @@
+# Monitor chamber with mirror for Siemens Oncor
+# Reference for geometry: Jabbari et al, J Med Signal Sens 3(3):172-179
+
+########################## Key Parameters In Monitor.txt ##############################
+# Parameters set in another parameter control file...
+# SAD: Source axis distance (distance from nominal source position to isocenter)
+#
+# Parameters available for adjustment...
+# Pos: Distance along beam axis Zg from nominal target position (SAD from isocenter)
+# Rmax: Maximum radius of Cylinder
+# HL: Half of cylinder's thickness
+# RotX: Mirror angle
+#
+# Parameters calculated from other parameters...
+# Reloc: Distance along beam axis Zg from isocenter, set by parameters SAD and Pos
+# TransZ1: Position of lower surface of previous object along Zg
+# TransZ: Position of center of object along Zg
+#######################################################################################
+
+includeFile = LinacDefaults.txt #Values in LinacDafaults.txt may be overriden
+
+############################## Monitor Chamber ########################################
+# Average value of ceramic density from the following link was used:
+# https://www.ceramicindustry.com/ceramic-materials-properties-charts/#Alumina%20Al2O3 
+sv:Ma/Ceramic/Components  = 2 "Aluminum" "Oxygen"  
+uv:Ma/Ceramic/Fractions   = 2 0.529412 0.470588  
+d:Ma/Ceramic/Density      = 3.835 g/cm3 
+s:Ma/Ceramic/DefaultColor = "skyblue"
+
+s:Ge/IC/W1/Parent         = "IEC_G" #IEC gantry coordinates
+s:Ge/IC/W1/Type           = "TsCylinder"
+s:Ge/IC/W1/Material       = "Ceramic"
+
+d:Ge/IC/W1/Pos               = 10.734 cm
+d:Ge/IC/W1/RMax           = 6. cm
+d:Ge/IC/W1/Reloc          = Ge/SAD - Ge/IC/W1/Pos cm
+d:Ge/IC/W1/HL             = 0.076 cm
+d:Ge/IC/W1/TransZ         = Ge/IC/W1/Reloc - Ge/IC/W1/HL cm
+s:Ge/IC/W1/Color          = "Green"
+s:Ge/IC/W1/DrawingStyle   = "Solid"
+
+s:Ge/IC/P1/Parent         = "IEC_G"
+s:Ge/IC/P1/Type           = "TsCylinder"
+s:Ge/IC/P1/Material       = "G4_lN2"
+d:Ge/IC/P1/RMax           = 6. cm
+d:Ge/IC/P1/HL             = 0.092 cm 
+d:Ge/IC/P1/TransZ1        = Ge/IC/W1/TransZ - Ge/IC/W1/HL cm
+d:Ge/IC/P1/TransZ         = Ge/IC/P1/TransZ1 - Ge/IC/P1/HL cm
+s:Ge/IC/P1/Color          = "Green"
+s:Ge/IC/P1/DrawingStyle   = "Solid"
+ 
+s:Ge/IC/W2/Parent         = "IEC_G"
+s:Ge/IC/W2/Type           = "TsCylinder"
+s:Ge/IC/W2/Material       = "Ceramic"
+d:Ge/IC/W2/RMax           = 6. cm 
+d:Ge/IC/W2/HL             = 0.076 cm
+d:Ge/IC/W2/TransZ1        = Ge/IC/P1/TransZ - Ge/IC/P1/HL cm
+d:Ge/IC/W2/TransZ         = Ge/IC/W2/TransZ1 - Ge/IC/W2/HL cm
+s:Ge/IC/W2/Color          = "Green"
+s:Ge/IC/W2/DrawingStyle   = "Solid"
+
+s:Ge/IC/P2/Parent         = "IEC_G"
+s:Ge/IC/P2/Type           = "TsCylinder"
+s:Ge/IC/P2/Material       = "G4_lN2"
+d:Ge/IC/P2/RMax           = 6. cm
+d:Ge/IC/P2/HL             = 0.092 cm 
+d:Ge/IC/P2/TransZ1        = Ge/IC/W2/TransZ - Ge/IC/W2/HL cm
+d:Ge/IC/P2/TransZ         = Ge/IC/P2/TransZ1 - Ge/IC/P2/HL cm
+s:Ge/IC/P2/Color          = "Green"
+s:Ge/IC/P2/DrawingStyle   = "Solid"
+ 
+s:Ge/IC/W3/Parent         = "IEC_G"
+s:Ge/IC/W3/Type           = "TsCylinder"
+s:Ge/IC/W3/Material       = "Ceramic"
+d:Ge/IC/W3/RMax           = 6. cm
+d:Ge/IC/W3/HL             = 0.076 cm
+d:Ge/IC/W3/TransZ1        = Ge/IC/P2/TransZ - Ge/IC/P2/HL cm
+d:Ge/IC/W3/TransZ         = Ge/IC/W3/TransZ1 - Ge/IC/W3/HL cm
+s:Ge/IC/W3/Color          = "Green"
+s:Ge/IC/W3/DrawingStyle   = "Solid"
+
+################################### Mirror ############################################
+s:Ge/IC/P3/Parent         = "IEC_G" #Mirror closest to jaw +Yb, furthest -Yb
+s:Ge/IC/P3/Type           = "TsCylinder"
+s:Ge/IC/P3/Material       = "G4_lN2"
+
+d:Ge/IC/P3/Pos            = 16.603 cm
+d:Ge/IC/P3/RMax           = 3. cm
+d:Ge/IC/P3/HL             = 0.1045 cm 
+d:Ge/IC/P3/RotX           = 40 deg #Mirror angle from direct measurement
+
+d:Ge/IC/P3/Reloc          = Ge/SAD - Ge/IC/P3/Pos cm
+d:Ge/IC/P3/TransZ         = Ge/IC/P3/Reloc - Ge/IC/P3/HL cm
+s:Ge/IC/P3/Color          = "Green"
+s:Ge/IC/P3/DrawingStyle   = "Solid"

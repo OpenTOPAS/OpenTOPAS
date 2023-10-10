@@ -1,0 +1,126 @@
+diff -ruN geant4.10.06.p03/source/geometry/solids/CSG/include/G4Sphere.icc geant4.10.06.p03-patched/source/geometry/solids/CSG/include/G4Sphere.icc
+--- geant4.10.06.p03/source/geometry/solids/CSG/include/G4Sphere.icc	2020-11-05 09:22:46.000000000 -0500
++++ geant4.10.06.p03-patched/source/geometry/solids/CSG/include/G4Sphere.icc	2020-11-11 10:54:31.000000000 -0500
+@@ -151,9 +151,11 @@
+   sinETheta = std::sin(eTheta);
+   cosETheta = std::cos(eTheta);
+ 
+-  tanSTheta  = std::tan(fSTheta);
++  // tanSTheta  = std::tan(fSTheta);
++  tanSTheta = sinSTheta / cosSTheta;
+   tanSTheta2 = tanSTheta*tanSTheta;
+-  tanETheta  = std::tan(eTheta);
++  // tanETheta  = std::tan(eTheta);
++  tanETheta  = sinETheta / cosETheta;  
+   tanETheta2 = tanETheta*tanETheta;
+ }
+ 
+diff -ruN geant4.10.06.p03/source/geometry/solids/specific/src/G4TessellatedSolid.cc geant4.10.06.p03-patched/source/geometry/solids/specific/src/G4TessellatedSolid.cc
+--- geant4.10.06.p03/source/geometry/solids/specific/src/G4TessellatedSolid.cc	2020-11-05 09:22:46.000000000 -0500
++++ geant4.10.06.p03-patched/source/geometry/solids/specific/src/G4TessellatedSolid.cc	2020-11-10 11:20:28.000000000 -0500
+@@ -1654,20 +1654,22 @@
+                                           const G4ThreeVector& v)const
+ {
+   G4double dist = DistanceToInCore(p,v,kInfinity);
+-#ifdef G4SPECSDEBUG
++//#ifdef G4SPECSDEBUG
+   if (dist < kInfinity)
+   {
+     if (Inside(p + dist*v) != kSurface)
+     {
+       std::ostringstream message;
+-      message << "Invalid response from facet in solid '" << GetName() << "',"
++//      message << "Invalid response from facet in solid '" << GetName() << "',"
++      message << "Calculation error in G4TessellatedSolid::DistanceToIn from facet in solid '" << GetName() << "',"
+               << G4endl
+               << "at point: " << p <<  "and direction: " << v;
+       G4Exception("G4TessellatedSolid::DistanceToIn(p,v)",
+-                  "GeomSolids1002", JustWarning, message);
++//                  "GeomSolids1002", JustWarning, message);
++                  "G4T0001", EventMustBeAborted, message);
+     }
+   }
+-#endif
++//#endif
+   return dist;
+ }
+ 
+@@ -1716,20 +1718,22 @@
+     *norm = n;
+     *validNorm = valid;
+   }
+-#ifdef G4SPECSDEBUG
++//#ifdef G4SPECSDEBUG
+   if (dist < kInfinity)
+   {
+     if (Inside(p + dist*v) != kSurface)
+     {
+       std::ostringstream message;
+-      message << "Invalid response from facet in solid '" << GetName() << "',"
++//      message << "Invalid response from facet in solid '" << GetName() << "',"
++      message << "Calculation error in G4TessellatedSolid::DistanceToOut from facet in solid '" << GetName() << "',"
+               << G4endl
+               << "at point: " << p <<  "and direction: " << v;
+       G4Exception("G4TessellatedSolid::DistanceToOut(p,v,..)",
+-                  "GeomSolids1002", JustWarning, message);
++//                  "GeomSolids1002", JustWarning, message);
++                  "G4T0001", EventMustBeAborted, message);
+     }
+   }
+-#endif
++//#endif
+   return dist;
+ }
+ 
+diff -ruN geant4.10.06.p03/source/processes/electromagnetic/dna/management/include/G4ITFinder.icc geant4.10.06.p03-patched/source/processes/electromagnetic/dna/management/include/G4ITFinder.icc
+--- geant4.10.06.p03/source/processes/electromagnetic/dna/management/include/G4ITFinder.icc	2020-11-05 09:22:45.000000000 -0500
++++ geant4.10.06.p03-patched/source/processes/electromagnetic/dna/management/include/G4ITFinder.icc	2020-11-10 11:20:28.000000000 -0500
+@@ -143,7 +143,8 @@
+           "Bad request : no node found in the IT you are searching "
+           "closest neighbourg for");
+       G4Exception("G4ITManager::FindNearest", "ITManager002",
+-          FatalErrorInArgument, exceptionDescription);
++          JustWarning, exceptionDescription);
++          //FatalErrorInArgument, exceptionDescription);
+       return 0; // coverity
+     }
+ 
+diff -ruN geant4.10.06.p03/source/interfaces/basic/src/G4UIQt.cc geant4.10.06.p03-patched source/interfaces/basic/src/G4UIQt.cc
+--- geant4.10.06.p03/source/interfaces/basic/src/G4UIQt.cc  2020-11-05 14:22:46.000000000 +0000
++++ geant4.10.06.p03-patched/source/interfaces/basic/src/G4UIQt.cc       2020-11-23 09:55:15.000000000 +0000
+@@ -2014,6 +2014,10 @@
+     return ReceiveG4cerr(aString);
+   }
+ 
++  // Workaround so that output is not lost after crash or G4Exception
++  // Worker threads seem to write to std::cout anyway, so
++  if (G4Threading::IsMasterThread()) std::cout << aString;
++
+   QStringList newStr;
+   
+   // Add to string
+@@ -2059,6 +2063,11 @@
+ #ifdef G4MULTITHREADED
+   G4AutoLock al(&ReceiveG4cerrMutex);
+ #endif
++
++  // Workaround so that output is not lost after crash or G4Exception
++  // Worker threads seem to write to std::cerr anyway, so
++  if (G4Threading::IsMasterThread()) std::cerr << aString;
++
+   QStringList newStr;
+ 
+   // Add to string
+
+diff -ruN geant4.10.06.p03/source/global/management/include/tls.hh geant4.10.06.p03-patched/source/global/management/include/tls.hh
+--- geant4.10.06.p03/source/global/management/include/tls.hh	2020-11-05 09:22:46.000000000 -0500
++++ geant4.10.06.p03-patched/source/global/management/include/tls.hh	2020-12-20 11:39:40.000000000 -0500
+@@ -38,7 +38,7 @@
+ #define G4_TLS
+ 
+ #if defined (G4MULTITHREADED)
+-  #if ( defined(__MACH__) && defined(__clang__) && defined(__x86_64__) ) || \
++  #if ( defined(__MACH__) && defined(__clang__) && (defined(__x86_64__) || defined(__aarch64__)) ) || \
+       ( defined(__linux__) && defined(__clang__) )
+     #  define G4ThreadLocalStatic static thread_local
+     #  define G4ThreadLocal thread_local

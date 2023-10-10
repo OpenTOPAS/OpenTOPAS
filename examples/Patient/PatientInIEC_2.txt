@@ -1,0 +1,25 @@
+# PatientInIEC_2 : we place a patient to treatment room.
+
+# Fix for iso-center
+# Fix for DICOM to IEC
+# Fix for Gantry rotation : 60 deg
+# Fix for Couch  rotation : 90 deg
+
+includeFile = PatientInIEC_1.txt
+
+# step 1
+Ge/patient/TransX = -1.0 * Ge/patient_iso/TransX mm
+Ge/patient/TransY = -1.0 * Ge/patient_iso/TransY mm
+Ge/patient/TransZ = -1.0 * Ge/patient_iso/TransZ mm
+
+Ge/DICOM_to_IEC/RotX  = 90.0 deg # step 2: 90.0 deg
+
+Ge/IEC_G/RotY         = 60.0 deg # step3: 60 deg ?
+
+# Couch (patient support)
+Ge/IEC_S/RotZ         = 45.0 deg # step4: 90 deg ? 
+
+s:Sc/DoseAtPhantom1/Quantity    = "DoseToWater"
+s:Sc/DoseAtPhantom1/Component   = "patient_rleg"
+s:Sc/DoseAtPhantom1/IfOutputFileAlreadyExists = "Overwrite"
+b:Sc/DoseAtPhantom1/OutputAfterRun = "True"

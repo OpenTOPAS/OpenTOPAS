@@ -1,0 +1,27 @@
+# PatientInIEC_3 : we place a beam to DICOM
+
+includeFile = PatientInIEC_1.txt
+
+# step 1 : Fix patient to world
+
+Ge/patient/Parent = "World"
+
+# step 2 : place IEC_G on IEC_S 
+
+Ge/DICOM_to_IEC/Parent = "World"
+Ge/IEC_S/Parent        = "DICOM_to_IEC"
+Ge/IEC_G/Parent        = "IEC_S"
+
+# step 3 : Gantry  
+Ge/IEC_G/RotY         = 60.0 deg # 60 deg ?
+
+# step 4 Couch (patient support)
+Ge/IEC_S/RotZ         = -45.0 deg # -90 deg ? 
+
+# step 5 rotation
+Ge/DICOM_to_IEC/RotX  = -90 deg
+
+# step 6 translational movement
+Ge/DICOM_to_IEC/TransX = Ge/patient_iso/TransX mm
+Ge/DICOM_to_IEC/TransY = Ge/patient_iso/TransY mm
+Ge/DICOM_to_IEC/TransZ = Ge/patient_iso/TransZ mm

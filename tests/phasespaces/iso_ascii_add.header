@@ -1,0 +1,44 @@
+TOPAS ASCII Phase Space
+
+Number of Original Histories: 100
+Number of Original Histories that Reached Phase Space: 99
+Number of Scored Particles: 106
+
+Columns of data are as follows:
+ 1: Position X [cm]
+ 2: Position Y [cm]
+ 3: Position Z [cm]
+ 4: Direction Cosine X
+ 5: Direction Cosine Y
+ 6: Energy [MeV]
+ 7: Weight
+ 8: Particle Type (in PDG Format)
+ 9: Flag to tell if Third Direction Cosine is Negative (1 means true)
+10: Flag to tell if this is the First Scored Particle from this History (1 means true)
+11: TOPAS Time [s]
+12: Time of Flight [ns]
+13: Run ID
+14: Event ID
+15: Track ID
+16: Parent ID
+17: Charge [e+]
+18: Initial Kinetic Energy [MeV]
+19: Vertex Position X [cm]
+20: Vertex Position Y [cm]
+21: Vertex Position Z [cm]
+22: Initial Direction Cosine X
+23: Initial Direction Cosine Y
+24: Initial Direction Cosine Z
+25: Seed Part 1
+26: Seed Part 2
+27: Seed Part 3
+28: Seed Part 4
+
+Number of e-: 7
+Number of proton: 99
+
+Minimum Kinetic Energy of e-: 0.010434 MeV
+Minimum Kinetic Energy of proton: 147.755 MeV
+
+Maximum Kinetic Energy of e-: 0.275116 MeV
+Maximum Kinetic Energy of proton: 148.56 MeV

@@ -1,0 +1,62 @@
+#--- Graphics
+b:Ge/World/Invisible    = "True"
+s:Gr/MyGraphic/Type     = "HepRep"
+s:Gr/MyGraphic/FileName = "Geometry_03"
+
+
+#--- Geometry
+s:Ge/Box/Parent        = "World"
+s:Ge/Box/Type          = "TsBox"
+s:Ge/Box/Material      = "G4_WATER"
+d:Ge/Box/HLX           = 7.0 cm
+d:Ge/Box/HLY           = 7.0 cm
+d:Ge/Box/HLZ           = 9.0 cm
+d:Ge/Box/TransX        = 0. cm
+d:Ge/Box/TransY        = 0. cm
+d:Ge/Box/TransZ        = 0. cm
+d:Ge/Box/RotX          = 0. deg
+d:Ge/Box/RotY          = 0. deg
+d:Ge/Box/RotZ          = 0. deg
+s:Ge/Box/Color         = "blue"
+i:Ge/Box/XBins         = 3
+i:Ge/Box/YBins         = 4
+i:Ge/Box/ZBins         = 5
+
+s:Ge/Cylinder/Parent   = "World"
+s:Ge/Cylinder/Type     = "TsCylinder"
+s:Ge/Cylinder/Material = "G4_WATER"
+d:Ge/Cylinder/RMin     = 0.0 cm
+d:Ge/Cylinder/RMax     = 8.0 cm
+d:Ge/Cylinder/HL       = 10.0 cm
+d:Ge/Cylinder/SPhi     = 0. deg
+d:Ge/Cylinder/DPhi     = 360. deg
+d:Ge/Cylinder/TransX   = 0. cm
+d:Ge/Cylinder/TransY   = 0. cm
+d:Ge/Cylinder/TransZ   = 25. cm
+d:Ge/Cylinder/RotX     = 0. deg
+d:Ge/Cylinder/RotY     = 0.0 deg
+d:Ge/Cylinder/RotZ     = 0. deg
+s:Ge/Cylinder/Color    = "blue"
+i:Ge/Cylinder/RBins    = 2
+i:Ge/Cylinder/PhiBins  = 8
+i:Ge/Cylinder/ZBins    = 2
+
+s:Ge/Sphere/Parent     = "World"
+s:Ge/Sphere/Type       = "TsSphere"
+s:Ge/Sphere/Material   = "G4_WATER"
+d:Ge/Sphere/RMin       = 0.0 cm
+d:Ge/Sphere/RMax       = 10.0 cm
+d:Ge/Sphere/SPhi       = 0. deg
+d:Ge/Sphere/DPhi       = 360. deg
+d:Ge/Sphere/STheta     = 0. deg
+d:Ge/Sphere/DTheta     = 180. deg
+d:Ge/Sphere/TransX     = 0. cm
+d:Ge/Sphere/TransY     = 0. cm
+d:Ge/Sphere/TransZ     = 50. cm
+d:Ge/Sphere/RotX       = 0. deg
+d:Ge/Sphere/RotY       = 0. deg
+d:Ge/Sphere/RotZ       = 0. deg
+s:Ge/Sphere/Color      = "blue"
+i:Ge/Sphere/RBins      = 3
+i:Ge/Sphere/PhiBins    = 4
+i:Ge/Sphere/ThetaBins  = 12

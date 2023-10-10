@@ -1,0 +1,65 @@
+# Demonstrates Gated scoring.
+# First scorer is gated, sometimes active, sometimes inactive,
+# under the control of a time feature and outputs after each run.
+# Second scorer is gated, sometimes active, sometimes inactive,
+# under the control of a time feature and outputs only at end of session.
+# Third scorer is always active and outputs only at end of session.
+
+s:Ge/Box/Type     = "TsBox"
+s:Ge/Box/Parent   = "World"
+s:Ge/Box/Material = "G4_WATER"
+d:Ge/Box/HLX      = 1. m
+d:Ge/Box/HLY      = 1. m
+d:Ge/Box/HLZ      = .4 m
+
+s:Sc/GatedAndOutputPerRun/Quantity                      = "Fluence"
+s:Sc/GatedAndOutputPerRun/Component                     = "Box"
+s:Sc/GatedAndOutputPerRun/IfOutputFileAlreadyExists     = "Overwrite"
+b:Sc/GatedAndOutputPerRun/OutputToConsole               = "True"
+b:Sc/GatedAndOutputPerRun/Active                        = Tf/ScoringOnOff/Value
+b:Sc/GatedAndOutputPerRun/OutputAfterRun                = "True"
+
+s:Sc/GatedAndOutputPerSession/Quantity                  = "Fluence"
+s:Sc/GatedAndOutputPerSession/Component                 = "Box"
+s:Sc/GatedAndOutputPerSession/IfOutputFileAlreadyExists = "Overwrite"
+b:Sc/GatedAndOutputPerSession/OutputToConsole           = "True"
+b:Sc/GatedAndOutputPerSession/Active                    = Tf/ScoringOnOff/Value
+
+s:Sc/NotGated/Quantity                  = "Fluence"
+s:Sc/NotGated/Component                 = "Box"
+s:Sc/NotGated/IfOutputFileAlreadyExists = "Overwrite"
+b:Sc/NotGated/OutputToConsole           = "True"
+
+s:Gr/MyOGL/Type        = "OpenGL"
+i:Gr/MyOGL/WindowSizeX = 600
+i:Gr/MyOGL/WindowSizeY = 600
+i:Gr/MyOGL/WindowPosX  = 0
+i:Gr/MyOGL/WindowPosY  = 0
+
+s:Tf/ScoringOnOff/Function = "Step"
+dv:Tf/ScoringOnOff/Times   = 10 10  20   30    40    50   60   70   80    90 100 ms
+bv:Tf/ScoringOnOff/Values  = 10   "true" "false" "true" "false" "false" "true" "true" "true" "false" "true"
+
+i:Tf/Verbosity =1
+d:Tf/TimelineEnd = 100.0 ms
+i:Tf/NumberOfSequentialTimes = 10
+
+s:So/Example/Type                     = "Beam"
+s:So/Example/Component                = "BeamPosition"
+s:So/Example/BeamParticle             = "proton"
+d:So/Example/BeamEnergy               = 169.23 MeV
+u:So/Example/BeamEnergySpread         = 0.757504
+s:So/Example/BeamPositionDistribution = "Gaussian"
+s:So/Example/BeamPositionCutoffShape  = "Ellipse"
+d:So/Example/BeamPositionCutoffX      = 10. cm
+d:So/Example/BeamPositionCutoffY      = 10. cm
+d:So/Example/BeamPositionSpreadX      = 0.65 cm
+d:So/Example/BeamPositionSpreadY      = 0.65 cm
+s:So/Example/BeamAngularDistribution  = "Gaussian"
+d:So/Example/BeamAngularCutoffX       = 90. deg
+d:So/Example/BeamAngularCutoffY       = 90. deg
+d:So/Example/BeamAngularSpreadX       = 0.0032 rad
+d:So/Example/BeamAngularSpreadY       = 0.0032 rad
+i:So/Example/NumberOfHistoriesInRun   = 10
+
+b:Ts/PauseBeforeQuit = "True"

@@ -1,0 +1,95 @@
+#
+i:Ts/NumberOfThreads = 1
+
+# Secondary biasing occurs in the region
+# of this component
+s:Ge/target/Parent   = "World"
+s:Ge/target/Material = "G4_WATER"
+s:Ge/target/Type     = "TsBox"
+d:Ge/target/HLX      = 1.5 cm
+d:Ge/target/HLY      = 1.5 cm
+d:Ge/target/HLZ      = 0.5 mm
+s:Ge/target/Color    = "yellow"
+# Set the region
+s:Ge/target/AssignToRegionNaMed = "targetregion"
+
+# Component for scoring
+s:Ge/scorer/Parent   = "World"
+s:Ge/scorer/Material = "G4_WATER"
+s:Ge/scorer/Type     = "TsCylinder"
+d:Ge/scorer/RMax     = 5 cm
+d:Ge/scorer/HL       = 0.05 mm
+d:Ge/scorer/SPhi     = 0 deg
+d:Ge/scorer/DPhi     = 360 deg
+d:Ge/scorer/TransZ   = 1 m + Ge/scorer/HL
+s:Ge/scorer/Color    = "yellow"
+i:Ge/scorer/RBins    = 20
+i:Ge/scorer/PhiBins  = 1
+i:Ge/scorer/ZBins    = 1
+
+s:Sc/scorer/Quantity   = "EnergyFluence"
+s:Sc/scorer/Component  = "scorer"
+s:Sc/scorer/OutputFile = "secondaryBiasing"
+s:Sc/scorer/IfOutputFileAlreadyExists = "Overwrite"
+
+# VISUALIZATION
+s:Gr/view/Type        = "OpenGl"
+i:Gr/view/WindowSizeX = 600
+i:Gr/view/WindowSizeY = 600
+d:Gr/view/Phi         = 0 deg
+d:Gr/view/Theta       = 270 deg
+u:Gr/view/Zoom        = 5
+
+b:Ts/PauseBeforeQuit = "True"
+
+# SOURCE
+s:So/Example/Type                     = "Beam"
+s:So/Example/Component                = "BeamPosition"
+s:So/Example/BeamParticle             = "gamma"
+d:So/Example/BeamEnergy               = 10 MeV
+u:So/Example/BeamEnergySpread         = 0.1
+s:So/Example/BeamPositionDistribution = "None"
+s:So/Example/BeamAngularDistribution  = "Gaussian"
+d:So/Example/BeamAngularCutoffX       = 90. deg
+d:So/Example/BeamAngularCutoffY       = 90. deg
+d:So/Example/BeamAngularSpreadX       = 0.0032 rad
+d:So/Example/BeamAngularSpreadY       = 0.0032 rad
+
+Ge/BeamPosition/Parent = "World"
+Ge/BeamPosition/TransX = 0.0 cm
+Ge/BeamPosition/TransZ = -1.0 * Ge/target/HLZ cm
+Ge/BeamPosition/TransY = 0.0 mm
+Ge/BeamPosition/RotX   = 0 deg
+
+# GEOMETRY
+d:Ge/World/HLX      = 16.1 cm
+d:Ge/World/HLY      = 16.1 cm
+d:Ge/World/HLZ      = 1.5 m
+s:Ge/World/Material = "Air"
+
+sv:Ph/Default/Modules = 1 "g4em-standard_opt3"
+
+i:So/Example/NumberOfHistoriesInRun = 1000
+i:Ts/ShowHistoryCountAtInterval = 100
+b:Ts/ShowCPUTime = "True"
+
+#Forced interaction in a region
+#A distance value shorter than the thickness of the volume 
+#of interest must be set.
+#By setting that distance of interaction large enough,
+#then the true physic length is taken into account. This
+#will mimic activation deactivation of this technique.
+s:Tf/ActiveVRT/Function = "step"
+dv:Tf/ActiveVRT/Times    = 5 1 2 3 4 5 ms
+dv:Tf/ActiveVRT/Values   = 5 0.1 Ge/World/HLZ 0.1 Ge/World/HLZ 0.1 mm 
+
+Tf/TimeLineEnd = 5 ms
+Tf/NumberOfSequentialTimes = 5
+
+b:Vr/UseVarianceReduction = "true"
+s:Vr/ForcedInteraction/Type   = "ForcedInteraction"
+sv:Vr/ForcedInteraction/forregion/targetregion/processesNamed   = 2 "compt" "conv"
+dv:Vr/ForcedInteraction/ForRegion/targetregion/ForcedDistances  = 2 Tf/ActiveVRT/Value Tf/ActiveVRT/Value mm
+b:Vr/ForcedInteraction/ForRegion/targetregion/CorrectByWeight = "True"
+
+

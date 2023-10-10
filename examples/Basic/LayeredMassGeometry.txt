@@ -1,0 +1,74 @@
+# Demonstrates use of Layered Mass Geometry,
+# a Geant4 feature whereby there can be material in a paralle world.
+
+s:Ge/World/Material  = "Vacuum"
+d:Ge/World/HLX       = 2.0 m
+d:Ge/World/HLY       = 2.0 m
+d:Ge/World/HLZ       = 2.0 m
+b:Ge/World/Invisible = "TRUE"
+
+sv:Ph/Default/LayeredMassGeometryWorlds = 2 "WaterBox" "IronBox"
+
+s:Ge/AirBox/Parent   = "World"
+s:Ge/AirBox/Type     = "TsBox"
+s:Ge/AirBox/Material = "Air"
+d:Ge/AirBox/HLX      = 1. m
+d:Ge/AirBox/HLY      = 1. m
+d:Ge/AirBox/HLZ      = 1. m
+d:Ge/AirBox/TransX   = 0. m
+d:Ge/AirBox/TransY   = 0. m
+d:Ge/AirBox/TransZ   = 0. m
+d:Ge/AirBox/RotX     = 0. deg
+d:Ge/AirBox/RotY     = 0. deg
+d:Ge/AirBox/RotZ     = 0. deg
+
+s:Ge/WaterBox/Parent     = "World"
+s:Ge/WaterBox/Type       =  "TsBox"
+s:Ge/WaterBox/Material   = "G4_WATER"
+d:Ge/WaterBox/HLX        = .6 m
+d:Ge/WaterBox/HLY        = .6 m
+d:Ge/WaterBox/HLZ        = .6 m
+d:Ge/WaterBox/TransX     = 0. m
+d:Ge/WaterBox/TransY     = 0. m
+d:Ge/WaterBox/TransZ     = 0. m
+d:Ge/WaterBox/RotX       = 0. deg
+d:Ge/WaterBox/RotY       = 0. deg
+d:Ge/WaterBox/RotZ       = 0. deg
+b:Ge/WaterBox/isParallel = "True"
+
+s:Ge/IronBox/Parent     = "World"
+s:Ge/IronBox/Type       =  "TsBox"
+s:Ge/IronBox/Material   = "Iron"
+d:Ge/IronBox/HLX        = .4 m
+d:Ge/IronBox/HLY        = .4 m
+d:Ge/IronBox/HLZ        = .4 m
+d:Ge/IronBox/TransX     = 0. m
+d:Ge/IronBox/TransY     = 0. m
+d:Ge/IronBox/TransZ     = 0. m
+d:Ge/IronBox/RotX       = 0. deg
+d:Ge/IronBox/RotY       = 0. deg
+d:Ge/IronBox/RotZ       = 0. deg
+b:Ge/IronBox/isParallel = "True"
+
+b:Ts/PauseBeforeQuit = "True"
+
+s:So/Example/Type                     = "Beam"
+s:So/Example/Component                = "BeamPosition"
+s:So/Example/BeamParticle             = "proton"
+d:So/Example/BeamEnergy               = 270. MeV
+u:So/Example/BeamEnergySpread         = 0.757504
+s:So/Example/BeamPositionDistribution = "Flat"
+s:So/Example/BeamPositionCutoffShape  = "Ellipse"
+d:So/Example/BeamPositionCutoffX      = 5 cm
+d:So/Example/BeamPositionCutoffY      = 20 cm
+s:So/Example/BeamAngularDistribution  = "None"
+i:So/Example/NumberOfHistoriesInRun   = 10
+
+sv:Ph/Default/Modules = 1 "g4em-standard_opt0"
+
+s:Gr/ViewA/Type           = "OpenGL"
+sv:Gr/ViewA/VisibleWorlds = 1 "All"
+i:Gr/ViewA/WindowSizeX    = 900
+i:Gr/ViewA/WindowSizeY    = 900
+d:Gr/ViewA/Theta          = 90 deg
+d:Gr/ViewA/Phi            = 0 deg

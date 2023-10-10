@@ -1,0 +1,62 @@
+########################
+# Weight window: Mass geometry
+########################
+includeFile = vrt_Shielding_Globals.txt
+
+d:Ge/World/HLX = 3.0 m
+d:Ge/World/HLY = 3.0 m
+d:Ge/World/HLZ = 3.0 m
+
+#########################
+# Gemetry for vrt set to mass geometry all the cells
+#########################
+b:Ge/subComponent1/IsParallel = "false"
+b:Ge/subComponent2/IsParallel = "false"
+b:Ge/subComponent3/IsParallel = "false"
+b:Ge/subComponent4/IsParallel = "false"
+b:Ge/subComponent5/IsParallel = "false"
+b:Ge/subComponent6/IsParallel = "false"
+b:Ge/subComponent7/IsParallel = "false"
+b:Ge/subComponent8/IsParallel = "false"
+b:Ge/subComponent9/IsParallel = "false"
+b:Ge/subComponent10/IsParallel = "false"
+
+s:Ge/subComponent1/Material = "G4_CONCRETE"
+s:Ge/subComponent2/Material = "G4_CONCRETE"
+s:Ge/subComponent3/Material = "G4_CONCRETE"
+s:Ge/subComponent4/Material = "G4_CONCRETE"
+s:Ge/subComponent5/Material = "G4_CONCRETE"
+s:Ge/subComponent6/Material = "G4_CONCRETE"
+s:Ge/subComponent7/Material = "G4_CONCRETE"
+s:Ge/subComponent8/Material = "G4_CONCRETE"
+s:Ge/subComponent9/Material = "G4_CONCRETE"
+s:Ge/subComponent10/Material = "G4_CONCRETE"
+
+b:Ge/Scorer/IsParallel = "True"
+s:Sc/Scorer/OutputFile = "vrt_Shielding_WeightW_Mass"
+
+#########################
+# VRT
+#########################
+b:Vr/UseVarianceReductioN         = "true"
+b:Vr/ParticleSplit/ActivE         = "true"
+sv:Vr/ParticleSplit/PartIcleName  = 3 "neutron" "proton" "gamma"
+s:Vr/ParticleSplit/CompoNent      = "target"
+sv:Vr/ParticleSplit/SubCOmponents = 10
+"subComponent1" "subComponent2"
+"subComponent3" "subComponent4"
+"subComponent5" "subComponent6"
+"subComponent7" "subComponent8"
+"subComponent9" "subComponent10"
+s:Vr/ParticleSplit/Type = "WeightWindow"
+uv:Vr/ParticleSplit/WeigHtMap = 10 1.0 0.5 0.25 0.125 0.0625 0.03125 0.015625 0.0078125 0.00390625 0.001953125
+dv:Vr/ParticleSplit/EnerGyMap = 10 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 GeV
+u:Vr/ParticleSplit/UpperlimitFactor    = 1
+u:Vr/ParticleSplit/SurviValFactor      = 1
+i:Vr/ParticleSplit/MaximUmSplitNumber  = 100
+s:Vr/ParticleSplit/PlacEofAction       = "OnBoundary"
+
+i:Ts/Seed = 123
+i:So/Default/NumberOfHistoriesInRun = 10000
+i:Ts/ShowHistoryCountAtInterval     = 1000
+b:Ts/ShowCPUTime                    = "True"

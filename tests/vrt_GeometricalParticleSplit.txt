@@ -1,0 +1,29 @@
+#
+includeFile = vrt_GeometricalParticleSplit_Globals.txt
+
+##########################
+# Variance reduction
+##########################
+# Test some case sensitivity
+b:Vr/UseVarianceREDUCTION                    = "true"
+b:Vr/ParticleSplit/AcTive                    = "true"
+sv:Vr/ParticleSplit/PartiCleName             = 1 "proton"
+s:Vr/ParticleSplit/CompoNent                 = "VrtParallelWorld"
+sv:Vr/ParticleSplit/SubComPonents            = 2 "subComponent1" "subComponent2"
+s:Vr/ParticleSplit/TypE                      = "GeometricalParticleSplit"
+iv:Vr/ParticleSplit/SplITNumber              = 2 4 4
+bv:Vr/ParticleSplit/SyMMetric                = 2 "false" "true"
+s:Vr/ParticleSplit/SPLitAxis                 = "zaxis"
+d:Vr/ParticleSplit/RussianRouLEtte/roiRadius = 12.5 cm
+d:Vr/ParticleSplit/RussianRoulette/ROITrans  = 20 cm
+bv:Vr/ParticleSplit/RussianRoulette          = 2 "true" "true"
+
+s:Sc/scorer/OutputFile = "vrt_GeometricalParticleSplit"
+
+##########################
+# Histories
+##########################
+i:Ts/Seed = 123
+i:So/Default/NumberOfHistoriesInRun = 1000
+i:Ts/ShowHistoryCountAtInterval     = 100
+b:Ts/ShowCPUTime                    = "True"

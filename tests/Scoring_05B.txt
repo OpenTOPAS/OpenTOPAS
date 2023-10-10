@@ -1,0 +1,6 @@
+includeFile = Scoring_05.txt
+
+#--- Scoring
+s:Ge/ScoringVolume/Type   = "TsSphere"
+d:Ge/ScoringVolume/RMax   = 10. cm
+d:Ge/ScoringVolume/TransZ = Ge/ScoringVolume/RMax - Ge/Phantom/HLZ cm

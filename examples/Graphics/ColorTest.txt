@@ -1,0 +1,169 @@
+# Demonstrate the 16 standard colors from HTML 4.01 specification
+
+s:Ge/Box01/Type     = "TsBox"
+s:Ge/Box01/Parent   = "World"
+s:Ge/Box01/Material = "G4_WATER"
+d:Ge/Box01/HLX      = 1. cm
+d:Ge/Box01/HLY      = 0.5 cm
+d:Ge/Box01/HLZ      = 1. cm
+d:Ge/Box01/TransY   = 16. cm
+s:Ge/Box01/DrawingStyle = "Solid"
+s:Ge/Box01/Color    = "White"
+
+s:Ge/Box02/Type     = "TsBox"
+s:Ge/Box02/Parent   = "World"
+s:Ge/Box02/Material = "G4_WATER"
+d:Ge/Box02/HLX      = 1. cm
+d:Ge/Box02/HLY      = 0.5 cm
+d:Ge/Box02/HLZ      = 1. cm
+d:Ge/Box02/TransY   = 15. cm
+s:Ge/Box02/DrawingStyle = "Solid"
+s:Ge/Box02/Color    = "Silver"
+
+s:Ge/Box03/Type     = "TsBox"
+s:Ge/Box03/Parent   = "World"
+s:Ge/Box03/Material = "G4_WATER"
+d:Ge/Box03/HLX      = 1. cm
+d:Ge/Box03/HLY      = 0.5 cm
+d:Ge/Box03/HLZ      = 1. cm
+d:Ge/Box03/TransY   = 14. cm
+s:Ge/Box03/DrawingStyle = "Solid"
+s:Ge/Box03/Color    = "Gray"
+
+s:Ge/Box04/Type     = "TsBox"
+s:Ge/Box04/Parent   = "World"
+s:Ge/Box04/Material = "G4_WATER"
+d:Ge/Box04/HLX      = 1. cm
+d:Ge/Box04/HLY      = 0.5 cm
+d:Ge/Box04/HLZ      = 1. cm
+d:Ge/Box04/TransY   = 13. cm
+s:Ge/Box04/DrawingStyle = "Solid"
+s:Ge/Box04/Color    = "Black"
+
+s:Ge/Box05/Type     = "TsBox"
+s:Ge/Box05/Parent   = "World"
+s:Ge/Box05/Material = "G4_WATER"
+d:Ge/Box05/HLX      = 1. cm
+d:Ge/Box05/HLY      = 0.5 cm
+d:Ge/Box05/HLZ      = 1. cm
+d:Ge/Box05/TransY   = 12. cm
+s:Ge/Box05/DrawingStyle = "Solid"
+s:Ge/Box05/Color    = "Red"
+
+s:Ge/Box06/Type     = "TsBox"
+s:Ge/Box06/Parent   = "World"
+s:Ge/Box06/Material = "G4_WATER"
+d:Ge/Box06/HLX      = 1. cm
+d:Ge/Box06/HLY      = 0.5 cm
+d:Ge/Box06/HLZ      = 1. cm
+d:Ge/Box06/TransY   = 11. cm
+s:Ge/Box06/DrawingStyle = "Solid"
+s:Ge/Box06/Color    = "Maroon"
+
+s:Ge/Box07/Type     = "TsBox"
+s:Ge/Box07/Parent   = "World"
+s:Ge/Box07/Material = "G4_WATER"
+d:Ge/Box07/HLX      = 1. cm
+d:Ge/Box07/HLY      = 0.5 cm
+d:Ge/Box07/HLZ      = 1. cm
+d:Ge/Box07/TransY   = 10. cm
+s:Ge/Box07/DrawingStyle = "Solid"
+s:Ge/Box07/Color    = "Yellow"
+
+s:Ge/Box08/Type     = "TsBox"
+s:Ge/Box08/Parent   = "World"
+s:Ge/Box08/Material = "G4_WATER"
+d:Ge/Box08/HLX      = 1. cm
+d:Ge/Box08/HLY      = 0.5 cm
+d:Ge/Box08/HLZ      = 1. cm
+d:Ge/Box08/TransY   = 9. cm
+s:Ge/Box08/DrawingStyle = "Solid"
+s:Ge/Box08/Color    = "Olive"
+
+s:Ge/Box09/Type     = "TsBox"
+s:Ge/Box09/Parent   = "World"
+s:Ge/Box09/Material = "G4_WATER"
+d:Ge/Box09/HLX      = 1. cm
+d:Ge/Box09/HLY      = 0.5 cm
+d:Ge/Box09/HLZ      = 1. cm
+d:Ge/Box09/TransY   = 8. cm
+s:Ge/Box09/DrawingStyle = "Solid"
+s:Ge/Box09/Color    = "Lime"
+
+s:Ge/Box10/Type     = "TsBox"
+s:Ge/Box10/Parent   = "World"
+s:Ge/Box10/Material = "G4_WATER"
+d:Ge/Box10/HLX      = 1. cm
+d:Ge/Box10/HLY      = 0.5 cm
+d:Ge/Box10/HLZ      = 1. cm
+d:Ge/Box10/TransY   = 7. cm
+s:Ge/Box10/DrawingStyle = "Solid"
+s:Ge/Box10/Color    = "Green"
+
+s:Ge/Box11/Type     = "TsBox"
+s:Ge/Box11/Parent   = "World"
+s:Ge/Box11/Material = "G4_WATER"
+d:Ge/Box11/HLX      = 1. cm
+d:Ge/Box11/HLY      = 0.5 cm
+d:Ge/Box11/HLZ      = 1. cm
+d:Ge/Box11/TransY   = 6. cm
+s:Ge/Box11/DrawingStyle = "Solid"
+s:Ge/Box11/Color    = "Aqua"
+
+s:Ge/Box12/Type     = "TsBox"
+s:Ge/Box12/Parent   = "World"
+s:Ge/Box12/Material = "G4_WATER"
+d:Ge/Box12/HLX      = 1. cm
+d:Ge/Box12/HLY      = 0.5 cm
+d:Ge/Box12/HLZ      = 1. cm
+d:Ge/Box12/TransY   = 5. cm
+s:Ge/Box12/DrawingStyle = "Solid"
+s:Ge/Box12/Color    = "Teal"
+
+s:Ge/Box13/Type     = "TsBox"
+s:Ge/Box13/Parent   = "World"
+s:Ge/Box13/Material = "G4_WATER"
+d:Ge/Box13/HLX      = 1. cm
+d:Ge/Box13/HLY      = 0.5 cm
+d:Ge/Box13/HLZ      = 1. cm
+d:Ge/Box13/TransY   = 4. cm
+s:Ge/Box13/DrawingStyle = "Solid"
+s:Ge/Box13/Color    = "Blue"
+
+s:Ge/Box14/Type     = "TsBox"
+s:Ge/Box14/Parent   = "World"
+s:Ge/Box14/Material = "G4_WATER"
+d:Ge/Box14/HLX      = 1. cm
+d:Ge/Box14/HLY      = 0.5 cm
+d:Ge/Box14/HLZ      = 1. cm
+d:Ge/Box14/TransY   = 3. cm
+s:Ge/Box14/DrawingStyle = "Solid"
+s:Ge/Box14/Color    = "Navy"
+
+s:Ge/Box15/Type     = "TsBox"
+s:Ge/Box15/Parent   = "World"
+s:Ge/Box15/Material = "G4_WATER"
+d:Ge/Box15/HLX      = 1. cm
+d:Ge/Box15/HLY      = 0.5 cm
+d:Ge/Box15/HLZ      = 1. cm
+d:Ge/Box15/TransY   = 2. cm
+s:Ge/Box15/DrawingStyle = "Solid"
+s:Ge/Box15/Color    = "Fuchsia"
+
+s:Ge/Box16/Type     = "TsBox"
+s:Ge/Box16/Parent   = "World"
+s:Ge/Box16/Material = "G4_WATER"
+d:Ge/Box16/HLX      = 1. cm
+d:Ge/Box16/HLY      = 0.5 cm
+d:Ge/Box16/HLZ      = 1. cm
+d:Ge/Box16/TransY   = 1. cm
+s:Ge/Box16/DrawingStyle = "Solid"
+s:Ge/Box16/Color    = "Purple"
+
+b:Ge/World/Invisible  = "True"
+
+sv:Ph/Default/Modules = 1 "g4em-standard_opt0"
+
+s:Gr/ViewA/Type       = "OpenGL"
+
+b:Ts/PauseBeforeQuit  = "True"

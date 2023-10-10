@@ -1,0 +1,5 @@
+includeFile = PhaseSpace_01A.txt
+
+#--- Scoring
+s:Sc/PHSP/OutputType = "Binary"
+s:Sc/PHSP/OutputFile = "iso_binary"

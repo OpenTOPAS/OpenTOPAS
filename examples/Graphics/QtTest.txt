@@ -1,0 +1,45 @@
+# Qt example.
+# Parameters marked Changeable with the "c:" syntax appear in GUI
+
+s:Ge/MyBox/Type     = "TsBox"
+sc:Ge/MyBox/Material = "G4_WATER"
+s:Ge/MyBox/Parent   = "World"
+dc:Ge/MyBox/HLX      = 1.5 m
+dc:Ge/MyBox/HLY      = 1. m
+dc:Ge/MyBox/HLZ      = 1. m
+dc:Ge/MyBox/TransX   = 0. m
+dc:Ge/MyBox/TransY   = 0. m
+dc:Ge/MyBox/TransZ   = 1.5 m
+dc:Ge/MyBox/RotX     = 0. deg
+dc:Ge/MyBox/RotY     = 0. deg
+dc:Ge/MyBox/RotZ     = 0. deg
+ic:Ge/MyBox/XBins    = 1
+ic:Ge/MyBox/YBins    = 1
+ic:Ge/MyBox/ZBins    = 1
+sc:Ge/MyBox/Color    = "blue"
+sc:Ge/MyBox/DrawingStyle = "WireFrame"
+bc:Ge/MyBox/Invisible = "False"
+
+s:So/Therapy/Type                     = "Beam"
+sc:So/Therapy/Component                = "BeamPosition"
+sc:So/Therapy/BeamParticle             = "e-"
+dc:So/Therapy/BeamEnergy               = 169.23 MeV
+uc:So/Therapy/BeamEnergySpread         = 0.757504
+sc:So/Therapy/BeamPositionDistribution = "Gaussian"
+sc:So/Therapy/BeamPositionCutoffShape  = "Ellipse"
+dc:So/Therapy/BeamPositionCutoffX      = 10. cm
+dc:So/Therapy/BeamPositionCutoffY      = 10. cm
+dc:So/Therapy/BeamPositionSpreadX      = 0.65 cm
+dc:So/Therapy/BeamPositionSpreadY      = 0.65 cm
+sc:So/Therapy/BeamAngularDistribution  = "Gaussian"
+dc:So/Therapy/BeamAngularCutoffX       = 90. deg
+dc:So/Therapy/BeamAngularCutoffY       = 90. deg
+dc:So/Therapy/BeamAngularSpreadX       = 0.0032 rad
+dc:So/Therapy/BeamAngularSpreadY       = 0.0032 rad
+ic:So/Therapy/NumberOfHistoriesInRun   = 10
+
+sv:Ph/Default/Modules = 1 "g4em-standard_opt0"
+
+s:Gr/ViewA/Type              = "OpenGL"
+
+Ts/UseQt = "True"

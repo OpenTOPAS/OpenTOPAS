@@ -1,0 +1,55 @@
+# Demonstrates how scoring can be split by a time feature.
+# In this example, though the time feature ImageName doesn't really get # used to load any images,
+# the scoring is still split by this time feature.
+# This means that separate scorers are created for each of the
+# three values of ImageName, and each scorer is active only when
+# the ImageName value matches the that scorer's required value.
+
+s:Ge/Phantom/Type     = "TsBox"
+s:Ge/Phantom/Parent   = "World"
+s:Ge/Phantom/Material = "G4_WATER"
+d:Ge/Phantom/HLX      = 80.0 cm
+d:Ge/Phantom/HLY      = 80.0 cm
+d:Ge/Phantom/HLZ      = 80.0 cm
+d:Ge/Phantom/TransX   = 0. cm
+d:Ge/Phantom/TransY   = 0. cm
+d:Ge/Phantom/TransZ   = -30. cm
+d:Ge/Phantom/RotX     = 0. deg
+d:Ge/Phantom/RotY     = 0. deg
+d:Ge/Phantom/RotZ     = 0. deg
+
+s:Sc/DoseAtPhantom/Quantity                  = "DoseToMedium"
+s:Sc/DoseAtPhantom/Component                 = "Phantom"
+b:Sc/DoseAtPhantom/OutputToConsole           = "TRUE"
+s:Sc/DoseAtPhantom/IfOutputFileAlreadyExists = "Overwrite"
+s:Sc/DoseAtPhantom/SplitByTimeFeature        = "ImageName"
+
+# This time feature will take one of three string values.
+s:Tf/ImageName/Function      = "Step"
+dv:Tf/ImageName/Times        = 3 10 20 30 ms
+sv:Tf/ImageName/Values       = 3 "lung1" "lung2" "lung3"
+d:Tf/TimelineEnd             = 40.0 ms
+i:Tf/NumberOfSequentialTimes = 4
+i:Tf/Verbosity               = 1
+
+sv:Ph/Default/Modules = 1 "g4em-standard_opt0"
+
+s:So/Example/Type                     = "Beam"
+s:So/Example/Component                = "BeamPosition"
+s:So/Example/BeamParticle             = "proton"
+d:So/Example/BeamEnergy               = 169.23 MeV
+u:So/Example/BeamEnergySpread         = 0.757504
+s:So/Example/BeamPositionDistribution = "Gaussian"
+s:So/Example/BeamPositionCutoffShape  = "Ellipse"
+d:So/Example/BeamPositionCutoffX      = 10. cm
+d:So/Example/BeamPositionCutoffY      = 10. cm
+d:So/Example/BeamPositionSpreadX      = 0.65 cm
+d:So/Example/BeamPositionSpreadY      = 0.65 cm
+s:So/Example/BeamAngularDistribution  = "Gaussian"
+d:So/Example/BeamAngularCutoffX       = 90. deg
+d:So/Example/BeamAngularCutoffY       = 90. deg
+d:So/Example/BeamAngularSpreadX       = 0.0032 rad
+d:So/Example/BeamAngularSpreadY       = 0.0032 rad
+i:So/Example/NumberOfHistoriesInRun   = 100
+
+s:Gr/View/Type = "OpenGL"

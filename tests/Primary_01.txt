@@ -1,0 +1,27 @@
+includeFile = GlobalParameters.txt
+
+#--- Source
+i:So/Demo/NumberOfHistoriesInRun = 1000
+
+
+#--- Target (upper surface at isocenter)
+s:Ge/Phantom/Type            = "TsBox"
+s:Ge/Phantom/Material        = "G4_WATER"
+s:Ge/Phantom/Parent          = "IsoCoordination"
+d:Ge/Phantom/HLX             = 25. cm
+d:Ge/Phantom/HLY             = 25. cm
+d:Ge/Phantom/HLZ             = 10. cm
+d:Ge/Phantom/TransX          = 0. m
+d:Ge/Phantom/TransY          = 0. m
+d:Ge/Phantom/TransZ          = -1.0 * Ge/Phantom/HLZ cm
+d:Ge/Phantom/RotX            = 180. deg   # rotate so +z means increasing depth
+d:Ge/Phantom/RotY            = 0. deg
+d:Ge/Phantom/RotZ            = 0. deg
+i:Ge/Phantom/ZBins           = 40
+s:Ge/Phantom/UpstreamSurface = "Phantom/ZMinusSurface"
+
+
+#--- Scoring
+s:Sc/Dose/Quantity                  = "DoseToMedium"
+s:Sc/Dose/Component                 = "Phantom"
+s:Sc/Dose/IfOutputFileAlreadyExists = "Overwrite"

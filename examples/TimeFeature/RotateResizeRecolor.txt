@@ -1,0 +1,75 @@
+# A box is set to rotate, grow and change color
+# as a test of the time feature system.
+
+d:Ge/World/HLX = 10. m
+d:Ge/World/HLY = 10. m
+d:Ge/World/HLZ = 10. m
+
+s:Ge/Box/Parent   = "World"
+s:Ge/Box/Type     = "TsBox"
+s:Ge/Box/Material = "Air"
+d:Ge/Box/HLX      = Tf/Size/Value m
+d:Ge/Box/HLY      = Tf/Size/Value m
+d:Ge/Box/HLZ      = 4. m
+d:Ge/Box/TransX   = 0. m
+d:Ge/Box/TransY   = 0. m
+d:Ge/Box/TransZ   = 0. m
+d:Ge/Box/RotX     = 0. deg
+d:Ge/Box/RotY     = 0. deg
+d:Ge/Box/RotZ     = Tf/Box/Value deg
+s:Ge/Box/Color    = Tf/Color/Value
+
+s:Tf/Box/Function            = "Linear deg"
+d:Tf/Box/Rate                = 1. deg/ms
+d:Tf/Box/StartValue          = 0.0 deg
+d:Tf/Box/RepetitionInterval  = 60. ms
+
+s:Tf/Size/Function           = "Linear cm"
+d:Tf/Size/Rate               = 0.1 m/ms
+d:Tf/Size/StartValue         = 1.0 m
+d:Tf/Size/RepetitionInterval = 60. ms
+
+s:Tf/Color/Function = "Step"
+sv:Tf/Color/Values  = 4 "white" "blue" "green" "red"
+dv:Tf/Color/Times   = 4 1. 2. 3. 4. ms
+
+i:Tf/Verbosity               = 1
+d:Tf/TimelineEnd             = 60.0 ms
+i:Tf/NumberOfSequentialTimes = 60
+
+s:Sc/MyScorer/Quantity                  = "EnergyDeposit"
+s:Sc/MyScorer/Component                 = "Box"
+b:Sc/MyScorer/OutputToConsole           = "1"
+s:Sc/MyScorer/IfOutputFileAlreadyExists = "Overwrite"
+
+s:Gr/ViewA/Type                             = "OpenGL"
+i:Gr/ViewA/WindowSizeX                      = 1024
+i:Gr/ViewA/WindowSizeY                      = 768
+d:Gr/ViewA/Theta                            = 55 deg
+d:Gr/ViewA/Phi                              = 20 deg
+u:Gr/ViewA/Zoom                             = 1.3
+b:Gr/ViewA/HiddenLineRemovalForTrajectories = "True"
+s:Gr/ViewA/Projection                       = "Perspective"
+d:Gr/ViewA/PerspectiveAngle                 = 30 deg
+
+sv:Ph/Default/Modules = 1 "g4em-standard_opt0"
+
+s:So/Example/Type                     = "Beam"
+s:So/Example/Component                = "BeamPosition"
+s:So/Example/BeamParticle             = "proton"
+d:So/Example/BeamEnergy               = 169.23 MeV
+u:So/Example/BeamEnergySpread         = 0.757504
+s:So/Example/BeamPositionDistribution = "Gaussian"
+s:So/Example/BeamPositionCutoffShape  = "Ellipse"
+d:So/Example/BeamPositionCutoffX      = 10. cm
+d:So/Example/BeamPositionCutoffY      = 10. cm
+d:So/Example/BeamPositionSpreadX      = 0.65 cm
+d:So/Example/BeamPositionSpreadY      = 0.65 cm
+s:So/Example/BeamAngularDistribution  = "Gaussian"
+d:So/Example/BeamAngularCutoffX       = 90. deg
+d:So/Example/BeamAngularCutoffY       = 90. deg
+d:So/Example/BeamAngularSpreadX       = 0.0032 rad
+d:So/Example/BeamAngularSpreadY       = 0.0032 rad
+i:So/Example/NumberOfHistoriesInRun   = 10
+
+b:Ts/PauseBeforeQuit = "True"

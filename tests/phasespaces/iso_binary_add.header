@@ -1,0 +1,45 @@
+TOPAS Binary Phase Space
+
+Number of Original Histories: 100
+Number of Original Histories that Reached Phase Space: 99
+Number of Scored Particles: 106
+Number of Bytes per Particle: 106
+
+Byte order of each record is as follows:
+f4: Position X [cm]
+f4: Position Y [cm]
+f4: Position Z [cm]
+f4: Direction Cosine X
+f4: Direction Cosine Y
+f4: Energy [MeV]
+f4: Weight
+i4: Particle Type (in PDG Format)
+b1: Flag to tell if Third Direction Cosine is Negative (1 means true)
+b1: Flag to tell if this is the First Scored Particle from this History (1 means true)
+f4: TOPAS Time [s]
+f4: Time of Flight [ns]
+i4: Run ID
+i4: Event ID
+i4: Track ID
+i4: Parent ID
+f4: Charge [e+]
+f4: Initial Kinetic Energy [MeV]
+f4: Vertex Position X [cm]
+f4: Vertex Position Y [cm]
+f4: Vertex Position Z [cm]
+f4: Initial Direction Cosine X
+f4: Initial Direction Cosine Y
+f4: Initial Direction Cosine Z
+i4: Seed Part 1
+i4: Seed Part 2
+i4: Seed Part 3
+i4: Seed Part 4
+
+Number of e-: 7
+Number of proton: 99
+
+Minimum Kinetic Energy of e-: 0.010434 MeV
+Minimum Kinetic Energy of proton: 147.755 MeV
+
+Maximum Kinetic Energy of e-: 0.275116 MeV
+Maximum Kinetic Energy of proton: 148.56 MeV

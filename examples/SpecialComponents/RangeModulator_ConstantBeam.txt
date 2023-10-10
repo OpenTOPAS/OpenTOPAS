@@ -1,0 +1,23 @@
+# Range modulator wheel in constant current beam
+
+includeFile = RangeModulator.txt
+
+d:Ge/RangeModulatorA/Rotz = Tf/RMW_Rotation/Value deg
+
+i:So/Example/NumberOfHistoriesInRun = 3
+
+d:Tf/TimelineEnd             = 12.0 ms
+i:Tf/NumberOfSequentialTimes = 20
+
+s:Tf/RMW_Rotation/Function           = "Linear deg"
+d:Tf/RMW_Rotation/Rate               = 3.6 deg/ms
+d:Tf/RMW_Rotation/StartValue         = 0.0 deg
+d:Tf/RMW_Rotation/RepetitionInterval = 100. ms
+
+b:Ts/PauseBeforeQuit = "False"
+i:Ts/ShowHistoryCountAtInterval = 0
+
+# Show time feature steps on console
+i:Tf/Verbosity = 1
+
+b:Gr/ViewA/CopyOpenGLToEPS = "False"

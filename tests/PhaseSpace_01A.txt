@@ -1,0 +1,39 @@
+includeFile = GlobalParameters.txt
+
+#--- Source
+s:So/Default/Type                     = "Beam"
+s:So/Default/Component                = "BeamPosition"
+s:So/Default/BeamParticle             = "proton"
+d:So/Default/BeamEnergy               = 150. MeV
+u:So/Default/BeamEnergySpread         = 0.
+s:So/Default/BeamPositionDistribution = "Flat"
+s:So/Default/BeamPositionCutoffShape  = "Ellipse"
+d:So/Default/BeamPositionCutoffX      = 3. cm
+d:So/Default/BeamPositionCutoffY      = 3. cm
+s:So/Default/BeamAngularDistribution  = "None"
+i:So/Default/NumberOfHistoriesInRun   = 100
+
+
+#--- Target (upper surface at isocenter)
+s:Ge/Phantom/Type            = "TsBox"
+s:Ge/Phantom/Material        = "G4_WATER"
+s:Ge/Phantom/Parent          = "IsoCoordination"
+d:Ge/Phantom/HLX             = 25. cm
+d:Ge/Phantom/HLY             = 25. cm
+d:Ge/Phantom/HLZ             = 0.5 cm
+d:Ge/Phantom/TransX          = 0. m
+d:Ge/Phantom/TransY          = 0. m
+d:Ge/Phantom/TransZ          = -1.0 * Ge/Phantom/HLZ cm
+d:Ge/Phantom/RotX            = 180. deg   # rotate so +z means increasing depth
+d:Ge/Phantom/RotY            = 0. deg
+d:Ge/Phantom/RotZ            = 0. deg
+s:Ge/Phantom/UpstreamSurface = "Phantom/ZMinusSurface"
+
+
+#--- Scoring
+s:Sc/PHSP/Quantity                  = "PhaseSpace"
+s:Sc/PHSP/Surface                   = Ge/Phantom/UpstreamSurface
+s:Sc/PHSP/OutputType                = "ASCII"
+s:Sc/PHSP/OutputFile                = "iso_ascii"
+s:Sc/PHSP/IfOutputFileAlreadyExists = "Overwrite"
+b:Sc/PHSP/KillAfterPhaseSpace       = "True"

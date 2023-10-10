@@ -1,0 +1,95 @@
+#
+i:Ts/NumberOfThreads = 1
+
+# Secondary biasing occurs in the region
+# of this component
+s:Ge/target/Parent   = "World"
+s:Ge/target/Material = "Lead"
+s:Ge/target/Type     = "TsBox"
+d:Ge/target/HLX      = 1.5 cm
+d:Ge/target/HLY      = 1.5 cm
+d:Ge/target/HLZ      = 0.5 mm
+s:Ge/target/Color    = "yellow"
+# Set the region
+s:Ge/target/AssignToRegionNaMed = "targetregion"
+
+# Component for scoring
+s:Ge/scorer/Parent   = "World"
+s:Ge/scorer/Material = "G4_WATER"
+s:Ge/scorer/Type     = "TsSphere"
+d:Ge/scorer/RMin     = 5 cm
+d:Ge/scorer/RMax     = 5.01 cm
+s:Ge/scorer/Color    = "yellow"
+s:Ge/scorer/AssignToRegionNamed = "scorerregion"
+
+s:Sc/scorer/Quantity   = "EnergyFluence"
+s:Sc/scorer/Component  = "scorer"
+s:Sc/scorer/OutputFile = "secondaryBiasing"
+s:Sc/scorer/IfOutputFileAlreadyExists = "Overwrite"
+i:Sc/scorer/EBins = 50
+d:Sc/scorer/EBinMin = 0.01 MeV
+d:Sc/scorer/EBinMax = 6 MeV
+b:Sc/scorer/EBinLog = "True"
+
+# VISUALIZATION
+s:Gr/view/Type        = "OpenGl"
+i:Gr/view/WindowSizeX = 600
+i:Gr/view/WindowSizeY = 600
+d:Gr/view/Phi         = 0 deg
+d:Gr/view/Theta       = 270 deg
+u:Gr/view/Zoom        = 5
+
+b:Ts/PauseBeforeQuit = "True"
+
+# SOURCE
+s:So/Example/Type                     = "Beam"
+s:So/Example/Component                = "BeamPosition"
+s:So/Example/BeamParticle             = "e-"
+d:So/Example/BeamEnergy               = 6 MeV
+u:So/Example/BeamEnergySpread         = 0.1
+s:So/Example/BeamPositionDistribution = "None"
+s:So/Example/BeamAngularDistribution  = "Gaussian"
+d:So/Example/BeamAngularCutoffX       = 90. deg
+d:So/Example/BeamAngularCutoffY       = 90. deg
+d:So/Example/BeamAngularSpreadX       = 0.0032 rad
+d:So/Example/BeamAngularSpreadY       = 0.0032 rad
+
+Ge/BeamPosition/Parent = "World"
+Ge/BeamPosition/TransX = 0.0 cm
+Ge/BeamPosition/TransZ = -1.0 * Ge/target/HLZ cm
+Ge/BeamPosition/TransY = 0.0 mm
+Ge/BeamPosition/RotX   = 0 deg
+
+# GEOMETRY
+d:Ge/World/HLX      = 16.1 cm
+d:Ge/World/HLY      = 16.1 cm
+d:Ge/World/HLZ      = 1.5 m
+s:Ge/World/Material = "Air"
+
+sv:Ph/Default/Modules = 1 "g4em-standard_opt3"
+
+i:So/Example/NumberOfHistoriesInRun = 100
+i:Ts/ShowHistoryCountAtInterval = 10
+b:Ts/ShowCPUTime = "True"
+
+#Cross section enhancement
+#This occurs everywhere
+b:Vr/UseVarianceReduction = "true"    
+s:Vr/CrossectionEnhancement/Type   = "CrosssectionEnhancement"
+sv:Vr/CrossectionEnhancement/processesNamed    = 1 "eBrem"
+uv:Vr/CrossectionEnhancement/EnhancementFactor = 1 400
+
+#Brem Uniform splitting in the target region
+b:Vr/UniformSplitting/Active = "True"
+s:Vr/UniformSplitting/Type   = "UniformSplitting"
+sv:Vr/UniformSplitting/forregion/targetregion/processesNamed   = 1 "eBrem"
+uv:Vr/UniformSplitting/ForRegion/targetregion/SplitNumber      = 1   10
+dv:Vr/UniformSplitting/ForRegion/targetregion/MaximumEnergies  = 1   6 MeV 
+
+#Forced Interaction in the sphere shell
+s:Vr/ForcedInteraction/Type   = "ForcedInteraction"
+sv:Vr/ForcedInteraction/forregion/scorerregion/processesNamed   = 1 "compt" 
+dv:Vr/ForcedInteraction/ForRegion/scorerregion/ForcedDistances  = 1 0.001 cm 
+b:Vr/ForcedInteraction/ForRegion/scorerregion/CorrectByWeight = "True"
+
+

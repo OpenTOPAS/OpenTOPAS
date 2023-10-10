@@ -1,0 +1,69 @@
+# Multileaf Collimator
+
+d:Ge/World/HLX       = 2. m
+d:Ge/World/HLY       = 2. m
+d:Ge/World/HLZ       = 2. m
+s:Ge/World/Material  = "G4_Galactic"
+b:Ge/World/Invisible = "TRUE"
+
+
+###########################################
+# Multi-leaf Collimator
+###########################################
+s:Ge/MultiLeafCollimatorA/Type              = "TsMultiLeafCollimator"
+s:Ge/MultiLeafCollimatorA/Parent            = "World"
+s:Ge/MultiLeafCollimatorA/Material          = "Aluminum"
+d:Ge/MultiLeafCollimatorA/TransX            = 0.0 cm
+d:Ge/MultiLeafCollimatorA/TransY            = 0.0 cm
+d:Ge/MultiLeafCollimatorA/TransZ            = 0.0 cm
+d:Ge/MultiLeafCollimatorA/RotX              = 0.0 deg
+d:Ge/MultiLeafCollimatorA/RotY              = 0.0 deg
+d:Ge/MultiLeafCollimatorA/RotZ              = 0.0 deg
+s:Ge/MultiLeafCollimatorA/DrawingStyle      = "Solid"
+b:Ge/MultiLeafCollimatorA/PrintInformation  = "True"
+
+d:Ge/MultiLeafCollimatorA/MaximumLeafOpen   = 5.0 cm
+d:Ge/MultiLeafCollimatorA/Thickness         = 5.0 cm
+d:Ge/MultiLeafCollimatorA/Length            = 6.0 cm
+dv:Ge/MultiLeafCollimatorA/Widths           = 5 1.5 0.5 0.5 0.5 1.5 cm
+dv:Ge/MultiLeafCollimatorA/XMinusLeavesOpen = 5 0.0 -0.3 -0.2 -0.5 0.0 cm
+dv:Ge/MultiLeafCollimatorA/XPlusLeavesOpen  = 5 0.0  0.3 0.2  0.5 0.0 cm
+
+
+##############################################################
+# Physics and Beam Section
+##############################################################
+s:So/Example/Type                     = "Beam"
+s:So/Example/Component                = "BeamPosition"
+s:So/Example/BeamParticle             = "proton"
+d:So/Example/BeamEnergy               = 230.0 MeV
+u:So/Example/BeamEnergySpread         = 0.757504
+s:So/Example/BeamPositionDistribution = "Gaussian"
+s:So/Example/BeamPositionCutoffShape  = "Ellipse"
+d:So/Example/BeamPositionCutoffX      = 10. cm
+d:So/Example/BeamPositionCutoffY      = 10. cm
+d:So/Example/BeamPositionSpreadX      = 1.0 cm
+d:So/Example/BeamPositionSpreadY      = 1.0 cm
+s:So/Example/BeamAngularDistribution  = "Gaussian"
+d:So/Example/BeamAngularCutoffX       = 90. deg
+d:So/Example/BeamAngularCutoffY       = 90. deg
+d:So/Example/BeamAngularSpreadX       = 0.0032 rad
+d:So/Example/BeamAngularSpreadY       = 0.0032 rad
+i:So/Example/NumberOfHistoriesInRun   = 5
+
+sv:Ph/Default/Modules = 1 "g4em-standard_opt0"
+b:Ts/PauseBeforeQuit = "True"
+
+s:Gr/ViewA/Type             = "OpenGL"
+i:Gr/ViewA/WindowSizeX      = 600
+i:Gr/ViewA/WindowSizeY      = 600
+d:Gr/ViewA/Theta            = 55 deg
+d:Gr/ViewA/Phi              = 20 deg
+s:Gr/ViewA/Projection       = "Orthogonal"
+d:Gr/ViewA/PerspectiveAngle = 20 deg
+u:Gr/ViewA/Zoom             = 1.6
+b:Gr/ViewA/HiddenLineRemovalForTrajectories = "True"
+
+b:Gr/ViewA/IncludeAxes   = "true"
+s:Gr/ViewA/AxesComponent = "MultiLeafCollimatorA"
+d:Gr/ViewA/AxesSize      = 0.1 m

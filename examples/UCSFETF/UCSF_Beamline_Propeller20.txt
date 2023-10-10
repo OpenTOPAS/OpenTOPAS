@@ -1,0 +1,41 @@
+includeFile   = UCSF_Beamline_Base.txt
+
+#Propeller 20.
+s:Ge/Propeller/Parent   = "Nozzle"
+s:Ge/Propeller/Type     = "TsPropeller"
+s:Ge/Propeller/Material = "World"
+d:Ge/Propeller/TransX   =  0.0 mm
+d:Ge/Propeller/TransY   =  Ge/PropellerConstant/YShift mm 
+d:Ge/Propeller/TransZ   =  Ge/PropellerConstant/ZPosition mm
+d:Ge/Propeller/RotX     = 0.0 deg
+d:Ge/Propeller/RotY     = 0.0 deg
+d:Ge/Propeller/RotZ      = Tf/Rotation/Value deg
+b:Ge/Propeller/Invisible = "True"
+s:Ge/Propeller/Message  = "UCSFETF::Propeller20 is constructed!"
+
+i:Ge/Propeller/NbOfBlades  = Ge/PropellerConstant/NbBlades 
+d:Ge/Propeller/Rin         = Ge/PropellerConstant/Rin mm
+d:Ge/Propeller/Rout        = Ge/PropellerConstant/Rout mm
+
+s:Ge/Propeller/Blade/Material     = "World"
+s:Ge/Propeller/Blade/Color        = "skyblue"
+s:Ge/Propeller/Blade/DrawingStyle = "FullWireFrame"
+d:Ge/Propeller/Blade/MaxStepSize  = Ge/PropellerConstant/MaxStepSize mm
+
+#Becareful the order of file up the pieces
+#bottom -> top
+dv:Ge/Propeller/Thickness =11 
+1.54	1.54	1.54	1.54	1.54	
+1.54	1.54	1.54	1.54	1.54	
+1.54	mm
+
+#bottom -> top
+dv:Ge/Propeller/Angles=11 
+ 9.16   15.70	22.24	28.78	35.32	
+41.86	48.40	54.94	61.48	68.02	
+74.56	deg
+
+sv:Ge/Propeller/Materials=11
+"G4_PLEXIGLASS" "G4_PLEXIGLASS" "G4_PLEXIGLASS" "G4_PLEXIGLASS" "G4_PLEXIGLASS"
+"G4_PLEXIGLASS" "G4_PLEXIGLASS" "G4_PLEXIGLASS" "G4_PLEXIGLASS" "G4_PLEXIGLASS"
+"G4_PLEXIGLASS"

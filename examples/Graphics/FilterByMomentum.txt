@@ -1,0 +1,84 @@
+# Demonstrates changing color scheme of trajectories.
+# Trajectories are colored based on the process that created the trajectory.
+
+s:Ge/Box/Type       = "TsBox"
+s:Ge/Box/Parent     = "World"
+s:Ge/Box/Material   = "G4_WATER"
+d:Ge/Box/HLX        = 4. m
+d:Ge/Box/HLY        = 4. m
+d:Ge/Box/HLZ       = .4 m
+d:Ge/Box/TransX     = 0. m
+d:Ge/Box/TransY     = 0. m
+d:Ge/Box/TransZ    = -3. m
+d:Ge/Box/RotX       = 0. deg
+d:Ge/Box/RotY       = 0. deg
+d:Ge/Box/RotZ       = 0. deg
+
+s:Ge/Outer/Type     = "TsBox"
+s:Ge/Outer/Parent   = "World"
+s:Ge/Outer/Material = "G4_AIR"
+d:Ge/Outer/HLX     = 3.2 m
+d:Ge/Outer/HLY     = 3.2 m
+d:Ge/Outer/HLZ     = 2. m
+d:Ge/Outer/TransX   = 0. m
+d:Ge/Outer/TransY   = 0. m
+d:Ge/Outer/TransZ  = 1. m
+d:Ge/Outer/RotX     = 0. deg
+d:Ge/Outer/RotY     = 0. deg
+d:Ge/Outer/RotZ     = 0. deg
+
+s:Ge/Film1/Type     = "TsBox"
+s:Ge/Film1/Parent   = "Outer"
+s:Ge/Film1/Material = "G4_WATER"
+d:Ge/Film1/HLX      = 2. m
+d:Ge/Film1/HLY      = 2. m
+d:Ge/Film1/HLZ      = .1 m
+d:Ge/Film1/TransX   = 0. m
+d:Ge/Film1/TransY   = 0. m
+d:Ge/Film1/TransZ   = 1. m
+d:Ge/Film1/RotX     = 0. deg
+d:Ge/Film1/RotY     = 0. deg
+d:Ge/Film1/RotZ     = 0. deg
+i:Ge/Film1/XBins    = 2
+i:Ge/Film1/YBins    = 2
+i:Ge/Film1/ZBins    = 2
+
+s:Ge/Film2/Type     = "TsBox"
+s:Ge/Film2/Parent   = "Outer"
+s:Ge/Film2/Material = "G4_WATER"
+d:Ge/Film2/HLX      = 3. m
+d:Ge/Film2/HLY      = 3. m
+d:Ge/Film2/HLZ      = .1 m
+d:Ge/Film2/TransX   = 0. m
+d:Ge/Film2/TransY   = 0. m
+d:Ge/Film2/TransZ   = -1. m
+d:Ge/Film2/RotX     = 0. deg
+d:Ge/Film2/RotY     = 0. deg
+d:Ge/Film2/RotZ     = 0. deg
+
+s:Gr/MyOGL/Type        = "OpenGL"
+i:Gr/MyOGL/WindowSizeX = 600
+i:Gr/MyOGL/WindowSizeY = 600
+i:Gr/MyOGL/WindowPosX  = 0
+i:Gr/MyOGL/WindowPosY  = 0
+d:Gr/OnlyIncludeParticlesWithInitialMomentumAbove = 200. MeV
+s:So/Example/Type                     = "Beam"
+s:So/Example/Component                = "BeamPosition"
+s:So/Example/BeamParticle             = "e-"
+d:So/Example/BeamEnergy               = 300 MeV
+u:So/Example/BeamEnergySpread         = 0.757504
+s:So/Example/BeamPositionDistribution = "Gaussian"
+s:So/Example/BeamPositionCutoffShape  = "Ellipse"
+d:So/Example/BeamPositionCutoffX      = 10. cm
+d:So/Example/BeamPositionCutoffY      = 10. cm
+d:So/Example/BeamPositionSpreadX      = 0.65 cm
+d:So/Example/BeamPositionSpreadY      = 0.65 cm
+s:So/Example/BeamAngularDistribution  = "Gaussian"
+d:So/Example/BeamAngularCutoffX       = 90. deg
+d:So/Example/BeamAngularCutoffY       = 90. deg
+d:So/Example/BeamAngularSpreadX       = 0.0032 rad
+d:So/Example/BeamAngularSpreadY       = 0.0032 rad
+i:So/Example/NumberOfHistoriesInRun   = 10
+
+b:Ts/PauseBeforeQuit = "True"
+Ts/UseQt = "False"

@@ -1,0 +1,167 @@
+diff -Naur geant4.10.05/source/geometry/solids/specific/src/G4TessellatedSolid.cc geant4.10.05.patched/source/geometry/solids/specific/src/G4TessellatedSolid.cc
+--- geant4.10.05/source/geometry/solids/specific/src/G4TessellatedSolid.cc	2018-12-06 07:44:33.000000000 -0800
++++ geant4.10.05.patched/source/geometry/solids/specific/src/G4TessellatedSolid.cc	2019-03-30 14:00:08.000000000 -0700
+@@ -1683,20 +1683,22 @@
+                                           const G4ThreeVector& v)const
+ {
+   G4double dist = DistanceToInCore(p,v,kInfinity);
+-#ifdef G4SPECSDEBUG
++//#ifdef G4SPECSDEBUG
+   if (dist < kInfinity)
+   {
+     if (Inside(p + dist*v) != kSurface)
+     {
+       std::ostringstream message;
+-      message << "Invalid response from facet in solid '" << GetName() << "',"
++//      message << "Invalid response from facet in solid '" << GetName() << "',"
++      message << "Calculation error in G4TessellatedSolid::DistanceToIn from facet in solid '" << GetName() << "',"
+               << G4endl
+               << "at point: " << p <<  "and direction: " << v;
+       G4Exception("G4TessellatedSolid::DistanceToIn(p,v)",
+-                  "GeomSolids1002", JustWarning, message);
++//                  "GeomSolids1002", JustWarning, message);
++                  "G4T0001", EventMustBeAborted, message);
+     }
+   }
+-#endif
++//#endif
+   return dist;
+ }
+ 
+@@ -1745,20 +1747,22 @@
+     *norm = n;
+     *validNorm = valid;
+   }
+-#ifdef G4SPECSDEBUG
++//#ifdef G4SPECSDEBUG
+   if (dist < kInfinity)
+   {
+     if (Inside(p + dist*v) != kSurface)
+     {
+       std::ostringstream message;
+-      message << "Invalid response from facet in solid '" << GetName() << "',"
++//      message << "Invalid response from facet in solid '" << GetName() << "',"
++      message << "Calculation error in G4TessellatedSolid::DistanceToOut from facet in solid '" << GetName() << "',"
+               << G4endl
+               << "at point: " << p <<  "and direction: " << v;
+       G4Exception("G4TessellatedSolid::DistanceToOut(p,v,..)",
+-                  "GeomSolids1002", JustWarning, message);
++//                  "GeomSolids1002", JustWarning, message);
++                  "G4T0001", EventMustBeAborted, message);
+     }
+   }
+-#endif
++//#endif
+   return dist;
+ }
+ 
+diff -Naur geant4.10.05/source/processes/electromagnetic/dna/management/include/G4ITFinder.icc geant4.10.05.patched/source/processes/electromagnetic/dna/management/include/G4ITFinder.icc
+--- geant4.10.05/source/processes/electromagnetic/dna/management/include/G4ITFinder.icc	2018-12-06 07:43:51.000000000 -0800
++++ geant4.10.05.patched/source/processes/electromagnetic/dna/management/include/G4ITFinder.icc	2019-03-30 14:08:00.000000000 -0700
+@@ -143,7 +143,8 @@
+           "Bad request : no node found in the IT you are searching "
+           "closest neighbourg for");
+       G4Exception("G4ITManager::FindNearest", "ITManager002",
+-          FatalErrorInArgument, exceptionDescription);
++          JustWarning, exceptionDescription);
++          //FatalErrorInArgument, exceptionDescription);
+       return 0; // coverity
+     }
+ 
+diff -Naur geant4.10.05/source/processes/electromagnetic/dna/management/src/G4ITModelProcessor.cc geant4.10.05.patched/source/processes/electromagnetic/dna/management/src/G4ITModelProcessor.cc
+--- geant4.10.05/source/processes/electromagnetic/dna/management/src/G4ITModelProcessor.cc	2018-12-06 07:43:51.000000000 -0800
++++ geant4.10.05.patched/source/processes/electromagnetic/dna/management/src/G4ITModelProcessor.cc	2019-03-30 14:11:46.000000000 -0700
+@@ -709,6 +709,12 @@
+       {
+         changes = process->MakeReaction(*trackA, *trackB);
+       }
++      else if (trackA->GetStep()->GetPreStepPoint()->GetPosition() == trackA->GetPosition())
++      {
++        G4cout << " [Warning] Particle has not moved since previous step and did not " << G4endl;
++        G4cout << "           reacted with existing molecules. Track terminated." << G4endl;
++        trackA->SetTrackStatus(fStopAndKill); 
++      }
+ 
+       if(changes)
+       {
+diff -Naur geant4.10.05/source/processes/electromagnetic/dna/models/src/G4DNASmoluchowskiReactionModel.cc geant4.10.05.patched/source/processes/electromagnetic/dna/models/src/G4DNASmoluchowskiReactionModel.cc
+--- geant4.10.05/source/processes/electromagnetic/dna/models/src/G4DNASmoluchowskiReactionModel.cc	2018-12-06 07:43:51.000000000 -0800
++++ geant4.10.05.patched/source/processes/electromagnetic/dna/models/src/G4DNASmoluchowskiReactionModel.cc	2019-03-30 14:13:08.000000000 -0700
+@@ -141,7 +141,7 @@
+     G4ThreeVector __preStepPositionB = __trackB.GetStep()->GetPreStepPoint()
+         ->GetPosition();
+ 
+-    if (__preStepPositionA == __trackA.GetPosition())
++    /*if (__preStepPositionA == __trackA.GetPosition())
+     {
+       G4ExceptionDescription exceptionDescription;
+       exceptionDescription << "The molecule : " << __moleculeA->GetName();
+@@ -155,7 +155,7 @@
+       G4Exception("G4DNASmoluchowskiReactionModel::FindReaction",
+                   "G4DNASmoluchowskiReactionModel", FatalErrorInArgument,
+                   exceptionDescription);
+-    }
++    }*/
+ 
+     G4double __preStepSeparation =
+         (__preStepPositionA - __preStepPositionB).mag();
+diff -Naur geant4.10.05/source/processes/electromagnetic/dna/processes/src/G4DNAMolecularDissociation.cc geant4.10.05.patched/source/processes/electromagnetic/dna/processes/src/G4DNAMolecularDissociation.cc
+--- geant4.10.05/source/processes/electromagnetic/dna/processes/src/G4DNAMolecularDissociation.cc	2018-12-06 07:43:51.000000000 -0800
++++ geant4.10.05.patched/source/processes/electromagnetic/dna/processes/src/G4DNAMolecularDissociation.cc	2019-03-30 16:49:35.000000000 -0700
+@@ -281,7 +281,7 @@
+         G4ThreeVector localPoint =
+           transform.TransformPoint(product_pos); //track.GetPosition());
+ 
+-        if(track.GetTouchable()->GetSolid()->Inside(localPoint) !=
++/*        if(track.GetTouchable()->GetSolid()->Inside(localPoint) !=
+            EInside::kInside)
+         {
+           G4cout << "Mother volume: "
+@@ -292,7 +292,7 @@
+                       FatalException,
+                       "Product has been placed outside of the volume "
+                       "containing the mother molecule");
+-        }
++        }*/
+ 
+         G4Track* secondary =
+             product->BuildTrack(track.GetGlobalTime(),
+diff -Naur geant4.10.05/source/processes/electromagnetic/utils/src/G4EmBiasingManager.cc geant4.10.05.patched/source/processes/electromagnetic/utils/src/G4EmBiasingManager.cc
+--- geant4.10.05/source/processes/electromagnetic/utils/src/G4EmBiasingManager.cc	2018-12-06 07:43:51.000000000 -0800
++++ geant4.10.05.patched/source/processes/electromagnetic/utils/src/G4EmBiasingManager.cc	2019-03-30 14:15:17.000000000 -0700
+@@ -304,7 +304,7 @@
+                     G4double safety)
+ {
+   G4int index = idxSecBiasedCouple[coupleIdx];
+-  fWeight = 1.0;
++  fWeight = track.GetWeight(); 
+   if(0 <= index) {
+     size_t n = vd.size();
+ 
+@@ -358,7 +358,7 @@
+                   G4double safety)
+ {
+   G4int index = idxSecBiasedCouple[coupleIdx];
+-  fWeight = 1.0;
++  fWeight = track.GetWeight();
+   if(0 <= index) {
+     size_t n = vd.size();
+ 
+@@ -406,7 +406,7 @@
+                                           G4int coupleIdx)
+ {
+   G4int index = idxSecBiasedCouple[coupleIdx];
+-  fWeight = 1.0;
++  fWeight = track[0]->GetWeight();
+   if(0 <= index) {
+     size_t n = track.size();
+ 
+@@ -486,7 +486,7 @@
+ {
+   // method is applied only if 1 secondary created PostStep 
+   // in the case of many secondaries there is a contradiction
+-  fWeight = 1.0;
++  fWeight = track.GetWeight();
+   size_t n = vd.size();
+   G4double w = secBiasedWeight[index];
+ 

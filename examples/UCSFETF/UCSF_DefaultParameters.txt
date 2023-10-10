@@ -1,0 +1,61 @@
+#Treatment room
+#The HL[X,Y,Z] must be extended enough to cover patient's body.
+d:Ge/World/HLX=50.0 cm
+d:Ge/World/HLY=50.0 cm
+d:Ge/World/HLZ=300.0 cm
+
+#Beam Energy
+s:So/Default/Type                     = "Beam"
+s:So/Default/Component                = "BeamPosition"
+s:So/Default/BeamParticle             = "proton"
+d:So/Default/BeamEnergy               = 67.5 MeV
+u:So/Default/BeamEnergySpread         = 0.10
+s:So/Default/BeamPositionDistribution = "Gaussian"
+s:So/Default/BeamPositionCutoffShape  = "Ellipse"
+d:So/Default/BeamPositionCutoffX      = 0.2 cm
+d:So/Default/BeamPositionCutoffY      = 0.2 cm
+d:So/Default/BeamPositionSpreadX      = 0.65 cm
+d:So/Default/BeamPositionSpreadY      = 0.65 cm
+s:So/Default/BeamAngularDistribution  = "Gaussian"
+d:So/Default/BeamAngularCutoffX       = 90. deg
+d:So/Default/BeamAngularCutoffY       = 90. deg
+d:So/Default/BeamAngularSpreadX       = 0.0020 rad
+d:So/Default/BeamAngularSpreadY       = 0.0020 rad
+i:So/Default/NumberOfHistoriesInRun   = 0
+
+d:Ge/BeamPosition/TransZ = 245.00 cm
+
+# ===============================================#
+# Execution mode setting
+# ===============================================#
+Ts/PauseBeforeSequence = "True"
+
+#Defined again to prevent Chain ambuiguity
+Tf/RandomizeTimeDistribution = "False"
+Tf/TimelineStart = 0. s
+Tf/TimelineEnd = Tf/TimelineStart s
+Tf/NumberOfSequentialTimes = 1
+
+Tf/Verbosity = 1 # set to 1 to get time log, 2 to get update messages
+i:Tf/UCSF_NbHistoriesInRun = 1
+d:Tf/TimeOfPropellerRotation = 100.0 ms
+i:Tf/UCSF_NbTimes = 100
+
+# ===============================================#
+# Constants for propeller setting
+# ===============================================#
+d:Ge/PropellerConstant/YShift      = -71.0 mm
+d:Ge/PropellerConstant/Rin         = 49.6  mm
+d:Ge/PropellerConstant/Rout        = 124.7 mm
+i:Ge/PropellerConstant/NbBlades    = 4
+d:Ge/PropellerConstant/MaxStepSize = 10 mm
+d:Ge/PropellerConstant/ZPosition   = 191.66 cm
+
+# ===============================================#
+# TimeFeature for Propeller rotation
+# 6.7 turns per sec
+# ===============================================#
+s:Tf/Rotation/Function = "Linear deg"
+d:Tf/Rotation/Rate = 2.40 deg/ms
+d:Tf/Rotation/StartValue = 0.0 deg
+d:Tf/Rotation/RepetitionInterval = 150. ms

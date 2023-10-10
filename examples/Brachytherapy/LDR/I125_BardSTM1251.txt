@@ -1,0 +1,171 @@
+#                                                          #
+#                   I 125 - BardSTM 1251                   #
+#                                                          #
+#                                                          #
+#                Latest version - May 2021                 #
+#                  Author: Audran Poher                    #
+#              Contact - fberumenm@gmail.com               #
+#       https://doi.org/10.1016/j.brachy.2020.12.007       #
+#                                                          #
+
+##### SOURCE #####
+s:So/ActiveSource/Type                       = "Volumetric"
+s:So/ActiveSource/Component                  = "IodineCylinder"
+sc:So/ActiveSource/ActiveMaterial            = "G4_I"
+s:So/ActiveSource/BeamParticle               = "gamma"
+b:So/ActiveSource/RecursivelyIncludeChildren = "T"
+s:So/ActiveSource/BeamEnergySpectrumType     = "Discrete"
+i:So/ActiveSource/MaxNumberOfPointsToSample  = 10000000#00 
+ic:So/ActiveSource/NumberOfHistoriesInRun    = 10
+
+##### SPECTRUM
+dv:So/ActiveSource/BeamEnergySpectrumValues = 7 3.77 27.202 27.472 30.944 30.995 31.704 35.3922 keV
+uv:So/ActiveSource/BeamEnergySpectrumWeightsUnscaled = 7 0.149 0.401 0.740 0.0683 0.132 0.0380 0.0668
+uv:So/ActiveSource/BeamEnergySpectrumWeights = 0.6269199 * So/ActiveSource/BeamEnergySpectrumWeightsUnscaled
+
+#====================
+#Iodine cylinder
+#====================
+
+s:Ge/IodineCylinder/Type         = "TsCylinder"
+s:Ge/IodineCylinder/Parent       = "DryAirCylinder"
+s:Ge/IodineCylinder/Material     = "G4_I"
+d:Ge/IodineCylinder/RMin         = 0. mm
+d:Ge/IodineCylinder/RMax         = 0.259417 mm
+d:Ge/IodineCylinder/SPhi         = 0. deg
+d:Ge/IodineCylinder/DPhi         = 360. deg
+d:Ge/IodineCylinder/HL           = 1.909417 mm
+d:Ge/IodineCylinder/TransX       = 0. mm
+d:Ge/IodineCylinder/TransY       = 0. mm
+d:Ge/IodineCylinder/TransZ       = 0. mm
+d:Ge/IodineCylinder/RotX         = 0. deg
+d:Ge/IodineCylinder/RotY         = 0. deg
+d:Ge/IodineCylinder/RotZ         = 0. deg
+s:Ge/IodineCylinder/DrawingStyle = "FullWireFrame"
+s:Ge/IodineCylinder/Color        = "yellow"
+
+#====================
+#Copper cylinder
+#====================
+
+s:Ge/CopperCylinder/Type         = "TsCylinder"
+s:Ge/CopperCylinder/Parent       = "IodineCylinder"
+s:Ge/CopperCylinder/Material     = "G4_Cu"
+d:Ge/CopperCylinder/RMin         = 0. mm
+d:Ge/CopperCylinder/RMax         = 0.2594 mm
+d:Ge/CopperCylinder/SPhi         = 0. deg
+d:Ge/CopperCylinder/DPhi         = 360. deg
+d:Ge/CopperCylinder/HL           = 1.9094 mm
+d:Ge/CopperCylinder/TransX       = 0. mm
+d:Ge/CopperCylinder/TransY       = 0. mm
+d:Ge/CopperCylinder/TransZ       = 0. mm
+d:Ge/CopperCylinder/RotX         = 0. deg
+d:Ge/CopperCylinder/RotY         = 0. deg
+d:Ge/CopperCylinder/RotZ         = 0. deg
+s:Ge/CopperCylinder/DrawingStyle = "FullWireFrame"
+s:Ge/CopperCylinder/Color        = "brown"
+
+#====================
+#Nickel cylinder
+#====================
+
+s:Ge/NickelCylinder/Type         = "TsCylinder"
+s:Ge/NickelCylinder/Parent       = "CopperCylinder"
+s:Ge/NickelCylinder/Material     = "G4_Ni"
+d:Ge/NickelCylinder/RMin         = 0. mm
+d:Ge/NickelCylinder/RMax         = 0.2569 mm
+d:Ge/NickelCylinder/SPhi         = 0. deg
+d:Ge/NickelCylinder/DPhi         = 360. deg
+d:Ge/NickelCylinder/HL           = 1.9069 mm
+d:Ge/NickelCylinder/TransX       = 0. mm
+d:Ge/NickelCylinder/TransY       = 0. mm
+d:Ge/NickelCylinder/TransZ       = 0. mm
+d:Ge/NickelCylinder/RotX         = 0. deg
+d:Ge/NickelCylinder/RotY         = 0. deg
+d:Ge/NickelCylinder/RotZ         = 0. deg
+s:Ge/NickelCylinder/DrawingStyle = "FullWireFrame"
+s:Ge/NickelCylinder/Color        = "grey"
+
+#====================
+#Aluminium cylinder
+#====================
+
+s:Ge/AluminiumCylinder/Type         = "TsCylinder"
+s:Ge/AluminiumCylinder/Parent       = "NickelCylinder"
+s:Ge/AluminiumCylinder/Material     = "G4_Al"
+d:Ge/AluminiumCylinder/RMin         = 0. mm
+d:Ge/AluminiumCylinder/RMax         = 0.255 mm
+d:Ge/AluminiumCylinder/SPhi         = 0. deg
+d:Ge/AluminiumCylinder/DPhi         = 360. deg
+d:Ge/AluminiumCylinder/HL           = 1.905 mm
+d:Ge/AluminiumCylinder/TransX       = 0. mm
+d:Ge/AluminiumCylinder/TransY       = 0. mm
+d:Ge/AluminiumCylinder/TransZ       = 0. mm
+d:Ge/AluminiumCylinder/RotX         = 0. deg
+d:Ge/AluminiumCylinder/RotY         = 0. deg
+d:Ge/AluminiumCylinder/RotZ         = 0. deg
+s:Ge/AluminiumCylinder/DrawingStyle = "FullWireFrame"
+s:Ge/AluminiumCylinder/Color        = "purple"
+
+#====================
+#Gold cylinder
+#====================
+
+s:Ge/GoldCylinder/Type         = "TsCylinder"
+s:Ge/GoldCylinder/Parent       = "AluminiumCylinder"
+s:Ge/GoldCylinder/Material     = "G4_Au"
+d:Ge/GoldCylinder/RMin         = 0. mm
+d:Ge/GoldCylinder/RMax         = 0.09 mm
+d:Ge/GoldCylinder/SPhi         = 0. deg
+d:Ge/GoldCylinder/DPhi         = 360. deg
+d:Ge/GoldCylinder/HL           = 1.905 mm
+d:Ge/GoldCylinder/TransX       = 0. mm
+d:Ge/GoldCylinder/TransY       = 0. mm
+d:Ge/GoldCylinder/TransZ       = 0. mm
+d:Ge/GoldCylinder/RotX         = 0. deg
+d:Ge/GoldCylinder/RotY         = 0. deg
+d:Ge/GoldCylinder/RotZ         = 0. deg
+s:Ge/GoldCylinder/DrawingStyle = "FullWireFrame"
+s:Ge/GoldCylinder/Color        = "red"
+
+#=====================
+#Cylinder of Titanium
+#=====================
+
+s:Ge/TitaniumCylinder/Type         = "TsCylinder"
+s:Ge/TitaniumCylinder/Parent       = "World"
+s:Ge/TitaniumCylinder/Material     = "G4_Ti"
+d:Ge/TitaniumCylinder/RMin         = 0. mm
+d:Ge/TitaniumCylinder/RMax         = 0.405 mm
+d:Ge/TitaniumCylinder/SPhi         = 180. deg
+d:Ge/TitaniumCylinder/DPhi         = 360. deg
+d:Ge/TitaniumCylinder/HL           = 2.275 mm
+d:Ge/TitaniumCylinder/TransX       = 0. mm
+d:Ge/TitaniumCylinder/TransY       = 0. mm
+d:Ge/TitaniumCylinder/TransZ       = 0. mm
+d:Ge/TitaniumCylinder/RotX         = 0. deg
+d:Ge/TitaniumCylinder/RotY         = 0. deg
+d:Ge/TitaniumCylinder/RotZ         = 0. deg
+s:Ge/TitaniumCylinder/Color        = "blue"
+s:Ge/TitaniumCylinder/DrawingStyle = "FullWireFrame"
+
+#====================
+#Dry Air cylinder
+#====================
+
+s:Ge/DryAirCylinder/Type         = "TsCylinder"
+s:Ge/DryAirCylinder/Parent       = "TitaniumCylinder"
+s:Ge/DryAirCylinder/Material     = "G4_AIR"
+d:Ge/DryAirCylinder/RMin         = 0. mm
+d:Ge/DryAirCylinder/RMax         = 0.325 mm
+d:Ge/DryAirCylinder/SPhi         = 0. deg
+d:Ge/DryAirCylinder/DPhi         = 360. deg
+d:Ge/DryAirCylinder/HL           = 2.145 mm
+d:Ge/DryAirCylinder/TransX       = 0. mm
+d:Ge/DryAirCylinder/TransY       = 0. mm
+d:Ge/DryAirCylinder/TransZ       = 0. mm
+d:Ge/DryAirCylinder/RotX         = 0. deg
+d:Ge/DryAirCylinder/RotY         = 0. deg
+d:Ge/DryAirCylinder/RotZ         = 0. deg
+s:Ge/DryAirCylinder/DrawingStyle = "FullWireFrame"
+s:Ge/DryAirCylinder/Color        = "white"

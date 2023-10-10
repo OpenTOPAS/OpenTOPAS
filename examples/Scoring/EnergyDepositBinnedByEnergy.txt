@@ -1,0 +1,104 @@
+# This example demonstrates the three different ways one can bin results by energy. Adjust the value of EBinEnergy to see the effect.
+#
+# IncidentTrack means we bin based on the energy of the track that was initially
+# incident on the scoring volume, even though the track that finally delivers the
+# scored energy is likely to be not this track but one of its resultng delta rays.
+# This is the default setting.
+# It is set this way because the original use of energy binning was to study how
+# proton therapy dose due to various energy protons incident on the patient.
+#
+# PreStep means we bin based on the kinetic energy of the track at the time
+# that it deposited the dose.
+# This is generally used when one wants to score a spectrum.
+# So, for example, if you adjust Quantity below to Fluence, then the scored
+# value is what is referred to in the literature as a Spectral Fluence.
+#
+# DepositedInStep means we bin based on the energy that was deposited in the step.
+# You can use this setting to see that almost all actual energy deposits occur
+# in small amounts spread along the track.
+#
+# PrimaryTrack means we bin based on the energy of the primary track from which this
+# track is descended.
+# You can use this setting to separate the effects of different energy primaries.
+
+s:Ge/World/Material  = "Vacuum"
+d:Ge/World/HLX       = 2.0 m
+d:Ge/World/HLY       = 2.0 m
+d:Ge/World/HLZ       = 2.0 m
+b:Ge/World/Invisible = "True"
+
+s:Ge/Phantom/Type     = "TsBox"
+s:Ge/Phantom/Parent   = "World"
+s:Ge/Phantom/Material = "G4_WATER"
+d:Ge/Phantom/HLX      = 20.0 cm
+d:Ge/Phantom/HLY      = 20.0 cm
+d:Ge/Phantom/HLZ      = 20.0 cm
+d:Ge/Phantom/TransZ   = -30. cm
+
+s:Sc/Case1BinnedByIncidentTrackEnergy/Quantity                  = "EnergyDeposit"
+s:Sc/Case1BinnedByIncidentTrackEnergy/Component                 = "Phantom"
+b:Sc/Case1BinnedByIncidentTrackEnergy/OutputToConsole           = "TRUE"
+s:Sc/Case1BinnedByIncidentTrackEnergy/IfOutputFileAlreadyExists = "Overwrite"
+i:Sc/Case1BinnedByIncidentTrackEnergy/EBins                     = 4
+d:Sc/Case1BinnedByIncidentTrackEnergy/EBinMin                   = 0. MeV
+d:Sc/Case1BinnedByIncidentTrackEnergy/EBinMax                   = 200. MeV
+sc:Sc/Case1BinnedByIncidentTrackEnergy/EBinEnergy               = "IncidentTrack"
+
+s:Sc/Case2BinnedByIncidentPreStepEnergy/Quantity                  = "EnergyDeposit"
+s:Sc/Case2BinnedByIncidentPreStepEnergy/Component                 = "Phantom"
+b:Sc/Case2BinnedByIncidentPreStepEnergy/OutputToConsole           = "TRUE"
+s:Sc/Case2BinnedByIncidentPreStepEnergy/IfOutputFileAlreadyExists = "Overwrite"
+i:Sc/Case2BinnedByIncidentPreStepEnergy/EBins                     = 4
+d:Sc/Case2BinnedByIncidentPreStepEnergy/EBinMin                   = 0. MeV
+d:Sc/Case2BinnedByIncidentPreStepEnergy/EBinMax                   = 200. MeV
+sc:Sc/Case2BinnedByIncidentPreStepEnergy/EBinEnergy               = "PreStep"
+
+s:Sc/Case3BinnedByEnergyDepositedInStep/Quantity                  = "EnergyDeposit"
+s:Sc/Case3BinnedByEnergyDepositedInStep/Component                 = "Phantom"
+b:Sc/Case3BinnedByEnergyDepositedInStep/OutputToConsole           = "TRUE"
+s:Sc/Case3BinnedByEnergyDepositedInStep/IfOutputFileAlreadyExists = "Overwrite"
+i:Sc/Case3BinnedByEnergyDepositedInStep/EBins                     = 4
+d:Sc/Case3BinnedByEnergyDepositedInStep/EBinMin                   = 0. MeV
+d:Sc/Case3BinnedByEnergyDepositedInStep/EBinMax                   = 200. MeV
+sc:Sc/Case3BinnedByEnergyDepositedInStep/EBinEnergy               = "DepositedInStep"
+
+s:Sc/Case3BinnedByPrimaryTrackEnergy/Quantity                  = "EnergyDeposit"
+s:Sc/Case3BinnedByPrimaryTrackEnergy/Component                 = "Phantom"
+b:Sc/Case3BinnedByPrimaryTrackEnergy/OutputToConsole           = "TRUE"
+s:Sc/Case3BinnedByPrimaryTrackEnergy/IfOutputFileAlreadyExists = "Overwrite"
+i:Sc/Case3BinnedByPrimaryTrackEnergy/EBins                     = 4
+d:Sc/Case3BinnedByPrimaryTrackEnergy/EBinMin                   = 0. MeV
+d:Sc/Case3BinnedByPrimaryTrackEnergy/EBinMax                   = 200. MeV
+sc:Sc/Case3BinnedByPrimaryTrackEnergy/EBinEnergy               = "PrimaryTrack"
+
+#s:Gr/ViewA/Type                            = "OpenGL"
+i:Gr/ViewA/WindowSizeX                      = 900
+i:Gr/ViewA/WindowSizeY                      = 900
+d:Gr/ViewA/Theta                            = 55 deg
+d:Gr/ViewA/Phi                              = 20 deg
+s:Gr/ViewA/Projection                       = "Perspective"
+d:Gr/ViewA/PerspectiveAngle                 = 30 deg
+u:Gr/ViewA/Zoom                             = 1.3
+b:Gr/ViewA/HiddenLineRemovalForTrajectories = "True"
+
+sv:Ph/Default/Modules = 1 "g4em-standard_opt0"
+
+s:So/Example/Type                     = "Beam"
+s:So/Example/Component                = "BeamPosition"
+s:So/Example/BeamParticle             = "proton"
+d:So/Example/BeamEnergy               = 175. MeV
+u:So/Example/BeamEnergySpread         = 0.
+s:So/Example/BeamPositionDistribution = "Gaussian"
+s:So/Example/BeamPositionCutoffShape  = "Ellipse"
+d:So/Example/BeamPositionCutoffX      = 10. cm
+d:So/Example/BeamPositionCutoffY      = 10. cm
+d:So/Example/BeamPositionSpreadX      = 0.65 cm
+d:So/Example/BeamPositionSpreadY      = 0.65 cm
+s:So/Example/BeamAngularDistribution  = "Gaussian"
+d:So/Example/BeamAngularCutoffX       = 90. deg
+d:So/Example/BeamAngularCutoffY       = 90. deg
+d:So/Example/BeamAngularSpreadX       = 0.0032 rad
+d:So/Example/BeamAngularSpreadY       = 0.0032 rad
+i:So/Example/NumberOfHistoriesInRun   = 1
+
+#b:Ts/PauseBeforeQuit = "True"

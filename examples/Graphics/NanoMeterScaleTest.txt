@@ -1,0 +1,51 @@
+# This example demonstrates an issue that occurs when there
+# is a very large zoom factor and how to work around that issue.
+# You will see that the display is not exactly centered on the
+# desired component, and that, if you try to adjust the Theta or Phi,
+# the change is not smooth but instead has discontinuities.
+# The issue is resolved if one makes the world invisible,
+# as this means the initial extent of the displayed scene only
+# contains the nm scale components, so little or no zoom is required.
+
+d:Ge/World/HLX      = 20. cm
+d:Ge/World/HLY      = 20. cm
+d:Ge/World/HLZ      = 20. cm
+#b:Ge/World/Invisible = "True" # Uncomment to solve zoom issue
+
+s:Ge/CenterBox/Type     = "TsBox"
+s:Ge/CenterBox/Material = "Air"
+s:Ge/CenterBox/Parent   = "World"
+d:Ge/CenterBox/HLX      = 2.5 nm
+d:Ge/CenterBox/HLY      = 2. nm
+d:Ge/CenterBox/HLZ      = 1. nm
+s:Ge/CenterBox/Color = "White"
+
+s:Ge/PlusXBox/Type     = "TsBox"
+s:Ge/PlusXBox/Material = "Air"
+s:Ge/PlusXBox/Parent   = "World"
+d:Ge/PlusXBox/HLX      = 2.5 nm
+d:Ge/PlusXBox/HLY      = 2. nm
+d:Ge/PlusXBox/HLZ      = 1. nm
+d:Ge/PlusXBox/TransX   = 10. nm
+s:Ge/PlusXBox/Color = "Blue"
+
+s:Ge/PlusYBox/Type     = "TsBox"
+s:Ge/PlusYBox/Material = "Air"
+s:Ge/PlusYBox/Parent   = "World"
+d:Ge/PlusYBox/HLX      = 2.5 nm
+d:Ge/PlusYBox/HLY      = 2. nm
+d:Ge/PlusYBox/HLZ      = 1. nm
+d:Ge/PlusYBox/TransY   = 10. nm
+s:Ge/PlusYBox/Color = "Red"
+
+sv:Ph/Default/Modules = 1 "g4em-standard_opt0"
+
+s:Gr/ViewA/Type             = "OpenGL"
+uv:Gr/ViewA/Scale = 3 1000 1000 1000 # Comment out to solve zoom issue
+u:Gr/ViewA/Zoom = 40000 # Comment out to solve zoom issue
+d:Gr/ViewA/Theta       = 45. deg
+d:Gr/ViewA/Phi         = 45. deg
+
+s:Gr/ViewA/CenterOn = "PlusYBox"
+
+b:Ts/PauseBeforeQuit = "True"

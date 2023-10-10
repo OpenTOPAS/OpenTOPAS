@@ -1,0 +1,46 @@
+# Demonstrates having G4DNA model defined in specific regions.
+# While only one electromagnetic model can be used in a given TOPAS
+# physics list, you are free to define a dna-electromagnetic model in
+# a user specific region.
+# The em models currently supported are: g4em-livermore, g4em-polarized
+# g4em-lowep, g4em-penelope and g4em-standard_opt(0-4)
+# The dna-electromagnetic model names are: opt0, opt1 and opt2.
+
+# A simple geometry. The material must be G4_WATER.
+s:Ge/Target/Parent   = "World"
+s:Ge/Target/Type     = "TsBox"
+s:Ge/Target/Material = "G4_WATER"
+d:Ge/Target/HLX      = 0.5 um
+d:Ge/Target/HLY      = 0.5 um
+d:Ge/Target/HLZ      = 0.25 um
+s:Ge/Target/Color    = "grass"
+# Assign a region
+s:Ge/Target/AssignToRegionNamed = "target"
+
+d:Ge/World/HLX      = Ge/Target/HLX um
+d:Ge/World/HLY      = Ge/Target/HLY um
+d:Ge/World/HLZ      = 1.5 * Ge/Target/HLZ um
+s:Ge/World/Material = "G4_WATER"
+s:Ge/World/Color    = "blue"
+
+# Start with a physics list
+sv:Ph/Default/Modules = 6 "g4em-penelope" "g4h-phy_QGSP_BIC_HP" "g4decay" "g4ion-binarycascade" "g4h-elastic_HP" "g4stopping"
+# Set the regions where g4em-penelope is switch to g4-dna 
+s:Ph/Default/ForRegion/target/ActiveG4EmModelFromModule = "g4em-dna"
+
+# Set a source
+s:So/Example/Type                     = "Beam"
+s:So/Example/Component                = "BeamPosition"
+s:So/Example/BeamParticle             = "proton"
+d:So/Example/BeamEnergy               = 5 MeV
+u:So/Example/BeamEnergySpread         = 0.757504
+s:So/Example/BeamPositionDistribution = "None"
+s:So/Example/BeamAngularDistribution  = "Gaussian"
+d:So/Example/BeamAngularCutoffX       = 90. deg
+d:So/Example/BeamAngularCutoffY       = 90. deg
+d:So/Example/BeamAngularSpreadX       = 0.0032 rad
+d:So/Example/BeamAngularSpreadY       = 0.0032 rad
+i:So/Example/NumberOfHistoriesInRun   = 10
+
+s:Gr/view/Type = "OpenGl"
+b:Ts/PauseBeforeQuit = "True"

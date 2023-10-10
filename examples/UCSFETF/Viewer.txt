@@ -1,0 +1,20 @@
+includeFile = UCSF_DefaultParameters.txt 
+## Graphics
+s:Gr/ViewA/Type = "OpenGL"
+i:Gr/ViewA/WindowSizeX = 768
+i:Gr/ViewA/WindowSizeY = 768
+d:Gr/ViewA/Theta = 25 deg
+d:Gr/ViewA/Phi = 14 deg
+s:Gr/ViewA/Projection = "Perspective"
+d:Gr/ViewA/PerspectiveAngle = 20 deg
+u:Gr/ViewA/Zoom = 10
+b:Gr/ViewA/HiddenLineRemovalForTrajectories = "False"
+b:Gr/ViewA/IncludeAxes="True"
+s:Gr/ViewA/AxesComponent = "World"
+d:Gr/ViewA/AxesSize= 0.1 m
+
+#b:Gr/ViewA/CopyOpenGLToEPS = "True"
+b:Gr/ViewA/IncludeTrajectories = "True"
+
+s:Gr/ViewA/ColorBy = "Charge"
+s:Gr/ViewA/ChargeColors = "red green cyan" 

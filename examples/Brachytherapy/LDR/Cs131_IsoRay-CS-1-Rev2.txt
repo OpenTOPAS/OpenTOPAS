@@ -1,0 +1,143 @@
+#                                                          #
+#                     Cs 131 - IsoRay                      #
+#                                                          #
+#                                                          #
+#                Latest version - May 2021                 #
+#                  Author: Audran Poher                    #
+#              Contact - fberumenm@gmail.com               #
+#       https://doi.org/10.1016/j.brachy.2020.12.007       #
+#                                                          #
+
+##### MATERIAL DEFINITION #####
+sv:Ma/PurePyrex/Components = 8 "Silicon" "Titanium" "Aluminum" "Boron" "Magnesium" "Calcium" "Sodium" "Oxygen"
+uv:Ma/PurePyrex/Fractions  = 8 0.2629625 0.0311625 0.0170625 0.0384625 0.0132625 0.0297625 0.1272625 0.4800625 
+d:Ma/PurePyrex/Density     = 2.4 g/cm3
+
+sv:Ma/RadioactivePyrex/Components = 9 "Silicon" "Titanium" "Aluminum" "Boron" "Magnesium" "Calcium" "Sodium" "Oxygen" "Caesium"
+uv:Ma/RadioactivePyrex/Fractions  = 9 0.2618 0.03 0.0159 0.0373 0.0121 0.0286 0.1261 0.4789 0.0093
+d:Ma/RadioactivePyrex/Density     = 2.4 g/cm3
+
+sv:Ma/ArgonGas/Components = 1 "Argon"
+uv:Ma/ArgonGas/Fractions  = 1 1
+d:Ma/ArgonGas/Density     = 1.784 mg/cm3
+
+##### SOURCE #####
+s:So/ActiveSource/Type                       = "Volumetric"
+s:So/ActiveSource/Component                  = "RadioactivePyrexCylinder"
+sc:So/ActiveSource/ActiveMaterial            = "RadioactivePyrex"
+s:So/ActiveSource/BeamParticle               = "gamma"
+b:So/ActiveSource/RecursivelyIncludeChildren = "T"
+s:So/ActiveSource/BeamEnergySpectrumType     = "Discrete"
+i:So/ActiveSource/MaxNumberOfPointsToSample  = 100000000
+ic:So/ActiveSource/NumberOfHistoriesInRun    = 10
+
+##### SPECTRUM #####
+dv:So/ActiveSource/BeamEnergySpectrumValues = 6 4.11 29.461 29.782 33.562 33.624 34.419 keV
+uv:So/ActiveSource/BeamEnergySpectrumWeightsUnscaled = 6 0.086 0.211 0.389 0.0363 0.0702 0.0213
+uv:So/ActiveSource/BeamEnergySpectrumWeights = 1.228803146 * So/ActiveSource/BeamEnergySpectrumWeightsUnscaled
+
+#=====================
+#Cylinder of Titanium
+#=====================
+
+s:Ge/TitaniumCylinder/Type         = "TsCylinder"
+s:Ge/TitaniumCylinder/Parent       = "World"
+s:Ge/TitaniumCylinder/Material     = "G4_Ti"
+d:Ge/TitaniumCylinder/RMin         = 0. mm
+d:Ge/TitaniumCylinder/RMax         = 0.415 mm
+d:Ge/TitaniumCylinder/SPhi         = 0. deg
+d:Ge/TitaniumCylinder/DPhi         = 360. deg
+d:Ge/TitaniumCylinder/HL           = 2.26 mm
+d:Ge/TitaniumCylinder/TransX       = 0. mm
+d:Ge/TitaniumCylinder/TransY       = 0. mm
+d:Ge/TitaniumCylinder/TransZ       = 0. mm
+d:Ge/TitaniumCylinder/RotX         = 0. deg
+d:Ge/TitaniumCylinder/RotY         = 0. deg
+d:Ge/TitaniumCylinder/RotZ         = 0. deg
+s:Ge/TitaniumCylinder/Color        = "blue"
+s:Ge/TitaniumCylinder/DrawingStyle = "FullWireFrame"
+
+#====================
+#Argon filling
+#====================
+
+s:Ge/ArgonFilling/Type         = "TsCylinder"
+s:Ge/ArgonFilling/Parent       = "TitaniumCylinder"
+s:Ge/ArgonFilling/Material     = "ArgonGas"
+d:Ge/ArgonFilling/RMin         = 0. mm
+d:Ge/ArgonFilling/RMax         = 0.355 mm
+d:Ge/ArgonFilling/SPhi         = 0. deg
+d:Ge/ArgonFilling/DPhi         = 360. deg
+d:Ge/ArgonFilling/HL           = 2.16 mm
+d:Ge/ArgonFilling/TransX       = 0. mm
+d:Ge/ArgonFilling/TransY       = 0. mm
+d:Ge/ArgonFilling/TransZ       = 0. mm
+d:Ge/ArgonFilling/RotX         = 0. deg
+d:Ge/ArgonFilling/RotY         = 0. deg
+d:Ge/ArgonFilling/RotZ         = 0. deg
+s:Ge/ArgonFilling/DrawingStyle = "FullWireFrame"
+s:Ge/ArgonFilling/Color        = "yellow"
+
+#====================
+#Gold cylinder
+#====================
+
+s:Ge/GoldCylinder/Type         = "TsCylinder"
+s:Ge/GoldCylinder/Parent       = "ArgonFilling"
+s:Ge/GoldCylinder/Material     = "G4_Au"
+d:Ge/GoldCylinder/RMin         = 0. mm
+d:Ge/GoldCylinder/RMax         = 0.125 mm
+d:Ge/GoldCylinder/SPhi         = 0. deg
+d:Ge/GoldCylinder/DPhi         = 360. deg
+d:Ge/GoldCylinder/HL           = 2 mm
+d:Ge/GoldCylinder/TransX       = 0. mm
+d:Ge/GoldCylinder/TransY       = 0. mm
+d:Ge/GoldCylinder/TransZ       = 0. mm
+d:Ge/GoldCylinder/RotX         = 0. deg
+d:Ge/GoldCylinder/RotY         = 0. deg
+d:Ge/GoldCylinder/RotZ         = 0. deg
+s:Ge/GoldCylinder/DrawingStyle = "FullWireFrame"
+s:Ge/GoldCylinder/Color        = "red"
+
+#====================
+#Pure Pyrex housing
+#====================
+
+s:Ge/PurePyrexHousing/Type         = "TsCylinder"
+s:Ge/PurePyrexHousing/Parent       = "ArgonFilling"
+s:Ge/PurePyrexHousing/Material     = "PurePyrex"
+d:Ge/PurePyrexHousing/RMin         = 0.15 mm
+d:Ge/PurePyrexHousing/RMax         = 0.2 mm
+d:Ge/PurePyrexHousing/SPhi         = 0. deg
+d:Ge/PurePyrexHousing/DPhi         = 360. deg
+d:Ge/PurePyrexHousing/HL           = 2 mm
+d:Ge/PurePyrexHousing/TransX       = 0. mm
+d:Ge/PurePyrexHousing/TransY       = 0. mm
+d:Ge/PurePyrexHousing/TransZ       = 0. mm
+d:Ge/PurePyrexHousing/RotX         = 0. deg
+d:Ge/PurePyrexHousing/RotY         = 0. deg
+d:Ge/PurePyrexHousing/RotZ         = 0. deg
+s:Ge/PurePyrexHousing/DrawingStyle = "FullWireFrame"
+s:Ge/PurePyrexHousing/Color        = "purple"
+
+#==========================
+#Radioactive Pyrex cylinder
+#==========================
+
+s:Ge/RadioactivePyrexCylinder/Type         = "TsCylinder"
+s:Ge/RadioactivePyrexCylinder/Parent       = "ArgonFilling"
+s:Ge/RadioactivePyrexCylinder/Material     = "RadioactivePyrex"
+d:Ge/RadioactivePyrexCylinder/RMin         = 0.15 mm
+d:Ge/RadioactivePyrexCylinder/RMax         = 0.31 mm
+d:Ge/RadioactivePyrexCylinder/SPhi         = 0. deg
+d:Ge/RadioactivePyrexCylinder/DPhi         = 360. deg
+d:Ge/RadioactivePyrexCylinder/HL           = 2 mm
+d:Ge/RadioactivePyrexCylinder/TransX       = 0. mm
+d:Ge/RadioactivePyrexCylinder/TransY       = 0. mm
+d:Ge/RadioactivePyrexCylinder/TransZ       = 0. mm
+d:Ge/RadioactivePyrexCylinder/RotX         = 0. deg
+d:Ge/RadioactivePyrexCylinder/RotY         = 0. deg
+d:Ge/RadioactivePyrexCylinder/RotZ         = 0. deg
+s:Ge/RadioactivePyrexCylinder/DrawingStyle = "FullWireFrame"
+s:Ge/RadioactivePyrexCylinder/Color        = "green"
+

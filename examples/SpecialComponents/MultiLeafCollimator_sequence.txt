@@ -1,0 +1,58 @@
+# Multileaf collimator moving in a time sequence
+
+includeFile = MultiLeafCollimator.txt
+
+dv:Ge/MultiLeafCollimatorA/XPlusLeavesOpen  = 5 0.0 Tf/LeafXPlus1/Value Tf/LeafXPlus0/Value Tf/LeafXPlus2/Value 0.0 cm
+dv:Ge/MultiLeafCollimatorA/XMinusLeavesOpen = 5 0.0  Tf/LeafXMinus1/Value Tf/LeafXMinus0/Value Tf/LeafXMinus2/Value 0.0 cm
+
+s:Tf/LeafXPlus0/Function            = "Linear cm"
+d:Tf/LeafXPlus0/Rate                = 0.02 cm/ms
+d:Tf/LeafXPlus0/StartValue          = 0.0 cm
+d:Tf/LeafXPlus0/RepetitionInterval  = 100.0 ms
+
+s:Tf/LeafXMinus0/Function           = "Linear cm"
+d:Tf/LeafXMinus0/Rate               = 0.01 cm/ms
+d:Tf/LeafXMinus0/StartValue         = -0.5 cm
+d:Tf/LeafXMinus0/RepetitionInterval = 100.0 ms
+
+s:Tf/LeafXPlus1/Function            = "Linear cm"
+d:Tf/LeafXPlus1/Rate                = 0.04 cm/ms
+d:Tf/LeafXPlus1/StartValue          = 0.5 cm
+d:Tf/LeafXPlus1/RepetitionInterval  = 100.0 ms
+
+s:Tf/LeafXMinus1/Function           = "Linear cm"
+d:Tf/LeafXMinus1/Rate               = 0.01 cm/ms
+d:Tf/LeafXMinus1/StartValue         = 0.0 cm
+d:Tf/LeafXMinus1/RepetitionInterval = 100.0 ms
+
+s:Tf/LeafXPlus2/Function            = "Linear cm"
+d:Tf/LeafXPlus2/Rate                = -0.02 cm/ms
+d:Tf/LeafXPlus2/StartValue          = 0.5 cm
+d:Tf/LeafXPlus2/RepetitionInterval  = 100.0 ms
+
+s:Tf/LeafXMinus2/Function           = "Linear cm"
+d:Tf/LeafXMinus2/Rate               = -0.03 cm/ms
+d:Tf/LeafXMinus2/StartValue         = 0.0 cm
+d:Tf/LeafXMinus2/RepetitionInterval = 100.0 ms
+
+d:Tf/TimelineEnd             = 100.0 ms
+i:Tf/NumberOfSequentialTimes = 60
+i:Tf/Verbosity               = 1
+b:Ts/PauseBeforeQuit         = "False"
+
+i:Gr/ViewA/WindowSizeX     = 1024
+i:Gr/ViewA/WindowSizeY     = 768
+u:Gr/ViewA/Zoom            = 2.
+d:Gr/ViewA/Theta           = Tf/Rot1/Value deg
+d:Gr/ViewA/Phi             = 90 deg + Tf/Rot1/Value
+b:Gr/ViewA/CopyOpenGLToEPS = "False"
+
+s:Tf/Rotate/Function           = "Linear deg"
+d:Tf/Rotate/Rate               = 1. deg/ms
+d:Tf/Rotate/StartValue         = -40.0 deg
+d:Tf/Rotate/RepetitionInterval = 100. ms
+
+s:Tf/Rot1/Function           = "Step"
+dv:Tf/Rot1/Times             = 2 40 100 ms
+dv:Tf/Rot1/Values            = 2 0. Tf/Rotate/Value deg
+d:Tf/Rot1/RepetitionInterval = 100. ms

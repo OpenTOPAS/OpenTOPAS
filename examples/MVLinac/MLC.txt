@@ -1,0 +1,50 @@
+# MLC for Siemens Oncor: Uses DivergingMLC TOPAS generic MLC component
+# Reference for geometry: Jabbari et al, J Med Signal Sens 3(3):172-179
+
+########################### Key Parameters In MLC.txt ################################
+# The parameters in MLC.txt are intended as defaults to be adjusted in higher level
+# parameter control files FullTxHead.txt or Field.txt
+#
+# Parameters available for adjustment...
+# SourceToUpstreamSurfaceDistance: Distance from x-ray target to MLC
+# MLC/RotZ: MLC orientation, dependent on direction of leaf travel along IEC_B
+# MaximumLeafOpen: Maximum distance permitted for leaf to open on either side of Zb
+# Thickness: Thickness of the MLC leaves in Zb
+# Length: Length of the MLC leaves in direction of travel
+# LeafWidths: Vector of leaf widths, same sequence of leaf widths on each MLC bank     
+# NegativeFieldSetting: Negative leaf positions (IEC X1) projected to isocenter <= PositiveFieldSetting
+# PositiveFieldSetting: Positive leaf positions (IEC X2) projected to isocenter >= NegativeFieldSetting
+#
+# Parameters calculated from other parameters...
+# SAD: Source to axis distance (isocenter coincides with gantry co-ordinates origin) 
+#######################################################################################
+
+includeFile = LinacDefaults.txt #Values in LinacDafaults.txt may be overriden
+
+s:Ge/MLC/Parent           = "IEC_B" # IEC beam limiting device coordinates
+s:Ge/MLC/Type             = "TsDivergingMLC"
+s:Ge/MLC/Material         = "G4_W"
+d:Ge/MLC/SAD              = Ge/SAD cm 
+
+d:Ge/MLC/SourceToUpstreamSurfaceDistance = 28.26  cm # Distance from source to MLC bank
+d:Ge/MLC/MaximumLeafOpen  = 20.0 cm # Actual limit of leaf travel
+d:Ge/MLC/Thickness        = 7.56 cm # Actual thickness of MLC leaves along IEC Zb
+d:Ge/MLC/Length           = 20.0 cm # Length of MLC leaves in direction of travel
+
+d:Ge/MLC/DistSourceToSAD = Ge/MLC/SAD - Ge/MLC/SourceToUpstreamSurfaceDistance cm
+d:Ge/MLC/HalfThickness = 0.5 * Ge/MLC/Thickness cm
+d:Ge/MLC/TransZ = Ge/MLC/DistSourceToSAD - Ge/MLC/HalfThickness cm
+
+# MLC orientation, leaf widths and positions, projected to isocenter
+# Default 20 cm wide, 50 cm long field at plane of isocenter (at SAD) with all leaves open
+d:Ge/MLC/MLCRotZforTravelAlongIECX = 0. deg # Constant for leaf travel along IEC X axis – DO NOT CHANGE
+d:Ge/MLC/MLCRotZforTravelAlongIECY = -90. deg # Constant for leaf travel along IEC Y axis – DO NOT CHANGE
+d:Ge/MLC/RotZ = Ge/MLC/MLCRotZforTravelAlongIECY deg # Set to one of the above two constants
+# MLC orientation, leaf widths and positions, projected to isocenter for 20 cm x 50 cm field
+# IEC leaf number depends on direction of leaf motion: For Xb leaf 1 is first, Yb leaf 1 is last
+dv:Ge/MLC/LeafWidths           = 42 5. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 5. cm
+dv:Ge/MLC/NegativeFieldSetting = 42 -10. -10. -10. -10. -10. -10. -10. -10. -10. -10. -10. -10. -10. -10. -10. -10. -10. -10. -10. -10. -10. -10. -10. -10. -10. -10. -10. -10. -10. -10. -10. -10. -10. -10. -10. -10. -10. -10. -10. -10. -10. -10. cm
+dv:Ge/MLC/PositiveFieldSetting = 42 10. 10. 10. 10. 10. 10. 10. 10. 10. 10. 10. 10. 10. 10. 10. 10. 10. 10. 10. 10. 10. 10. 10. 10. 10. 10. 10. 10. 10. 10. 10. 10. 10. 10. 10. 10. 10. 10. 10. 10. 10. 10. cm
+
+s:Ge/MLC/DrawingStyle     = "Solid"
+b:Ge/MLC/PrintInformation = "True"

@@ -1,0 +1,73 @@
+# Demonstrates having several physics lists defined.
+# While only one physics list can be used in a given TOPAS session,
+# you are free to define several different sets in your parameter files.
+# The parameter Ph/ListName tells which of these lists is actually used.
+
+s:Ph/ListName = "MyList1"
+
+s:Ph/MyList1/Type           = "Geant4_Modular"
+sv:Ph/MyList1/Modules       = 3 "g4decay" "g4em-standard_opt3" "g4h-elastic"
+d:Ph/MyList1/CutForGamma    = 0.04 mm
+d:Ph/MyList1/CutForElectron = 0.03 mm
+d:Ph/MyList1/CutForPositron = 0.02 mm
+d:Ph/MyList1/CutForProton   = 0.01 mm
+
+s:Ph/MyList2/Type           = "Geant4_Modular"
+sv:Ph/MyList2/Modules       = 1 "g4em-standard_opt0"
+d:Ph/MyList2/CutForGamma    = 0.04 mm
+d:Ph/MyList2/CutForElectron = 0.03 mm
+d:Ph/MyList2/CutForPositron = 0.02 mm
+d:Ph/MyList2/CutForProton   = 0.01 mm
+
+s:Ph/MyList3/Type           = "Geant4_Modular"
+sv:Ph/MyList3/Modules       = 1 "Transportation_Only"
+d:Ph/MyList3/CutForGamma    = 0.04 mm
+d:Ph/MyList3/CutForElectron = 0.03 mm
+d:Ph/MyList3/CutForPositron = 0.02 mm
+d:Ph/MyList3/CutForProton   = 0.01 mm
+
+s:Ph/MyList4/Type               = "QGSP_BERT_HP"
+d:Ph/MyList4/CutForAllParticles = 0.03 mm
+i:Ph/MyList4/Verbosity          = 2
+
+s:Ge/Phantom/Type     = "TsBox"
+s:Ge/Phantom/Parent   = "World"
+s:Ge/Phantom/Material = "G4_WATER"
+d:Ge/Phantom/HLX      = 80.0 cm
+d:Ge/Phantom/HLY      = 80.0 cm
+d:Ge/Phantom/HLZ      = 20.0 cm
+d:Ge/Phantom/TransX   = 0. cm
+d:Ge/Phantom/TransY   = 0. cm
+d:Ge/Phantom/TransZ   = -30. cm
+d:Ge/Phantom/RotX     = 0. deg
+d:Ge/Phantom/RotY     = 0.0 deg
+d:Ge/Phantom/RotZ     = 0. deg
+s:Ge/Phantom/Color    = "blue"
+i:Ge/Phantom/XBins    = 2
+
+s:Sc/EnergyDepAtPhantom/Quantity    = "DoseToWater"
+s:Sc/EnergyDepAtPhantom/Component   = "Phantom"
+b:Sc/EnergyDepAtPhantom/OutputToConsole = "TRUE"
+s:Sc/EnergyDepAtPhantom/IfOutputFileAlreadyExists = "Overwrite"
+
+s:Gr/ViewA/Type = "OpenGL"
+
+s:So/Example/Type                     = "Beam"
+s:So/Example/Component                = "BeamPosition"
+s:So/Example/BeamParticle             = "proton"
+d:So/Example/BeamEnergy               = 169.23 MeV
+u:So/Example/BeamEnergySpread         = 0.757504
+s:So/Example/BeamPositionDistribution = "Gaussian"
+s:So/Example/BeamPositionCutoffShape  = "Ellipse"
+d:So/Example/BeamPositionCutoffX      = 10. cm
+d:So/Example/BeamPositionCutoffY      = 10. cm
+d:So/Example/BeamPositionSpreadX      = 0.65 cm
+d:So/Example/BeamPositionSpreadY      = 0.65 cm
+s:So/Example/BeamAngularDistribution  = "Gaussian"
+d:So/Example/BeamAngularCutoffX       = 90. deg
+d:So/Example/BeamAngularCutoffY       = 90. deg
+d:So/Example/BeamAngularSpreadX       = 0.0032 rad
+d:So/Example/BeamAngularSpreadY       = 0.0032 rad
+i:So/Example/NumberOfHistoriesInRun   = 10
+
+b:Ts/PauseBeforeQuit = "True"

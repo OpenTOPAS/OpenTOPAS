@@ -1,0 +1,118 @@
+# Range modulator wheel
+
+b:Ge/World/Invisible = "TRUE"
+
+s:Ge/RangeModulatorA/Type                   = "TsRangeModulator"
+s:Ge/RangeModulatorA/Material               = "Parent"
+s:Ge/RangeModulatorA/Parent                 = "World"
+d:Ge/RangeModulatorA/TransX                 = 10.0 cm
+d:Ge/RangeModulatorA/TransY                 = 0.0  cm
+d:Ge/RangeModulatorA/TransZ                 = 0.0  cm
+d:Ge/RangeModulatorA/RotX                   = 0.0 deg
+d:Ge/RangeModulatorA/RotY                   = 0.0 deg
+d:Ge/RangeModulatorA/RotZ                   = 0.0 deg
+b:Ge/RangeModulatorA/Invisible              = "TRUE"
+b:Ge/RangeModulatorA/PrintInformation       = "True"
+
+d:Ge/RangeModulatorA/HeightOfUpper          = 150 mm
+d:Ge/RangeModulatorA/HeightOfMiddle         = 1.0 mm
+d:Ge/RangeModulatorA/HeightOfLower          = 9.0 mm
+
+d:Ge/RangeModulatorA/Shell/Rin              = 15.0 cm
+d:Ge/RangeModulatorA/Shell/Rout             = 15.5 cm
+s:Ge/RangeModulatorA/Shell/Material         = "Aluminum"
+s:Ge/RangeModulatorA/Shell/Color            = "grey"
+s:Ge/RangeModulatorA/Shell/DrawingStyle     = "Solid"
+i:Ge/RangeModulatorA/Shell/VisSegsPerCircle = 360
+
+d:Ge/RangeModulatorA/Hub/Rin                = 6.0 cm
+d:Ge/RangeModulatorA/Hub/Rout               = 7.0 cm
+s:Ge/RangeModulatorA/Hub/Material           = "Aluminum"
+s:Ge/RangeModulatorA/Hub/Color              = "grey"
+s:Ge/RangeModulatorA/Hub/DrawingStyle       = "Solid"
+i:Ge/RangeModulatorA/Hub/VisSegsPerCircle   = 360
+
+#Upper tracks
+dv:Ge/RangeModulatorA/Upper/RadialDivisions  = 1 11.0 cm
+s:Ge/RangeModulatorA/Upper/Track1/Pattern    = "LexanBlockT1"
+s:Ge/RangeModulatorA/Upper/Track2/Pattern    = "NULL"
+#Middle tracks
+dv:Ge/RangeModulatorA/Middle/RadialDivisions = 1 11.0 cm
+s:Ge/RangeModulatorA/Middle/Track1/Pattern   = "InterfaceDisk"
+s:Ge/RangeModulatorA/Middle/Track2/Pattern   = "HoleTrackDisk"
+#Lower tracks
+dv:Ge/RangeModulatorA/Lower/RadialDivisions  = 1 11.0 cm
+s:Ge/RangeModulatorA/Lower/Track1/Pattern    = "LeadBlockT1"
+s:Ge/RangeModulatorA/Lower/Track2/Pattern    = "NULL"
+
+#A track pattern: 14 blocks of Lexan
+d:Ge/LexanBlockT1/Offset = 0.0 deg
+dv:Ge/LexanBlockT1/Angles = 14
+  5.00 115.00 146.50 173.2 195.07
+216.15 230.14 243.00 255.5 270.60
+282.20 294.60 306.20 324.00 deg
+dv:Ge/LexanBlockT1/Heights = 14
+ 77.0  82.0  87.0  92.15 95.0
+100.4 106.0 110.2 115.3 119.5
+124.0 128.8 132.00 60.0 mm
+sv:Ge/LexanBlockT1/Materials = 14
+"Lexan" "Lexan" "Lexan" "Lexan" "Lexan"
+"Lexan" "Lexan" "Lexan" "Lexan" "Lexan"
+"Lexan" "Lexan" "Lexan" "Brass"
+
+#A track pattern of single block
+dv:Ge/InterfaceDisk/Angles    = 1 0.0 deg
+dv:Ge/InterfaceDisk/Heights   = 1 1.0 mm
+sv:Ge/InterfaceDisk/Materials = 1 "Aluminum"
+
+#A track pattern of two blocks but one block is a hole
+dv:Ge/HoleTrackDisk/Angles    = 2 90.0 110.0 deg
+dv:Ge/HoleTrackDisk/Heights   = 2  0.0  1.0 mm
+sv:Ge/HoleTrackDisk/Materials = 2 "NULL" "Aluminum"
+
+#A track pattern of 8 Lead blocks
+dv:Ge/LeadBlockT1/Angles = 9
+  5.00 115.00 146.50 173.2 195.07
+216.15 230.14 243.00 255.5 deg
+dv:Ge/LeadBlockT1/Heights = 9
+ 0.890 0.75 0.60 0.52 0.40
+ 0.30 0.16 0.070 0.0 mm
+sv:Ge/LeadBlockT1/Materials = 9
+"Lead" "Lead" "Lead" "Lead" "Lead"
+"Lead" "Lead" "Lead" "NULL"
+
+s:So/Example/Type                     = "Beam"
+s:So/Example/Component                = "BeamPosition"
+s:So/Example/BeamParticle             = "proton"
+d:So/Example/BeamEnergy               = 169.23 MeV
+u:So/Example/BeamEnergySpread         = 0.757504
+s:So/Example/BeamPositionDistribution = "Gaussian"
+s:So/Example/BeamPositionCutoffShape  = "Ellipse"
+d:So/Example/BeamPositionCutoffX      = 10. cm
+d:So/Example/BeamPositionCutoffY      = 10. cm
+d:So/Example/BeamPositionSpreadX      = 0.65 cm
+d:So/Example/BeamPositionSpreadY      = 0.65 cm
+s:So/Example/BeamAngularDistribution  = "Gaussian"
+d:So/Example/BeamAngularCutoffX       = 90. deg
+d:So/Example/BeamAngularCutoffY       = 90. deg
+d:So/Example/BeamAngularSpreadX       = 0.0032 rad
+d:So/Example/BeamAngularSpreadY       = 0.0032 rad
+i:So/Example/NumberOfHistoriesInRun   = 10
+
+s:Gr/ViewA/Type                             = "OpenGL"
+i:Gr/ViewA/WindowSizeX                      = 1024
+i:Gr/ViewA/WindowSizeY                      = 768
+d:Gr/ViewA/Theta                            = 30 deg
+d:Gr/ViewA/Phi                              = 20 deg
+s:Gr/ViewA/Projection                       = "Perspective"
+d:Gr/ViewA/PerspectiveAngle                 = 30 deg
+u:Gr/ViewA/Zoom                             = 1.5
+b:Gr/ViewA/HiddenLineRemovalForTrajectories = "True"
+b:Gr/ViewA/IncludeAxes                      = "true"
+s:Gr/ViewA/AxesComponent                    = "RangeModulatorA"
+d:Gr/ViewA/AxesSize                         = 0.1 m
+
+sv:Ph/Default/Modules = 1 "g4em-standard_opt0"
+
+b:Ts/PauseBeforeQuit = "True"
+i:Ts/ShowHistoryCountAtInterval = 0

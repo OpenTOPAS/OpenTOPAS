@@ -1,0 +1,102 @@
+# Primary collimator for Siemens Oncor
+# Reference for geometry: Sawkey and Faddegon, Med Phys 36(12):5622-32, 2009
+
+################## Key Parameters In PrimaryCollimator.txt ###########################
+# Parameters set in another parameter control file...
+# SAD: Source axis distance (distance from nominal source position to isocenter)
+#
+# Parameters available for adjustment...
+# HL: Half thickness of cone or cylinder
+# Pos: Distance along beam axis Zg from nominal target position (SAD from isocenter)
+# Rmax1: Maximum radius of cone at the top (closest to target)
+# Rmax2: Maximum raidus of cone at the bottom (closest to isocenter)
+# Rmin1: Minium radius of cone at the top
+# Rmin2: Minium raidus of cone at the bottom
+#
+# Parameters calculated from other parameters...
+# Reloc: Distance along beam axis Zg from isocenter, set by parameters SAD and Pos
+# TransZ1: Position of lower surface of previous object along Zg
+# TransZ: Position of center of object along Zg
+#######################################################################################
+
+#Choose one flattening filter, commment out the others
+#includeFile = Flattener6MV.txt #6MV flattening filter
+#includeFile = Flattener18MV.txt #18 MV flattening filter
+
+includeFile = LinacDefaults.txt #Values in LinacDafaults.txt may be overriden
+
+# Primary Collimator
+
+s:Ge/Collimator_1/Parent     = "IEC_G" #IEC gantry coordinate
+s:Ge/Collimator_1/Material   = "G4_W"
+s:Ge/Collimator_1/Type       = "G4Cons"
+d:Ge/Collimator_1/RMin1      = 1.748 cm
+d:Ge/Collimator_1/RMax1      = 4.0 cm #Portions of collimator axis within 4 cm of air
+d:Ge/Collimator_1/RMin2      = 1.748 cm
+d:Ge/Collimator_1/RMax2      = 4.0 cm
+d:Ge/Collimator_1/HL         = 0.638 cm
+d:Ge/Collimator_1/Pos        = 1.7 cm
+d:Ge/Collimator_1/Reloc      = Ge/SAD - Ge/Collimator_1/Pos cm
+d:Ge/Collimator_1/TransZ     = Ge/Collimator_1/Reloc - Ge/Collimator_1/HL cm
+s:Ge/Collimator_1/Color      = "TransparentBlue"
+
+s:Ge/Collimator_2/Parent     = "IEC_G"
+s:Ge/Collimator_2/Material   = "G4_W"
+s:Ge/Collimator_2/Type       = "G4Cons"
+d:Ge/Collimator_2/RMin1      = 1.041 cm
+d:Ge/Collimator_2/RMax1      = 4.0 cm
+d:Ge/Collimator_2/RMin2      = 1.041 cm
+d:Ge/Collimator_2/RMax2      = 4.0 cm
+d:Ge/Collimator_2/HL         = 0.607 cm
+d:Ge/Collimator_2/TransZ1    = Ge/Collimator_1/TransZ - Ge/Collimator_1/HL cm
+d:Ge/Collimator_2/TransZ     = Ge/Collimator_2/TransZ1 - Ge/Collimator_2/HL cm
+s:Ge/Collimator_2/Color      = "TransparentBlue"
+
+s:Ge/Collimator_3/Parent     = "IEC_G"
+s:Ge/Collimator_3/Material   = "G4_W"
+s:Ge/Collimator_3/Type       = "G4Cons"
+d:Ge/Collimator_3/RMin1      = 1.372 cm
+d:Ge/Collimator_3/RMax1      = 4.0 cm
+d:Ge/Collimator_3/RMin2      = 1.372 cm
+d:Ge/Collimator_3/RMax2      = 4.0 cm
+d:Ge/Collimator_3/HL         = 0.673 cm
+d:Ge/Collimator_3/TransZ1    = Ge/Collimator_2/TransZ - Ge/Collimator_2/HL cm
+d:Ge/Collimator_3/TransZ     = Ge/Collimator_3/TransZ1 - Ge/Collimator_3/HL cm
+s:Ge/Collimator_3/Color      = "TransparentBlue"
+
+s:Ge/Collimator_4/Parent     = "IEC_G"
+s:Ge/Collimator_4/Material   = "G4_W"
+s:Ge/Collimator_4/Type       = "G4Cons"
+d:Ge/Collimator_4/RMin1      = 1.702 cm
+d:Ge/Collimator_4/RMax1      = 4.0 cm
+d:Ge/Collimator_4/RMin2      = 1.702 cm
+d:Ge/Collimator_4/RMax2      = 4.0 cm
+d:Ge/Collimator_4/HL         = 0.673 cm
+d:Ge/Collimator_4/TransZ1    = Ge/Collimator_3/TransZ - Ge/Collimator_3/HL cm
+d:Ge/Collimator_4/TransZ     = Ge/Collimator_4/TransZ1 - Ge/Collimator_4/HL cm
+s:Ge/Collimator_4/Color      = "TransparentBlue"
+
+s:Ge/Collimator_5/Parent     = "IEC_G"
+s:Ge/Collimator_5/Material   = "G4_W"
+s:Ge/Collimator_5/Type       = "G4Cons"
+d:Ge/Collimator_5/RMin1      = 2.05 cm
+d:Ge/Collimator_5/RMax1      = 4.0 cm
+d:Ge/Collimator_5/RMin2      = 2.05 cm
+d:Ge/Collimator_5/RMax2      = 4.0 cm
+d:Ge/Collimator_5/HL         = 0.673 cm
+d:Ge/Collimator_5/TransZ1    = Ge/Collimator_4/TransZ - Ge/Collimator_4/HL cm
+d:Ge/Collimator_5/TransZ     = Ge/Collimator_5/TransZ1 - Ge/Collimator_5/HL cm
+s:Ge/Collimator_5/Color      = "TransparentBlue"
+
+s:Ge/Collimator_6/Parent     = "IEC_G"
+s:Ge/Collimator_6/Material   = "G4_W"
+s:Ge/Collimator_6/Type       = "G4Cons"
+d:Ge/Collimator_6/RMin1      = 2.388 cm
+d:Ge/Collimator_6/RMax1      = 4.0 cm
+d:Ge/Collimator_6/RMin2      = 2.388 cm
+d:Ge/Collimator_6/RMax2      = 4.0 cm
+d:Ge/Collimator_6/HL         = 0.673 cm
+d:Ge/Collimator_6/TransZ1    = Ge/Collimator_5/TransZ - Ge/Collimator_5/HL cm
+d:Ge/Collimator_6/TransZ     = Ge/Collimator_6/TransZ1 - Ge/Collimator_6/HL cm
+s:Ge/Collimator_6/Color      = "TransparentBlue"
+

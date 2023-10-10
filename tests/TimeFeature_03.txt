@@ -1,0 +1,5 @@
+includeFile = TimeFeature_01.txt
+
+#--- Scoring
+b:Sc/Dose/OutputAfterRun = "True"
+b:Sc/PHSP/OutputAfterRun = "True"

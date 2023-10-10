@@ -1,0 +1,41 @@
+#                                                          #
+#     Example: TG186 source inside the TG186 applicator    #
+#                                                          #
+#                                                          #
+#                Latest version - May 2021                 #
+#                Author: Francisco Berumen                 #
+#              Contact - fberumenm@gmail.com               #
+#       https://doi.org/10.1016/j.brachy.2020.12.007       #
+#                                                          #
+
+##### Import the source and applicator ##### 
+includeFile = ./HDR/Ir192_TG186.txt
+includeFile = ./HDR/TG186Applicator.txt
+
+## Since the TG186 source must be inside the applicator,
+## the parent of the "Capsule" group component (TG186 source)
+## is the "AirCylinder" applicator's geometry component.
+s:Ge/Capsule/Parent = "AirCylinder"
+
+## See the effect of the shielded applicator with more photons
+i:So/Source/NumberOfHistoriesInRun    = 150
+
+##### Water phantom of 50 cm side #####
+d:Ge/World/HLX = 25 cm
+d:Ge/World/HLY = 25 cm
+d:Ge/World/HLZ = 25 cm
+s:Ge/World/Material = "G4_WATER"
+
+##### Physics #####
+sv:Ph/Default/Modules = 1 "g4em-standard_opt0"
+
+##### Graphics #####
+b:Gr/Enable          = "T"
+b:Ts/PauseBeforeQuit = "T"
+
+s:Gr/View/Type        = "OpenGL"
+u:Gr/View/Zoom        = 4.5
+d:Gr/View/Phi         = 90 deg
+d:Gr/View/Theta       = 91 deg
+b:Gr/View/IncludeAxes = "F"
+d:Gr/View/AxesSize    = 10 cm

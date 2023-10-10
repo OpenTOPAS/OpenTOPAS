@@ -1,0 +1,14 @@
+includeFile = Field_01.txt
+
+#--- Timeline
+d:Tf/TimelineEnd             = 5. ms
+i:Tf/NumberOfSequentialTimes = 5
+
+
+#--- Magnet
+s:Tf/DipoleStrength/Function           = "Linear tesla"
+d:Tf/DipoleStrength/Rate               = 0.1 tesla/ms
+d:Tf/DipoleStrength/StartValue         = 0. tesla
+d:Tf/DipoleStrength/RepetitionInterval = 10. s
+
+d:Ge/Dipole/MagneticFieldStrength = Tf/DipoleStrength/Value tesla

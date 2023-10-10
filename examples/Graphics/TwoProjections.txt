@@ -1,0 +1,53 @@
+# Demonstrate two different kinds of graphical projections.
+
+s:Gr/MyOGLa/Type        = "OpenGL"
+i:Gr/MyOGLa/WindowSizeX = 400
+i:Gr/MyOGLa/WindowSizeY = 400
+i:Gr/MyOGLa/WindowPosX  = 0
+i:Gr/MyOGLa/WindowPosY  = 0
+s:Gr/MyOGLa/Projection  = "Orthogonal"
+d:Gr/MyOGLa/Theta       = 45. deg
+d:Gr/MyOGLa/Phi         = 45. deg
+
+s:Gr/MyOGLb/Type             = "OpenGL"
+i:Gr/MyOGLb/WindowSizeX      = 400
+i:Gr/MyOGLb/WindowSizeY      = 400
+i:Gr/MyOGLb/WindowPosX       = 0
+i:Gr/MyOGLb/WindowPosY       = 400
+s:Gr/MyOGLb/Projection       = "Perspective"
+d:Gr/MyOGLb/PerspectiveAngle = 10. deg
+d:Gr/MyOGLb/Theta            = 45. deg
+d:Gr/MyOGLb/Phi              = 45. deg
+
+s:Ge/Box/Type     = "TsBox"
+s:Ge/Box/Parent   = "World"
+s:Ge/Box/Material = "G4_WATER"
+d:Ge/Box/HLX      = 1. m
+d:Ge/Box/HLY      = 1. m
+d:Ge/Box/HLZ      = .4 m
+d:Ge/Box/TransX   = 0. m
+d:Ge/Box/TransY   = 0. m
+d:Ge/Box/TransZ   = 0. m
+d:Ge/Box/RotX     = 0. deg
+d:Ge/Box/RotY     = 0. deg
+d:Ge/Box/RotZ     = 0. deg
+
+s:So/Example/Type                     = "Beam"
+s:So/Example/Component                = "BeamPosition"
+s:So/Example/BeamParticle             = "proton"
+d:So/Example/BeamEnergy               = 200. MeV
+u:So/Example/BeamEnergySpread         = 0.757504
+s:So/Example/BeamPositionDistribution = "Gaussian"
+s:So/Example/BeamPositionCutoffShape  = "Ellipse"
+d:So/Example/BeamPositionCutoffX      = 10. cm
+d:So/Example/BeamPositionCutoffY      = 10. cm
+d:So/Example/BeamPositionSpreadX      = 0.65 cm
+d:So/Example/BeamPositionSpreadY      = 0.65 cm
+s:So/Example/BeamAngularDistribution  = "Gaussian"
+d:So/Example/BeamAngularCutoffX       = 90. deg
+d:So/Example/BeamAngularCutoffY       = 90. deg
+d:So/Example/BeamAngularSpreadX       = 0.0032 rad
+d:So/Example/BeamAngularSpreadY       = 0.0032 rad
+i:So/Example/NumberOfHistoriesInRun   = 10
+
+b:Ts/PauseBeforeQuit = "True"

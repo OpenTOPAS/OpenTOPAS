@@ -1,0 +1,96 @@
+# XCAT Material Definitions
+# (any spaces in material name from XCAT log file are replaced with underscores)
+
+# Temporarily, all are actually water, just with different colors
+
+sv:Ma/XCAT_Air/Components 			= 2 "Hydrogen" "Oxygen"
+uv:Ma/XCAT_Air/Fractions  			= 2 0.111894 0.888106
+d:Ma/XCAT_Air/Density 			= 1.0 g/cm3
+s:Ma/XCAT_Air/DefaultColor 			= "TransparentBlack"
+iv:Gr/Color/TransparentBlack = 4 0 0 0 0
+
+sv:Ma/XCAT_Body_(water)/Components 		= 2 "Hydrogen" "Oxygen"
+uv:Ma/XCAT_Body_(water)/Fractions  		= 2 0.111894 0.888106
+d:Ma/XCAT_Body_(water)/Density 		= 1.0 g/cm3
+d:Ma/XCAT_Body_(water)/MeanExcitationEnergy 	= 75.0 eV
+s:Ma/XCAT_Body_(water)/DefaultColor 		= "blue"
+
+sv:Ma/XCAT_Muscle/Components 			= 2 "Hydrogen" "Oxygen"
+uv:Ma/XCAT_Muscle/Fractions  			= 2 0.111894 0.888106
+d:Ma/XCAT_Muscle/Density 			= 1.0 g/cm3
+s:Ma/XCAT_Muscle/DefaultColor 			= "orange"
+
+sv:Ma/XCAT_Adipose_(fat)/Components 		= 2 "Hydrogen" "Oxygen"
+uv:Ma/XCAT_Adipose_(fat)/Fractions  		= 2 0.111894 0.888106
+d:Ma/XCAT_Adipose_(fat)/Density 		= 1.0 g/cm3
+s:Ma/XCAT_Adipose_(fat)/DefaultColor 		= "yellow"
+
+sv:Ma/XCAT_Lung/Components 			= 2 "Hydrogen" "Oxygen"
+uv:Ma/XCAT_Lung/Fractions  			= 2 0.111894 0.888106
+d:Ma/XCAT_Lung/Density 			= 1.0 g/cm3
+s:Ma/XCAT_Lung/DefaultColor 			= "skyblue"
+
+sv:Ma/XCAT_Spine_Bone/Components 		= 2 "Hydrogen" "Oxygen"
+uv:Ma/XCAT_Spine_Bone/Fractions  		= 2 0.111894 0.888106
+d:Ma/XCAT_Spine_Bone/Density 			= 1.0 g/cm3
+s:Ma/XCAT_Spine_Bone/DefaultColor 		= "white"
+
+sv:Ma/XCAT_Rib_Bone/Components 		= 2 "Hydrogen" "Oxygen"
+uv:Ma/XCAT_Rib_Bone/Fractions  		= 2 0.111894 0.888106
+d:Ma/XCAT_Rib_Bone/Density 			= 1.0 g/cm3
+s:Ma/XCAT_Rib_Bone/DefaultColor 		= "grey"
+
+sv:Ma/XCAT_Blood/Components 			= 2 "Hydrogen" "Oxygen"
+uv:Ma/XCAT_Blood/Fractions  			= 2 0.111894 0.888106
+d:Ma/XCAT_Blood/Density 			= 1.0 g/cm3
+s:Ma/XCAT_Blood/DefaultColor 			= "blue"
+
+sv:Ma/XCAT_Heart/Components 			= 2 "Hydrogen" "Oxygen"
+uv:Ma/XCAT_Heart/Fractions  			= 2 0.111894 0.888106
+d:Ma/XCAT_Heart/Density 			= 1.0 g/cm3
+s:Ma/XCAT_Heart/DefaultColor 			= "red"
+
+sv:Ma/XCAT_Kidney/Components 			= 2 "Hydrogen" "Oxygen"
+uv:Ma/XCAT_Kidney/Fractions  			= 2 0.111894 0.888106
+d:Ma/XCAT_Kidney/Density 			= 1.0 g/cm3
+s:Ma/XCAT_Kidney/DefaultColor 			= "red"
+
+sv:Ma/XCAT_Liver/Components 			= 2 "Hydrogen" "Oxygen"
+uv:Ma/XCAT_Liver/Fractions  			= 2 0.111894 0.888106
+d:Ma/XCAT_Liver/Density 			= 1.0 g/cm3
+s:Ma/XCAT_Liver/DefaultColor 			= "red"
+
+sv:Ma/XCAT_Lymph/Components 			= 2 "Hydrogen" "Oxygen"
+uv:Ma/XCAT_Lymph/Fractions  			= 2 0.111894 0.888106
+d:Ma/XCAT_Lymph/Density 			= 1.0 g/cm3
+s:Ma/XCAT_Lymph/DefaultColor 			= "green"
+
+sv:Ma/XCAT_Pancreas/Components 		= 2 "Hydrogen" "Oxygen"
+uv:Ma/XCAT_Pancreas/Fractions  		= 2 0.111894 0.888106
+d:Ma/XCAT_Pancreas/Density 			= 1.0 g/cm3
+s:Ma/XCAT_Pancreas/DefaultColor 		= "red"
+
+sv:Ma/XCAT_Spleen/Components 			= 2 "Hydrogen" "Oxygen"
+uv:Ma/XCAT_Spleen/Fractions  			= 2 0.111894 0.888106
+d:Ma/XCAT_Spleen/Density 			= 1.0 g/cm3
+s:Ma/XCAT_Spleen/DefaultColor 			= "red"
+
+sv:Ma/XCAT_Intestine/Components 		= 2 "Hydrogen" "Oxygen"
+uv:Ma/XCAT_Intestine/Fractions  		= 2 0.111894 0.888106
+d:Ma/XCAT_Intestine/Density 			= 1.0 g/cm3
+s:Ma/XCAT_Intestine/DefaultColor 		= "yellow"
+
+sv:Ma/XCAT_Skull/Components 			= 2 "Hydrogen" "Oxygen"
+uv:Ma/XCAT_Skull/Fractions  			= 2 0.111894 0.888106
+d:Ma/XCAT_Skull/Density 			= 1.0 g/cm3
+s:Ma/XCAT_Skull/DefaultColor 			= "grey"
+
+sv:Ma/XCAT_Cartilage/Components 		= 2 "Hydrogen" "Oxygen"
+uv:Ma/XCAT_Cartilage/Fractions  		= 2 0.111894 0.888106
+d:Ma/XCAT_Cartilage/Density 			= 1.0 g/cm3
+s:Ma/XCAT_Cartilage/DefaultColor 		= "grey"
+
+sv:Ma/XCAT_Brain/Components 			= 2 "Hydrogen" "Oxygen"
+uv:Ma/XCAT_Brain/Fractions  			= 2 0.111894 0.888106
+d:Ma/XCAT_Brain/Density 			= 1.0 g/cm3
+s:Ma/XCAT_Brain/DefaultColor 			= "grey"

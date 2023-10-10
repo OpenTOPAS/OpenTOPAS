@@ -1,0 +1,272 @@
+########################
+# Simple shielding example
+########################
+d:Ge/World/HLX = 2 m
+d:Ge/World/HLY = 2 m
+d:Ge/World/HLZ = 2.1 m
+
+#########################
+# Gemetry for vrt
+#########################
+d:Ge/ScorerHLX = 1 m
+d:Ge/ScorerHLY = 1 m
+d:Ge/ScorerHLZ = 1 m
+
+d:Ge/subComponent/Thickness     = 20 cm
+d:Ge/subComponent/StartPosition = -1.0 * Ge/ScorerHLZ cm
+
+s:Ge/subComponent1/Material  = "G4_CONCRETE"
+s:Ge/subComponent2/Material  = "G4_CONCRETE"
+s:Ge/subComponent3/Material  = "G4_CONCRETE"
+s:Ge/subComponent4/Material  = "G4_CONCRETE"
+s:Ge/subComponent5/Material  = "G4_CONCRETE"
+s:Ge/subComponent6/Material  = "G4_CONCRETE"
+s:Ge/subComponent7/Material  = "G4_CONCRETE"
+s:Ge/subComponent8/Material  = "G4_CONCRETE"
+s:Ge/subComponent9/Material  = "G4_CONCRETE"
+s:Ge/subComponent10/Material = "G4_CONCRETE"
+s:Ge/subComponent11/Material = "G4_CONCRETE"
+
+s:Ge/subComponent1/Type      = "TsBox"
+s:Ge/subComponent1/Parent    = "World"
+d:Ge/subComponent1/HLX       = Ge/ScorerHLX m
+d:Ge/subComponent1/HLY       = Ge/ScorerHLY m
+d:Ge/subComponent1/HLZ       = 0.5 * Ge/subComponent/Thickness cm
+d:Ge/subComponent1/TransX    = 0 cm
+d:Ge/subComponent1/TransY    = 0 cm
+d:Ge/subComponent1/TransZ    = Ge/subComponent/StartPosition + Ge/subComponent1/HLZ cm
+d:Ge/subComponent1/RotX      = 0 deg
+d:Ge/subComponent1/RotY      = 0 deg
+d:Ge/subComponent1/RotZ      = 0 deg
+
+s:Ge/subComponent2/Type      = "TsBox"
+s:Ge/subComponent2/Parent    = "World"
+d:Ge/subComponent2/HLX       = Ge/ScorerHLX m
+d:Ge/subComponent2/HLY       = Ge/ScorerHLY m
+d:Ge/subComponent2/HLZ       = 0.5 * Ge/subComponent/Thickness cm
+d:Ge/subComponent2/TransX    = 0 cm
+d:Ge/subComponent2/TransY    = 0 cm
+d:Ge/subComponent2/TransZTmp = Ge/subComponent1/TransZ + Ge/subComponent1/HLZ cm
+d:Ge/subComponent2/TransZ    = Ge/subComponent2/TransZTmp + Ge/subComponent2/HLZ cm
+d:Ge/subComponent2/RotX      = 0 deg
+d:Ge/subComponent2/RotY      = 0 deg
+d:Ge/subComponent2/RotZ      = 0 deg
+
+s:Ge/subComponent3/Type      = "TsBox"
+s:Ge/subComponent3/Parent    = "World"
+d:Ge/subComponent3/HLX       = Ge/ScorerHLX m
+d:Ge/subComponent3/HLY       = Ge/ScorerHLY m
+d:Ge/subComponent3/HLZ       = 0.5 * Ge/subComponent/Thickness cm
+d:Ge/subComponent3/TransX    = 0 cm
+d:Ge/subComponent3/TransY    = 0 cm
+d:Ge/subComponent3/TransZTmp = Ge/subComponent2/TransZ + Ge/subComponent2/HLZ cm
+d:Ge/subComponent3/TransZ    = Ge/subComponent3/TransZTmp + Ge/subComponent3/HLZ cm
+d:Ge/subComponent3/RotX      = 0 deg
+d:Ge/subComponent3/RotY      = 0 deg
+d:Ge/subComponent3/RotZ      = 0 deg
+
+s:Ge/subComponent4/Type      = "TsBox"
+s:Ge/subComponent4/Parent    = "World"
+d:Ge/subComponent4/HLX       = Ge/ScorerHLX m
+d:Ge/subComponent4/HLY       = Ge/ScorerHLY m
+d:Ge/subComponent4/HLZ       = 0.5 * Ge/subComponent/Thickness cm
+d:Ge/subComponent4/TransX    = 0 cm
+d:Ge/subComponent4/TransY    = 0 cm
+d:Ge/subComponent4/TransZTmp = Ge/subComponent3/TransZ + Ge/subComponent3/HLZ cm
+d:Ge/subComponent4/TransZ    = Ge/subComponent4/TransZTmp + Ge/subComponent4/HLZ cm
+d:Ge/subComponent4/RotX      = 0 deg
+d:Ge/subComponent4/RotY      = 0 deg
+d:Ge/subComponent4/RotZ      = 0 deg
+
+s:Ge/subComponent5/Type      = "TsBox"
+s:Ge/subComponent5/Parent    = "World"
+d:Ge/subComponent5/HLX       = Ge/ScorerHLX m
+d:Ge/subComponent5/HLY       = Ge/ScorerHLY m
+d:Ge/subComponent5/HLZ       = 0.5 * Ge/subComponent/Thickness cm
+d:Ge/subComponent5/TransX    = 0 cm
+d:Ge/subComponent5/TransY    = 0 cm
+d:Ge/subComponent5/TransZTmp = Ge/subComponent4/TransZ + Ge/subComponent4/HLZ cm
+d:Ge/subComponent5/TransZ    = Ge/subComponent5/TransZTmp + Ge/subComponent5/HLZ cm
+d:Ge/subComponent5/RotX      = 0 deg
+d:Ge/subComponent5/RotY      = 0 deg
+d:Ge/subComponent5/RotZ      = 0 deg
+
+s:Ge/subComponent6/Type      = "TsBox"
+s:Ge/subComponent6/Parent    = "World"
+d:Ge/subComponent6/HLX       = Ge/ScorerHLX m
+d:Ge/subComponent6/HLY       = Ge/ScorerHLY m
+d:Ge/subComponent6/HLZ       = 0.5 * Ge/subComponent/Thickness cm
+d:Ge/subComponent6/TransX    = 0 cm
+d:Ge/subComponent6/TransY    = 0 cm
+d:Ge/subComponent6/TransZTmp = Ge/subComponent5/TransZ + Ge/subComponent5/HLZ cm
+d:Ge/subComponent6/TransZ    = Ge/subComponent6/TransZTmp + Ge/subComponent6/HLZ cm
+d:Ge/subComponent6/RotX      = 0 deg
+d:Ge/subComponent6/RotY      = 0 deg
+d:Ge/subComponent6/RotZ      = 0 deg
+
+s:Ge/subComponent7/Type       = "TsBox"
+s:Ge/subComponent7/Parent     = "World"
+d:Ge/subComponent7/HLX        = Ge/ScorerHLX m
+d:Ge/subComponent7/HLY        = Ge/ScorerHLY m
+d:Ge/subComponent7/HLZ        = 0.5 * Ge/subComponent/Thickness cm
+d:Ge/subComponent7/TransX     = 0 cm
+d:Ge/subComponent7/TransY     = 0 cm
+d:Ge/subComponent7/TransZTmp  = Ge/subComponent6/TransZ + Ge/subComponent6/HLZ cm
+d:Ge/subComponent7/TransZ     = Ge/subComponent7/TransZTmp + Ge/subComponent7/HLZ cm
+d:Ge/subComponent7/RotX       = 0 deg
+d:Ge/subComponent7/RotY       = 0 deg
+d:Ge/subComponent7/RotZ       = 0 deg
+
+s:Ge/subComponent8/Type       = "TsBox"
+s:Ge/subComponent8/Parent     = "World"
+d:Ge/subComponent8/HLX        = Ge/ScorerHLX m
+d:Ge/subComponent8/HLY        = Ge/ScorerHLY m
+d:Ge/subComponent8/HLZ        = 0.5 * Ge/subComponent/Thickness cm
+d:Ge/subComponent8/TransX     = 0 cm
+d:Ge/subComponent8/TransY     = 0 cm
+d:Ge/subComponent8/TransZTmp  = Ge/subComponent7/TransZ + Ge/subComponent7/HLZ cm
+d:Ge/subComponent8/TransZ     = Ge/subComponent8/TransZTmp + Ge/subComponent8/HLZ cm
+d:Ge/subComponent8/RotX       = 0 deg
+d:Ge/subComponent8/RotY       = 0 deg
+d:Ge/subComponent8/RotZ       = 0 deg
+
+s:Ge/subComponent9/Type       = "TsBox"
+s:Ge/subComponent9/Parent     = "World"
+d:Ge/subComponent9/HLX        = Ge/ScorerHLX m
+d:Ge/subComponent9/HLY        = Ge/ScorerHLY m
+d:Ge/subComponent9/HLZ        = 0.5 * Ge/subComponent/Thickness cm
+d:Ge/subComponent9/TransX     = 0 cm
+d:Ge/subComponent9/TransY     = 0 cm
+d:Ge/subComponent9/TransZTmp  = Ge/subComponent8/TransZ + Ge/subComponent8/HLZ cm
+d:Ge/subComponent9/TransZ     = Ge/subComponent9/TransZTmp + Ge/subComponent9/HLZ cm
+d:Ge/subComponent9/RotX       = 0 deg
+d:Ge/subComponent9/RotY       = 0 deg
+d:Ge/subComponent9/RotZ       = 0 deg
+
+s:Ge/subComponent10/Type      = "TsBox"
+s:Ge/subComponent10/Parent    = "World"
+d:Ge/subComponent10/HLX       = Ge/ScorerHLX m
+d:Ge/subComponent10/HLY       = Ge/ScorerHLY m
+d:Ge/subComponent10/HLZ       = 0.5 * Ge/subComponent/Thickness cm
+d:Ge/subComponent10/TransX    = 0 cm
+d:Ge/subComponent10/TransY    = 0 cm
+d:Ge/subComponent10/TransZTmp = Ge/subComponent9/TransZ + Ge/subComponent9/HLZ cm
+d:Ge/subComponent10/TransZ    = Ge/subComponent10/TransZTmp + Ge/subComponent10/HLZ cm
+d:Ge/subComponent10/RotX      = 0 deg
+d:Ge/subComponent10/RotY      = 0 deg
+d:Ge/subComponent10/RotZ      = 0 deg
+
+s:Ge/subComponent11/Type      = "TsBox"
+s:Ge/subComponent11/Parent    = "World"
+d:Ge/subComponent11/HLX       = Ge/ScorerHLX m
+d:Ge/subComponent11/HLY       = Ge/ScorerHLY m
+d:Ge/subComponent11/HLZ       = 0.05 mm
+d:Ge/subComponent11/TransX    = 0 cm
+d:Ge/subComponent11/TransY    = 0 cm
+d:Ge/subComponent11/TransZTmp = Ge/subComponent10/TransZ + Ge/subComponent10/HLZ cm
+d:Ge/subComponent11/TransZ    = Ge/subComponent11/TransZTmp + Ge/subComponent11/HLZ cm
+d:Ge/subComponent11/RotX      = 0 deg
+d:Ge/subComponent11/RotY      = 0 deg
+d:Ge/subComponent11/RotZ      = 0 deg
+
+#########################
+# VRT
+#########################
+b:Vr/UseVarianceReduction         = "true"
+b:Vr/ParticleSplit/Active         = "true"
+sv:Vr/ParticleSplit/ParticleName  = 1 "neutron"
+s:Vr/ParticleSplit/Component      = "subComponent1"
+sv:Vr/ParticleSplit/SubComponents = 10
+"subComponent2"
+"subComponent3" "subComponent4"
+"subComponent5" "subComponent6"
+"subComponent7" "subComponent8"
+"subComponent9" "subComponent10" "subComponent11"
+s:Vr/ParticleSplit/Type = "ImportanceSampling"
+uv:Vr/ParticleSplit/ImportanceValues = 10 2 4 8 16 32 64 128 256 512 512
+
+#########################
+# Scorer
+#########################
+# Fix binwidth
+sv:Sc/scorerFix/OnlyIncludeParticlesNamed = 1 "neutron"
+s:Sc/scorerFix/Quantity                   = "Fluence"
+s:Sc/scorerFix/Component                  = "subComponent11"
+s:Sc/scorerFix/OutputFile                 = "FluenceSpectra_FixedBin"
+s:Sc/scorerFix/OutputType                 = "Binary"
+s:Sc/scorerFix/IfOutputFileAlreadyExists  = "Overwrite"
+i:Sc/scorerFix/EBins                      = 100
+d:Sc/scorerFix/EBinMin                    = 0.01 MeV
+d:Sc/scorerFix/EBinMax                    = 110.1 MeV
+
+# Logarithmic binwidth
+sv:Sc/scorerLog/OnlyIncludeParticlesNamed = 1 "neutron"
+s:Sc/scorerLog/Quantity                   = "Fluence"
+s:Sc/scorerLog/Component                  = "subComponent11"
+s:Sc/scorerLog/OutputFile                 = "FluenceSpectra_LogBin"
+s:Sc/scorerLog/OutputType                 = "Binary"
+s:Sc/scorerLog/IfOutputFileAlreadyExists  = "Overwrite"
+i:Sc/scorerLog/EBins                      = 100
+d:Sc/scorerLog/EBinMin                    = 0.01 MeV
+d:Sc/scorerLog/EBinMax                    = 110.1 MeV
+b:Sc/scorerLog/EBinLog                    = "True"
+
+# Score dose to medium
+sv:Sc/scorerDosePerSource/OnlyIncludeParticlesNamed = 1 "neutron"
+s:Sc/scorerDosePerSource/Quantity                   = "DoseToMedium"
+s:Sc/scorerDosePerSource/Component                  = "subComponent11"
+s:Sc/scorerDosePerSource/OutputFile                 = "DoseNeutronPerSourceNeutron"
+b:Sc/scorerDosePerSource/OutputToConsole            = "True"
+s:Sc/scorerDosePerSource/IfOutputFileAlreadyExists  = "Overwrite"
+sv:Sc/scorerDosePerSource/Report                    = 1 "Mean"
+
+# Score ambient dose equivalent for neutrons
+sv:Sc/scorerAmbDosePerSource/OnlyIncludeParticlesNamed = 1 "neutron"
+s:Sc/scorerAmbDosePerSource/Quantity                   = "AmbientDoseEquivalent"
+s:Sc/scorerAmbDosePerSource/Component                  = "subComponent11"
+s:Sc/scorerAmbDosePerSource/OutputFile                 = "AmbientDoseNeutronPerSourceNeutron"
+b:Sc/scorerAmbDosePerSource/OutputToConsole            = "True"
+s:Sc/scorerAmbDosePerSource/IfOutputFileAlreadyExists  = "Overwrite"
+sv:Sc/scorerAmbDosePerSource/Report                    = 1 "Mean"
+# Set the fluence-to-dose conversion factors.
+s:Sc/scorerAmbDosePerSource/GetAmbientDoseEquivalentForParticleNamed = "neutron"
+dv:Sc/scorerAmbDosePerSource/FluenceToDoseConversionEnergies = 58
+2.5314e-08 7.71605e-08 2.35195e-07 6.33404e-07 1.70582e-06 4.05885e-06 1.02746e-05 2.44475e-05 6.18866e-05 0.000142765
+0.000309568 0.000611723 0.00100388 0.00150131 0.00217678 0.00305995 0.00430144 0.00604662 0.00849986  0.0119484
+ 0.0157877  0.0221931  0.0293242  0.0399651  0.0511969  0.0676476  0.0866593   0.101168     0.1296   0.171243
+  0.233382   0.289858    0.37132   0.490632   0.590784   0.711379          1    1.85741    2.95521    4.95083
+   9.98711    14.7825     18.937    20.1466    48.9368    98.7183    195.073    504.105    996.138    2182.41
+   5086.78     9846.4      29400    99357.1     302853     982103 3.05600e+06 9.91011e+06  MeV
+dv:Sc/scorerAmbDosePerSource/FluenceToDoseConversionValues   = 58
+1.04694e-09 1.0279e-09 1.00922e-09 9.90868e-10 9.72854e-10 9.55168e-10 9.37803e-10 9.29239e-10 9.12346e-10 8.95759e-10
+8.79474e-10 8.71443e-10 8.63485e-10 1.07615e-09 1.31681e-09 1.59657e-09 1.91809e-09 2.32559e-09 2.79393e-09 3.35658e-09
+3.99571e-09 4.7131e-09 5.50853e-09 6.55742e-09 7.52478e-09 8.71443e-09 9.8182e-09 1.09608e-08 1.29287e-08 1.56754e-08
+1.86602e-08 2.18095e-08 2.59623e-08 3.06236e-08 3.51412e-08 3.95922e-08 4.93432e-08 4.67006e-08 4.46069e-08 4.26071e-08
+4.69871e-08 5.15014e-08 5.64495e-08 5.24551e-08 3.61218e-08 2.6443e-08 2.2418e-08 2.95202e-08 3.7933e-08 4.31315e-08
+4.93432e-08 5.27769e-08 5.15014e-08 5.05651e-08 5.96437e-08 7.20944e-08 9.0956e-08 1.17594e-07 Sv*mm2
+
+#########################
+# Beam setting
+#########################
+s:So/Example/Type                     = "Beam"
+s:So/Example/Component                = "BeamPosition"
+s:So/Example/BeamParticle             = "neutron"
+d:So/Example/BeamEnergy               = 100.0 MeV
+u:So/Example/BeamEnergySpread         = 0.5
+s:So/Example/BeamPositionDistribution = "Gaussian"
+s:So/Example/BeamPositionCutoffShape  = "Ellipse"
+d:So/Example/BeamPositionCutoffX      = 10. cm
+d:So/Example/BeamPositionCutoffY      = 10. cm
+d:So/Example/BeamPositionSpreadX      = 0.65 cm
+d:So/Example/BeamPositionSpreadY      = 0.65 cm
+s:So/Example/BeamAngularDistribution  = "Gaussian"
+d:So/Example/BeamAngularCutoffX       = 90. deg
+d:So/Example/BeamAngularCutoffY       = 90. deg
+d:So/Example/BeamAngularSpreadX       = 0.0032 rad
+d:So/Example/BeamAngularSpreadY       = 0.0032 rad
+i:So/Example/NumberOfHistoriesInRun   = 1000
+
+d:Ge/BeamPosition/TransZ = -1.0 * Ge/World/HLZ m
+d:Ge/BeamPosition/RotX   = 0 deg
+
+i:Ts/ShowHistoryCountAtInterval = 100

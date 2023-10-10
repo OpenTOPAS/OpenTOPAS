@@ -1,0 +1,15 @@
+# Range modulator wheel in modulated current beam
+
+includeFile = RangeModulator_ConstantBeam.txt
+
+s:Tf/BeamCurrent/Function = "Step"
+dv:Tf/BeamCurrent/Times   = 1 10 ms
+iv:Tf/BeamCurrent/Values  = 1 10
+
+s:Tf/BeamWeight/Function = "Step"
+dv:Tf/BeamWeight/Times   = 10  1 2 3 4 5 6 7 8 9 10 ms
+iv:Tf/BeamWeight/Values  = 10  1 4 1 1 2 5 2 3 2 1
+
+i:So/Example/NumberOfHistoriesInRun = Tf/BCM_1/Value
+
+i:Tf/BCM_1/Value = Tf/BeamWeight/Value * Tf/BeamCurrent/Value

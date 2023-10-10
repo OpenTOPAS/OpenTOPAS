@@ -1,0 +1,177 @@
+# Exit window and target for Siemens Oncor
+# Reference for geometry: Jabbari et al, J Med Signal Sens 3(3):172-179, 2013
+# Exit window water channel thickness: Sawkey and Faddegon, Med Phys 36(12):5622-32
+# Additional target details: Faddegon et al, Med Phys 31(1):91-97, 2004
+#
+# Positioning relative to nominal source position using parameters Pos and Reloc
+# Simulation of three distinct regions: vacuum, exit window and target
+# All regions are simulated as cylinders, using TOPAS component TsCylinder
+#
+########################## Key Parameters In Target.txt ###############################
+# Parameters set in another parameter control file...
+# SAD: Source axis distance (distance from nominal source position to isocenter)
+#
+# Parameters available for adjustment...
+# Rmax:    Maximum radius of cylinder
+# HL:      Half of cylinder's thickness
+# Pos:     Distance along gantry axis Zg from nominal target position (defined by SAD)
+#
+# Parameters calculated from above parameters...
+# Reloc:   Distance from isocenter to center of the first object in the region
+# TransZ1: Position of lower surface of previous object along Zg
+# TransZ:  Position of center of object along Zg
+#######################################################################################
+
+includeFile = LinacDefaults.txt #Values in LinacDafaults.txt may be overriden
+
+s:Ge/Window/Parent                 = "IEC_G" #IEC gantry coordinates
+s:Ge/Window/Type                   = "Group"
+
+#From data sheet Nicoro R BAu-3, see:
+#https://www.morganbrazealloys.com/media/6955/wesgo_nicoro_technical-data-sheet-2018.pdf
+sv:Ma/NICORO/Components            = 3 "Gold" "Copper" "Nickel"
+uv:Ma/NICORO/Fractions             = 3 0.35 0.62 0.03
+d:Ma/NICORO/Density                = 10.9 g/cm3 
+s:Ma/NICORO/DefaultColor           = "yellow"
+
+################################### Vacuum #########################################
+s:Ge/ExitWindow/Parent             = "Window"
+s:Ge/ExitWindow/Type               = "TsCylinder"
+s:Ge/ExitWindow/Material           = "G4_Galactic" #density of 10E-25 g/cm3
+d:Ge/ExitWindow/Rmax               = 1.0 cm #W radius 3 mm, C 6 mm, steel 16 mm
+d:Ge/ExitWindow/HL                 = 0.5 cm
+d:Ge/ExitWindow/Pos                = -1.424 cm
+d:Ge/ExitWindow/Reloc              = Ge/SAD - Ge/ExitWindow/Pos cm
+d:Ge/ExitWindow/TransZ             = Ge/ExitWindow/Reloc - Ge/ExitWindow/HL cm
+s:Ge/ExitWindow/Color              = "Yellow"
+s:Ge/ExitWindow/DrawingStyle       = "WireFrame"
+s:Ge/ExitWindow/AssignToRegionNamed = "target"
+
+################################# Exit Window ######################################
+# Upstream titanium layer
+s:Ge/ExitW_Ti_1/Parent             = "Window"
+s:Ge/ExitW_Ti_1/Type               = "TsCylinder"
+s:Ge/ExitW_Ti_1/Material           = "G4_Ti" 
+d:Ge/ExitW_Ti_1/Rmax               = 1.0 cm #W radius 3 mm, C 6 mm, steel 16 mm
+d:Ge/ExitW_Ti_1/HL                 = 0.0025 cm
+d:Ge/ExitW_Ti_1/Pos                = -0.424 cm
+d:Ge/ExitW_Ti_1/Reloc              = Ge/SAD - Ge/ExitW_Ti_1/Pos cm
+d:Ge/ExitW_Ti_1/TransZ             = Ge/ExitW_Ti_1/Reloc - Ge/ExitW_Ti_1/HL cm
+s:Ge/ExitW_Ti_1/Color              = "Red"
+s:Ge/ExitW_Ti_1/DrawingStyle       = "Solid"
+s:Ge/ExitW_Ti_1/AssignToRegionNamed = "target"
+
+# Cooling water channel
+s:Ge/ExitW_Water/Parent            = "Window"
+s:Ge/ExitW_Water/Type              = "TsCylinder"
+s:Ge/ExitW_Water/Material          = "G4_WATER" 
+d:Ge/ExitW_Water/Rmax              = 1.0 cm
+d:Ge/ExitW_Water/HL                = 0.066 cm
+d:Ge/ExitW_Water/TransZ1           = Ge/ExitW_Ti_1/TransZ - Ge/ExitW_Ti_1/HL cm
+d:Ge/ExitW_Water/TransZ            = Ge/ExitW_Water/TransZ1 - Ge/ExitW_Water/HL cm
+s:Ge/ExitW_Water/Color             = "Blue"
+s:Ge/ExitW_Water/DrawingStyle      = "Solid"
+s:Ge/ExitW_Water/AssignToRegionNamed = "target"
+
+# Downstream titanium layer
+s:Ge/ExitW_Ti_2/Parent             = "Window"
+s:Ge/ExitW_Ti_2/Type               = "TsCylinder"
+s:Ge/ExitW_Ti_2/Material           = "G4_Ti" 
+d:Ge/ExitW_Ti_2/Rmax               = 1.0 cm
+d:Ge/ExitW_Ti_2/HL                 = 0.0025 cm
+d:Ge/ExitW_Ti_2/TransZ1            = Ge/ExitW_Water/TransZ - Ge/ExitW_Water/HL cm
+d:Ge/ExitW_Ti_2/TransZ             = Ge/ExitW_Ti_2/TransZ1 - Ge/ExitW_Ti_2/HL cm
+s:Ge/ExitW_Ti_2/Color              = "Red"
+s:Ge/ExitW_Ti_2/DrawingStyle       = "Solid"
+s:Ge/ExitW_Ti_2/AssignToRegionNamed = "target"
+
+# Target for Siemens Oncor
+s:Ge/Target/Parent                 = "IEC_G"
+s:Ge/Target/Type                   = "Group"
+
+#################################### Target ##########################################
+# Tungsten target
+s:Ge/Target_W/Parent               = "Target"
+s:Ge/Target_W/Type                 = "TsCylinder"
+s:Ge/Target_W/Material             = "G4_W" 
+d:Ge/Target_W/Rmax                 = 1.0 cm
+d:Ge/Target_W/HL                   = 0.032 cm
+d:Ge/Target_W/Pos                  = 0.117 cm
+d:Ge/Target_W/Reloc                = Ge/SAD - Ge/Target_W/Pos  cm
+d:Ge/Target_W/TransZ               = Ge/Target_W/Reloc - Ge/Target_W/HL cm
+s:Ge/Target_W/Color                = "Orange"
+s:Ge/Target_W/DrawingStyle         = "Solid"
+s:Ge/Target_W/AssignToRegionNamed  = "target"
+
+# NICORO brazing
+s:Ge/Target_NICORO_1/Parent        = "Target"
+s:Ge/Target_NICORO_1/Type          = "TsCylinder"
+s:Ge/Target_NICORO_1/Material      = "NICORO" 
+d:Ge/Target_NICORO_1/Rmax          = 1.0 cm
+d:Ge/Target_NICORO_1/HL            = 0.0075 cm
+d:Ge/Target_NICORO_1/TransZ1       = Ge/Target_W/TransZ - Ge/Target_W/HL cm 
+d:Ge/Target_NICORO_1/TransZ        = Ge/Target_NICORO_1/TransZ1 - Ge/Target_NICORO_1/HL cm
+s:Ge/Target_NICORO_1/Color         = "Blue"
+s:Ge/Target_NICORO_1/DrawingStyle  = "Solid"
+s:Ge/Target_NICORO_1/AssignToRegionNamed = "target"
+
+# Copper 
+s:Ge/Target_Cu/Parent              = "Target"
+s:Ge/Target_Cu/Type                = "TsCylinder"
+s:Ge/Target_Cu/Material            = "G4_Cu" 
+d:Ge/Target_Cu/Rmax                = 1.0 cm
+d:Ge/Target_Cu/HL                  = 0.0825 cm
+d:Ge/Target_Cu/TransZ1             = Ge/Target_NICORO_1/TransZ - Ge/Target_NICORO_1/HL cm 
+d:Ge/Target_Cu/TransZ              = Ge/Target_Cu/TransZ1 - Ge/Target_Cu/HL cm
+s:Ge/Target_Cu/Color               = "Yellow"
+s:Ge/Target_Cu/DrawingStyle        = "Solid"
+s:Ge/Target_Cu/AssignToRegionNamed = "target"
+
+# NICORO brazing
+s:Ge/Target_NICORO_2/Parent        = "Target"
+s:Ge/Target_NICORO_2/Type          = "TsCylinder"
+s:Ge/Target_NICORO_2/Material      = "NICORO" 
+d:Ge/Target_NICORO_2/Rmax          = 1.0 cm
+d:Ge/Target_NICORO_2/HL            = 0.0025 cm
+d:Ge/Target_NICORO_2/TransZ1       = Ge/Target_Cu/TransZ - Ge/Target_Cu/HL cm 
+d:Ge/Target_NICORO_2/TransZ        = Ge/Target_NICORO_2/TransZ1 - Ge/Target_NICORO_2/HL cm
+s:Ge/Target_NICORO_2/Color         = "Blue"
+s:Ge/Target_NICORO_2/DrawingStyle  = "Solid"
+s:Ge/Target_NICORO_2/AssignToRegionNamed = "target"
+
+# Stainless steel
+s:Ge/Target_SS_1/Parent            = "Target"
+s:Ge/Target_SS_1/Type              = "TsCylinder"
+s:Ge/Target_SS_1/Material          = "G4_STAINLESS-STEEL" 
+d:Ge/Target_SS_1/Rmax              = 1.0 cm
+d:Ge/Target_SS_1/HL                = 0.051 cm
+d:Ge/Target_SS_1/TransZ1           = Ge/Target_NICORO_2/TransZ - Ge/Target_NICORO_2/HL cm 
+d:Ge/Target_SS_1/TransZ            = Ge/Target_SS_1/TransZ1 - Ge/Target_SS_1/HL cm
+s:Ge/Target_SS_1/Color             = "Silver"
+s:Ge/Target_SS_1/DrawingStyle      = "Solid"
+s:Ge/Target_SS_1/AssignToRegionNamed = "target"
+
+# Graphite
+s:Ge/Target_GP_1/Parent            = "Target"
+s:Ge/Target_GP_1/Type              = "TsCylinder"
+s:Ge/Target_GP_1/Material          = "G4_GRAPHITE" 
+d:Ge/Target_GP_1/Rmax              = 1.0 cm
+d:Ge/Target_GP_1/HL                = 0.508 cm
+d:Ge/Target_GP_1/TransZ1           = Ge/Target_SS_1/TransZ - Ge/Target_SS_1/HL cm 
+d:Ge/Target_GP_1/TransZ            = Ge/Target_GP_1/TransZ1 - Ge/Target_GP_1/HL cm
+s:Ge/Target_GP_1/Color             = "Grey"
+s:Ge/Target_GP_1/DrawingStyle      = "Solid"
+s:Ge/Target_GP_1/AssignToRegionNamed = "target"
+
+# Stainless steel
+s:Ge/Target_SS_2/Parent            = "Target"
+s:Ge/Target_SS_2/Type              = "TsCylinder"
+s:Ge/Target_SS_2/Material          = "G4_STAINLESS-STEEL" 
+d:Ge/Target_SS_2/Rmax              = 1.0 cm
+d:Ge/Target_SS_2/HL                = 0.002 cm
+d:Ge/Target_SS_2/TransZ1           = Ge/Target_GP_1/TransZ - Ge/Target_GP_1/HL cm 
+d:Ge/Target_SS_2/TransZ            = Ge/Target_SS_2/TransZ1 - Ge/Target_SS_2/HL cm
+s:Ge/Target_SS_2/Color             = "Silver"
+s:Ge/Target_SS_2/DrawingStyle      = "Solid"
+s:Ge/Target_SS_2/AssignToRegionNamed = "target"
+

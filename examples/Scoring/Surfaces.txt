@@ -1,0 +1,109 @@
+# Test of scoring on various surfaces
+
+d:Ge/World/HLX       = 2.0 m
+d:Ge/World/HLY       = 2.0 m
+d:Ge/World/HLZ       = 2.0 m
+b:Ge/World/Invisible = "TRUE"
+
+s:Ge/TestBox/Type     = "TsBox"
+s:Ge/TestBox/Parent   = "World"
+s:Ge/TestBox/Material = "G4_WATER"
+d:Ge/TestBox/HLX      = 20.0 cm
+d:Ge/TestBox/HLY      = 15.0 cm
+d:Ge/TestBox/HLZ      = 10.0 cm
+s:Ge/TestBox/Color    = "blue"
+
+s:Ge/TestSphere/Type     = "TsSphere"
+s:Ge/TestSphere/Parent   = "World"
+s:Ge/TestSphere/Material = "G4_WATER"
+d:Ge/TestSphere/RMin     = 5.0 cm
+d:Ge/TestSphere/RMax     = 7.0 cm
+d:Ge/TestSphere/SPhi     = 0. deg
+d:Ge/TestSphere/DPhi     = 360. deg
+d:Ge/TestSphere/STheta   = 0. deg
+d:Ge/TestSphere/DTheta   = 180. deg
+d:Ge/TestSphere/TransZ   = -20. cm
+s:Ge/TestSphere/Color    = "blue"
+
+s:Ge/TestCylinder/Type     = "TsCylinder"
+s:Ge/TestCylinder/Parent   = "World"
+s:Ge/TestCylinder/Material = "G4_WATER"
+d:Ge/TestCylinder/RMin     = 0.0 cm
+d:Ge/TestCylinder/RMax     = 8.0 cm
+d:Ge/TestCylinder/HL       = 10.0 cm
+d:Ge/TestCylinder/SPhi     = 0. deg
+d:Ge/TestCylinder/DPhi     = 360. deg
+d:Ge/TestCylinder/TransZ   = -40. cm
+s:Ge/TestCylinder/Color    = "blue"
+
+s:Sc/BoxXPlus/Quantity         = "SurfaceTrackCount"
+s:Sc/BoxXPlus/Surface          = "TestBox/XPlusSurface"
+b:Sc/BoxXPlus/OutputToConsole  = "TRUE"
+
+s:Sc/BoxXMinus/Quantity        = "SurfaceTrackCount"
+s:Sc/BoxXMinus/Surface         = "TestBox/XMinusSurface"
+b:Sc/BoxXMinus/OutputToConsole = "TRUE"
+
+s:Sc/BoxYPlus/Quantity         = "SurfaceTrackCount"
+s:Sc/BoxYPlus/Surface          = "TestBox/YPlusSurface"
+b:Sc/BoxYPlus/OutputToConsole  = "TRUE"
+
+s:Sc/BoxYMinus/Quantity        = "SurfaceTrackCount"
+s:Sc/BoxYMinus/Surface         = "TestBox/YMinusSurface"
+b:Sc/BoxYMinus/OutputToConsole = "TRUE"
+
+s:Sc/BoxZPlus/Quantity         = "SurfaceTrackCount"
+s:Sc/BoxZPlus/Surface          = "TestBox/ZPlusSurface"
+b:Sc/BoxZPlus/OutputToConsole  = "TRUE"
+
+s:Sc/BoxZMinus/Quantity        = "SurfaceTrackCount"
+s:Sc/BoxZMinus/Surface         = "TestBox/ZMinusSurface"
+b:Sc/BoxZMinus/OutputToConsole = "TRUE"
+
+s:Sc/SphereInner/Quantity        = "SurfaceTrackCount"
+s:Sc/SphereInner/Surface         = "TestSphere/InnerCurvedSurface"
+b:Sc/SphereInner/OutputToConsole = "TRUE"
+
+s:Sc/SphereOuter/Quantity        = "SurfaceTrackCount"
+s:Sc/SphereOuter/Surface         = "TestSphere/OuterCurvedSurface"
+b:Sc/SphereOuter/OutputToConsole = "TRUE"
+
+
+s:Sc/CylinderZPlus/Quantity         = "SurfaceTrackCount"
+s:Sc/CylinderZPlus/Surface          = "TestCylinder/ZPlusSurface"
+b:Sc/CylinderZPlus/OutputToConsole  = "TRUE"
+
+s:Sc/CylinderZMinus/Quantity        = "SurfaceTrackCount"
+s:Sc/CylinderZMinus/Surface         = "TestCylinder/ZMinusSurface"
+b:Sc/CylinderZMinus/OutputToConsole = "TRUE"
+
+s:Sc/CylinderInner/Quantity         = "SurfaceTrackCount"
+s:Sc/CylinderInner/Surface          = "TestCylinder/InnerCurvedSurface"
+b:Sc/CylinderInner/OutputToConsole  = "TRUE"
+
+s:Sc/CylinderOuter/Quantity         = "SurfaceTrackCount"
+s:Sc/CylinderOuter/Surface          = "TestCylinder/OuterCurvedSurface"
+b:Sc/CylinderOuter/OutputToConsole  = "TRUE"
+
+s:Gr/ViewA/Type = "OpenGL"
+
+s:So/Example/Type                     = "Beam"
+s:So/Example/Component                = "BeamPosition"
+s:So/Example/BeamParticle             = "proton"
+d:So/Example/BeamEnergy               = 169.23 MeV
+u:So/Example/BeamEnergySpread         = 0.757504
+s:So/Example/BeamPositionDistribution = "Gaussian"
+s:So/Example/BeamPositionCutoffShape  = "Ellipse"
+d:So/Example/BeamPositionCutoffX      = 10. cm
+d:So/Example/BeamPositionCutoffY      = 10. cm
+d:So/Example/BeamPositionSpreadX      = 0.65 cm
+d:So/Example/BeamPositionSpreadY      = 0.65 cm
+s:So/Example/BeamAngularDistribution  = "Gaussian"
+d:So/Example/BeamAngularCutoffX       = 90. deg
+d:So/Example/BeamAngularCutoffY       = 90. deg
+d:So/Example/BeamAngularSpreadX       = 0.0032 rad
+d:So/Example/BeamAngularSpreadY       = 0.0032 rad
+i:So/Example/NumberOfHistoriesInRun   = 1000
+
+i:Ts/ShowHistoryCountAtInterval = 100
+b:Ts/PauseBeforeQuit = "True"

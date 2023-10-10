@@ -1,0 +1,60 @@
+# 
+includeFile = Optical_Globals.txt
+
+i:Ts/SequenceVerbosity = 1
+
+# SURFACES 
+
+s:Su/Surface_Coating/Type                   = "dielectric_metal"
+s:Su/Surface_Coating/Finish                 = "polished"
+s:Su/Surface_Coating/Model                  = "unified"
+dv:Su/Surface_Coating/Reflectivity/Energies = 3 0.6 4.2 9.0 eV
+uv:Su/Surface_Coating/Reflectivity/Values   = 3 0.8 0.8 0.8
+
+s:Su/Surface_Absorber/Type                   = "dielectric_metal"
+s:Su/Surface_Absorber/Finish                 = "polished"
+s:Su/Surface_Absorber/Model                  = "unified"
+dv:Su/Surface_Absorber/Reflectivity/Energies = 3 0.6 4.2 9.0 eV
+uv:Su/Surface_Absorber/Reflectivity/Values   = 3 0.1 0.1 0.1
+
+s:Su/Surface_OpticalGlue/Type                   = "dielectric_dielectric"
+s:Su/Surface_OpticalGlue/Finish                 = "polished"
+s:Su/Surface_OpticalGlue/Model                  = "unified"
+dv:Su/Surface_OpticalGlue/Transmittance/Energies = 2 1.6 4.2 eV
+uv:Su/Surface_OpticalGlue/Transmittance/Values   = 2 0.9 0.9
+
+s:Ge/Plastic/OpticalBehavior       = "Surface_Coating"
+s:Ge/Plastic/OpticalBehaviorTo/WLS = "Surface_OpticalGlue"
+
+s:Ge/WLS/OpticalBehavior = "Surface_Coating"
+s:Ge/WLS/OpticalBehaviorTo/PMT = "Surface_OpticalGlue"
+
+s:Ge/PMT/OpticalBehavior = "Surface_Absorber"
+s:Ge/PMT/OpticalBehaviorTo/Photocathode = "Surface_OpticalGlue"
+
+# SCORER
+s:Sc/PhSpIn/Quantity                  = "PhaseSpace"
+s:Sc/PhSpIn/Surface                   = "Plastic/ZPlusSurface"
+s:Sc/PhSpIn/OutputType                 = "Ascii"
+s:Sc/PhSpIn/OutputFile                 = "Optical_Surfaces_In"
+s:Sc/PhSpIn/IfOutputFileAlreadyExists  = "Overwrite"
+b:Sc/PhSpIn/IncludeTimeOfFlight       = "true"
+b:Sc/PhSpIn/UsePDGEncoding            = "True"
+s:Sc/PhSpIn/OnlyIncludeParticlesGoing = "Out"
+
+s:Sc/PhSpOut/Quantity                  = "PhaseSpace"
+s:Sc/PhSpOut/Surface                   = "Photocathode/ZMinusSurface"
+s:Sc/PhSpOut/OutputType                = "Ascii"
+s:Sc/PhSpOut/OutputFile                = "Optical_Surfaces_Out"
+s:Sc/PhSpOut/IfOutputFileAlreadyExists = "Overwrite"
+b:Sc/PhSpOut/IncludeTimeOfFlight       = "true"
+b:Sc/PhSpOut/UsePDGEncoding            = "True"
+s:Sc/PhSpOut/OnlyIncludeParticlesGoing = "In"
+
+# PHYSICS LIST
+s:Ph/ListName         = "Optical"
+s:Ph/Optical/Type     = "Geant4_Modular"
+sv:Ph/Optical/Modules = 2 "g4em-standard_opt3" "g4optical"
+
+i:So/Default/NumberOfHistoriesInRun   = 10
+

@@ -1,0 +1,109 @@
+# Demonstrate time features by changing a cylinder's phi extent
+# and color over time.
+
+d:Ge/World/HLX       = 10. m
+d:Ge/World/HLY       = 10. m
+d:Ge/World/HLZ       = 10. m
+b:Ge/World/Invisible = "True"
+
+s:Ge/Outer/Type     = "TsCylinder"
+s:Ge/Outer/Parent   = "World"
+s:Ge/Outer/Material = "Vacuum"
+d:Ge/Outer/RMin     = 0.0 cm
+d:Ge/Outer/RMax     = 60.0 cm
+d:Ge/Outer/SPhi     = 0.0 deg
+d:Ge/Outer/DPhi     = 360. deg
+d:Ge/Outer/HL       = 3. cm
+d:Ge/Outer/TransX   = 0. cm
+d:Ge/Outer/TransY   = 0. cm
+d:Ge/Outer/TransZ   = -53. cm
+d:Ge/Outer/RotX     = 0. deg
+d:Ge/Outer/RotY     = 0. deg
+d:Ge/Outer/RotZ     = 0. deg
+
+s:Ge/Outer2/Type     = "TsCylinder"
+s:Ge/Outer2/Parent   = "World"
+s:Ge/Outer2/Material = "Vacuum"
+d:Ge/Outer2/RMin     = 0.0 cm
+d:Ge/Outer2/RMax     = 60.0 cm
+d:Ge/Outer2/SPhi     = 0.0 deg
+d:Ge/Outer2/DPhi     = 360. deg
+d:Ge/Outer2/HL       = 3. cm
+d:Ge/Outer2/TransX   = 0. cm
+d:Ge/Outer2/TransY   = 0. cm
+d:Ge/Outer2/TransZ   = 53. cm
+d:Ge/Outer2/RotX     = 0. deg
+d:Ge/Outer2/RotY     = 0. deg
+d:Ge/Outer2/RotZ     = 0. deg
+
+s:Ge/Cylinder/Type             = "TsCylinder"
+s:Ge/Cylinder/Parent           = "World"
+s:Ge/Cylinder/Material         = "Vacuum"
+d:Ge/Cylinder/RMin             = 50.0 cm
+d:Ge/Cylinder/RMax             = 55.0 cm
+d:Ge/Cylinder/SPhi             = 20.0 deg
+d:Ge/Cylinder/DPhi             = Tf/Phi/Value deg
+d:Ge/Cylinder/HL               = 50. cm
+d:Ge/Cylinder/TransX           = 0. cm
+d:Ge/Cylinder/TransY           = 0. cm
+d:Ge/Cylinder/TransZ           = 0. cm
+d:Ge/Cylinder/RotX             = 0. deg
+d:Ge/Cylinder/RotY             = 0. deg
+d:Ge/Cylinder/RotZ             = 0. deg
+s:Ge/Cylinder/Color            = Tf/Color/Value
+i:Ge/Cylinder/VisSegsPerCircle = 360
+s:Ge/Cylinder/DrawingStyle     = "FullWireFrame"
+
+s:Tf/Color/Function = "Step"
+sv:Tf/Color/Values  = 4 "white" "Blue" "grEEn" "red"
+dv:Tf/Color/Times   = 4 1. 2. 3. 4. ms
+
+s:Tf/PosPhi/Function           = "Linear deg"
+d:Tf/PosPhi/Rate               = 12. deg/ms
+d:Tf/PosPhi/StartValue         = 10.0 deg
+d:Tf/PosPhi/RepetitionInterval = 29. ms
+
+s:Tf/NegPhi/Function           = "Linear deg"
+d:Tf/NegPhi/Rate               = -12. deg/ms
+d:Tf/NegPhi/StartValue         = 358.0 deg
+d:Tf/NegPhi/RepetitionInterval = 29. ms
+
+s:Tf/Phi/Function           = "Step"
+dv:Tf/Phi/Times             = 2 29 58 ms
+dv:Tf/Phi/Values            = 2 Tf/PosPhi/Value Tf/NegPhi/value deg
+d:Tf/Phi/RepetitionInterval = 100. ms
+
+i:Tf/Verbosity               = 1
+d:Tf/TimelineEnd             = 58.0 ms
+i:Tf/NumberOfSequentialTimes = 58
+
+s:Gr/ViewA/Type                             = "OpenGL"
+i:Gr/ViewA/WindowSizeX                      = 1024
+i:Gr/ViewA/WindowSizeY                      = 768
+d:Gr/ViewA/Theta                            = 55 deg
+d:Gr/ViewA/Phi                              = 20 deg
+u:Gr/ViewA/Zoom                             = 2.
+b:Gr/ViewA/HiddenLineRemovalForTrajectories = "True"
+s:Gr/ViewA/Projection                       = "Perspective"
+d:Gr/ViewA/PerspectiveAngle                 = 30 deg
+b:Gr/ViewA/CopyOpenGLToEPS                  = "False"
+
+sv:Ph/Default/Modules = 1 "g4em-standard_opt0"
+
+s:So/Example/Type                     = "Beam"
+s:So/Example/Component                = "BeamPosition"
+s:So/Example/BeamParticle             = "proton"
+d:So/Example/BeamEnergy               = 169.23 MeV
+u:So/Example/BeamEnergySpread         = 0.757504
+s:So/Example/BeamPositionDistribution = "Gaussian"
+s:So/Example/BeamPositionCutoffShape  = "Ellipse"
+d:So/Example/BeamPositionCutoffX      = 10. cm
+d:So/Example/BeamPositionCutoffY      = 10. cm
+d:So/Example/BeamPositionSpreadX      = 0.65 cm
+d:So/Example/BeamPositionSpreadY      = 0.65 cm
+s:So/Example/BeamAngularDistribution  = "Gaussian"
+d:So/Example/BeamAngularCutoffX       = 90. deg
+d:So/Example/BeamAngularCutoffY       = 90. deg
+d:So/Example/BeamAngularSpreadX       = 0.0032 rad
+d:So/Example/BeamAngularSpreadY       = 0.0032 rad
+i:So/Example/NumberOfHistoriesInRun   = 10

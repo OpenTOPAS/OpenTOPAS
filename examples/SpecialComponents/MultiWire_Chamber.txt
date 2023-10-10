@@ -1,0 +1,57 @@
+# Multiwire chamber
+
+d:Ge/World/HLX = 50. cm
+d:Ge/World/HLY = 60. cm
+d:Ge/World/HLZ = 20. cm
+
+sv:Ph/Default/Modules = 1 "g4em-standard_opt0"
+b:Ts/PauseBeforeQuit = "True"
+
+s:Ge/WireChamberA/Parent           = "World"
+s:Ge/WireChamberA/Type             = "TsMultiWireChamber"
+d:Ge/WireChamberA/HLX              = 30.0 cm
+d:Ge/WireChamberA/HLY              = 30.0 cm
+d:Ge/WireChamberA/HLZ              = 10.0 cm
+s:Ge/WireChamberA/Material         = "Air"
+d:Ge/WireChamberA/TransX           = 0.0 cm
+d:Ge/WireChamberA/TransY           = 0.0 cm
+d:Ge/WireChamberA/TransZ           = 0.0 cm
+d:Ge/WireChamberA/RotX             = 0.0 deg
+d:Ge/WireChamberA/RotY             = 0.0 deg
+d:Ge/WireChamberA/RotZ             = 0.0 deg
+b:Ge/WireChamberA/PrintInformation = "True"
+i:Ge/WireChamberA/NbOfLayers       = 2
+
+d:Ge/WireChamberA/Layer1/RMin          = 0.0 cm
+d:Ge/WireChamberA/Layer1/RMax          = 1.0 cm
+s:Ge/WireChamberA/Layer1/Material      = "Brass"
+d:Ge/WireChamberA/Layer1/HL            = 20.0 cm
+s:Ge/WireChamberA/Layer1/Align         = "X"
+dv:Ge/WireChamberA/Layer1/Displacement = 3 -10 0 10 cm
+d:Ge/WireChamberA/Layer1/PosZ          = 5.0 cm
+s:Ge/WireChamberA/Layer1/DrawingStyle  = "FullWireFrame"
+s:Ge/WireChamberA/Layer1/Color         = "red"
+
+d:Ge/WireChamberA/Layer2/RMin          = 0.5 cm
+d:Ge/WireChamberA/Layer2/RMax          = 1.0 cm
+s:Ge/WireChamberA/Layer2/Material      = "Lexan"
+d:Ge/WireChamberA/Layer2/HL            = 20.0 cm
+s:Ge/WireChamberA/Layer2/Align         = "Y"
+dv:Ge/WireChamberA/Layer2/Displacement = 5 -20 -10 0 10 20 cm
+d:Ge/WireChamberA/Layer2/PosZ          = -5.0 cm
+s:Ge/WireChamberA/Layer2/DrawingStyle  = "Solid"
+
+s:Gr/ViewA/Type             = "OpenGL"
+i:Gr/ViewA/WindowSizeX      = 600
+i:Gr/ViewA/WindowSizeY      = 600
+d:Gr/ViewA/Theta            = 55 deg
+d:Gr/ViewA/Phi              = 20 deg
+s:Gr/ViewA/Projection       = "Orthogonal"
+#s:Gr/ViewA/Projection       = "Perspective"
+#d:Gr/ViewA/PerspectiveAngle = 20 deg
+u:Gr/ViewA/Zoom             = 2.
+b:Gr/ViewA/HiddenLineRemovalForTrajectories = "True"
+
+b:Gr/ViewA/IncludeAxes   = "true"
+s:Gr/ViewA/AxesComponent = "WireChamberA"
+d:Gr/ViewA/AxesSize      = 0.1 m

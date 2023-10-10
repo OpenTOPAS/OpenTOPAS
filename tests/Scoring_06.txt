@@ -1,0 +1,13 @@
+includeFile = Scoring_01.txt
+
+#--- Target
+i:Ge/Phantom/XBins = 3
+i:Ge/Phantom/YBins = 3
+i:Ge/Phantom/ZBins = 3
+
+
+#--- Scoring
+s:Sc/SurfaceCurrent/Quantity                  = "SurfaceCurrent"
+s:Sc/SurfaceCurrent/Component                 = "Phantom"
+s:Sc/SurfaceCurrent/IfOutputFileAlreadyExists = "Overwrite"
+s:Sc/SurfaceCurrent/Surface                   = "Phantom/ZPlusSurface"

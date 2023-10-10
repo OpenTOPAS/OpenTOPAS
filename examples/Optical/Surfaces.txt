@@ -1,0 +1,136 @@
+# Demonstrate use of optical surfaces
+
+includeFile = OpticalMaterialSample.txt
+
+i:Ts/SequenceVerbosity = 1
+
+# SEQUENCE
+b:Ts/PauseBeforeQuit                = "True"
+b:Ts/ShowCPUTime                    = "True"
+i:Ts/ShowHistoryCountAtInterval     = 10
+
+# VISUALIZATION
+s:Gr/view/Type         = "OpenGl"
+#b:Gr/view/IncludeAxes  = "true"
+d:Gr/view/AxesSize     = 10 cm
+
+# PHYSICS LIST
+s:Ph/ListName         = "Optical"
+s:Ph/Optical/Type     = "Geant4_Modular"
+sv:Ph/Optical/Modules = 2 "g4optical" "g4em-standard_opt3"
+
+# SCORER
+s:Sc/PhSp/Quantity                  = "PhaseSpace"
+s:Sc/PhSp/Surface                   = "Screen/YMinusSurface"
+s:Sc/PhSp/OutputType                = "ASCII"
+s:Sc/PhSp/OutputFile                = "PhSp"
+s:Sc/PhSp/IfOutputFileAlreadyExists = "Overwrite"
+b:Sc/PhSp/UsePDGEncoding            = "True"
+b:Sc/PhSp/KillAfterPhaseSpace       = "True"
+
+# SOURCE
+s:So/Example/Type                     = "Beam"
+s:So/Example/Component                = "BeamPosition"
+s:So/Example/BeamParticle             = "opticalphoton"
+u:So/Example/BeamPolarizationX        = 1
+u:So/Example/BeamPolarizationY        = 0
+u:So/Example/BeamPolarizationZ        = 0
+d:So/Example/BeamEnergy               = 1.9593 eV
+u:So/Example/BeamEnergySpread         = 0.04898
+s:So/Example/BeamPositionDistribution = "Flat"
+s:So/Example/BeamPositionCutoffShape  = "Ellipse"
+d:So/Example/BeamPositionCutoffX      = 0.405 mm
+d:So/Example/BeamPositionCutoffY      = 0.405 mm
+s:So/Example/BeamAngularDistribution  = "Gaussian"
+d:So/Example/BeamAngularCutoffX       = 90. deg
+d:So/Example/BeamAngularCutoffY       = 90. deg
+d:So/Example/BeamAngularSpreadX       = 1. mrad
+d:So/Example/BeamAngularSpreadY       = 1. mrad
+i:So/Example/NumberOfHistoriesInRun   = 100
+d:Ge/BeamPosition/TransZ         = -1.0 * Ge/World/HLZ cm
+d:Ge/BeamPosition/RotY           = 180 deg
+
+d:Ge/World/HLX = 15 cm
+d:Ge/World/HLY = 15 cm
+d:Ge/World/HLZ = 15 cm
+
+# Splitter
+s:Ge/Splitter/Parent = "World"
+s:Ge/Splitter/Type   = "Group"
+d:Ge/Splitter/TransX = 0 mm
+d:Ge/Splitter/TransY = 0 mm
+d:Ge/Splitter/TransZ = 0 mm
+d:Ge/Splitter/RotX   = -45 deg
+d:Ge/Splitter/RotY   = 0 deg
+d:Ge/Splitter/RotZ   = 0 deg
+
+s:Ge/Split/Parent   = "Splitter"
+s:Ge/Split/Type     = "TsBox"
+s:Ge/Split/Material = "Borosilicate"
+d:Ge/Split/HLX      = 2 cm
+d:Ge/Split/HLY      = 2 cm
+d:Ge/Split/HLZ      = 0.75 mm
+d:Ge/Split/TransX   = 0 mm
+d:Ge/Split/TransY   = 0 mm
+d:Ge/Split/TransZ   = 0 mm
+d:Ge/Split/RotX     = 0 deg
+d:Ge/Split/RotY     = 0 deg
+d:Ge/Split/RotZ     = 0 deg
+s:Ge/Split/OpticalBehaviorTo/SilverSurface   = "SurfaceSplitter"
+
+s:Ge/SilverSurface/Parent   = "Splitter"
+s:Ge/SilverSurface/Type     = "TsBox"
+s:Ge/SilverSurface/Material = "Borosilicate"
+d:Ge/SilverSurface/HLX      = 1.9 cm
+d:Ge/SilverSurface/HLY      = 1.9 cm
+d:Ge/SilverSurface/HLZ      = 0.5 nm
+d:Ge/SilverSurface/TransX   = 0 mm
+d:Ge/SilverSurface/TransY   = 0 mm
+d:Ge/SilverSurface/TransZ   = Ge/Split/HLZ + Ge/SilverSurface/HLZ cm
+d:Ge/SilverSurface/RotX     = 0 deg
+d:Ge/SilverSurface/RotY     = 0 deg
+d:Ge/SilverSurface/RotZ     = 0 deg
+s:Ge/SilverSurface/OpticalBehaviorTo/Split  = "SurfaceSplitter"
+
+# Mirrors
+s:Ge/Mirror/Parent          = "World"
+s:Ge/Mirror/Type            = "TsBox"
+s:Ge/Mirror/Material        = "Borosilicate"
+d:Ge/Mirror/HLX             = 2 cm
+d:Ge/Mirror/HLY             = 2 cm
+d:Ge/Mirror/HLZ             = 0.75 mm
+d:Ge/Mirror/TransX          = 0 mm
+d:Ge/Mirror/TransY          = 10 cm
+d:Ge/Mirror/TransZ          = 0 mm
+d:Ge/Mirror/RotX            = 89.7 deg
+d:Ge/Mirror/RotY            = 0 deg
+d:Ge/Mirror/RotZ            = 0 deg
+s:Ge/Mirror/OpticalBehavior = "surfaceMirror"
+
+s:Ge/screen/Parent   = "World"
+s:Ge/screen/Type     = "TsBox"
+s:Ge/screen/Material = "Air"
+d:Ge/screen/HLX      = 2 cm
+d:Ge/screen/HLY      = 1 mm
+d:Ge/screen/HLZ      = 2 cm
+d:Ge/screen/TransX   = 0 mm
+d:Ge/screen/TransY   = -10 cm
+d:Ge/screen/TransZ   = 0 cm
+d:Ge/screen/RotX     = 0 deg
+d:Ge/screen/RotY     = 0 deg
+d:Ge/screen/RotZ     = 0 deg
+
+# Optical properties of the surfaces needed
+s:Su/SurfaceSplitter/Type                   = "dielectric_dielectric"
+s:Su/SurfaceSplitter/Finish                 = "polished"
+s:Su/SurfaceSplitter/Model                  = "unified"
+dv:Su/SurfaceSplitter/Efficiency/Energies   = 2 1.6 4.2 eV
+uv:Su/SurfaceSplitter/Efficiency/Values     = 2 1.0 1.0
+dv:Su/SurfaceSplitTer/Reflectivity/Energies = 2 1.6 4.2 eV
+uv:Su/SurfaceSplitter/Reflectivity/Values   = 2 0.5 0.5
+
+s:Su/SurfaceMirror/Type                   = "dielectric_metal"
+s:Su/SurfaceMirror/Finish                 = "polished"
+s:Su/SurfaceMirror/Model                  = "unified"
+dv:Su/SurfaceMirror/Reflectivity/Energies = 2 1.6 4.2 eV
+uv:Su/SurfaceMirror/Reflectivity/Values   = 2 1.0 1.0

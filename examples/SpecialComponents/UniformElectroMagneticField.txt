@@ -1,0 +1,62 @@
+# Uniform electric field
+
+d:Ge/World/HLX       = 2.0 m
+d:Ge/World/HLY       = 2.0 m
+d:Ge/World/HLZ       = 2.0 m
+b:Ge/World/Invisible = "True"
+s:Ge/World/Material = "Vacuum"
+
+s:Ge/DriftBox/Type          = "TsBox"
+s:Ge/DriftBox/Parent        = "World"
+s:Ge/DriftBox/Material      = "Vacuum"
+d:Ge/DriftBox/HLX           = 80 cm
+d:Ge/DriftBox/HLY           = 80 cm
+d:Ge/DriftBox/HLZ           = 100 cm
+s:Ge/DriftBox/Field = "UniformElectroMagnetic"
+u:Ge/DriftBox/ElectricFieldDirectionX    = 1.0
+u:Ge/DriftBox/ElectricFieldDirectionY    = 1.0
+u:Ge/DriftBox/ElectricFieldDirectionZ    = 0.0
+d:Ge/DriftBox/ElectricFieldStrength      = 5000 kV/cm
+u:Ge/DriftBox/MagneticFieldDirectionX    = 0.0
+u:Ge/DriftBox/MagneticFieldDirectionY    = 1.0
+u:Ge/DriftBox/MagneticFieldDirectionZ    = 0.0
+d:Ge/DriftBox/MagneticFieldStrength      = 5.0 tesla
+d:Ge/DriftBox/RotZ     = Tf/RotationStep/Value deg
+
+d:Ge/BeamPosition/TransZ = Ge/World/HLZ cm
+d:Ge/BeamPosition/RotX   = 180. deg
+
+i:Tf/Verbosity               = 1
+d:Tf/TimelineEnd             = 30.0 ms
+i:Tf/NumberOfSequentialTimes = 40
+
+s:Tf/RotationStep/Function            = "Linear deg"
+d:Tf/RotationStep/Rate                = 5. deg/ms
+d:Tf/RotationStep/StartValue          = -28.0 deg
+d:Tf/RotationStep/RepetitionInterval  = 360. ms
+
+s:So/Example/Type                     = "Beam"
+s:So/Example/Component                = "BeamPosition"
+s:So/Example/BeamParticle             = "chargedgeantino"
+d:So/Example/BeamEnergy               = 169.23 MeV
+u:So/Example/BeamEnergySpread         = 0.0
+s:So/Example/BeamPositionDistribution = "Gaussian"
+s:So/Example/BeamPositionCutoffShape  = "Ellipse"
+d:So/Example/BeamPositionCutoffX      = 5.0 cm
+d:So/Example/BeamPositionCutoffY      = 5.0 cm
+d:So/Example/BeamPositionSpreadX      = 0.65 cm
+d:So/Example/BeamPositionSpreadY      = 0.65 cm
+s:So/Example/BeamAngularDistribution  = "None"
+i:So/Example/NumberOfHistoriesInRun   = 10
+
+s:Gr/ViewA/Type              = "OpenGL"
+i:Gr/ViewA/WindowSizeX       = 1024
+i:Gr/ViewA/WindowSizeY       = 768
+d:Gr/ViewA/Theta             = 55 deg
+d:Gr/ViewA/Phi               = 20 deg
+s:Gr/ViewA/Projection        = "Perspective"
+d:Gr/ViewA/PerspectiveAngle  = 30 deg
+u:Gr/ViewA/Zoom              = 1.
+b:Gr/ViewA/IncludeStepPoints = "True"
+
+b:Ts/PauseBeforeQuit = "True"

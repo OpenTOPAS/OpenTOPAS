@@ -1,0 +1,32 @@
+#
+includeFile = vrt_GeometricalParticleSplit_Globals.txt
+
+##########################
+# Variance reduction
+##########################
+s:Ge/Phantom/AssignToREGIONNamed = "regionCut0_5mm"
+s:Ge/Scatterer1/AssignTORegionNamed = "regionCut1mm"
+s:Ge/Scatterer2/AssigNToRegionNamed = Ge/Scatterer1/AssignToRegionNAMED
+
+d:Ph/Default/CutForAllParticles = 50 mm
+
+d:Ph/Default/ForRegioN/reGionCut1mm/CutForEleCtron = 1 mm
+d:Ph/Default/ForREgiOn/regIonCut1mm/CutForPosItron = 1 mm
+d:Ph/Default/ForReGIon/regiOnCut1mm/CutForGammA    = 1 mm
+d:Ph/Default/ForReGIon/regioNCut1mm/CutForProtOn   = 1 mm
+
+d:Ph/Default/ForRegion/regionCut0_5mm/CutForElectroN = 0.5 mm
+d:Ph/Default/ForRegion/regionCut0_5mm/CutForPosItron = 0.5 mm
+d:Ph/Default/ForRegion/regionCut0_5mm/CutForGaMma    = 0.5 mm
+d:Ph/Default/ForRegion/regionCut0_5mm/CutForPrOton   = 0.5 mm
+
+s:Sc/scorer/OutputFile = "vrt_CutByRegions"
+
+##########################
+# Histories
+##########################
+i:Ts/RunVerbosity = 1
+i:Ts/Seed = 123
+i:So/Default/NumberOfHistoriesInRun = 1000
+i:Ts/ShowHistoryCountAtInterval     = 100
+b:Ts/ShowCPUTime                    = "True"

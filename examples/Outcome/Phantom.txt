@@ -1,0 +1,67 @@
+# The body
+s:Ge/WaterPhantom/Parent = "World"
+s:Ge/WaterPhantom/Type   = "TsBox"
+s:Ge/WaterPhantom/Material = "G4_WATER"
+d:Ge/WaterPhantom/HLX = 40 mm
+d:Ge/WaterPhantom/HLY = 40 mm
+d:Ge/WaterPhantom/HLZ = 100 mm
+d:Ge/WaterPhantom/TransX =  0.0 cm
+d:Ge/WaterPhantom/TransY =  0.0 cm
+d:Ge/WaterPhantom/TransZ =  0.0 cm
+d:Ge/WaterPhantom/RotX= 0. deg
+d:Ge/WaterPhantom/RotY= 0. deg
+d:Ge/WaterPhantom/RotZ= 0. deg
+
+# The target/tumor
+d:Ge/InitPosZ = -1.0 * Ge/WaterPhantom/HLZ mm
+s:Ge/WaterPhantom/Target/Parent = "WaterPhantom"
+s:Ge/WaterPhantom/Target/Type   = "TsBox"
+s:Ge/WaterPhantom/Target/Material = "G4_WATER"
+d:Ge/WaterPhantom/Target/HLX = 10 mm
+d:Ge/WaterPhantom/Target/HLY = 10 mm
+d:Ge/WaterPhantom/Target/HLZ = 22 mm
+d:Ge/WaterPhantom/Target/TransX =  0.0 cm
+d:Ge/WaterPhantom/Target/TransY =  0.0 cm
+d:Ge/WaterPhantom/Target/TransZTmp = 24 mm + Ge/InitPosZ
+d:Ge/WaterPhantom/Target/TransZ =  Ge/WaterPhantom/Target/TransZTmp + Ge/WaterPhantom/Target/HLZ  mm
+d:Ge/WaterPhantom/Target/RotX= 0. deg
+d:Ge/WaterPhantom/Target/RotY= 0. deg
+d:Ge/WaterPhantom/Target/RotZ= 0. deg
+i:Ge/WaterPhantom/Target/XBins = 20
+i:Ge/WaterPhantom/Target/YBins = 20
+i:Ge/WaterPhantom/Target/ZBins = 44
+
+# An organ at risk at the entrance of the beam
+s:Ge/WaterPhantom/OAR1/Parent = "WaterPhantom"
+s:Ge/WaterPhantom/OAR1/Type   = "TsBox"
+s:Ge/WaterPhantom/OAR1/Material = "G4_WATER"
+d:Ge/WaterPhantom/OAR1/HLX = 10 mm
+d:Ge/WaterPhantom/OAR1/HLY = 10 mm
+d:Ge/WaterPhantom/OAR1/HLZ = 22 mm
+d:Ge/WaterPhantom/OAR1/TransX =  0.0 cm
+d:Ge/WaterPhantom/OAR1/TransY =  0.0 cm
+d:Ge/WaterPhantom/OAR1/TransZTmp = Ge/WaterPhantom/Target/TransZ + Ge/WaterPhantom/Target/HLZ mm
+d:Ge/WaterPhantom/OAR1/TransZ = Ge/WaterPhantom/OAR1/TransZTmp + Ge/WaterPhantom/OAR1/HLZ mm
+d:Ge/WaterPhantom/OAR1/RotX= 0. deg
+d:Ge/WaterPhantom/OAR1/RotY= 0. deg
+d:Ge/WaterPhantom/OAR1/RotZ= 0. deg
+i:Ge/WaterPhantom/OAR1/XBins = 20
+i:Ge/WaterPhantom/OAR1/YBins = 20
+i:Ge/WaterPhantom/OAR1/ZBins = 44
+
+# An organ at risk at distal position
+s:Ge/WaterPhantom/OAR2/Parent = "WaterPhantom"
+s:Ge/WaterPhantom/OAR2/Type   = "TsBox"
+s:Ge/WaterPhantom/OAR2/Material = "G4_WATER"
+d:Ge/WaterPhantom/OAR2/HLX = 12 mm
+d:Ge/WaterPhantom/OAR2/HLY = 12 mm
+d:Ge/WaterPhantom/OAR2/HLZ = 12 mm
+d:Ge/WaterPhantom/OAR2/TransX =  0.0 cm
+d:Ge/WaterPhantom/OAR2/TransY =  0.0 cm
+d:Ge/WaterPhantom/OAR2/TransZ = Ge/InitPosZ + Ge/WaterPhantom/OAR2/HLZ mm
+d:Ge/WaterPhantom/OAR2/RotX= 0. deg
+d:Ge/WaterPhantom/OAR2/RotY= 0. deg
+d:Ge/WaterPhantom/OAR2/RotZ= 0. deg
+i:Ge/WaterPhantom/OAR2/XBins = 24
+i:Ge/WaterPhantom/OAR2/YBins = 24
+i:Ge/WaterPhantom/OAR2/ZBins = 24
