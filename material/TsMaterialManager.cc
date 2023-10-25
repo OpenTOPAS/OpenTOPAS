@@ -332,13 +332,13 @@ void TsMaterialManager::SetConstantProperty(G4MaterialPropertiesTable* propertie
 				if (!fPm->ParameterExists(prefix + "FastTimeConstant"))
 					Quit(parameterName, "Requires additional parameter: " + prefix + "FastTimeConstant");
 
-				propertiesTable->AddConstProperty(propertyName, property/MeV);
+				propertiesTable->AddConstProperty(propertyName, property/MeV, true);
 			} else {
-				propertiesTable->AddConstProperty(propertyName, property);
+				propertiesTable->AddConstProperty(propertyName, property, true);
 			}
 		} else {
 			G4double property = fPm->GetDoubleParameter(parameterName, "Time");
-			propertiesTable->AddConstProperty(propertyName, property);
+			propertiesTable->AddConstProperty(propertyName, property, true);
 
 		}
 
