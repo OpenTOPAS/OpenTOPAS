@@ -25,6 +25,21 @@ body:
     validations:
       required: true
   - type: dropdown
+    id: topas-category 
+    attributes:
+      label: TOPAS category 
+      description: Select an option 
+      options:
+        - Geometry 
+        - Physics 
+        - Scoring 
+        - Time feature 
+        - Variance reduction
+        - Outcome model 
+      default: 0
+    validations:
+      required: true
+  - type: dropdown
     id: version
     attributes:
       label: Version
