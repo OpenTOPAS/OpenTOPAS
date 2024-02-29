@@ -197,6 +197,8 @@ void setDataEnvVars(G4String dataDirectory)
 	dataVars.push_back({"G4ENSDFSTATEDATA", "G4ENSDFSTATE2.3"});
 	dataVars.push_back({"G4TENDLDATA", "G4TENDL1.4"});
 	dataVars.push_back({"G4PROTONHPDATA", "G4TENDL1.4/Proton"});
+	dataVars.push_back({"G4LENDDATA", "LEND_GND1.3_ENDF.BVII.1"});
+
 #else
 	G4cout << "\nUnable to use Ts/G4DataDirectory parameter or TOPAS_G4_DATA_DIR environment variable" << G4endl;
 	G4cout << "as TOPAS does not know the set of data files needed for this Geant4 release." << G4endl;
