@@ -1,0 +1,74 @@
+name: User Issue 
+description: File a code issue 
+title: "[User Issue]: "
+labels: ["issue", "user"]
+projects: ["topas"]
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please, make sure to follow the user issue guidelines for TOPAS. Failure to comply with the guidelines will result in this issue to be deleted.
+        Thanks for your understanding and we hope to be able to best assist you.
+  - type: input
+    id: contact
+    attributes:
+      label: Contact Details
+      description: How can we get in touch with you if we need more info?
+      placeholder: ex. email@example.com
+    validations:
+      required: false
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What was the issue?
+      description: Please, explain to us in the most consise manner what was the issue.
+      placeholder: Did TOPAS crashed or was the output different from expected?
+      value: "A bug happened!"
+    validations:
+      required: true
+  - type: dropdown
+    id: version
+    attributes:
+      label: Version
+      description: What version of TOPAS are you running?
+      options:
+        - 3.7
+        - 3.8
+        - 3.9
+        - 4.0
+      default: 0
+    validations:
+      required: true
+  - type: dropdown
+    id: browsers
+    attributes:
+      label: What Operative System (OS) are you running on?
+      multiple: true
+      options:
+        - Linux
+        - MacOS
+        - Windows (WSL)
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant log output
+      description: Please copy and paste any relevant log output. This will be automatically formatted into code, so no need for backticks.
+      render: shell
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Code of Conduct
+      description: By submitting this issue, you agree to follow our [Code of Conduct](https://example.com)
+      options:
+        - label: I agree to follow this project's Code of Conduct
+          required: true
+  - type: checkboxes
+    id: attestation
+    attributes:
+       label: Attestation
+       description: By submitting this issue, you testify of having read the code of conduct.
+       options:
+         - label: I testify that I have fully read the bug reporting guideline beforehand.
+           required: true
+
