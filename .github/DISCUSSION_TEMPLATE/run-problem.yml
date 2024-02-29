@@ -1,8 +1,5 @@
-name: TOPAS Run Issue 
-description: File a TOPAS run/execution issue 
 title: "[Run issue]:"
 labels: ["execute", "run", "issue", "user"]
-projects: ["topas"]
 
 body:
   - type: markdown
