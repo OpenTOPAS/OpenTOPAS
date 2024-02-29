@@ -1,7 +1,7 @@
-name: User Issue 
-description: File a code issue 
-title: "[User Issue]: "
-labels: ["issue", "user"]
+name: User Code Building Issue 
+description: File a TOPAS code building issue 
+title: "[Issue]:"
+labels: ["code", "build", "issue", "user"]
 projects: ["topas"]
 
 body:
@@ -24,7 +24,7 @@ body:
       label: What was the issue?
       description: Please, explain to us in the most consise manner what was the issue.
       placeholder: Did TOPAS crashed or was the output different from expected?
-      value: "A bug happened!"
+      value: 
     validations:
       required: true
   - type: dropdown
