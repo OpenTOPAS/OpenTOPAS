@@ -1,4 +1,4 @@
-name: User Code Building Issue 
+name: TOPAS Code Building Issue 
 description: File a TOPAS code building issue 
 title: "[Issue]:"
 labels: ["code", "build", "issue", "user"]
