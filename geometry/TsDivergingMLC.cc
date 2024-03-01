@@ -27,7 +27,7 @@
 // ********************************************************************
 //
 
-#include "DivergingMLC.hh"
+#include "TsDivergingMLC.hh"
 
 #include "TsParameterManager.hh"
 #include "G4ios.hh"
