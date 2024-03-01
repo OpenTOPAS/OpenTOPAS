@@ -38,15 +38,15 @@
 #include "G4Trap.hh"
 #include "G4GenericTrap.hh"
 
-DivergingMLC::DivergingMLC(TsParameterManager* pM, TsExtensionManager* eM, TsMaterialManager* mM, TsGeometryManager* gM,
-								 TsVGeometryComponent* parentComponent, G4VPhysicalVolume* parentVolume, G4String& name)
+TsDivergingMLC::TsDivergingMLC(TsParameterManager* pM, TsExtensionManager* eM, TsMaterialManager* mM, TsGeometryManager* gM,
+							   TsVGeometryComponent* parentComponent, G4VPhysicalVolume* parentVolume, G4String& name)
 	: TsVGeometryComponent(pM, eM, mM, gM, parentComponent, parentVolume, name)
 {;}
 
-DivergingMLC::~DivergingMLC()
+TsDivergingMLC::~TsDivergingMLC()
 {;}
 
-void DivergingMLC::UpdateForSpecificParameterChange(G4String parameter)
+void TsDivergingMLC::UpdateForSpecificParameterChange(G4String parameter)
 {
 	if (parameter == GetFullParmNameLower("NegativeFieldSetting") || parameter == GetFullParmNameLower("PositiveFieldSetting")) {
 		G4double* xPlusOpenNew  = fPm->GetDoubleVector(GetFullParmName("PositiveFieldSetting"), "Length");
@@ -95,7 +95,7 @@ void DivergingMLC::UpdateForSpecificParameterChange(G4String parameter)
 }
 
 
-G4VPhysicalVolume* DivergingMLC::Construct()
+G4VPhysicalVolume* TsDivergingMLC::Construct()
 {
 	BeginConstruction();
 	fPhysicalXPlusLeaves.clear();
@@ -218,7 +218,7 @@ G4VPhysicalVolume* DivergingMLC::Construct()
 }
 
 
-std::pair<G4GenericTrap*,G4GenericTrap*> DivergingMLC::ConstructLeafPair(G4int leafID, G4double thick, G4double posOpen, G4double negOpen, G4double leafWidth, G4double currentWidth) {
+std::pair<G4GenericTrap*,G4GenericTrap*> TsDivergingMLC::ConstructLeafPair(G4int leafID, G4double thick, G4double posOpen, G4double negOpen, G4double leafWidth, G4double currentWidth) {
 	// X Deformation: Between the leaf openings
 	G4double positiveXDeformation = 0;
 	G4double negativeXDeformation = 0;
