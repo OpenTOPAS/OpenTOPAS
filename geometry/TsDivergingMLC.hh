@@ -27,19 +27,19 @@
 // ********************************************************************
 //
 
-#ifndef DivergingMLC_hh
-#define DivergingMLC_hh
+#ifndef TsDivergingMLC_hh
+#define TsDivergingMLC_hh
 
 #include "TsVGeometryComponent.hh"
 
 class G4GenericTrap;
 
-class DivergingMLC : public TsVGeometryComponent
+class TsDivergingMLC : public TsVGeometryComponent
 {
 public:
-	DivergingMLC(TsParameterManager* pM, TsExtensionManager* eM, TsMaterialManager* mM, TsGeometryManager* gM,
-							TsVGeometryComponent* parentComponent, G4VPhysicalVolume* parentVolume, G4String& name);
-	~DivergingMLC();
+	TsDivergingMLC(TsParameterManager* pM, TsExtensionManager* eM, TsMaterialManager* mM, TsGeometryManager* gM,
+				   TsVGeometryComponent* parentComponent, G4VPhysicalVolume* parentVolume, G4String& name);
+	~TsDivergingMLC();
 
 	G4VPhysicalVolume* Construct();
 	void UpdateForSpecificParameterChange(G4String parameter);
