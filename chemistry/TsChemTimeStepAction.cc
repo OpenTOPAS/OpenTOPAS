@@ -59,6 +59,16 @@ TsChemTimeStepAction::TsChemTimeStepAction(TsParameterManager* pM, G4String name
 		for ( int i = 0; i < nSteps; i++ )
 			AddTimeStep(highEdges[i], resolution[i]);
 	}
+
+	else {
+		AddTimeStep(     1*ps,0.1*ps);
+		AddTimeStep(    10*ps,1.0*ps);
+		AddTimeStep(   100*ps,3.0*ps);
+		AddTimeStep(  1000*ps, 10*ps);
+		AddTimeStep( 10000*ps,100*ps);
+		AddTimeStep(100000*ps,100*ps);
+		AddTimeStep(999999*ps,100*ps);
+	}
 	
 }
 
