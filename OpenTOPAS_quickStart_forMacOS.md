@@ -156,7 +156,7 @@ Then use the following commands to move GDCM(<em>gdcm-2.6.8.tar.gz</em>) from th
         cmake ../gdcm-2.6.8 -DGDCM_BUILD_SHARED_LIBS=ON \
                             -DGDCM_BUILD_DOCBOOK_MANPAGES:BOOL=OFF \
                             -DCMAKE_INSTALL_PREFIX=../gdcm-install \
-                            -DCMAKE_INSTALL_RPATH=@loader_path OFF \
+                            -DCMAKE_INSTALL_RPATH=@loader_path \
                             -DCMAKE_MACOSX_RPATH=ON
         make -j20 install
 
