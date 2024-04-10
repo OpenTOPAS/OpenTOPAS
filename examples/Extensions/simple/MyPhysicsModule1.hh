@@ -1,6 +1,7 @@
 // This file was copied from
 // geant4/source/physics_lists/constructors/electromagnetic to TOPAS
 // as an example of a user-contributed physics module.
+// * Copyright 2024 The OpenTOPAS Collaboration                       *
 // The only change for TOPAS was to pass the pointer to
 // the TsParameterManager so that you can use TOPAS parameters to further
 // control your physics.
