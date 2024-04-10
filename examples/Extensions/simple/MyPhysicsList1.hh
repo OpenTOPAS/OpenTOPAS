@@ -1,7 +1,6 @@
 //
 // This file was copied from geant4/examples/extended/analysis to TOPAS
 // as an example of a user-contributed physics list.
-// * Copyright 2024 The OpenTOPAS Collaboration                       *
 // The only addition for TOPAS was to also pass the pointer to
 // the TsParameterManager so that you can use TOPAS parameters to further
 // control your physics.
