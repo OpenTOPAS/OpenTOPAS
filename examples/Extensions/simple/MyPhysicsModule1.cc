@@ -1,7 +1,6 @@
 // Physics Module for MyPhysicsModule1
 //
 // This file was copied from
-// * Copyright 2024 The OpenTOPAS Collaboration                       *
 // geant4/source/physics_lists/constructors/electromagnetic to TOPAS
 // as an example of a user-contributed physics module.
 // The only change for TOPAS was to pass the pointer to
