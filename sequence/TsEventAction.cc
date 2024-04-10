@@ -118,7 +118,7 @@ void TsEventAction::EndOfEventAction(const G4Event* event) {
 			G4cerr << "We do  not yet understand what causes this condition in Geant4." << G4endl;
 			G4cerr << "Please report to us that you encountered this condition," << G4endl;
 			G4cerr << "as your example may help us to solve this mystery." << G4endl;
-			G4cerr << "Contact us on the TOPAS user forum or by sending email to perl@topasmc.org." << G4endl;
+			G4cerr << "Contact us on the TOPAS user forum or by sending email to Jose.RamosMendez@ucsf.edu or JSchuemann@mgh.harvard.edu" << G4endl;
 			G4cerr << "" << G4endl;
 			G4cerr << "For now you may be able to work around the issue by changing the random seed." << G4endl;
 			G4cerr << "You can also increase the number of such histories permitted in a row by adjusting the parameter:" << G4endl;
