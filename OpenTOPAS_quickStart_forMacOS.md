@@ -131,11 +131,11 @@ Build Geant4. Take note of the following warnings before running the commands sh
 ### Step 7
 Downloading and installing OpenTOPAS and GDCM.
 
-7.1. First get OpenTOPAS from the GitHub [repository](https://github.com/OpenTOPAS/topas).
+7.1. First get OpenTOPAS from the GitHub [repository](https://github.com/OpenTOPAS/OpenTOPAS).
 
         mkdir -p /Applications/TOPAS
         cd /Applications/TOPAS
-        git clone https://github.com/OpenTOPAS/topas.git
+        git clone https://github.com/OpenTOPAS/OpenTOPAS.git
 
 7.2. Next, check if the /Applications/GDCM already exists (GDCM is already installed). If so, rename the directory to GDCM-OLD (or another name) using the following command. 
 
@@ -144,7 +144,7 @@ Downloading and installing OpenTOPAS and GDCM.
 Then use the following commands to move GDCM(<em>gdcm-2.6.8.tar.gz</em>) from the OpenTOPAS source code folder to its own directory and decompress it.
 
         mkdir /Applications/GDCM
-        cd /Applications/TOPAS/topas
+        cd /Applications/TOPAS/OpenTOPAS
         mv gdcm-2.6.8.tar.gz ../../GDCM
         cd ../../GDCM
         tar zxf gdcm-2.6.8.tar.gz
@@ -163,11 +163,11 @@ Then use the following commands to move GDCM(<em>gdcm-2.6.8.tar.gz</em>) from th
 7.4. With GDCM built and installed, you can continue with the OpenTOPAS installation:
 
         cd /Applications/TOPAS
-        mkdir topas-{build,install}
-        cd topas-build
+        mkdir OpenTOPAS-{build,install}
+        cd OpenTOPAS-build
         export Geant4_DIR=/Applications/GEANT4/geant4-install \
                GDCM_DIR=/Applications/GDCM/gdcm-install/
-        cmake ../topas -DCMAKE_INSTALL_PREFIX=../topas-install
+        cmake ../OpenTOPAS -DCMAKE_INSTALL_PREFIX=../OpenTOPAS-install
         make -j20 install
 
 ### Step 8
@@ -175,9 +175,9 @@ Setup the environment.
 
 8.1. This can be done manually as follows, however it needs to be repeated each time you open a new terminal window.
 
-        export QT_QPA_PLATFORM_PLUGIN_PATH=/Applications/TOPAS/topas-install/Frameworks
+        export QT_QPA_PLATFORM_PLUGIN_PATH=/Applications/TOPAS/OpenTOPAS-install/Frameworks
         export TOPAS_G4_DATA_DIR=/Applications/GEANT4/G4DATA
-        export DYLD_LIBRARY_PATH=/Applications/TOPAS/topas-install/lib:$DYLD_LIBRARY_PATH
+        export DYLD_LIBRARY_PATH=/Applications/TOPAS/OpenTOPAS-install/lib:$DYLD_LIBRARY_PATH
         export DYLD_LIBRARY_PATH=/Applications/GEANT4/geant4-install/lib:$DYLD_LIBRARY_PATH
 
 8.2.1. Alternatively, you can automate setting up the environment. We recommend adding all the exports into a dedicated shell script folder as follows:
@@ -185,11 +185,11 @@ Setup the environment.
         mkdir ~/shellScripts
         cd ~/shellScripts
         touch topas
-        echo export QT_QPA_PLATFORM_PLUGIN_PATH=/Applications/TOPAS/topas-install/Frameworks >> topas
+        echo export QT_QPA_PLATFORM_PLUGIN_PATH=/Applications/TOPAS/OpenTOPAS-install/Frameworks >> topas
         echo export TOPAS_G4_DATA_DIR=/Applications/GEANT4/G4DATA >> topas
-        echo export DYLD_LIBRARY_PATH=/Applications/TOPAS/topas-install/lib:$DYLD_LIBRARY_PATH >> topas
+        echo export DYLD_LIBRARY_PATH=/Applications/TOPAS/OpenTOPAS-install/lib:$DYLD_LIBRARY_PATH >> topas
         echo export DYLD_LIBRARY_PATH=/Applications/GEANT4/geant4-install/lib:$DYLD_LIBRARY_PATH >> topas
-        echo /Applications/TOPAS/topas-install/bin/topas $1 >> topas
+        echo /Applications/TOPAS/OpenTOPAS-install/bin/topas $1 >> topas
         chmod +x topas
 
 8.2.2 After the OpenTOPAS shell script folder has been created as outlined above, export the appropriate path in either your `~/.zshrc` or `~/.bash_profile` file. You can find out which shell you are using by typing `echo $SHELL` in your terminal. For `zsh`:
@@ -205,9 +205,9 @@ And for `bash`:
 ### Step 9
 Running your first OpenTOPAS simulation. 
 
-9.1. For those that decided to set the environment up manually, as described in Step 8.1, OpenTOPAS can now be run by accessing the executable located in `/Applications/TOPAS/topas-install/bin/topas`. For example, to run the simple OpenTOPAS example of dose being scored inside a water phantom:
+9.1. For those that decided to set the environment up manually, as described in Step 8.1, OpenTOPAS can now be run by accessing the executable located in `/Applications/TOPAS/OpenTOPAS-install/bin/topas`. For example, to run the simple OpenTOPAS example of dose being scored inside a water phantom:
 
-        cd /Applications/TOPAS/topas-install/examples/Scoring
+        cd /Applications/TOPAS/OpenTOPAS-install/examples/Scoring
         ../../bin/topas Dose.txt
 
 9.2. For those that decided to automate the process as described in Step 8.2 onwards, OpenTOPAS can now be run with the `topas` command in your terminal without having to setup the environment variables:
@@ -215,7 +215,7 @@ Running your first OpenTOPAS simulation.
         topas Dose.txt
 
 > [!TIP]
-> If you require assistance with any of your OpenTOPAS simulations, don't hesitate to request help from the developers and other users on the [Discussions](https://github.com/OpenTOPAS/topas/discussions) tab of the OpenTOPAS [GitHub](https://github.com/OpenTOPAS/topas) page.
+> If you require assistance with any of your OpenTOPAS simulations, don't hesitate to request help from the developers and other users on the [Discussions](https://github.com/OpenTOPAS/OpenTOPAS/discussions) tab of the OpenTOPAS [GitHub](https://github.com/OpenTOPAS/OpenTOPAS) page.
 
 ______________________________________________________________________________________________
 
@@ -229,7 +229,7 @@ As an additional step for those interested in running quality checks, the contin
 
 The OpenTOPAS tests are located in the “tests” folder of the OpenTOPAS source code directory, and testing is performed using `nrtest` and the OpenTOPAS-specific plugins contained in [nrtest-topas](https://github.com/davidchall/nrtest-topas):
 
-        cd /Applications/TOPAS/topas
+        cd /Applications/TOPAS/OpenTOPAS
         pip3 install nrtest
         pip3 install git+https://github.com/davidchall/nrtest-topas.git
 
