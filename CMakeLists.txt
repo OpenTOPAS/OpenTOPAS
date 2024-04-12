@@ -36,10 +36,6 @@ configure_file (
 	"${CMAKE_CURRENT_SOURCE_DIR}/TsTopasConfig.hh.in"
 	"${CMAKE_CURRENT_BINARY_DIR}/TsTopasConfig.hh")
 
-configure_file (
-	"${CMAKE_CURRENT_SOURCE_DIR}/forenduser/README.txt.in"
-	"${CMAKE_CURRENT_SOURCE_DIR}/forenduser/README.txt")
-
 include (CMakeHandleExtensions.cmake)
 
 include_directories (
