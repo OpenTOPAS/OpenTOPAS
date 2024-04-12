@@ -100,7 +100,7 @@ Build Geant4. Take note of the following warnings before running the commands sh
         cmake --version
 
 > [!WARNING]
-> Verify that `qt@6` is not linked or installed in your system. The following command should yield no output if `qt@6` is indeed **NOT** installed on your system. See the [warning](#QuickStart-Guide-for-OpenTOPAS:-TOol-for-PArticle-Simulation) at the top of the document about `qt@6` compatibility.
+> Verify that `qt@6` is not linked or installed in your system. The following command should yield no output if `qt@6` is indeed **NOT** installed on your system. See the warning at the top of the document about `qt@6` compatibility.
 
         brew list --versions qt@6
 
