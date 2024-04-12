@@ -1,5 +1,5 @@
 # QuickStart Guide for OpenTOPAS: TOol for PArticle Simulation
-This file details the steps to be followed by <ins>Mac users</ins> to order to install OpenTOPAS and launch your first simulation. 
+This file details the steps to be followed by <ins>Mac users</ins> in order to install OpenTOPAS and launch your first simulation. 
 
 > [!WARNING]
 > We recommend macOS version 14.0 (Sonoma) or higher. Furthermore these instructions are only compatible with `qt@5` (see the warnings in Step 6 to ensure that `qt@6` is not installed on your system). We take no responsibility for users who wish to proceed with `qt@6` already installed on their system.
@@ -100,7 +100,7 @@ Build Geant4. Take note of the following warnings before running the commands sh
         cmake --version
 
 > [!WARNING]
-> Verify that `qt@6` is not linked or installed in your system. The following command should yield no output if `qt@6` is indeed NOT installed on your system. See the warning at the top of the document about `qt@6` compatibility.
+> Verify that `qt@6` is not linked or installed in your system. The following command should yield no output if `qt@6` is indeed **NOT** installed on your system. See the [warning](#QuickStart-Guide-for-OpenTOPAS:-TOol-for-PArticle-Simulation) at the top of the document about `qt@6` compatibility.
 
         brew list --versions qt@6
 
