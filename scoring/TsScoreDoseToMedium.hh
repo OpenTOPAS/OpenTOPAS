@@ -27,7 +27,6 @@
 // *                                                                  *
 // ********************************************************************
 //
-
 #ifndef TsScoreDoseToMedium_hh
 #define TsScoreDoseToMedium_hh
 
@@ -42,5 +41,10 @@ public:
 	virtual ~TsScoreDoseToMedium();
 
 	G4bool ProcessHits(G4Step*,G4TouchableHistory*);
+
+	void UpdateForSpecificParameterChange(G4String);
+
+private:
+	G4double fWeightFactor;
 };
 #endif

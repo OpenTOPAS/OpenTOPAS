@@ -47,6 +47,11 @@ fProtonStoppingPowerRatio(0), fElectronStoppingPowerRatio(0), fOtherStoppingPowe
 {
 	SetUnit("Gy");
 
+	fWeightFactor = 1.0;
+	if (fPm->ParameterExists(GetFullParmName("WeightFactor"))){
+		fWeightFactor = fPm->GetUnitlessParameter(GetFullParmName("WeightFactor"));
+	}
+
 	G4String quantityNameLower = quantity;
 #if GEANT4_VERSION_MAJOR >= 11
 	G4StrUtil::to_lower(quantityNameLower);
@@ -124,6 +129,7 @@ void TsScoreDoseToMaterial::UpdateForSpecificParameterChange(G4String parameter)
 #else
 	parameterLower.toLower();
 #endif
+
 	if (parameterLower == GetFullParmNameLower("Material")) {
 		if (fVerbosity>0)
 			G4cout << "TsScoreDoseToMaterial::UpdateForParameterChange for parameter: " << parameter << G4endl;
@@ -135,8 +141,14 @@ void TsScoreDoseToMaterial::UpdateForSpecificParameterChange(G4String parameter)
 			G4cout << "Unknown material, " << materialName << ", specified in: " << GetFullParmName("Material") << G4endl;
 			fPm->AbortSession(1);
 		}
-
 		fHadParameterChangeSinceLastRun = true;
+	} 
+	else if (parameterLower == GetFullParmNameLower("WeightFactor")) {
+		if (fVerbosity>0)
+			G4cout << "TsScoreDoseToMaterial::UpdateForParameterChange for parameter: " << parameter << G4endl;
+
+		fWeightFactor = fPm->GetUnitlessParameter(GetFullParmName("WeightFactor"));
+        fHadParameterChangeSinceLastRun = true;
 	} else {
 		TsVScorer::UpdateForSpecificParameterChange(parameter);
 	}
@@ -183,7 +195,7 @@ G4bool TsScoreDoseToMaterial::ProcessHits(G4Step* aStep,G4TouchableHistory*)
 
 		G4double density = aStep->GetPreStepPoint()->GetMaterial()->GetDensity();
 		G4double dose = edep / (density * GetCubicVolume(aStep));
-		dose *= aStep->GetPreStepPoint()->GetWeight();
+		dose *= aStep->GetPreStepPoint()->GetWeight() * fWeightFactor;
 
 		G4ParticleDefinition* particle = aStep->GetTrack()->GetDefinition();
 		G4double energy = aStep->GetPreStepPoint()->GetKineticEnergy();
