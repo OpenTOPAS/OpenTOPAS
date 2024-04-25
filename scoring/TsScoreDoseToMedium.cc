@@ -35,10 +35,35 @@ TsScoreDoseToMedium::TsScoreDoseToMedium(TsParameterManager* pM, TsMaterialManag
 : TsVBinnedScorer(pM, mM, gM, scM, eM, scorerName, quantity, outFileName, isSubScorer)
 {
 	SetUnit("Gy");
+
+	fOutputWeightingFactor = 1.0;
+	if (fPm->ParameterExists(GetFullParmName("OutputWeightingFactor"))){
+		fOutputWeightingFactor = fPm->GetUnitlessParameter(GetFullParmName("OutputWeightingFactor"));
+	}
+	
 }
 
 
 TsScoreDoseToMedium::~TsScoreDoseToMedium() {;}
+
+
+void TsScoreDoseToMedium::UpdateForSpecificParameterChange(G4String parameter)
+{		
+
+	G4String parameterLower = parameter;
+#if GEANT4_VERSION_MAJOR >= 11
+	G4StrUtil::to_lower(parameterLower);
+#else
+	parameterLower.toLower();
+#endif
+
+	if (parameterLower == GetFullParmNameLower("OutputWeightingFactor")) {
+		fOutputWeightingFactor = fPm->GetUnitlessParameter(GetFullParmName("OutputWeightingFactor"));
+        fHadParameterChangeSinceLastRun = true;
+    } else {
+        TsVScorer::UpdateForSpecificParameterChange(parameter);
+    }
+}
 
 
 G4bool TsScoreDoseToMedium::ProcessHits(G4Step* aStep,G4TouchableHistory*)
@@ -55,7 +80,7 @@ G4bool TsScoreDoseToMedium::ProcessHits(G4Step* aStep,G4TouchableHistory*)
 		ResolveSolid(aStep);
 
 		G4double dose = edep / ( density * GetCubicVolume(aStep));
-		dose *= aStep->GetPreStepPoint()->GetWeight();
+		dose *= aStep->GetPreStepPoint()->GetWeight() * fOutputWeightingFactor;
 
 		AccumulateHit(aStep, dose);
 
