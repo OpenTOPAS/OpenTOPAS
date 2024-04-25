@@ -47,9 +47,9 @@ fProtonStoppingPowerRatio(0), fElectronStoppingPowerRatio(0), fOtherStoppingPowe
 {
 	SetUnit("Gy");
 
-	fWeightFactor = 1.0;
-	if (fPm->ParameterExists(GetFullParmName("WeightFactor"))){
-		fWeightFactor = fPm->GetUnitlessParameter(GetFullParmName("WeightFactor"));
+	fOutputWeightingFactor = 1.0;
+	if (fPm->ParameterExists(GetFullParmName("OutputWeightingFactor"))){
+		fOutputWeightingFactor = fPm->GetUnitlessParameter(GetFullParmName("OutputWeightingFactor"));
 	}
 
 	G4String quantityNameLower = quantity;
@@ -143,11 +143,11 @@ void TsScoreDoseToMaterial::UpdateForSpecificParameterChange(G4String parameter)
 		}
 		fHadParameterChangeSinceLastRun = true;
 	} 
-	else if (parameterLower == GetFullParmNameLower("WeightFactor")) {
+	else if (parameterLower == GetFullParmNameLower("OutputWeightingFactor")) {
 		if (fVerbosity>0)
 			G4cout << "TsScoreDoseToMaterial::UpdateForParameterChange for parameter: " << parameter << G4endl;
 
-		fWeightFactor = fPm->GetUnitlessParameter(GetFullParmName("WeightFactor"));
+		fOutputWeightingFactor = fPm->GetUnitlessParameter(GetFullParmName("OutputWeightingFactor"));
         fHadParameterChangeSinceLastRun = true;
 	} else {
 		TsVScorer::UpdateForSpecificParameterChange(parameter);
@@ -195,7 +195,7 @@ G4bool TsScoreDoseToMaterial::ProcessHits(G4Step* aStep,G4TouchableHistory*)
 
 		G4double density = aStep->GetPreStepPoint()->GetMaterial()->GetDensity();
 		G4double dose = edep / (density * GetCubicVolume(aStep));
-		dose *= aStep->GetPreStepPoint()->GetWeight() * fWeightFactor;
+		dose *= aStep->GetPreStepPoint()->GetWeight() * fOutputWeightingFactor;
 
 		G4ParticleDefinition* particle = aStep->GetTrack()->GetDefinition();
 		G4double energy = aStep->GetPreStepPoint()->GetKineticEnergy();

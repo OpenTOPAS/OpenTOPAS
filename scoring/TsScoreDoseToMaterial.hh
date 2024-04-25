@@ -69,6 +69,6 @@ private:
 	G4double fMinElectronEnergyForRatio;
 	G4double fMaxElectronEnergyForRatio;
 	
-	G4double fWeightFactor;
+	G4double fOutputWeightingFactor;
 };
 #endif

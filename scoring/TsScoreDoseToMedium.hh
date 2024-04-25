@@ -45,6 +45,6 @@ public:
 	void UpdateForSpecificParameterChange(G4String);
 
 private:
-	G4double fWeightFactor;
+	G4double fOutputWeightingFactor;
 };
 #endif
