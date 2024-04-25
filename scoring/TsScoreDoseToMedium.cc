@@ -36,9 +36,9 @@ TsScoreDoseToMedium::TsScoreDoseToMedium(TsParameterManager* pM, TsMaterialManag
 {
 	SetUnit("Gy");
 
-	fWeightFactor = 1.0;
-	if (fPm->ParameterExists(GetFullParmName("WeightFactor"))){
-		fWeightFactor = fPm->GetUnitlessParameter(GetFullParmName("WeightFactor"));
+	fOutputWeightingFactor = 1.0;
+	if (fPm->ParameterExists(GetFullParmName("OutputWeightingFactor"))){
+		fOutputWeightingFactor = fPm->GetUnitlessParameter(GetFullParmName("OutputWeightingFactor"));
 	}
 	
 }
@@ -57,8 +57,8 @@ void TsScoreDoseToMedium::UpdateForSpecificParameterChange(G4String parameter)
 	parameterLower.toLower();
 #endif
 
-	if (parameterLower == GetFullParmNameLower("WeightFactor")) {
-		fWeightFactor = fPm->GetUnitlessParameter(GetFullParmName("WeightFactor"));
+	if (parameterLower == GetFullParmNameLower("OutputWeightingFactor")) {
+		fOutputWeightingFactor = fPm->GetUnitlessParameter(GetFullParmName("OutputWeightingFactor"));
         fHadParameterChangeSinceLastRun = true;
     } else {
         TsVScorer::UpdateForSpecificParameterChange(parameter);
@@ -80,7 +80,7 @@ G4bool TsScoreDoseToMedium::ProcessHits(G4Step* aStep,G4TouchableHistory*)
 		ResolveSolid(aStep);
 
 		G4double dose = edep / ( density * GetCubicVolume(aStep));
-		dose *= aStep->GetPreStepPoint()->GetWeight() * fWeightFactor;
+		dose *= aStep->GetPreStepPoint()->GetWeight() * fOutputWeightingFactor;
 
 		AccumulateHit(aStep, dose);
 
