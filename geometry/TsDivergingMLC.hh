@@ -46,7 +46,7 @@ public:
 	void UpdateForSpecificParameterChange(G4String parameter);
 
 private:
-	std::pair<G4GenericTrap*,G4GenericTrap*> ConstructLeafPair(G4int,G4double,G4double,G4double,G4double,G4double);
+	std::pair<G4GenericTrap*,G4GenericTrap*> ConstructLeafPair(G4int,G4double,G4double,G4double,G4double,G4double,G4bool);
 
 private:
 	// Leaf Position Variables
@@ -60,6 +60,8 @@ private:
 	G4double* fXPlusLeavesOpen;
 	G4double* fXMinusLeavesOpen;
 	G4int fNbOfLeavesPerSide;
+
+	G4bool fIsXMLC;
 
 	// Generic Volume storage
 	std::vector<G4GenericTrap*> fGenericTrapXPlusLeaves;

@@ -69,11 +69,20 @@ void TsDivergingMLC::UpdateForSpecificParameterChange(G4String parameter)
 					fPm->AbortSession(1);
 				}
 
-				G4ThreeVector xpl = G4ThreeVector((fLeafHalfLength + posOpen)/fMagnification,    (CurrentWidth + (widht*0.5))/fMagnification, 0);
-				G4ThreeVector xml = G4ThreeVector((-(fLeafHalfLength) + negOpen)/fMagnification, (CurrentWidth + (widht*0.5))/fMagnification, 0);
+				G4ThreeVector xpl;
+				G4ThreeVector xml;
+
+				if (fIsXMLC) {
+					xpl = G4ThreeVector((fLeafHalfLength + posOpen)/fMagnification,    (CurrentWidth + (widht*0.5))/fMagnification, 0);
+					xml = G4ThreeVector((-(fLeafHalfLength) + negOpen)/fMagnification, (CurrentWidth + (widht*0.5))/fMagnification, 0);	
+				}
+				else {
+					xpl = G4ThreeVector((CurrentWidth + (widht*0.5))/fMagnification,   (fLeafHalfLength + posOpen)/fMagnification, 0);
+					xml = G4ThreeVector((CurrentWidth + (widht*0.5))/fMagnification,(-(fLeafHalfLength) + negOpen)/fMagnification, 0);						
+				}
 
 				// Construct the new Leaves
-				std::pair<G4GenericTrap*,G4GenericTrap*> Leaves = ConstructLeafPair(i, fLeafThickness,posOpen,negOpen,widht,CurrentWidth);
+				std::pair<G4GenericTrap*,G4GenericTrap*> Leaves = ConstructLeafPair(i, fLeafThickness,posOpen,negOpen,widht,CurrentWidth,fIsXMLC);
 
 
 				*(fGenericTrapXPlusLeaves[i])  = *(Leaves.first);
@@ -138,24 +147,16 @@ G4VPhysicalVolume* TsDivergingMLC::Construct()
 	fMagnification       = fSAD/fSUSD;
 	fLeafThickness  = fPm->GetDoubleParameter(GetFullParmName("Thickness"), "Length") * fMagnification;    //z
 	G4String Travelangle = fPm->GetStringParameter(GetFullParmName("LeafTravelAxis"));
-	G4String TransZName  = "dc:Ge/" + fName + "/TransZ";
 	G4double DistanceSourceToMLCcenter = fSUSD + (fLeafThickness * 0.5/fMagnification);
-	G4double TransZVal = (fSAD - DistanceSourceToMLCcenter)/mm;
-	G4String TransZValString = G4UIcommand::ConvertToString(TransZVal);
-	G4String transValue = "0. deg";
 
-	if (Travelangle == "Yb") {
-		transValue = "270. deg";
-	}
-	else if (Travelangle == "Xb") {
-		transValue = "0. deg";
-	}
+	if (Travelangle == "Yb")
+		fIsXMLC = false;
+	else if (Travelangle == "Xb")
+		fIsXMLC = true;
 	else {
 		std::cerr << "LeafTravelAxis need to be either Xb or Yb. LeafTravelAxis = " << Travelangle << std::endl;
 		fPm->AbortSession(1); 	
 	}
-	fPm->AddParameter("dc:Ge/" + fName + "/RotZ", transValue);
-	fPm->AddParameter(TransZName, TransZValString + " mm");
 	if (fSAD < 0) {
 		std::cerr << "SAD must be positive. SAD = " << fSAD << std::endl;
 		fPm->AbortSession(1); 										// Need to be modified to return false
@@ -179,7 +180,11 @@ G4VPhysicalVolume* TsDivergingMLC::Construct()
 	}
 
 	G4String envelopeMaterialName = fParentComponent->GetResolvedMaterialName();
-	G4Box* svWholeBox = new G4Box(fName, fLeafHalfLength + fMaximumLeafOpen, TotalMLCWidth/2, 0.5 * fLeafThickness / fMagnification);
+	G4Box* svWholeBox; 
+	if (fIsXMLC)
+		svWholeBox = new G4Box(fName, fLeafHalfLength + fMaximumLeafOpen, TotalMLCWidth/2, 0.5 * fLeafThickness / fMagnification);
+	else
+		svWholeBox = new G4Box(fName, TotalMLCWidth/2, fLeafHalfLength + fMaximumLeafOpen, 0.5 * fLeafThickness / fMagnification);
 	fEnvelopeLog  = CreateLogicalVolume(fName, envelopeMaterialName, svWholeBox);
 	fEnvelopePhys = CreatePhysicalVolume(fEnvelopeLog);
 
@@ -191,19 +196,30 @@ G4VPhysicalVolume* TsDivergingMLC::Construct()
 		G4double xPosOpen  = fXPlusLeavesOpen[i];
 		G4double xNegOpen  = fXMinusLeavesOpen[i];
 		G4double leafWidth = leaf_widths[i];
-	
-		std::pair<G4GenericTrap*,G4GenericTrap*> Leaves = ConstructLeafPair(i,fLeafThickness,xPosOpen,xNegOpen,leafWidth, CurrentWidth);
+
+		std::pair<G4GenericTrap*,G4GenericTrap*> Leaves = ConstructLeafPair(i,fLeafThickness,xPosOpen,xNegOpen,leafWidth, CurrentWidth, fIsXMLC);
 
 		G4String volName                = "X+Leaf"+id_string;
 		G4GenericTrap* positivesvLeaf   = Leaves.first;
 		G4LogicalVolume* positivelLeaf  = CreateLogicalVolume(positivesvLeaf);
-		G4ThreeVector* threeVecPlus     = new G4ThreeVector(((fLeafHalfLength) + xPosOpen)/fMagnification, (CurrentWidth + (leafWidth*0.5))/fMagnification, 0);
-		G4VPhysicalVolume* pPlusLeaf    = CreatePhysicalVolume(volName, positivelLeaf, 0, threeVecPlus, fEnvelopePhys);
 
 		volName                         = "X-Leaf"+id_string;
 		G4GenericTrap* negativesvLeaf   = Leaves.second;
 		G4LogicalVolume* negativelLeaf  = CreateLogicalVolume(negativesvLeaf);
-		G4ThreeVector* threeVecMinus    = new G4ThreeVector((-(fLeafHalfLength) + xNegOpen)/fMagnification, (CurrentWidth + (leafWidth*0.5))/fMagnification, 0);
+
+		G4ThreeVector* threeVecPlus;
+		G4ThreeVector* threeVecMinus;
+
+		if (fIsXMLC) {
+			threeVecPlus     = new G4ThreeVector(((fLeafHalfLength) + xPosOpen)/fMagnification, (CurrentWidth + (leafWidth*0.5))/fMagnification, 0);
+			threeVecMinus    = new G4ThreeVector((-(fLeafHalfLength) + xNegOpen)/fMagnification, (CurrentWidth + (leafWidth*0.5))/fMagnification, 0);
+		}
+		else {
+			threeVecPlus     = new G4ThreeVector((CurrentWidth + (leafWidth*0.5))/fMagnification, ((fLeafHalfLength) + xPosOpen)/fMagnification, 0);
+			threeVecMinus    = new G4ThreeVector((CurrentWidth + (leafWidth*0.5))/fMagnification, (-(fLeafHalfLength) + xNegOpen)/fMagnification, 0);
+		}
+
+		G4VPhysicalVolume* pPlusLeaf    = CreatePhysicalVolume(volName, positivelLeaf, 0, threeVecPlus, fEnvelopePhys);
 		G4VPhysicalVolume* pMinusLeaf   = CreatePhysicalVolume(volName, negativelLeaf, 0, threeVecMinus, fEnvelopePhys);
 		
 		fPhysicalXPlusLeaves.push_back(pPlusLeaf);
@@ -219,7 +235,7 @@ G4VPhysicalVolume* TsDivergingMLC::Construct()
 }
 
 
-std::pair<G4GenericTrap*,G4GenericTrap*> TsDivergingMLC::ConstructLeafPair(G4int leafID, G4double thick, G4double posOpen, G4double negOpen, G4double leafWidth, G4double currentWidth) {
+std::pair<G4GenericTrap*,G4GenericTrap*> TsDivergingMLC::ConstructLeafPair(G4int leafID, G4double thick, G4double posOpen, G4double negOpen, G4double leafWidth, G4double currentWidth, G4bool isX) {
 	// X Deformation: Between the leaf openings
 	G4double positiveXDeformation = 0;
 	G4double negativeXDeformation = 0;
@@ -236,30 +252,80 @@ std::pair<G4GenericTrap*,G4GenericTrap*> TsDivergingMLC::ConstructLeafPair(G4int
 	backwardYDeformation = thick*(currentWidth)/fSAD;
 
 	std::vector<G4TwoVector> posVertexes;
-	//Posterior To Source
-	posVertexes.push_back(G4TwoVector(-fLeafHalfLength+positiveXDeformation,backwardYDeformation-leafWidth*0.5)/fMagnification); // -X, -Y, -Z
-	posVertexes.push_back(G4TwoVector(-fLeafHalfLength+positiveXDeformation,forwardYDeformation+leafWidth*0.5)/fMagnification);  // -X, +Y, -Z
-	posVertexes.push_back(G4TwoVector( fLeafHalfLength,                     forwardYDeformation+leafWidth*0.5)/fMagnification);  // +X, +Y, -Z
-	posVertexes.push_back(G4TwoVector( fLeafHalfLength,                     backwardYDeformation-leafWidth*0.5)/fMagnification); // +X, -Y, -Z
-
-	//Anterior to Source
-	posVertexes.push_back(G4TwoVector(-fLeafHalfLength,-leafWidth*0.5)/fMagnification); // -X, -Y, +Z
-	posVertexes.push_back(G4TwoVector(-fLeafHalfLength,+leafWidth*0.5)/fMagnification); // -X, +Y, +Z
-	posVertexes.push_back(G4TwoVector( fLeafHalfLength,+leafWidth*0.5)/fMagnification); // +X, +Y, +Z
-	posVertexes.push_back(G4TwoVector( fLeafHalfLength,-leafWidth*0.5)/fMagnification); // +X, -Y, +Z
-
 	std::vector<G4TwoVector> negVertexes;
-	//Posterior to Source
-	negVertexes.push_back(G4TwoVector(-fLeafHalfLength,                     backwardYDeformation-leafWidth*0.5)/fMagnification); // -X -Y, -Z
-	negVertexes.push_back(G4TwoVector(-fLeafHalfLength,                     forwardYDeformation+leafWidth*0.5)/fMagnification);  // -X +Y, -Z
-	negVertexes.push_back(G4TwoVector( fLeafHalfLength-negativeXDeformation,forwardYDeformation+leafWidth*0.5)/fMagnification);  // +X +Y, -Z
-	negVertexes.push_back(G4TwoVector( fLeafHalfLength-negativeXDeformation,backwardYDeformation-leafWidth*0.5)/fMagnification); // +X -Y, -Z
 
-	//Anterior to Source
-	negVertexes.push_back(G4TwoVector(-fLeafHalfLength,-leafWidth*0.5)/fMagnification); // -X -Y, +Z
-	negVertexes.push_back(G4TwoVector(-fLeafHalfLength,+leafWidth*0.5)/fMagnification); // -X +Y, +Z
-	negVertexes.push_back(G4TwoVector( fLeafHalfLength,+leafWidth*0.5)/fMagnification); // +X +Y, +Z
-	negVertexes.push_back(G4TwoVector( fLeafHalfLength,-leafWidth*0.5)/fMagnification); // +X -Y, +Z
+	G4double Positive_Posterior_nX = -fLeafHalfLength+positiveXDeformation;
+	G4double Positive_Posterior_pX = fLeafHalfLength;
+	G4double Positive_Posterior_nY = backwardYDeformation-leafWidth*0.5;
+	G4double Positive_Posterior_pY = forwardYDeformation+leafWidth*0.5;
+
+	G4double Positive_Anterior_nX = -fLeafHalfLength;
+	G4double Positive_Anterior_pX =  fLeafHalfLength;
+	G4double Positive_Anterior_nY = -leafWidth*0.5;
+	G4double Positive_Anterior_pY = +leafWidth*0.5;
+
+	G4double Negative_Posterior_nX = -fLeafHalfLength;
+	G4double Negative_Posterior_pX = fLeafHalfLength-negativeXDeformation;
+	G4double Negative_Posterior_nY = backwardYDeformation-leafWidth*0.5;
+	G4double Negative_Posterior_pY = forwardYDeformation+leafWidth*0.5;
+
+	G4double Negative_Anterior_nX = -fLeafHalfLength;
+	G4double Negative_Anterior_pX =  fLeafHalfLength;
+	G4double Negative_Anterior_nY = -leafWidth*0.5;
+	G4double Negative_Anterior_pY = +leafWidth*0.5;
+
+	if (isX) {
+		//Posterior To Source
+		posVertexes.push_back(G4TwoVector(Positive_Posterior_nX,Positive_Posterior_nY)/fMagnification); // -X, -Y, -Z
+		posVertexes.push_back(G4TwoVector(Positive_Posterior_nX,Positive_Posterior_pY)/fMagnification); // -X, +Y, -Z
+		posVertexes.push_back(G4TwoVector(Positive_Posterior_pX,Positive_Posterior_pY)/fMagnification); // +X, +Y, -Z
+		posVertexes.push_back(G4TwoVector(Positive_Posterior_pX,Positive_Posterior_nY)/fMagnification); // +X, -Y, -Z
+
+		//Anterior to Source
+		posVertexes.push_back(G4TwoVector(Positive_Anterior_nX,Positive_Anterior_nY)/fMagnification); // -X, -Y, +Z
+		posVertexes.push_back(G4TwoVector(Positive_Anterior_nX,Positive_Anterior_pY)/fMagnification); // -X, +Y, +Z
+		posVertexes.push_back(G4TwoVector(Positive_Anterior_pX,Positive_Anterior_pY)/fMagnification); // +X, +Y, +Z
+		posVertexes.push_back(G4TwoVector(Positive_Anterior_pX,Positive_Anterior_nY)/fMagnification); // +X, -Y, +Z
+
+		
+		//Posterior to Source
+		negVertexes.push_back(G4TwoVector(Negative_Posterior_nX,Negative_Posterior_nY)/fMagnification); // -X -Y, -Z
+		negVertexes.push_back(G4TwoVector(Negative_Posterior_nX,Negative_Posterior_pY)/fMagnification); // -X +Y, -Z
+		negVertexes.push_back(G4TwoVector(Negative_Posterior_pX,Negative_Posterior_pY)/fMagnification); // +X +Y, -Z
+		negVertexes.push_back(G4TwoVector(Negative_Posterior_pX,Negative_Posterior_nY)/fMagnification); // +X -Y, -Z
+
+		//Anterior to Source
+		negVertexes.push_back(G4TwoVector(Negative_Anterior_nX,Negative_Anterior_nY)/fMagnification); // -X -Y, +Z
+		negVertexes.push_back(G4TwoVector(Negative_Anterior_nX,Negative_Anterior_pY)/fMagnification); // -X +Y, +Z
+		negVertexes.push_back(G4TwoVector(Negative_Anterior_pX,Negative_Anterior_pY)/fMagnification); // +X +Y, +Z
+		negVertexes.push_back(G4TwoVector(Negative_Anterior_pX,Negative_Anterior_nY)/fMagnification); // +X -Y, +Z
+	}
+	else {
+		//Posterior To Source
+		posVertexes.push_back(G4TwoVector(Positive_Posterior_nY,Positive_Posterior_nX)/fMagnification); // -X, -Y, -Z
+		posVertexes.push_back(G4TwoVector(Positive_Posterior_nY,Positive_Posterior_pX)/fMagnification); // -X, +Y, -Z
+		posVertexes.push_back(G4TwoVector(Positive_Posterior_pY,Positive_Posterior_pX)/fMagnification); // +X, +Y, -Z
+		posVertexes.push_back(G4TwoVector(Positive_Posterior_pY,Positive_Posterior_nX)/fMagnification); // +X, -Y, -Z
+
+		//Anterior to Source
+		posVertexes.push_back(G4TwoVector(Positive_Anterior_nY,Positive_Anterior_nX)/fMagnification); // -X, -Y, +Z
+		posVertexes.push_back(G4TwoVector(Positive_Anterior_nY,Positive_Anterior_pX)/fMagnification); // -X, +Y, +Z
+		posVertexes.push_back(G4TwoVector(Positive_Anterior_pY,Positive_Anterior_pX)/fMagnification); // +X, +Y, +Z
+		posVertexes.push_back(G4TwoVector(Positive_Anterior_pY,Positive_Anterior_nX)/fMagnification); // +X, -Y, +Z
+
+		
+		//Posterior to Source
+		negVertexes.push_back(G4TwoVector(Negative_Posterior_nY,Negative_Posterior_nX)/fMagnification); // -X -Y, -Z
+		negVertexes.push_back(G4TwoVector(Negative_Posterior_nY,Negative_Posterior_pX)/fMagnification); // -X +Y, -Z
+		negVertexes.push_back(G4TwoVector(Negative_Posterior_pY,Negative_Posterior_pX)/fMagnification); // +X +Y, -Z
+		negVertexes.push_back(G4TwoVector(Negative_Posterior_pY,Negative_Posterior_nX)/fMagnification); // +X -Y, -Z
+
+		//Anterior to Source
+		negVertexes.push_back(G4TwoVector(Negative_Anterior_nY,Negative_Anterior_nX)/fMagnification); // -X -Y, +Z
+		negVertexes.push_back(G4TwoVector(Negative_Anterior_nY,Negative_Anterior_pX)/fMagnification); // -X +Y, +Z
+		negVertexes.push_back(G4TwoVector(Negative_Anterior_pY,Negative_Anterior_pX)/fMagnification); // +X +Y, +Z
+		negVertexes.push_back(G4TwoVector(Negative_Anterior_pY,Negative_Anterior_nX)/fMagnification); // +X -Y, +Z	
+	}
 
 	G4GenericTrap* posLeaf = new G4GenericTrap("gLeaf_pos",thick * 0.5/fMagnification,posVertexes);
 	G4GenericTrap* negLeaf = new G4GenericTrap("gLeaf_neg",thick * 0.5/fMagnification,negVertexes);
