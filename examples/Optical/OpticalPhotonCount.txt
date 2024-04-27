@@ -88,10 +88,10 @@ s:Ge/FOT/OpticalBehavior = "SurfaceDetector"
 s:Su/SurfaceDetector/Type                = "dielectric_metal"
 s:Su/SurfaceDetector/Finish              = "polished"
 s:Su/SurfaceDetector/Model               = "unified"
-dv:Su/SurfaceDetector/Efficiency/Energies   = 2 1.6 7.2 eV
-uv:Su/SurfaceDetector/Efficiency/Values     = 2 1.0 1.0
-dv:Su/SurfaceDetector/Reflectivity/Energies = 2 1.6 4.2 eV
-uv:Su/SurfaceDetector/Reflectivity/Values   = 2 0.0 0.0
+dv:Su/SurfaceDetector/EFFICIENCY/Energies   = 2 1.6 7.2 eV
+uv:Su/SurfaceDetector/EFFICIENCY/Values     = 2 1.0 1.0
+dv:Su/SurfaceDetector/REFLECTIVITY/Energies = 2 1.6 4.2 eV
+uv:Su/SurfaceDetector/REFLECTIVITY/Values   = 2 0.0 0.0
 
 # The scorer is attached to the PMT, but only those
 # photons that arrives to the surface of the photocathode

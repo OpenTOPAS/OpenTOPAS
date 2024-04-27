@@ -46,7 +46,7 @@ sv:Ph/Optical/Modules = 7 "g4optical" "g4em-standard_opt3" "g4h-phy_QGSP_BIC_HP"
 # SOURCE
 s:So/Example/Type                     = "Beam"
 s:So/Example/Component                = "BeamPosition"
-s:So/Example/BeamParticle             = "e-" #proton"
+s:So/Example/BeamParticle             = "proton"
 d:So/Example/BeamEnergy               = 200 MeV
 u:So/Example/BeamEnergySpread         = 0.5
 s:So/Example/BeamPositionDistribution = "Flat"
