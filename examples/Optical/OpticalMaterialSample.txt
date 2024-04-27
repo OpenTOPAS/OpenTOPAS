@@ -1,8 +1,8 @@
 # Materials used by Optical examples
 
 # Materials
-dv:Ma/Air/RefractiveIndex/Energies = 3 2.0 3.5 7.14 eV
-uv:Ma/Air/RefractiveIndex/Values = 3 1.0 1.0 1.0
+dv:Ma/Air/RINDEX/Energies = 3 2.0 3.5 7.14 eV
+uv:Ma/Air/RINDEX/Values = 3 1.0 1.0 1.0
 
 # 
 sv:Ma/PMMA/Components = 3 "Carbon" "Hydrogen" "Oxygen"
@@ -10,23 +10,23 @@ uv:Ma/PMMA/Fractions = 3  0.599848  0.080538  0.319614
 d:Ma/PMMA/Density = 1.190 g/cm3
 d:Ma/PMMA/MeanExcitationEnergy=85.7 eV
 s:Ma/PMMA/DefaultColor = "lightblue"
-dv:Ma/PMMA/RefractiveIndex/Energies = 2 2.0 3.35 eV
-uv:Ma/PMMA/RefractiveIndex/Values = 2 1.49 1.49
+dv:Ma/PMMA/RINDEX/Energies = 2 2.0 3.35 eV
+uv:Ma/PMMA/RINDEX/Values = 2 1.49 1.49
 
 #
 sv:Ma/Buapfcfm/Components = 2 "Hydrogen" "Carbon"
 uv:Ma/Buapfcfm/Fractions  = 2  0.5 0.5
 d:Ma/Buapfcfm/Density     = 1.032 g/cm3
 s:Ma/Buapfcfm/DefaultColor= "yellow"
-u:Ma/Buapfcfm/ScintillationYield      = 50
-u:Ma/Buapfcfm/ResolutionScale         = 1.0
-d:Ma/Buapfcfm/FastTimeConstant        = 2.1 ns 
-u:Ma/Buapfcfm/YieldRatio              = 1.0
-dv:Ma/Buapfcfm/RefractiveIndex/Energies    = 4 2.11501 2.3509 2.85803 3.10177 eV
-uv:Ma/Buapfcfm/RefractiveIndex/Values    = 4 1.58  1.58  1.58  1.58 
-dv:Ma/Buapfcfm/AbsLength/Energies = 4 2.11501 2.3509 2.85803 3.10177 eV
-dv:Ma/Buapfcfm/AbsLength/Values = 4 50  50  50  50 cm 
-dv:Ma/Buapfcfm/FastComponent/Energies = 300
+d:Ma/Buapfcfm/SCINTILLATIONYIELD      = 50 /MeV
+u:Ma/Buapfcfm/RESOLUTIONSCALE         = 1.0
+d:Ma/Buapfcfm/SCINTILLATIONTIMECONSTANT1        = 2.1 ns 
+#u:Ma/Buapfcfm/YieldRatio              = 1.0
+dv:Ma/Buapfcfm/RINDEX/Energies    = 4 2.11501 2.3509 2.85803 3.10177 eV
+uv:Ma/Buapfcfm/RINDEX/Values    = 4 1.58  1.58  1.58  1.58 
+dv:Ma/Buapfcfm/ABSLENGTH/Energies = 4 2.11501 2.3509 2.85803 3.10177 eV
+dv:Ma/Buapfcfm/ABSLENGTH/Values = 4 50  50  50  50 cm 
+dv:Ma/Buapfcfm/SCINTILLATIONCOMPONENT1/Energies = 300
 2.06785  2.07016  2.07247  2.07479  2.07711  2.07944  2.08177  2.08411  2.08646  2.08881  
 2.09116  2.09352  2.09589  2.09826  2.10064  2.10302  2.1054  2.1078  2.11019  2.1126  
 2.11501  2.11742  2.11984  2.12227  2.1247  2.12713  2.12958  2.13202  2.13448  2.13694  
@@ -57,7 +57,7 @@ dv:Ma/Buapfcfm/FastComponent/Energies = 300
 2.95831  2.96304  2.96778  2.97254  2.97731  2.98209  2.98689  2.99171  2.99654  3.00139  
 3.00626  3.01114  3.01604  3.02095  3.02588  3.03082  3.03578  3.04075  3.04575  3.05076  
 3.05579  3.06083  3.06589  3.07097  3.07606  3.08116  3.08629  3.09143  3.0966  3.10177   eV
-uv:Ma/Buapfcfm/FastComponent/Values = 300
+uv:Ma/Buapfcfm/SCINTILLATIONCOMPONENT1/Values = 300
 2.53707e-09  0.000969057  0.00219543  0.00343101  0.00448992  0.00406717  0.00212089  
 0.00189828  0.0034739  0.00463901  0.00349636  0.00220565  0.00175737  0.00296129  
 0.00380065  0.00368119  0.00409474  0.00472785  0.0048657  0.00466862  0.00530172  
@@ -108,8 +108,8 @@ uv:Ma/Polystyrene/Fractions = 2 0.9226 0.0774
 d:Ma/Polystyrene/Density = 1.06 g/cm3
 d:Ma/Polystyrene/MeanExcitationEnergy = 68 eV
 s:Ma/Polystyrene/DefaultColor = "blue"
-d:Ma/Polystyrene/WLSTimeConstant = 2.7 ns
-dv:Ma/Polystyrene/RefractiveIndex/Energies = 67
+d:Ma/Polystyrene/WLSTIMECONSTANT = 2.7 ns
+dv:Ma/Polystyrene/RINDEX/Energies = 67
 2.08871  2.09688  2.1067  2.11901  2.13227  2.14775  2.16097  2.17225  2.18364  2.19859
 2.21026  2.22648  2.23891  2.25375  2.26738  2.27888  2.29049  2.30364  2.3179  2.33282
 2.34843  2.36028  2.37327  2.39096  2.40429  2.41311  2.42304  2.43043  2.43947  2.44483
@@ -117,7 +117,7 @@ dv:Ma/Polystyrene/RefractiveIndex/Energies = 67
 2.52494  2.52869  2.53548  2.54  2.5476  2.55294  2.55983  2.56443  2.57218  2.57919
 2.58782  2.59887  2.60524  2.61001  2.61641  2.61961  2.62441  2.6317  2.63573  2.64143
 2.648  2.65211  2.6554  2.66204  2.66787  2.67712  2.68643   eV
-uv:Ma/Polystyrene/RefractiveIndex/Values = 67
+uv:Ma/Polystyrene/RINDEX/Values = 67
 1.6  1.6  1.6  1.6  1.6  1.6  1.6  1.6  1.6  1.6
 1.6  1.6  1.6  1.6  1.6  1.6  1.6  1.6  1.6  1.6
 1.6  1.6  1.6  1.6  1.6  1.6  1.6  1.6  1.6  1.6
@@ -125,7 +125,7 @@ uv:Ma/Polystyrene/RefractiveIndex/Values = 67
 1.6  1.6  1.6  1.6  1.6  1.6  1.6  1.6  1.6  1.6
 1.6  1.6  1.6  1.6  1.6  1.6  1.6  1.6  1.6  1.6
 1.6  1.6  1.6  1.6  1.6  1.6  1.6
-dv:Ma/Polystyrene/WLSAbsLength/Energies = 117
+dv:Ma/Polystyrene/WLSABSLENGTH/Energies = 117
 2.62543  2.63692  2.65308  2.66523  2.67411  2.68221  2.68692
 2.69251  2.69684  2.70162  2.70685  2.7108  2.71696  2.72228
 2.72455  2.72906  2.73495  2.73962  2.74511  2.74695  2.74879
@@ -143,7 +143,7 @@ dv:Ma/Polystyrene/WLSAbsLength/Energies = 117
 3.17489  3.18651  3.20186  3.21461  3.23025  3.24885  3.26483
 3.28095  3.29435  3.30881  3.32635  3.34805  3.37005  3.40055
 3.42847  3.45475  3.48037  3.50747  3.54278   eV
-dv:Ma/Polystyrene/WLSAbsLength/Values =117
+dv:Ma/Polystyrene/WLSABSLENGTH/Values =117
 0.298184  0.298199  0.297833  0.297076  0.294001  0.28996  
 0.287072  0.283028  0.278404  0.27378  0.268193  0.261253  
 0.251423  0.241592  0.229636  0.211509  0.188755  0.149411  
@@ -167,7 +167,7 @@ dv:Ma/Polystyrene/WLSAbsLength/Values =117
 0.23093  0.237309  0.242238  0.249772  0.25673  
 0.264269  0.269783 0.275014  0.279375  0.282287  
 0.284331  0.286086  0.287847   m
-dv:Ma/Polystyrene/WLSComponent/Energies = 67
+dv:Ma/Polystyrene/WLSCOMPONENT/Energies = 67
 2.08871  2.09688  2.1067  2.11901  2.13227  2.14775  2.16097  2.17225
 2.18364  2.19859  2.21026  2.22648  2.23891  2.25375  2.26738  2.27888
 2.29049  2.30364  2.3179  2.33282  2.34843  2.36028  2.37327  2.39096
@@ -176,7 +176,7 @@ dv:Ma/Polystyrene/WLSComponent/Energies = 67
 2.52494  2.52869  2.53548  2.54  2.5476  2.55294  2.55983  2.56443  2.57218
 2.57919  2.58782  2.59887  2.60524  2.61001  2.61641  2.61961  2.62441
 2.6317  2.63573  2.64143  2.648  2.65211  2.6554  2.66204  2.66787  2.67712  2.68643   eV
-uv:Ma/Polystyrene/WLSComponent/Values = 67
+uv:Ma/Polystyrene/WLSCOMPONENT/Values = 67
 0.00571321  0.00979897  0.0200973  0.0283023  0.0406511  0.0581719
 0.0767485  0.092228  0.108745  0.121088  0.136567  0.165503  0.191354
 0.226526  0.23681  0.252295  0.265706  0.288444  0.304952  0.323532
@@ -192,5 +192,5 @@ sv:Ma/Borosilicate/Components = 6 "Boron" "Oxygen" "Sodium" "Aluminum" "Silicon"
 uv:Ma/Borosilicate/Fractions  = 6 0.040064 0.539562 0.028191 0.011644 0.377220 0.003321
 d:Ma/Borosilicate/Density     = 2.23 g/cm3
 s:Ma/Borosilicate/DefaultColor = "red"
-dv:Ma/Borosilicate/RefractiveIndex/Energies = 2 2.297 2.298 eV
-uv:Ma/Borosilicate/RefractiveIndex/Values = 2 1.5   1.5
+dv:Ma/Borosilicate/RINDEX/Energies = 2 2.297 2.298 eV
+uv:Ma/Borosilicate/RINDEX/Values = 2 1.5   1.5

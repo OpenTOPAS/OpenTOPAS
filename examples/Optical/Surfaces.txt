@@ -3,6 +3,7 @@
 includeFile = OpticalMaterialSample.txt
 
 i:Ts/SequenceVerbosity = 1
+i:Ma/Verbosity = 1
 
 # SEQUENCE
 b:Ts/PauseBeforeQuit                = "True"
@@ -13,6 +14,7 @@ i:Ts/ShowHistoryCountAtInterval     = 10
 s:Gr/view/Type         = "OpenGl"
 #b:Gr/view/IncludeAxes  = "true"
 d:Gr/view/AxesSize     = 10 cm
+b:Ts/UseQt = "True"
 
 # PHYSICS LIST
 s:Ph/ListName         = "Optical"
@@ -124,13 +126,13 @@ d:Ge/screen/RotZ     = 0 deg
 s:Su/SurfaceSplitter/Type                   = "dielectric_dielectric"
 s:Su/SurfaceSplitter/Finish                 = "polished"
 s:Su/SurfaceSplitter/Model                  = "unified"
-dv:Su/SurfaceSplitter/Efficiency/Energies   = 2 1.6 4.2 eV
-uv:Su/SurfaceSplitter/Efficiency/Values     = 2 1.0 1.0
-dv:Su/SurfaceSplitTer/Reflectivity/Energies = 2 1.6 4.2 eV
-uv:Su/SurfaceSplitter/Reflectivity/Values   = 2 0.5 0.5
+dv:Su/SurfaceSplitter/EFFICIENCY/Energies   = 2 1.6 4.2 eV
+uv:Su/SurfaceSplitter/EFFICIENCY/Values     = 2 1.0 1.0
+dv:Su/SurfaceSplitTer/REFLECTIVITY/Energies = 2 1.6 4.2 eV
+uv:Su/SurfaceSplitter/REFLECTIVITY/Values   = 2 0.5 0.5
 
 s:Su/SurfaceMirror/Type                   = "dielectric_metal"
 s:Su/SurfaceMirror/Finish                 = "polished"
 s:Su/SurfaceMirror/Model                  = "unified"
-dv:Su/SurfaceMirror/Reflectivity/Energies = 2 1.6 4.2 eV
-uv:Su/SurfaceMirror/Reflectivity/Values   = 2 1.0 1.0
+dv:Su/SurfaceMirror/REFLECTIVITY/Energies = 2 1.6 4.2 eV
+uv:Su/SurfaceMirror/REFLECTIVITY/Values   = 2 1.0 1.0
