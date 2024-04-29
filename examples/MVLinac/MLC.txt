@@ -30,6 +30,7 @@ d:Ge/MLC/SourceToUpstreamSurfaceDistance = 28.26  cm # Distance from source to M
 d:Ge/MLC/MaximumLeafOpen  = 20.0 cm # Actual limit of leaf travel
 d:Ge/MLC/Thickness        = 7.56 cm # Actual thickness of MLC leaves along IEC Zb
 d:Ge/MLC/Length           = 20.0 cm # Length of MLC leaves in direction of travel
+s:Ge/MLC/LeafTravelAxis = "Xb"
 
 d:Ge/MLC/DistSourceToSAD = Ge/MLC/SAD - Ge/MLC/SourceToUpstreamSurfaceDistance cm
 d:Ge/MLC/HalfThickness = 0.5 * Ge/MLC/Thickness cm
