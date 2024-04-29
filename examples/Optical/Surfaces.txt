@@ -3,6 +3,7 @@
 includeFile = OpticalMaterialSample.txt
 
 i:Ts/SequenceVerbosity = 1
+i:Ma/Verbosity = 1
 
 # SEQUENCE
 b:Ts/PauseBeforeQuit                = "True"
@@ -13,6 +14,7 @@ i:Ts/ShowHistoryCountAtInterval     = 10
 s:Gr/view/Type         = "OpenGl"
 #b:Gr/view/IncludeAxes  = "true"
 d:Gr/view/AxesSize     = 10 cm
+b:Ts/UseQt = "True"
 
 # PHYSICS LIST
 s:Ph/ListName         = "Optical"

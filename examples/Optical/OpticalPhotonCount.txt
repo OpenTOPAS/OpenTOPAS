@@ -25,6 +25,8 @@ i:Gr/view/WindowSizeY = 600
 d:Gr/view/Theta       = 45. deg
 d:Gr/view/Phi         = 45. deg
 
+b:Ts/UseQt = "True"
+
 # PHYSICS LIST
 s:Ph/ListName         = "Optical"
 s:Ph/Optical/Type     = "Geant4_Modular"

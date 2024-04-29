@@ -291,60 +291,36 @@ G4Material* TsMaterialManager::GetMaterial(G4String fullMaterialName)
 
 
 void TsMaterialManager::FillMaterialPropertiesTable(G4MaterialPropertiesTable* propertiesTable, G4String prefix) {
-	SetConstantProperty(propertiesTable, prefix, "SCINTILLATIONYIELD");
-	SetConstantProperty(propertiesTable, prefix, "RESOLUTIONSCALE");
-	SetConstantProperty(propertiesTable, prefix, "FASTTIMECONSTANT");
-	SetConstantProperty(propertiesTable, prefix, "SLOWTIMECONSTANT");
-	SetConstantProperty(propertiesTable, prefix, "YIELDRATIO");
-	SetConstantProperty(propertiesTable, prefix, "MIEHG_FORWARD");
-	SetConstantProperty(propertiesTable, prefix, "MIEHG_BACKWARD");
-	SetConstantProperty(propertiesTable, prefix, "MIEHG_FORWARD_RATIO");
-	SetConstantProperty(propertiesTable, prefix, "WLSTIMECONSTANT");
-
-	SetVectorProperty(propertiesTable, prefix, "REFRACTIVEINDEX", true);
-	SetVectorProperty(propertiesTable, prefix, "IMAGINARYREFRACTIVEINDEX", true);
-	SetVectorProperty(propertiesTable, prefix, "REALREFRACTIVEINDEX", true);
-	SetVectorProperty(propertiesTable, prefix, "ABSLENGTH", true);
-	SetVectorProperty(propertiesTable, prefix, "FASTCOMPONENT", true);
-	SetVectorProperty(propertiesTable, prefix, "SLOWCOMPONENT", true);
-	SetVectorProperty(propertiesTable, prefix, "MIEHG", true);
-	SetVectorProperty(propertiesTable, prefix, "SPECULARLOBECONSTANT", true);
-	SetVectorProperty(propertiesTable, prefix, "SPECULARSPIKECONSTANT", true);
-	SetVectorProperty(propertiesTable, prefix, "BACKSCATTERCONSTANT", true);
-	SetVectorProperty(propertiesTable, prefix, "REFLECTIVITY", true);
-	SetVectorProperty(propertiesTable, prefix, "EFFICIENCY", true);
-	SetVectorProperty(propertiesTable, prefix, "WLSABSLENGTH", false);
-	SetVectorProperty(propertiesTable, prefix, "WLSCOMPONENT", true);
-	SetVectorProperty(propertiesTable, prefix, "TRANSMITTANCE", false);
+    const std::vector<G4String>& constPropertyNames = propertiesTable->GetMaterialConstPropertyNames();
+    for (size_t t = 0; t < constPropertyNames.size(); t++ )
+        SetConstantProperty(propertiesTable, prefix, constPropertyNames[t]);
+    
+    const std::vector<G4String>& vectPropertyNames = propertiesTable->GetMaterialPropertyNames();
+    for ( size_t t = 0; t < vectPropertyNames.size(); t++ )
+        SetVectorProperty(propertiesTable, prefix, vectPropertyNames[t], true);
 }
 
 
 void TsMaterialManager::SetConstantProperty(G4MaterialPropertiesTable* propertiesTable, G4String prefix, G4String propertyName) {
 	G4String parameterName = prefix + propertyName;
 
-	if (fPm->ParameterExists(parameterName)){
-		if (propertyName != "FASTTIMECONSTANT" && propertyName != "SLOWTIMECONSTANT" && propertyName != "WLSTIMECONSTANT") {
-			G4double property = fPm->GetUnitlessParameter(parameterName);
-
-			if (propertyName == "SCINTILLATIONYIELD") {
-				if (!fPm->ParameterExists(prefix + "ResolutionScale"))
-					Quit(parameterName, "Requires additional parameter: " + prefix + "ResolutionScale");
-
-				if (!fPm->ParameterExists(prefix + "FastTimeConstant"))
-					Quit(parameterName, "Requires additional parameter: " + prefix + "FastTimeConstant");
-
-				propertiesTable->AddConstProperty(propertyName, property/MeV, true);
-			} else {
-				propertiesTable->AddConstProperty(propertyName, property, true);
-			}
-		} else {
-			G4double property = fPm->GetDoubleParameter(parameterName, "Time");
-			propertiesTable->AddConstProperty(propertyName, property, true);
-
-		}
+    if (fPm->ParameterExists(parameterName)){
+        G4double property;
+        if (fPm->GetUnitOfParameter(parameterName) == "" ) {
+            property = fPm->GetUnitlessParameter(parameterName);
+        } else {
+            property = fPm->GetDoubleParameter(parameterName, fPm->GetUnitCategoryOfParameter(parameterName));
+        }
+        
+#if GEANT4_VERSION_MAJOR >= 11
+        G4StrUtil::to_upper(propertyName);
+#else
+        propertyName.toUpper();
+#endif
+        propertiesTable->AddConstProperty(propertyName, property, true);
 
 		if (fVerbosity > 0)
-			G4cout << "Added optical property from parameter: " << parameterName << G4endl;
+			G4cout << "Added constant for optical property from parameter: " << parameterName << G4endl;
 	}
 }
 
@@ -354,19 +330,12 @@ void TsMaterialManager::SetVectorProperty(G4MaterialPropertiesTable* propertiesT
 	G4String energiesParameterName = prefix + propertyName + "/Energies";
 
 	if (fPm->ParameterExists(valuesParameterName)) {
-		if (propertyName == "FASTCOMPONENT")
-			if (!fPm->ParameterExists(prefix + "ScintillationYield"))
-				Quit(valuesParameterName, "Requires additional parameter: " + prefix + "ScintillationYield");
-
-		if (propertyName == "WLSCOMPONENT")
-			if (!fPm->ParameterExists(prefix + "WLSTimeConstant"))
-				Quit(valuesParameterName, "Requires additional parameter: " + prefix + "WLSTimeConstant");
-
-		G4double* property;
-		if (propertyName != "ABSLENGTH" && propertyName != "MIEHG" && propertyName != "WLSABSLENGTH")
-			property = fPm->GetUnitlessVector(valuesParameterName);
-		else
-			property = fPm->GetDoubleVector(valuesParameterName, "Length" );
+        G4double* property;
+        if (fPm->GetUnitOfParameter(valuesParameterName) == "" ) {
+            property = fPm->GetUnitlessVector(valuesParameterName);
+        } else {
+            property = fPm->GetDoubleVector(valuesParameterName, fPm->GetUnitCategoryOfParameter(valuesParameterName));
+        }
 
 		G4int nValues = fPm->GetVectorLength(valuesParameterName);
 
@@ -377,25 +346,17 @@ void TsMaterialManager::SetVectorProperty(G4MaterialPropertiesTable* propertiesT
 			Quit(valuesParameterName, "must be same length as: " + energiesParameterName);
 
 		G4double* photonEnergies = fPm->GetDoubleVector(energiesParameterName, "Energy");
-
-		if (propertyName == "REFRACTIVEINDEX")
-			propertyName = "RINDEX";
-
-		if (propertyName == "IMAGINARYREFRACTIVEINDEX")
-			propertyName = "IMAGINARYRINDEX";
-
-		if (propertyName == "REALREFRACTIVEINDEX")
-			propertyName = "REALRINDEX";
-
 		
 #if GEANT4_VERSION_MAJOR >= 11
-		propertiesTable->AddProperty(propertyName, photonEnergies, property, nValues,true,applySpline);
+        G4StrUtil::to_upper(propertyName);
+		propertiesTable->AddProperty(propertyName, photonEnergies, property, nValues, true, applySpline);
 #else
+        propertyName.toUpper();
 		propertiesTable->AddProperty(propertyName, photonEnergies, property, nValues)->SetSpline(applySpline);
 #endif
 
 		if (fVerbosity > 0)
-			G4cout << "Added optical property from parameter: " << valuesParameterName << G4endl;
+			G4cout << "Added vector for optical property from parameter: " << valuesParameterName << G4endl;
 	}
 }
 
