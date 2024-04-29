@@ -748,6 +748,7 @@ G4String TsParameterManager::GetUnitCategory(const G4String& unitString) {
 	else if (unitString == "/cm2") category = "fluence";
 	else if (unitString == "/Gy") category = "perDose";
 	else if (unitString == "/Gy2") category = "perDoseSquare";
+    else if (unitString == "/MeV") category = "perEnergy";
 	else if (unitString == "mm/MeV/Gy") category = "perForce perDose";
 	else if (unitString == "Sv") category = "dose";
 	else if (unitString == "Sv*mm2") category = "dose fluence";
@@ -789,6 +790,7 @@ G4double TsParameterManager::GetUnitValue(const G4String& unitString) {
 	else if (unitString == "/cm2") value = 1./cm/cm;
 	else if (unitString == "/Gy") value = 1./gray;
 	else if (unitString == "/Gy2") value = 1./gray/gray;
+    else if (unitString == "/MeV") value = 1./MeV;
 	else if (unitString == "mm/MeV/Gy") value = mm/MeV/gray;
 	else if (unitString == "Sv") value = gray;
 	else if (unitString == "Sv*mm2") value = gray*mm*mm;

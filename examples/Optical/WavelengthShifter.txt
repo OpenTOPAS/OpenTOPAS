@@ -3,6 +3,7 @@
 includeFile = OpticalMaterialSample.txt
 
 i:Ts/SequenceVerbosity = 0
+i:Ma/Verbosity = 1
 
 # SEQUENCE
 b:Ts/PauseBeforeQuit = "False"
@@ -11,7 +12,7 @@ i:Ts/ShowHistoryCountAtInterval= 10000
 
 # SCORER
 s:Sc/PhSp1/Quantity                        = "PhaseSpace"
-s:Sc/PhSp1/Surface                         = "WLS/OuterCurvedSurface"
+s:Sc/PhSp1/Surface                         = "wls/OuterCurvedSurface"
 s:Sc/PhSp1/OutputType                      = "ASCII"
 s:Sc/PhSp1/OutputFile                      = "In"
 s:Sc/PhSp1/IfOutputFileAlreadyExists       = "Overwrite"
@@ -21,7 +22,7 @@ sv:Sc/PhSp1/OnlyIncludeParticlesFromVolume = 1 "Plastic"
 s:Sc/PhSp1/OnlyIncludeParticlesGoing       = "in"
 
 s:Sc/PhSp2/Quantity                  = "PhaseSpace"
-s:Sc/PhSp2/Surface                   = "WLS/Core/ZPlusSurface"
+s:Sc/PhSp2/Surface                   = "wls/Core/ZPlusSurface"
 s:Sc/PhSp2/OutputType                = "ASCII"
 s:Sc/PhSp2/OutputFile                = "Out"
 s:Sc/PhSp2/IfOutputFileAlreadyExists = "Overwrite"
@@ -30,11 +31,11 @@ b:Sc/PhSp2/UsePDGEncoding            = "True"
 
 # VISUALIZATION
 #s:Gr/view/Type       = "OpenGl"
-b:Gr/view/IncludeAxes = "True"
 i:Gr/view/WindowSizeX = 600
 i:Gr/view/WindowSizeY = 600
 d:Gr/view/Theta       = 45. deg
 d:Gr/view/Phi         = 45. deg
+#b:Ts/UseQt = "True"
 
 # PHYSICS LIST
 s:Ph/ListName         = "Optical"
@@ -94,34 +95,34 @@ d:Ge/Plastic/RotX     = 0 deg
 d:Ge/Plastic/RotY     = 0 deg
 d:Ge/Plastic/RotZ     = 0 deg
 
-# WLS
-d:Ge/WLS/Diameter = 1.03 mm
-s:Ge/WLS/Parent   = "World"
-s:Ge/WLS/Type     = "TsCylinder"
-s:Ge/WLS/Material = "PMMA"
-d:Ge/WLS/HL       = 10 cm
-d:Ge/WLS/RMin     = 0.50 mm
-d:Ge/WLS/RMax     = 0.515 mm
-d:Ge/WLS/SPhi     = 0 deg
-d:Ge/WLS/DPhi     = 360 deg
-d:Ge/WLS/TransX   = 0 mm
-d:Ge/WLS/TransY   = Ge/Plastic/HLY + Ge/WLS/RMax mm
-d:Ge/WLS/TransZ   = Ge/WLS/HL - Ge/Plastic/HLZ cm
-d:Ge/WLS/RotX     = 0 deg
-d:Ge/WLS/RotY     = 0 deg
-d:Ge/WLS/RotZ     = 0 deg
+# wls
+d:Ge/wls/Diameter = 1.03 mm
+s:Ge/wls/Parent   = "World"
+s:Ge/wls/Type     = "TsCylinder"
+s:Ge/wls/Material = "PMMA"
+d:Ge/wls/HL       = 10 cm
+d:Ge/wls/RMin     = 0.50 mm
+d:Ge/wls/RMax     = 0.515 mm
+d:Ge/wls/SPhi     = 0 deg
+d:Ge/wls/DPhi     = 360 deg
+d:Ge/wls/TransX   = 0 mm
+d:Ge/wls/TransY   = Ge/Plastic/HLY + Ge/wls/RMax mm
+d:Ge/wls/TransZ   = Ge/wls/HL - Ge/Plastic/HLZ cm
+d:Ge/wls/RotX     = 0 deg
+d:Ge/wls/RotY     = 0 deg
+d:Ge/wls/RotZ     = 0 deg
 
-s:Ge/WLS/Core/Parent   = "World"
-s:Ge/WLS/Core/Type     = "TsCylinder"
-s:Ge/WLS/Core/Material = "Polystyrene"
-d:Ge/WLS/Core/HL       = Ge/WLS/HL cm
-d:Ge/WLS/Core/RMin     = 0.0 mm
-d:Ge/WLS/Core/RMax     = 0.5 mm
-d:Ge/WLS/Core/SPhi     = 0 deg
-d:Ge/WLS/Core/DPhi     = 360 deg
-d:Ge/WLS/Core/TransX   = 0 mm
-d:Ge/WLS/Core/TransY   = Ge/Plastic/HLY + Ge/WLS/RMax mm
-d:Ge/WLS/Core/TransZ   = Ge/WLS/HL - Ge/Plastic/HLZ cm
-d:Ge/WLS/Core/RotX     = 0 deg
-d:Ge/WLS/Core/RotY     = 0 deg
-d:Ge/WLS/Core/RotZ     = 0 deg
+s:Ge/wls/Core/Parent   = "World"
+s:Ge/wls/Core/Type     = "TsCylinder"
+s:Ge/wls/Core/Material = "Polystyrene"
+d:Ge/wls/Core/HL       = Ge/wls/HL cm
+d:Ge/wls/Core/RMin     = 0.0 mm
+d:Ge/wls/Core/RMax     = 0.5 mm
+d:Ge/wls/Core/SPhi     = 0 deg
+d:Ge/wls/Core/DPhi     = 360 deg
+d:Ge/wls/Core/TransX   = 0 mm
+d:Ge/wls/Core/TransY   = Ge/Plastic/HLY + Ge/wls/RMax mm
+d:Ge/wls/Core/TransZ   = Ge/wls/HL - Ge/Plastic/HLZ cm
+d:Ge/wls/Core/RotX     = 0 deg
+d:Ge/wls/Core/RotY     = 0 deg
+d:Ge/wls/Core/RotZ     = 0 deg
