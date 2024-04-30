@@ -138,7 +138,7 @@ TsModularPhysicsList::TsModularPhysicsList(TsParameterManager* pM, TsExtensionMa
 	if (fPm->ParameterExists("Ph/Verbosity"))
 		SetVerboseLevel(fPm->GetIntegerParameter("Ph/Verbosity"));
 
-	fPhysicsTable.insert(std::make_pair("tsphotonuclear", new Creator<TsPhotoNeutron>()));
+	fPhysicsTable.insert(std::make_pair("tsphotoneutron", new Creator<TsPhotoNeutron>()));
 	fPhysicsTable.insert(std::make_pair("g4h-chargeexchange", new Creator<G4ChargeExchangePhysics>()));
 	fPhysicsTable.insert(std::make_pair("g4decay", new Creator<G4DecayPhysics>()));
 	fPhysicsTable.insert(std::make_pair("g4em-dna", new Creator<G4EmDNAPhysics>()));
