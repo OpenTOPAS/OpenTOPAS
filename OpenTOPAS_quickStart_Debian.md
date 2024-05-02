@@ -147,7 +147,7 @@ Then use the following commands to move GDCM(<em>gdcm-2.6.8.tar.gz</em>) from th
 
 8.3. Build GDCM with the following commands:
 
-        rm -rf gdcm4-install gdcm-build
+        rm -rf gdcm-install gdcm-build
         mkdir gdcm-{build,install}
         cd gdcm-build
         cmake ../gdcm-2.6.8 -DGDCM_BUILD_SHARED_LIBS=ON -DGDCM_BUILD_DOCBOOK_MANPAGES:BOOL=OFF  -DCMAKE_INSTALL_PREFIX=../gdcm-install 
