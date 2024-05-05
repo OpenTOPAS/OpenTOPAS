@@ -8,8 +8,8 @@ project (topas)
 
 enable_testing()
 
-set (TOPAS_VERSION_MAJOR 3)
-set (TOPAS_VERSION_MINOR 9)
+set (TOPAS_VERSION_MAJOR 4)
+set (TOPAS_VERSION_MINOR 0)
 set (TOPAS_VERSION_PATCH 0)
 
 # Print compiler information
@@ -28,6 +28,7 @@ message (STATUS "TOPAS_MT: ${TOPAS_MT}")
 message (STATUS "TOPAS_WITH_STATIC_GEANT4: ${TOPAS_WITH_STATIC_GEANT4}")
 message (STATUS "TOPAS_COVERAGE: ${TOPAS_COVERAGE}")
 message (STATUS "TOPAS_INSTALL_EXAMPLES: ${TOPAS_INSTALL_EXAMPLES}")
+message (STATUS "TOPAS-VERSION: ${TOPAS_VERSION_MAJOR}.${TOPAS_VERSION_MINOR}.${TOPAS_VERSION_PATCH}")
 
 #
 # Set up the file tree
@@ -117,14 +118,9 @@ install (TARGETS topas RUNTIME DESTINATION bin)
 # LICENSE & README
 install (FILES
 	forenduser/LICENSE.txt
-	forenduser/README.txt
 	forenduser/rundemos.csh
 	DESTINATION .)
 	
-#install (FILES forenduser/Geant4Headers.zip DESTINATION .)
-#
-#install (FILES patches/geant4_10_07_p03.patch DESTINATION .)
-
 # files for end user compiling
 install (FILES
 	topas.cc
