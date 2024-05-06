@@ -1,6 +1,12 @@
 # QuickStart Guide for OpenTOPAS: TOol for PArticle Simulation
 This file details the steps to be followed by <ins>Debian 10 or 11</ins> in order to install OpenTOPAS and launch your first simulation. 
 
+> [!TIP]
+> The directory path setting proposed in this quick-guide sets a local installation at the home directory (path defined by `$HOME` environment variable). 
+> Then, it requires the existence or creation of a `$HOME/Applications` folder.
+> For a global installation, a directory named `/Applications` should be created, which migth needs admin priviledges. In this case, change the coincidences
+> in this quick-guide from `$HOME/Applications` to `/Applications`.
+
 
 ### Steps 1-4 are used to prepare your system for installation of OpenTOPAS.
 Run these steps from a "terminal" window when logged in as a user with administrative privileges (a so-called super user or su). 
@@ -53,23 +59,23 @@ If you have not done so already, download Geant4 version <em>11.1.3</em> (or <em
 
 5.1.a Download Geant4 from the terminal as follows:
 
-        mkdir /Applications/GEANT4
-        cd /Applications/GEANT4
+        mkdir $HOME/Applications/GEANT4
+        cd $HOME/Applications/GEANT4
         wget https://gitlab.cern.ch/geant4/geant4/-/archive/v11.1.3/geant4-v11.1.3.tar.gz
         tar -zxf geant4-v11.1.3.tar.gz
 
-5.1.b Alternatively, you can download Geant4 manually. For a manual download, go to the Geant4 [website]([https://brew.sh/](https://geant4.web.cern.ch/download/all)), choose your version, scroll down to "Source code", and download the compressed file. Create a directory called `GEANT4` in your `/Applications` directory, move the compressed folder into this directory, and decompress the file. Assuming you downloaded version <em>11.1.3</em>, you should have the directory `/Applications/GEANT4/geant4-v11.1.3`
+5.1.b Alternatively, you can download Geant4 manually. For a manual download, go to the Geant4 [website]([https://brew.sh/](https://geant4.web.cern.ch/download/all)), choose your version, scroll down to "Source code", and download the compressed file. Create a directory called `GEANT4` in your `$HOME/Applications` directory, move the compressed folder into this directory, and decompress the file. Assuming you downloaded version <em>11.1.3</em>, you should have the directory `$HOME/Applications/GEANT4/geant4-v11.1.3`
 
 ### Step 6
 If you have not done so already, download the Geant4 data files which correspond to your version of Geant4.
 
 6.1. First create the G4DATA directory which will house the data files:
 
-        mkdir /Applications/GEANT4/G4DATA
+        mkdir $HOME/Applications/GEANT4/G4DATA
 
 6.2.a Next, download the files using the `wget` command in your terminal; e.g., for Geant4-11.1.3:
 
-        cd /Applications/GEANT4/G4DATA/
+        cd $HOME/Applications/GEANT4/G4DATA/
         wget https://cern.ch/geant4-data/datasets/G4NDL.4.7.tar.gz
         wget https://cern.ch/geant4-data/datasets/G4EMLOW.8.2.tar.gz
         wget https://cern.ch/geant4-data/datasets/G4PhotonEvaporation.5.7.tar.gz
@@ -100,7 +106,7 @@ and ecompress them using `tar -zxf`.
         tar -zxf G4TENDL.1.4.tar.gz
         tar -zxf LEND_GND1.3_ENDF.BVII.1.tar.gz
 
-6.2.b Alternatively, download manually the data files which correspond to your version of Geant4. The datasets for the latest Geant4 release may be donwloaded from (https://geant4.web.cern.ch/download/all). The datesets for earlier versions of Geant4 can be found by going to the specific webpage for your Geant4 [version](https://geant4.web.cern.ch/download/11.1.3.html). On the webpage, scroll down to “Datasets”, and hover over each data set name. For a manual download, get the <em>.tar.gz</em> files from the website, move them into `/Applications/GEANT4/G4DATA`, and decompress them.
+6.2.b Alternatively, download manually the data files which correspond to your version of Geant4. The datasets for the latest Geant4 release may be donwloaded from (https://geant4.web.cern.ch/download/all). The datesets for earlier versions of Geant4 can be found by going to the specific webpage for your Geant4 [version](https://geant4.web.cern.ch/download/11.1.3.html). On the webpage, scroll down to “Datasets”, and hover over each data set name. For a manual download, get the <em>.tar.gz</em> files from the website, move them into `$HOME/Applications/GEANT4/G4DATA`, and decompress them.
 
 ### Step 7
 Build Geant4.
@@ -109,7 +115,7 @@ Build Geant4.
 
 7.2. Run the following commands: 
 
-        cd /Applications/GEANT4/
+        cd $HOME/Applications/GEANT4/
         rm -rf geant4-install geant4-build
         mkdir geant4-{build,install}
         cd geant4-build
@@ -127,20 +133,20 @@ Downloading and installing OpenTOPAS and GDCM.
 
 8.1.a Get OpenTOPAS from the GitHub [repository](https://github.com/OpenTOPAS/OpenTOPAS) running the following commands from the terminal:
 
-        mkdir /Applications/TOPAS
-        cd /Applications/TOPAS
+        mkdir $HOME/Applications/TOPAS
+        cd $HOME/Applications/TOPAS
         git clone https://github.com/OpenTOPAS/OpenTOPAS.git
 
-8.1.b Alternatively, you can download OpenTOPAS manually. For a manual download, go to the OpenTOPAS GitHub [website]([https://github.com/OpenTOPAS/OpenTOPAS/tree/main)), click on the green tab named `<> Code` and `Download ZIP`. Create a directory called `TOPAS` in your `/Applications` directory, move the compressed folder into this directory, and decompress the file. To follow the following commands, rename the decompressed folder `OpenTOPAS-main` as `OpenTOPAS`. You should have the directory `/Applications/TOPAS/Open-TOPAS` 
+8.1.b Alternatively, you can download OpenTOPAS manually. For a manual download, go to the OpenTOPAS GitHub [website]([https://github.com/OpenTOPAS/OpenTOPAS/tree/main)), click on the green tab named `<> Code` and `Download ZIP`. Create a directory called `TOPAS` in your `$HOME/Applications` directory, move the compressed folder into this directory, and decompress the file. To follow the following commands, rename the decompressed folder `OpenTOPAS-main` as `OpenTOPAS`. You should have the directory `$HOME/Applications/TOPAS/Open-TOPAS` 
 
-8.2. Next, check if the /Applications/GDCM already exists (GDCM is already installed). If so, rename the directory to GDCM-OLD (or another name) using the following command. 
+8.2. Next, check if the $HOME/Applications/GDCM already exists (GDCM is already installed). If so, rename the directory to GDCM-OLD (or another name) using the following command. 
 
-        mv /Applications/GDCM /Applications/GDCM-OLD
+        mv $HOME/Applications/GDCM $HOME/Applications/GDCM-OLD
 
 Then use the following commands to move GDCM(<em>gdcm-2.6.8.tar.gz</em>) from the OpenTOPAS source code folder to its own directory and decompress it.
 
-        mkdir /Applications/GDCM
-        cd /Applications/TOPAS/OpenTOPAS
+        mkdir $HOME/Applications/GDCM
+        cd $HOME/Applications/TOPAS/OpenTOPAS
         mv gdcm-2.6.8.tar.gz ../../GDCM
         cd ../../GDCM
         tar -zxf gdcm-2.6.8.tar.gz
@@ -155,12 +161,12 @@ Then use the following commands to move GDCM(<em>gdcm-2.6.8.tar.gz</em>) from th
 
 8.4. With GDCM built and installed, you can continue with the OpenTOPAS installation:
 
-        cd /Applications/TOPAS
+        cd $HOME/Applications/TOPAS
         rm -rf OpenTOPAS-install OpenTOPAS-build
         mkdir OpenTOPAS-{build,install}
         cd OpenTOPAS-build
-        export Geant4_DIR=/Applications/GEANT4/geant4-install
-        export GDCM_DIR=/Applications/GDCM/gdcm-install
+        export Geant4_DIR=$HOME/Applications/GEANT4/geant4-install
+        export GDCM_DIR=$HOME/Applications/GDCM/gdcm-install
         cmake ../OpenTOPAS -DCMAKE_INSTALL_PREFIX=../OpenTOPAS-install
         sudo make -j20 install
 
@@ -169,21 +175,21 @@ Setup the environment.
 
 9.1.a This can be done manually as follows, however it needs to be repeated each time you open a new terminal window.
 
-        export QT_QPA_PLATFORM_PLUGIN_PATH=/Applications/TOPAS/OpenTOPAS-install/Frameworks
-        export TOPAS_G4_DATA_DIR=/Applications/GEANT4/G4DATA
-        export LD_LIBRARY_PATH=/Applications/TOPAS/OpenTOPAS-install/lib:$LD_LIBRARY_PATH
-        export LD_LIBRARY_PATH=/Applications/GEANT4/geant4-install/lib:$LD_LIBRARY_PATH
+        export QT_QPA_PLATFORM_PLUGIN_PATH=$HOME/Applications/TOPAS/OpenTOPAS-install/Frameworks
+        export TOPAS_G4_DATA_DIR=$HOME/Applications/GEANT4/G4DATA
+        export LD_LIBRARY_PATH=$HOME/Applications/TOPAS/OpenTOPAS-install/lib:$LD_LIBRARY_PATH
+        export LD_LIBRARY_PATH=$HOME/Applications/GEANT4/geant4-install/lib:$LD_LIBRARY_PATH
 
 9.1.b.1 Alternatively, you can automate setting up the environment. We recommend adding all the exports into a dedicated shell script folder as follows:
 
         mkdir ~/shellScripts
         cd ~/shellScripts
         touch topas
-        echo 'export QT_QPA_PLATFORM_PLUGIN_PATH=/Applications/TOPAS/OpenTOPAS-install/Frameworks' >> topas
-        echo 'export TOPAS_G4_DATA_DIR=/Applications/GEANT4/G4DATA' >> topas
-        echo 'export LD_LIBRARY_PATH=/Applications/TOPAS/OpenTOPAS-install/lib:$LD_LIBRARY_PATH' >> topas
-        echo 'export LD_LIBRARY_PATH=/Applications/GEANT4/geant4-install/lib:$LD_LIBRARY_PATH' >> topas
-        echo '/Applications/TOPAS/OpenTOPAS-install/bin/topas $1' >> topas
+        echo 'export QT_QPA_PLATFORM_PLUGIN_PATH=$HOME/Applications/TOPAS/OpenTOPAS-install/Frameworks' >> topas
+        echo 'export TOPAS_G4_DATA_DIR=$HOME/Applications/GEANT4/G4DATA' >> topas
+        echo 'export LD_LIBRARY_PATH=$HOME/Applications/TOPAS/OpenTOPAS-install/lib:$LD_LIBRARY_PATH' >> topas
+        echo 'export LD_LIBRARY_PATH=$HOME/Applications/GEANT4/geant4-install/lib:$LD_LIBRARY_PATH' >> topas
+        echo '$HOME/Applications/TOPAS/OpenTOPAS-install/bin/topas $1' >> topas
         chmod +x topas
 
 and export the appropriate path to the OpenTOPAS shell script folder has been created in your `~/.bashrc` file.
@@ -194,14 +200,14 @@ and export the appropriate path to the OpenTOPAS shell script folder has been cr
 ### Step 10
 Running your first OpenTOPAS simulation in a new terminal window. 
 
-10.a For those that decided to set the environment up manually, as described in Step 9.1.a, OpenTOPAS can now be run by accessing the executable located in `/Applications/TOPAS/OpenTOPAS-install/bin/topas`. For example, to run the simple OpenTOPAS example to test Qt visualization:
+10.a For those that decided to set the environment up manually, as described in Step 9.1.a, OpenTOPAS can now be run by accessing the executable located in `$HOME/Applications/TOPAS/OpenTOPAS-install/bin/topas`. For example, to run the simple OpenTOPAS example to test Qt visualization:
 
-        cd /Applications/TOPAS/OpenTOPAS-install/examples/Basic
+        cd $HOME/Applications/TOPAS/OpenTOPAS-install/examples/Basic
         ../../bin/topas QtShapeTest.txt
 
 10.b For those that decided to automate the process as described in Step 9.1.b onwards, OpenTOPAS can now be run with the `topas` command in your terminal without having to setup the environment variables:
 
-        topas /Applications/TOPAS/OpenTOPAS/examples/Basic/QtShapeTest.txt
+        topas $HOME/Applications/TOPAS/OpenTOPAS/examples/Basic/QtShapeTest.txt
 
 > [!TIP]
 > If you require assistance with any of your OpenTOPAS simulations, don't hesitate to request help from the developers and other users on the [Discussions](https://github.com/OpenTOPAS/OpenTOPAS/discussions) tab of the OpenTOPAS [GitHub](https://github.com/OpenTOPAS/OpenTOPAS) page.
