@@ -27,7 +27,7 @@ Install the following libraries (you can copy commands from here and paste them 
 ## Step 2 
 Install Cmake:
 
-        apt install -y cmake
+        sudo apt install -y cmake
 
 > [!WARNING]
 > Geant4 requires a minimum `CMake` version (<em>3.16</em> and <em>3.243</em> or higher). If already installed, check your version of `CMake` as follows:
