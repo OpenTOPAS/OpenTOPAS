@@ -2,10 +2,10 @@
 This file details the steps to be followed by <ins>Debian 10 or 11</ins> in order to install OpenTOPAS and launch your first simulation. 
 
 > [!TIP]
-> The directory path setting proposed in this quick-guide sets a local installation at the home directory (path defined by `$HOME` environment variable). 
+> The directory path setting proposed in this quickStart guide sets a local installation at the home directory (path defined by `$HOME` environment variable). 
 > Then, it requires the existence or creation of a `$HOME/Applications` folder.
-> For a global installation, a directory named `/Applications` should be created, which migth needs admin priviledges. In this case, change the coincidences
-> in this quick-guide from `$HOME/Applications` to `/Applications`.
+> For a global installation, a directory named `/Applications` should be created, which might need admin privileges. In this case, change the occurrences
+> of `$HOME/Applications` in this quickStart guide to `/Applications`.
 
 
 ### Steps 1-4 are used to prepare your system for installation of OpenTOPAS.
