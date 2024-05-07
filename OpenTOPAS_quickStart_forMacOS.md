@@ -4,18 +4,18 @@ This file details the steps to be followed by <ins>Mac users</ins> in order to i
 > [!WARNING]
 > We recommend macOS version 14.0 (Sonoma) or higher. Furthermore these instructions are only compatible with `qt@5` (see the warnings in Step 6 to ensure that `qt@6` is not installed on your system). We take no responsibility for users who wish to proceed with `qt@6` already installed on their system.
 
-### Steps 1-3 are used to prepare your system for installation of OpenTOPAS.
-Run these steps from a "terminal" window (found in the Utilities subfolder of the Applications folder on your system) when logged in as a user with administrative privileges (a so-called super user or su). 
+> [!NOTE]
+> **Steps 1-3 are used to prepare your system for installation of OpenTOPAS**. Run these steps from a "terminal" window (found in the Utilities subfolder of the Applications folder on your system) when logged in as a user with administrative privileges (a so-called super user or su). 
 
 > [!TIP]
 > You can skip steps 1 and 2 if your system has XCode and Homebrew. You can check for this by entering the command `which xcode-select` for XCode and `which brew` for Homebrew. If the command is available the system will respond, showing you where it is installed on your system. 
 
-### Step 1
+## Step 1
 Download [XCode](https://apps.apple.com/fr/app/xcode/id497799835?l=en-GB&mt=12), which can be found on the Mac App Store, then enter the following command to install xcode-select (you can copy commands from here and paste them to your terminal):
 
         sudo xcode-select --install
 
-### Step 2 
+## Step 2 
 Install [Homebrew](https://brew.sh/). Access the Homebrew website given in Step 2 from your web browser then copy and paste the installation command provided near the top of the website page into your terminal; e.g.:
 
         /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
@@ -25,7 +25,7 @@ Follow the instructions posted to your terminal at the end of the Homebrew insta
         (echo; echo 'eval "$(/opt/homebrew/bin/brew shellenv)"') >> $HOME/.zprofile
         eval "$(/opt/homebrew/bin/brew shellenv)"
 
-### Step 3
+## Step 3
 Once Homebrew is installed, you will have access to the command `brew install`. Use this command to install `qt@5`, `git`, `wget`, and `cmake` by entering the following commands into your terminal:
 
         brew install qt@5
@@ -36,10 +36,10 @@ Once Homebrew is installed, you will have access to the command `brew install`. 
 > [!NOTE]
 > Steps 4-6 are used to install Geant4, the Monte Carlo toolkit that provides the radiation transport.
 
-### Step 4
+## Step 4
 If you have not done so already, download Geant4 version <em>11.1.3</em> (or <em>11.1.2</em>).
 
-4.1. For a manual download, go to the Geant4 [website]([https://brew.sh/](https://geant4.web.cern.ch/download/all)), choose your version, scroll down to "Source code", and download the compressed file. Create a directory called `GEANT4` in your `/Applications` directory, move the compressed folder into this directory, and decompress the file. Assuming you downloaded version <em>11.1.3</em>, you should have the directory `/Applications/GEANT4/geant4-v11.1.3`
+4.1. For a manual download, go to the Geant4 [website](https://geant4.web.cern.ch/download/all), choose your version, scroll down to "Source code", and download the compressed file. Create a directory called `GEANT4` in your `/Applications` directory, move the compressed folder into this directory, and decompress the file. Assuming you downloaded version <em>11.1.3</em>, you should have the directory `/Applications/GEANT4/geant4-v11.1.3`
    
 4.2. Alternatively, download Geant4 from the terminal as follows:
 
@@ -48,7 +48,7 @@ If you have not done so already, download Geant4 version <em>11.1.3</em> (or <em
         wget https://gitlab.cern.ch/geant4/geant4/-/archive/v11.1.3/geant4-v11.1.3.tar.gz
         tar zxf geant4-v11.1.3.tar.gz
  
-### Step 5
+## Step 5
 If you have not done so already, download the Geant4 data files which correspond to your version of Geant4.
 
 5.1. First create the G4DATA directory which will house the data files:
@@ -91,7 +91,7 @@ If you have not done so already, download the Geant4 data files which correspond
         tar zxf G4TENDL.1.4.tar.gz
         tar zxf LEND_GND1.3_ENDF.BVII.1.tar.gz
 
-### Step 6
+## Step 6
 Build Geant4. Take note of the following warnings before running the commands shown in step 6.2:
 
 > [!WARNING]
@@ -128,7 +128,7 @@ Build Geant4. Take note of the following warnings before running the commands sh
 > [!NOTE]
 > The remaining steps complete the download and installation of OpenTOPAS and start you on the road to successful simulations.
 
-### Step 7
+## Step 7
 Downloading and installing OpenTOPAS and GDCM.
 
 7.1. First get OpenTOPAS from the GitHub [repository](https://github.com/OpenTOPAS/OpenTOPAS).
@@ -170,7 +170,7 @@ Then use the following commands to move GDCM(<em>gdcm-2.6.8.tar.gz</em>) from th
         cmake ../OpenTOPAS -DCMAKE_INSTALL_PREFIX=../OpenTOPAS-install
         make -j20 install
 
-### Step 8
+## Step 8
 Setup the environment. 
 
 8.1. This can be done manually as follows, however it needs to be repeated each time you open a new terminal window.
@@ -202,7 +202,7 @@ And for `bash`:
         cd ~
         echo 'export PATH=~/shellScripts:$PATH' >> .bash_profile
 
-### Step 9
+## Step 9
 Running your first OpenTOPAS simulation. 
 
 9.1. For those that decided to set the environment up manually, as described in Step 8.1, OpenTOPAS can now be run by accessing the executable located in `/Applications/TOPAS/OpenTOPAS-install/bin/topas`. For example, to run the simple OpenTOPAS example of dose being scored inside a water phantom:
@@ -219,7 +219,7 @@ Running your first OpenTOPAS simulation.
 
 ______________________________________________________________________________________________
 
-### Step 10
+## Step 10
 As an additional step for those interested in running quality checks, the continuous integration test suite for OpenTOPAS can be used. Python and `pip3` will be needed. 
 
 > [!WARNING]
