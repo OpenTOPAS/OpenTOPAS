@@ -105,10 +105,9 @@ Build Geant4. Take note of the following warnings before running the commands sh
         brew list --versions qt@6
 
 > [!WARNING]
-> This warning can be ignored if you already have `xquartz` installed on your system. If the first of the following commands yields no output (i.e. `xquartz` is **NOT** installed on your system), the second command can be used to install `xquartz`.
+> Depending on your MacOS version you may or may not have XQuartz installed on your system. This can be tested with the following command which should yield no output if it is **NOT** installed. If this is the case please head to the official [Xquartz](https://www.xquartz.org) website to download the application.
 
         which xquartz
-        brew install --cask xquartz
 
 > [!WARNING]
 > Those with M1, M2 or M3 chips (check by going to the apple logo on the upper left of your screen and clicking on “About this Mac”) have `arm64` architecture and should include this architecture in the `DCMAKE_OSX_ARCHITECTURES` option of the cmake command in step 6.2 below. Those with Intel chips should not include this command and can delete the last line of the cmake command.
