@@ -105,11 +105,19 @@ Build Geant4. Take note of the following warnings before running the commands sh
         brew list --versions qt@6
 
 > [!WARNING]
+> This warning can be ignored if you already have `xquartz` installed on your system. If the first of the following commands yields no output (i.e. `xquartz` is **NOT** installed on your system), the second command can be used to install `xquartz`.
+
+        which xquartz
+        brew install --cask xquartz
+
+> [!WARNING]
 > Those with M1, M2 or M3 chips (check by going to the apple logo on the upper left of your screen and clicking on “About this Mac”) have `arm64` architecture and should include this architecture in the `DCMAKE_OSX_ARCHITECTURES` option of the cmake command in step 6.2 below. Those with Intel chips should not include this command and can delete the last line of the cmake command.
 
-6.1. Check which `qt@5` version you have installed using the following command. If your qt@5 version is 5.15.11 you can run the cmake command as shown in step 6.2 as is. Otherwise, replace the qt@5 version in that command with the one you have on your system:
+6.1. Check which version of `qt@5` you have installed on your system as well as the associated installation path with the following command. 
 
-        brew list --versions qt@5
+        readlink -f $(brew --prefix qt@5)
+
+Replace the path supplied to `DCMAKE_PREFIX_PATH` in step 6.2 with the output of the above command.
 
 6.2. Run the following commands: 
 
@@ -185,11 +193,11 @@ Setup the environment.
         mkdir ~/shellScripts
         cd ~/shellScripts
         touch topas
-        echo export QT_QPA_PLATFORM_PLUGIN_PATH=/Applications/TOPAS/OpenTOPAS-install/Frameworks >> topas
-        echo export TOPAS_G4_DATA_DIR=/Applications/GEANT4/G4DATA >> topas
-        echo export DYLD_LIBRARY_PATH=/Applications/TOPAS/OpenTOPAS-install/lib:$DYLD_LIBRARY_PATH >> topas
-        echo export DYLD_LIBRARY_PATH=/Applications/GEANT4/geant4-install/lib:$DYLD_LIBRARY_PATH >> topas
-        echo /Applications/TOPAS/OpenTOPAS-install/bin/topas $1 >> topas
+        echo 'export QT_QPA_PLATFORM_PLUGIN_PATH=/Applications/TOPAS/OpenTOPAS-install/Frameworks' >> topas
+        echo 'export TOPAS_G4_DATA_DIR=/Applications/GEANT4/G4DATA' >> topas
+        echo 'export DYLD_LIBRARY_PATH=/Applications/TOPAS/OpenTOPAS-install/lib:$DYLD_LIBRARY_PATH' >> topas
+        echo 'export DYLD_LIBRARY_PATH=/Applications/GEANT4/geant4-install/lib:$DYLD_LIBRARY_PATH' >> topas
+        echo '/Applications/TOPAS/OpenTOPAS-install/bin/topas $1' >> topas
         chmod +x topas
 
 8.2.2 After the OpenTOPAS shell script folder has been created as outlined above, export the appropriate path in either your `~/.zshrc` or `~/.bash_profile` file. You can find out which shell you are using by typing `echo $SHELL` in your terminal. For `zsh`:
