@@ -73,7 +73,7 @@ void TsChemistryManager::ResolveParameters() {
 	}
 	
 	if ( fUseTimmingCut && fUseStepNumberingCut ) {
-		G4cerr << "TOPAS is exiting due to an incompatibility in parameters." << G4endl;
+		G4cerr << "OpenTOPAS is exiting due to an incompatibility in parameters." << G4endl;
 		G4cerr << "Parameter: " << GetFullParmName("ChemicalStageTimeEnd") << " cannot be used in conjunction with "
 		<< "parameter: " << GetFullParmName("ChemicalStageMaximumStepNumber") << G4endl;
 		fPm->AbortSession(1);

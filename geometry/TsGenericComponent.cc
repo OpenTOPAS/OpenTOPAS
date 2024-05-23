@@ -96,7 +96,7 @@ G4VPhysicalVolume* TsGenericComponent::Construct()
 	if (fPm->ParameterExists(paramList))
 		parameterNames = fPm->GetStringVector(paramList);
 	else if (compType!="group") {
-		G4cerr << "Topas is exiting due to a serious error." << G4endl;
+		G4cerr << "OpenTOPAS is exiting due to a serious error." << G4endl;
 		G4cerr << "The parameter:" << GetFullParmName("Type") << G4endl;
 		G4cerr << "refers to an unsupported Component Type: " << compTypeMixed << G4endl;
 		fPm->AbortSession(1);
@@ -546,7 +546,7 @@ G4VPhysicalVolume* TsGenericComponent::Construct()
 
 void TsGenericComponent::CheckLengthMatch(G4String parameterName1, G4String parameterName2) {
 	if (fPm->GetVectorLength(GetFullParmName(parameterName1)) != fPm->GetVectorLength(GetFullParmName(parameterName2))) {
-		G4cerr << "Topas is exiting due to a serious error." << G4endl;
+		G4cerr << "OpenTOPAS is exiting due to a serious error." << G4endl;
 		G4cerr << "Length of parameter: " << GetFullParmName(parameterName1) << " does not match length of parameter: " << GetFullParmName(parameterName2) << G4endl;
 		fPm->AbortSession(1);
 	}

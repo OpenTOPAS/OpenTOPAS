@@ -61,7 +61,7 @@ void TsSplitConfigurator::Configure(G4VSamplerConfigurator*)
 		fSplitProcess = new TsSplitProcess(fPm, fGm, name, &fIStore);
 	
 	if (!fSplitProcess) {
-		G4cerr << "Topas is exiting due to error in variance reduction." << G4endl;
+		G4cerr << "OpenTOPAS is exiting due to error in variance reduction." << G4endl;
 		G4cerr << "GeometricalParticleSplit not found." << G4endl;
 		G4cerr << "Failed allocation of TsSplitProcess." << G4endl;
 		fPm->AbortSession(1);

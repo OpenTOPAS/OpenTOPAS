@@ -103,7 +103,7 @@ G4String TsVBiasingProcess::GetFullParmName(G4String parmName) {
 
 
 void TsVBiasingProcess::Quit(const G4String& name, G4String message) {
-	G4cerr << "Topas is exiting due to a serious error in geometry setup." << G4endl;
+	G4cerr << "OpenTOPAS is exiting due to a serious error in geometry setup." << G4endl;
 	G4cerr << "Parameter name: " << name << G4endl;
 	G4cerr << message << G4endl;
 	fPm->AbortSession(1);

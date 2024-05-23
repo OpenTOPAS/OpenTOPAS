@@ -258,7 +258,7 @@ void TsVNtuple::AbsorbBufferFromWorkerNtuple(TsVNtuple* workerNtuple)
 		fBufferB.size() != workerNtuple->fBufferB.size() ||
 		fBufferS.size() != workerNtuple->fBufferS.size()) {
 
-		G4cerr << "Topas is exiting due to a serious error in file output." << G4endl;
+		G4cerr << "OpenTOPAS is exiting due to a serious error in file output." << G4endl;
 		G4cerr << "Inconsistent buffers found when absorbing ntuples across threads." << G4endl;
 		fPm->AbortSession(1);
 	}
@@ -340,7 +340,7 @@ void TsVNtuple::WriteHeader()
 	std::ofstream outFile(fPathHeader, std::ios::out);
 
 	if (!outFile.good()) {
-		G4cerr << "Topas is exiting due to a serious error in file output." << G4endl;
+		G4cerr << "OpenTOPAS is exiting due to a serious error in file output." << G4endl;
 		G4cerr << "Output file: " << fPathHeader << " cannot be opened" << G4endl;
 		fPm->AbortSession(1);
 	}

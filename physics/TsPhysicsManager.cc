@@ -82,7 +82,7 @@ G4VUserPhysicsList* TsPhysicsManager::GetPhysicsList() {
 		G4PhysListFactory ReferenceList;
 		if (ReferenceList.IsReferencePhysList( upperListType ) || lowerListType=="shielding") {
 			if (fGm->HaveParallelComponentsThatAreNotGroups()) {
-				G4cerr << "Topas is exiting due to inappropriate physics list for your setup." << G4endl;
+				G4cerr << "OpenTOPAS is exiting due to inappropriate physics list for your setup." << G4endl;
 				G4cerr << "Your geometry involves parallel worlds, either from explicit IsParallel parameters" << G4endl;
 				G4cerr << "or due to scoring with different divisions than the component divisions." << G4endl;
 				G4cerr << "Your setup will only work with physics list Geant4_Modular." << G4endl;
@@ -97,7 +97,7 @@ G4VUserPhysicsList* TsPhysicsManager::GetPhysicsList() {
 
 		} else if (lowerListType == "geant4_modular") {
 			if (!fPm->ParameterExists(GetFullParmName("Modules"))) {
-				G4cerr << "Topas is exiting due to a serious error in physics setup." << G4endl;
+				G4cerr << "OpenTOPAS is exiting due to a serious error in physics setup." << G4endl;
 				G4cerr << "Your physics list is missing the parameter: " << GetFullParmName("Modules") << G4endl;
 				fPm->AbortSession(1);
 			}
@@ -146,14 +146,14 @@ G4VUserPhysicsList* TsPhysicsManager::GetPhysicsList() {
 			physicsList = fEm->InstantiatePhysicsList(fPm, lowerListType);
 
 			if (physicsList==0) {
-				G4cerr << "Topas is exiting due to a serious error in physics setup." << G4endl;
+				G4cerr << "OpenTOPAS is exiting due to a serious error in physics setup." << G4endl;
 				G4cerr << "Your parameter: " << GetFullParmName("Type") << " has an unknown physics list type:" << listType << G4endl;
 				fPm->AbortSession(1);
 			}
 		}
 
 	} else {
-		G4cerr << "Topas is exiting due to a serious error in physics setup." << G4endl;
+		G4cerr << "OpenTOPAS is exiting due to a serious error in physics setup." << G4endl;
 		G4cerr << "You have specified a physics list with no type." << G4endl;
 		G4cerr << "You need a parameter named: " << GetFullParmName("Type") << G4endl;
 		fPm->AbortSession(1);
@@ -188,7 +188,7 @@ void TsPhysicsManager::SetEmParameters() {
 		G4EmParameters::Instance()->SetNumberOfBinsPerDecade(fPm->GetIntegerParameter(GetFullParmName("EMBinsPerDecade")));
 
 	else if (fPm->ParameterExists(GetFullParmName("EMBins")) && fPm->ParameterExists(GetFullParmName("EMBinsPerDecade"))) {
-		G4cerr << "Topas is exiting due to a serious error in physics setup." << G4endl;
+		G4cerr << "OpenTOPAS is exiting due to a serious error in physics setup." << G4endl;
 		G4cerr << GetFullParmName("EMBins") << " and " << GetFullParmName("EMBinsPerDecade") << "are not compatible at the same time." << G4endl;
 		G4cerr << "Remove either of them and re-run Topas." << G4endl;
 		fPm->AbortSession(1);
@@ -202,13 +202,13 @@ void TsPhysicsManager::SetEmParameters() {
 #endif
 
 	if (fPm->ParameterExists(GetFullParmName("dEdXBins"))) {
-		G4cerr << "Topas is exiting due to a serious error in physics setup." << G4endl;
+		G4cerr << "OpenTOPAS is exiting due to a serious error in physics setup." << G4endl;
 		G4cerr << GetFullParmName("dEdXBins") << " is no longer supported in Geant4.10" << G4endl;
 		fPm->AbortSession(1);
 	}
 
 	if (fPm->ParameterExists(GetFullParmName("LambdaBins"))) {
-		G4cerr << "Topas is exiting due to a serious error in physics setup." << G4endl;
+		G4cerr << "OpenTOPAS is exiting due to a serious error in physics setup." << G4endl;
 		G4cerr << GetFullParmName("LambdaBins") << " is no longer supported in Geant4.10" << G4endl;
 		fPm->AbortSession(1);
 	}
@@ -264,7 +264,7 @@ void TsPhysicsManager::SetEmParameters() {
 		} else if (mscStepLimitType == "distancetoboundary") {
 			G4EmParameters::Instance()->SetMscStepLimitType(fUseDistanceToBoundary);
 		} else {
-			G4cerr << "Topas is exiting due to a serious error in physics setup." << G4endl;
+			G4cerr << "OpenTOPAS is exiting due to a serious error in physics setup." << G4endl;
 			G4cerr << GetFullParmName("MSCStepLimitType") << " refers to an unknown type of step limit for multiplescattering" << G4endl;
 			fPm->AbortSession(1);
 		}
@@ -290,7 +290,7 @@ void TsPhysicsManager::SetEmParameters() {
 		} else if ( eaqModel == "kreipl" ) {
 			G4EmParameters::Instance()->SetDNAeSolvationSubType(fKreipl2009eSolvation);
 		} else {
-			G4cerr << "Topas is exiting due to a serious error in physics setup." << G4endl;
+			G4cerr << "OpenTOPAS is exiting due to a serious error in physics setup." << G4endl;
 			G4cerr << GetFullParmName("SolvatedElectronThermalizationModel") << " refers to an unknown model" << G4endl;
 			fPm->AbortSession(1);
 		}

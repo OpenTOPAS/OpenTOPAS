@@ -56,7 +56,7 @@ void MyOutcomeModel1::ResolveParameters() {
 	fFunction.toLower();
 
 	if ( fFunction != "probit" && fFunction != "logistic" ) {
-	    G4cerr << "Topas is exiting due to a serious error in scoring setup." << G4endl;
+	    G4cerr << "OpenTOPAS is exiting due to a serious error in scoring setup." << G4endl;
 	    G4cerr << GetFullParmName(fModelName, "Function") << " refers to an unknown outcome function: "
 	           << fPm->GetStringParameter(GetFullParmName(fModelName, "Function")) << G4endl;
 	    exit(1);

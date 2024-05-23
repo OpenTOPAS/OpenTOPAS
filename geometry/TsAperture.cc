@@ -58,7 +58,7 @@ G4VPhysicalVolume* TsAperture::Construct()
 	G4String fileName = fPm->GetStringParameter(GetFullParmName("InputFile"));
 	std::ifstream inAperture(fileName);
 	if (!inAperture) {
-		G4cerr << "Topas is exiting due to a serious error." << G4endl;
+		G4cerr << "OpenTOPAS is exiting due to a serious error." << G4endl;
 		G4cerr << "Unable to open aperture file: " << fileName << G4endl;
 		fPm->AbortSession(1);
 	}
@@ -83,7 +83,7 @@ G4VPhysicalVolume* TsAperture::Construct()
 		for (G4int i=1; i<=2*nDummyPoints; i++)
 			inAperture >> unusedDouble;
 	} else if (fileFormat != "xycoordinates") {
-		G4cerr << "Topas is exiting due to a serious error." << G4endl;
+		G4cerr << "OpenTOPAS is exiting due to a serious error." << G4endl;
 		G4cerr << fPm->GetStringParameter(GetFullParmName("FileFormat")) << " has invalid value: " << fPm->GetStringParameter(GetFullParmName("FileFormat")) << G4endl;
 		G4cerr << "Must be either MGH or XYCoordinates." << G4endl;
 		fPm->AbortSession(1);
@@ -137,13 +137,13 @@ G4VPhysicalVolume* TsAperture::Construct()
 	}
 
 	if (nPoints < 3) {
-		G4cerr << "Topas is exiting due to a serious error." << G4endl;
+		G4cerr << "OpenTOPAS is exiting due to a serious error." << G4endl;
 		G4cerr << "Aperture file " << fileName << " has fewer than 3 points (excluding any beginning/end duplicates)." << G4endl;
 		fPm->AbortSession(1);
 	}
 
 	if (nPoints > 1E6) {
-		G4cerr << "Topas is exiting due to a serious error." << G4endl;
+		G4cerr << "OpenTOPAS is exiting due to a serious error." << G4endl;
 		G4cerr << "Aperture file " << fileName << " has more than one million points." << G4endl;
 		fPm->AbortSession(1);
 	}

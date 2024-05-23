@@ -60,7 +60,7 @@ void TsMagneticFieldMap::ResolveParameters() {
 	std::ifstream file(fPm->GetStringParameter(fComponent->GetFullParmName("MagneticField3DTable")));
 	if (!file) {
 		G4cerr << "" << G4endl;
-		G4cerr << "Topas is exiting due to a serious error." << G4endl;
+		G4cerr << "OpenTOPAS is exiting due to a serious error." << G4endl;
 		G4cerr << "The parameter: " << fComponent->GetFullParmName("MagneticField3DTable") << G4endl;
 		G4cerr << "references a MagneticField3DTable file that cannot be found:" << G4endl;
 		G4cerr << fPm->GetStringParameter(fComponent->GetFullParmName("MagneticField3DTable")) << G4endl;
@@ -106,7 +106,7 @@ void TsMagneticFieldMap::ResolveParameters() {
 			if (headerUnitStrings.size() == 0) {
 				if (headerFields.size() > 6) {
 					G4cerr << "" << G4endl;
-					G4cerr << "Topas is exiting due to a serious error." << G4endl;
+					G4cerr << "OpenTOPAS is exiting due to a serious error." << G4endl;
 					G4cerr << "Header information was not usable from MagneticField3DTable file:" << G4endl;
 					G4cerr << fPm->GetStringParameter(fComponent->GetFullParmName("MagneticField3DTable")) << G4endl;
 					G4cerr << "Only six fields (x,y,z,Bx,By,Bz) are allowed without specified units. Please include explicit unit declaration in the header" << G4endl;
@@ -189,7 +189,7 @@ void TsMagneticFieldMap::ResolveParameters() {
 
 				if (thisRow.size() > 3) {
 					G4cerr << "" << G4endl;
-					G4cerr << "Topas is exiting due to a serious error." << G4endl;
+					G4cerr << "OpenTOPAS is exiting due to a serious error." << G4endl;
 					G4cerr << "Header information was not usable from MagneticField3DTable file:" << G4endl;
 					G4cerr << fPm->GetStringParameter(fComponent->GetFullParmName("MagneticField3DTable")) << G4endl;
 					G4cerr << "Header has an unknown format on line" << G4endl;
@@ -202,7 +202,7 @@ void TsMagneticFieldMap::ResolveParameters() {
 		} else {
 			if (thisRow.size() != headerFields.size()) {
 				G4cerr << "" << G4endl;
-				G4cerr << "Topas is exiting due to a serious error." << G4endl;
+				G4cerr << "OpenTOPAS is exiting due to a serious error." << G4endl;
 				G4cerr << "Header information was not usable from MagneticField3DTable file:" << G4endl;
 				G4cerr << fPm->GetStringParameter(fComponent->GetFullParmName("MagneticField3DTable")) << G4endl;
 				G4cerr << "File contains columns not in the header." << G4endl;
@@ -245,7 +245,7 @@ void TsMagneticFieldMap::ResolveParameters() {
 
 	if (fNX == 0) {
 		G4cerr << "" << G4endl;
-		G4cerr << "Topas is exiting due to a serious error." << G4endl;
+		G4cerr << "OpenTOPAS is exiting due to a serious error." << G4endl;
 		G4cerr << "Header information was not usable from MagneticField3DTable file:" << G4endl;
 		G4cerr << fPm->GetStringParameter(fComponent->GetFullParmName("MagneticField3DTable")) << G4endl;
 		fPm->AbortSession(1);

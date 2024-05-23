@@ -108,7 +108,7 @@ void TsGeneratorEmittance::ResolveParameters(){
 		fFractionX = fPm->GetUnitlessParameter(GetFullParmName("ParticleFractionX"));
 		fFractionY = fPm->GetUnitlessParameter(GetFullParmName("ParticleFractionY"));
 		if( (fFractionX >=1.0 || fFractionX <=0.0) || (fFractionY >=1.0 || fFractionY <=0.0) ){
-			G4cerr << "Topas is exiting due to a serious error in beam source setup.. " << G4endl;
+			G4cerr << "OpenTOPAS is exiting due to a serious error in beam source setup.. " << G4endl;
 			G4cerr << "Please use ParticleFractionOfX/Y between (0, 1): " << fSourceName << G4endl;
 			fPm->AbortSession(1);
 			}

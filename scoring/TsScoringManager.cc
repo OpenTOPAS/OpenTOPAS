@@ -114,7 +114,7 @@ void TsScoringManager::Initialize()
 	std::vector<G4String>* badScorers = new std::vector<G4String>;
 	fPm->GetParameterNamesBracketedBy("Sc", "/Type", badScorers);
 	for (G4int iToken=0; iToken<(G4int)badScorers->size(); iToken++) {
-		G4cerr << "Topas is exiting due to a serious error in scoring setup." << G4endl;
+		G4cerr << "OpenTOPAS is exiting due to a serious error in scoring setup." << G4endl;
 		G4cerr << "The parameter name: " << (*badScorers)[iToken] << G4endl;
 		G4cerr << "should end with Quantity rather than Type." << G4endl;
 		fPm->AbortSession(1);
@@ -161,7 +161,7 @@ void TsScoringManager::Initialize()
 			std::vector<G4String>::iterator iter;
 			for (iter=fOutFileNames.begin(); iter!=fOutFileNames.end(); iter++)
 				if (*iter==testName) {
-					G4cerr << "Topas is exiting due to a serious error in scoring setup." << G4endl;
+					G4cerr << "OpenTOPAS is exiting due to a serious error in scoring setup." << G4endl;
 					G4cerr << "Two scorers are using the same output file name: " << outFileName << G4endl;
 					fPm->AbortSession(1);
 				}
@@ -345,7 +345,7 @@ TsVScorer* TsScoringManager::InstantiateScorer(G4String scorerName, G4String qua
 
 	if (!scorer)
 	{
-		G4cerr << "Topas is exiting due to a serious error in scoring setup." << G4endl;
+		G4cerr << "OpenTOPAS is exiting due to a serious error in scoring setup." << G4endl;
 
 		if (isSubScorer)
 			G4cerr << " A scorer has attempted to create a SubScorer with unknown Quantity value: " << quantityName << G4endl;
@@ -455,14 +455,14 @@ void TsScoringManager::NoteAnyUseOfChangeableParameters(const G4String& name)
 
 #ifdef TOPAS_MT
 		if (directParmLower == fCurrentScorer.Get()->GetFullParmNameLower("Component")) {
-			G4cerr << "Topas is exiting due to a serious error." << G4endl;
+			G4cerr << "OpenTOPAS is exiting due to a serious error." << G4endl;
 			G4cerr << "A scorer's Component has been set to depend on a time feature." << G4endl;
 			G4cerr << "This is not permitted." << G4endl;
 			fPm->AbortSession(1);
 		}
 #else
 		if (directParmLower == fCurrentScorer->GetFullParmNameLower("Component")) {
-			G4cerr << "Topas is exiting due to a serious error." << G4endl;
+			G4cerr << "OpenTOPAS is exiting due to a serious error." << G4endl;
 			G4cerr << "A scorer's Component has been set to depend on a time feature." << G4endl;
 			G4cerr << "This is not permitted." << G4endl;
 			fPm->AbortSession(1);
@@ -476,7 +476,7 @@ void TsScoringManager::NoteAnyUseOfChangeableParameters(const G4String& name)
 			if (fCurrentScorer.Get()->GetComponent()) {
 				binParmName = fCurrentScorer.Get()->GetComponent()->GetDivisionName(i) + "Bins";
 				if (directParmLower == fCurrentScorer.Get()->GetFullParmNameLower(binParmName)) {
-					G4cerr << "Topas is exiting due to a serious error." << G4endl;
+					G4cerr << "OpenTOPAS is exiting due to a serious error." << G4endl;
 					G4cerr << "The " << binParmName << " parameter of component " << fCurrentScorer.Get()->GetNameWithSplitId() << " has been set to depend on a time feature." << G4endl;
 					G4cerr << "This is not permitted." << G4endl;
 					fPm->AbortSession(1);
@@ -486,7 +486,7 @@ void TsScoringManager::NoteAnyUseOfChangeableParameters(const G4String& name)
 			if (fCurrentScorer->GetComponent()) {
 				binParmName = fCurrentScorer->GetComponent()->GetDivisionName(i) + "Bins";
 				if (directParmLower == fCurrentScorer->GetFullParmNameLower(binParmName)) {
-					G4cerr << "Topas is exiting due to a serious error." << G4endl;
+					G4cerr << "OpenTOPAS is exiting due to a serious error." << G4endl;
 					G4cerr << "The " << binParmName << " parameter of component " << fCurrentScorer->GetNameWithSplitId() << " has been set to depend on a time feature." << G4endl;
 					G4cerr << "This is not permitted." << G4endl;
 					fPm->AbortSession(1);
@@ -635,7 +635,7 @@ TsVScorer* TsScoringManager::GetMasterScorerByID(G4int uid) {
 		if ((*iter)->fUID == uid)
 			return *iter;
 
-	G4cerr << "Topas is exiting due to a serious error." << G4endl;
+	G4cerr << "OpenTOPAS is exiting due to a serious error." << G4endl;
 	G4cerr << "Unable to find master scorer for worker scorer #" << uid << G4endl;
 	fPm->AbortSession(1);
 	return 0;

@@ -100,7 +100,7 @@ G4Element* TsMaterialManager::GetElement(G4String name)
 			// Take element from NIST
 			element = fNistManager->FindOrBuildElement(symbol);
 			if (!element) {
-				G4cerr << "Topas is exiting unable to define element: " << name << ", due to unknown symbol: " << symbol << G4endl;
+				G4cerr << "OpenTOPAS is exiting unable to define element: " << name << ", due to unknown symbol: " << symbol << G4endl;
 				G4cerr << "Use one of the standard symbols from the NIST database or define the element yourself from Isotopes." << G4endl;
 				fPm->AbortSession(1);
 			}
@@ -441,14 +441,14 @@ G4String TsMaterialManager::GetFullMaterialParmName(G4String name, const char* s
 
 
 void TsMaterialManager::Quit(const G4String& name, const char* message) {
-	G4cerr << "Topas is exiting due to a serious error for material name: " << name << G4endl;
+	G4cerr << "OpenTOPAS is exiting due to a serious error for material name: " << name << G4endl;
 	G4cerr << message << G4endl;
 	fPm->AbortSession(1);
 }
 
 
 void TsMaterialManager::Quit(const G4String& name, const G4String& message) {
-	G4cerr << "Topas is exiting due to a serious error for material name: " << name << G4endl;
+	G4cerr << "OpenTOPAS is exiting due to a serious error for material name: " << name << G4endl;
 	G4cerr << message << G4endl;
 	fPm->AbortSession(1);
 }

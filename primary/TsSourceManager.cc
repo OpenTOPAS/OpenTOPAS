@@ -158,7 +158,7 @@ void TsSourceManager::NoteAnyUseOfChangeableParameters(const G4String& name)
 		size_t pos = directParmLower.find_last_of("/");
 
 		if (directParmLower.substr(pos+1) == "phasespacemultipleuse") {
-			G4cerr << "Topas is exiting. " << directParm << " is not allowed to be controlled by a time feature." << G4endl;
+			G4cerr << "OpenTOPAS is exiting. " << directParm << " is not allowed to be controlled by a time feature." << G4endl;
 			exit(1);
 		}
 
@@ -167,7 +167,7 @@ void TsSourceManager::NoteAnyUseOfChangeableParameters(const G4String& name)
 			G4String includeEmptyHistories = directParmLower.substr(0,pos+1) + "PhaseSpaceIncludeEmptyHistories";
 			if (fPm->ParameterExists(includeEmptyHistories) && fPm->GetBooleanParameter(includeEmptyHistories) &&
 				fPm->ParameterExists(multipleUseParmName) && (fPm->GetIntegerParameter(multipleUseParmName) == 0)) {
-				G4cerr << "Topas is exiting. " << directParm << " is not allowed to be controlled by a time feature" << G4endl;
+				G4cerr << "OpenTOPAS is exiting. " << directParm << " is not allowed to be controlled by a time feature" << G4endl;
 				G4cerr << "when the same source has IncludeEmptyHistories since we can't tell where in the time sequence" << G4endl;
 				G4cerr << "this empty histories are supposed to occur." << G4endl;
 				exit(1);
@@ -231,7 +231,7 @@ TsSource* TsSourceManager::GetSource(G4String sourceName) {
 	if (iter != fSources->end())
 		return iter->second;
 
-	G4cerr << "Topas is exiting. Particle source: " << sourceName << " not found at generate time" << G4endl;
+	G4cerr << "OpenTOPAS is exiting. Particle source: " << sourceName << " not found at generate time" << G4endl;
 	exit(1);
 }
 

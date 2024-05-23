@@ -152,7 +152,7 @@ fSumLimit(0.), fStandardDeviationLimit(0.), fRelativeSDLimit(0.), fCountLimit(0)
 			fReportDVolHist = true;
 			fReportValues[i] = 10;
 		}else {
-			G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+			G4cerr << "OpenTOPAS is exiting due to a serious error in scoring." << G4endl;
 			G4cerr << "The parameter Sc/" << GetName() << "/Report has an unknown option: " << reportValues[i] << G4endl;
 			G4cerr << "Value should be one or more of the following:" << G4endl;
 			G4cerr << "Sum, Mean, Histories, Count_In_Bin, Second_Moment," << G4endl;
@@ -164,7 +164,7 @@ fSumLimit(0.), fStandardDeviationLimit(0.), fRelativeSDLimit(0.), fCountLimit(0)
 	}
 
 	if (fNumberOfOutputColumns==0) {
-		G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+		G4cerr << "OpenTOPAS is exiting due to a serious error in scoring." << G4endl;
 		G4cerr << "The scorer named: " << GetName() << " is not set to report anything." << G4endl;
 		G4cerr << "Check the valueof the parameter Sc/" << GetName() << "/Report" << G4endl;
 		fPm->AbortSession(1);
@@ -176,7 +176,7 @@ fSumLimit(0.), fStandardDeviationLimit(0.), fRelativeSDLimit(0.), fCountLimit(0)
 
 	// Cannot do both kinds of volume histogram in same scorer
 	if (fReportCVolHist && fReportDVolHist) {
-		G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+		G4cerr << "OpenTOPAS is exiting due to a serious error in scoring." << G4endl;
 		G4cerr << "The scorer named: " << GetName() << " is set to report both" << G4endl;
 		G4cerr << "CumulativeVolumeHistogram and DifferentialVolumeHistogram." << G4endl;
 		G4cerr << "You cannot do both in the same scorer." << G4endl;
@@ -197,12 +197,12 @@ fSumLimit(0.), fStandardDeviationLimit(0.), fRelativeSDLimit(0.), fCountLimit(0)
 			} else if (limitType == "d") {
 				fSumLimit = fPm->GetDoubleParameter(parmName, fPm->GetUnitCategory(fPm->GetUnitOfParameter(parmName)));
 			} else {
-				G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+				G4cerr << "OpenTOPAS is exiting due to a serious error in scoring." << G4endl;
 				G4cerr << parmName << " must be have type of either d, u or i." << G4endl;
 				fPm->AbortSession(1);
 			}
 		} else {
-			G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+			G4cerr << "OpenTOPAS is exiting due to a serious error in scoring." << G4endl;
 			G4cerr << "To use the parameter: " << parmName << G4endl;
 			G4cerr << "this scorer's Report parameter must include at least one of:" << G4endl;
 			G4cerr << "Sum, Mean, Second_Moment, Variance, Standard_Deviation," << G4endl;
@@ -223,12 +223,12 @@ fSumLimit(0.), fStandardDeviationLimit(0.), fRelativeSDLimit(0.), fCountLimit(0)
 			} else if (limitType == "d") {
 				fStandardDeviationLimit = fPm->GetDoubleParameter(parmName, fPm->GetUnitCategory(fPm->GetUnitOfParameter(parmName)));
 			} else {
-				G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+				G4cerr << "OpenTOPAS is exiting due to a serious error in scoring." << G4endl;
 				G4cerr << parmName << " must be have type of either d, u or i." << G4endl;
 				fPm->AbortSession(1);
 			}
 		} else {
-			G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+			G4cerr << "OpenTOPAS is exiting due to a serious error in scoring." << G4endl;
 			G4cerr << "To use the parameter: " << parmName << G4endl;
 			G4cerr << "this scorer's Report parameter must include at least one of:" << G4endl;
 			G4cerr << "Second_Moment, Variance or Standard_Deviation." << G4endl;
@@ -243,12 +243,12 @@ fSumLimit(0.), fStandardDeviationLimit(0.), fRelativeSDLimit(0.), fCountLimit(0)
 			fRelativeSDLimit = fPm->GetUnitlessParameter(parmName);
 
 			if (fRelativeSDLimit < 0. || fRelativeSDLimit > 1.) {
-				G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+				G4cerr << "OpenTOPAS is exiting due to a serious error in scoring." << G4endl;
 				G4cerr << "Value of: " << parmName << " must be between 0 and 1." << G4endl;
 				fPm->AbortSession(1);
 			}
 		} else {
-			G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+			G4cerr << "OpenTOPAS is exiting due to a serious error in scoring." << G4endl;
 			G4cerr << "To use the parameter: " << parmName << G4endl;
 			G4cerr << "this scorer's Report parameter must include at least one of:" << G4endl;
 			G4cerr << "Second_Moment, Variance or Standard_Deviation." << G4endl;
@@ -262,7 +262,7 @@ fSumLimit(0.), fStandardDeviationLimit(0.), fRelativeSDLimit(0.), fCountLimit(0)
 		if (fReportCountInBin) {
 			fCountLimit = fPm->GetIntegerParameter(parmName);
 		} else {
-			G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+			G4cerr << "OpenTOPAS is exiting due to a serious error in scoring." << G4endl;
 			G4cerr << "To use the parameter: " << parmName << G4endl;
 			G4cerr << "this scorer's Report parameter must include Count_In_Bin." << G4endl;
 			fPm->AbortSession(1);
@@ -271,7 +271,7 @@ fSumLimit(0.), fStandardDeviationLimit(0.), fRelativeSDLimit(0.), fCountLimit(0)
 	}
 
 	if (HaveSetALimit && fOutputAfterRun & !fOutputAfterRunShouldAccumulate) {
-		G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+		G4cerr << "OpenTOPAS is exiting due to a serious error in scoring." << G4endl;
 		G4cerr << "The scorer: " << GetName() << G4endl;
 		G4cerr << "has one of the RepeatSequence parameters set," << G4endl;
 		G4cerr << "while it also has OutputAfterRun set to True." << G4endl;
@@ -298,7 +298,7 @@ fSumLimit(0.), fStandardDeviationLimit(0.), fRelativeSDLimit(0.), fCountLimit(0)
 
 	if (fSparsify) {
 		if (!fReportSum && !fReportMean && !fReportSecondMoment && !fReportVariance && !fReportStandardDeviation) {
-			G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+			G4cerr << "OpenTOPAS is exiting due to a serious error in scoring." << G4endl;
 			G4cerr << "Sparsify can only be used if Report options include at least one of" << G4endl;
 			G4cerr << "Sum, Mean, Second_Moment, Variance or Standard_Deviation" << G4endl;
 			fPm->AbortSession(1);
@@ -342,7 +342,7 @@ void TsVBinnedScorer::GetAppropriatelyBinnedCopyOfComponent(G4String componentNa
 				fBinByPrimaryEnergy = true;
 				fPm->SetNeedsTrackingAction();
 			} else {
-				G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+				G4cerr << "OpenTOPAS is exiting due to a serious error in scoring." << G4endl;
 				G4cerr << "The scorer named: " << GetName() << " has EBinEnergy set to an unknown value:" <<
 					fPm->GetStringParameter(GetFullParmName("EBinEnergy"))<< G4endl;
 				G4cerr << "Acceptable values are: IncidentTrack, PreStep, DepositedInStep or PrimaryTrack" << G4endl;
@@ -356,7 +356,7 @@ void TsVBinnedScorer::GetAppropriatelyBinnedCopyOfComponent(G4String componentNa
 		fNEorTBins = fPm->GetIntegerParameter(GetFullParmName("EBins"));
 
 		if (fNEorTBins < 0) {
-			G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+			G4cerr << "OpenTOPAS is exiting due to a serious error in scoring." << G4endl;
 			G4cerr << "The scorer named: " << GetName() << " has EBins less than 0" << G4endl;
 			fPm->AbortSession(1);
 		} else if (fNEorTBins > 0) {
@@ -369,7 +369,7 @@ void TsVBinnedScorer::GetAppropriatelyBinnedCopyOfComponent(G4String componentNa
 			if (fPm->ParameterExists(GetFullParmName("EBinMax")))
 				fBinMax = fPm->GetDoubleParameter(GetFullParmName("EBinMax"), "Energy");
 			else {
-				G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+				G4cerr << "OpenTOPAS is exiting due to a serious error in scoring." << G4endl;
 				G4cerr << "The scorer named: " << GetName() << " has energy binning defined with no EBinMax defined" << G4endl;
 				fPm->AbortSession(1);
 			}
@@ -381,7 +381,7 @@ void TsVBinnedScorer::GetAppropriatelyBinnedCopyOfComponent(G4String componentNa
 				fBinMin = fPm->GetDoubleParameter(GetFullParmName("EBinMin"), "Energy");
 
 			if (fBinMin > fBinMax) {
-				G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+				G4cerr << "OpenTOPAS is exiting due to a serious error in scoring." << G4endl;
 				G4cerr << "The scorer named: " << GetName() << " has EBinMin greater than EBinMax" << G4endl;
 				fPm->AbortSession(1);
 			} else {
@@ -389,7 +389,7 @@ void TsVBinnedScorer::GetAppropriatelyBinnedCopyOfComponent(G4String componentNa
 					fBinWidth = (fBinMax - fBinMin) / fNEorTBins;
 				} else {
 					if ( fBinMin == 0 ) {
-						G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+						G4cerr << "OpenTOPAS is exiting due to a serious error in scoring." << G4endl;
 						G4cerr << "The scorer named: " << GetName() << " has EBinMin equal to zero and Log spacing is activated" << G4endl;
 						fPm->AbortSession(1);
 					}
@@ -408,7 +408,7 @@ void TsVBinnedScorer::GetAppropriatelyBinnedCopyOfComponent(G4String componentNa
 		fNEorTBins = fPm->GetIntegerParameter(GetFullParmName("TimeBins"));
 
 		if (fNEorTBins < 0) {
-			G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+			G4cerr << "OpenTOPAS is exiting due to a serious error in scoring." << G4endl;
 			G4cerr << "The scorer named: " << GetName() << " has TimeBins less than 0" << G4endl;
 			fPm->AbortSession(1);
 		} else if (fNEorTBins > 0) {
@@ -416,7 +416,7 @@ void TsVBinnedScorer::GetAppropriatelyBinnedCopyOfComponent(G4String componentNa
 			fBinByTime = true;
 
 			if (fBinByIncidentEnergy || fBinByPreStepEnergy || fBinByStepDepositEnergy || fBinByPrimaryEnergy) {
-				G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+				G4cerr << "OpenTOPAS is exiting due to a serious error in scoring." << G4endl;
 				G4cerr << "The scorer named: " << GetName() << " has both EBins and TimeBins" << G4endl;
 				G4cerr << "A given scorer can only have one or the other of these two options." << G4endl;
 				fPm->AbortSession(1);
@@ -426,7 +426,7 @@ void TsVBinnedScorer::GetAppropriatelyBinnedCopyOfComponent(G4String componentNa
 			if (fPm->ParameterExists(GetFullParmName("TimeBinMax")))
 				fBinMax = fPm->GetDoubleParameter(GetFullParmName("TimeBinMax"), "Time");
 			else {
-				G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+				G4cerr << "OpenTOPAS is exiting due to a serious error in scoring." << G4endl;
 				G4cerr << "The scorer named: " << GetName() << " has time binning defined with no TimeBinMax defined" << G4endl;
 				fPm->AbortSession(1);
 			}
@@ -435,7 +435,7 @@ void TsVBinnedScorer::GetAppropriatelyBinnedCopyOfComponent(G4String componentNa
 				fBinMin = fPm->GetDoubleParameter(GetFullParmName("TimeBinMin"), "Time");
 
 			if (fBinMin > fBinMax) {
-				G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+				G4cerr << "OpenTOPAS is exiting due to a serious error in scoring." << G4endl;
 				G4cerr << "The scorer named: " << GetName() << " has TimeBinMin greater than TimeBinMax" << G4endl;
 				fPm->AbortSession(1);
 			} else {
@@ -445,7 +445,7 @@ void TsVBinnedScorer::GetAppropriatelyBinnedCopyOfComponent(G4String componentNa
 	}
 
 	if (fSparsify && fNEorTBins) {
-		G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+		G4cerr << "OpenTOPAS is exiting due to a serious error in scoring." << G4endl;
 		G4cerr << "Sparsify can not be used with Energy or Time binning." << G4endl;
 		fPm->AbortSession(1);
 	}
@@ -676,7 +676,7 @@ G4bool TsVBinnedScorer::HasUnsatisfiedLimits() {
 void TsVBinnedScorer::PostConstructor()
 {
 	if (!fUnitWasSet) {
-		G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+		G4cerr << "OpenTOPAS is exiting due to a serious error in scoring." << G4endl;
 		G4cerr << "The scorer named " << GetName() << " never called SetUnit." << G4endl;
 		G4cerr << "Every scorer must make this call in its constructor." << G4endl;
 		fPm->AbortSession(1);
@@ -693,7 +693,7 @@ void TsVBinnedScorer::PostConstructor()
 		compType.toLower();
 #endif
 		if (compType != "tsbox" && compType != "tsdicompatient" && compType != "tsxiopatient" && compType != "tsimagecube") {
-			G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+			G4cerr << "OpenTOPAS is exiting due to a serious error in scoring." << G4endl;
 			G4cerr << GetName() << " has unsupported component type for DICOM output." << G4endl;
 			G4cerr << "Supported component types are TsBox, TsDicomPatient, TsXiOPatient and TsImageCube." << G4endl;
 			fPm->AbortSession(1);
@@ -704,20 +704,20 @@ void TsVBinnedScorer::PostConstructor()
 			G4String compName = fPm->GetStringParameter(GetFullParmName("ReferencedDicomPatient"));
 			TsVGeometryComponent* tmpReferencedDicomPatient = fGm->GetComponent(compName);
 			if (!tmpReferencedDicomPatient) {
-				G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+				G4cerr << "OpenTOPAS is exiting due to a serious error in scoring." << G4endl;
 				G4cerr << GetName() << " has unfound ReferencedDicomPatient: " << compName << G4endl;
 				fPm->AbortSession(1);
 			}
 			fReferencedDicomPatient = dynamic_cast<TsDicomPatient*>(tmpReferencedDicomPatient);
 			if (!fReferencedDicomPatient) {
-				G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+				G4cerr << "OpenTOPAS is exiting due to a serious error in scoring." << G4endl;
 				G4cerr << GetFullParmName("ReferencedDicomPatient") << " does not refer to a TsDicomPatient" << G4endl;
 				fPm->AbortSession(1);
 			}
 			G4RotationMatrix* rotDicom = fReferencedDicomPatient->GetRotRelToWorld();
 			G4RotationMatrix* rotScore = fComponent->GetRotRelToWorld();
 			if (*rotScore != *rotDicom) {
-				G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+				G4cerr << "OpenTOPAS is exiting due to a serious error in scoring." << G4endl;
 				G4cerr << "Scorer " << GetName() << " has a relative rotation between Component and ReferencedDicomPatient." << G4endl;
 				G4cerr << "This is not allowed when outputting to DICOM format with a ReferencedDicomPatient." << G4endl;
 				fPm->AbortSession(1);
@@ -739,7 +739,7 @@ void TsVBinnedScorer::PostConstructor()
 		fNeedToUpdateFileSpecs = false;
 	} else {
 		if (!fOutputToBinary && !fOutputToCsv && !fOutputToRoot && !fOutputToXml && !fOutputToDicom) {
-			G4cerr << "Topas is exiting due to a serious error in scoring setup." << G4endl;
+			G4cerr << "OpenTOPAS is exiting due to a serious error in scoring setup." << G4endl;
 			G4cerr << "The scorer named " << GetName() << " has unsupported OutputType: "
 			<< fPm->GetStringParameter(GetFullParmName("OutputType")) << G4endl;
 
@@ -806,24 +806,24 @@ void TsVBinnedScorer::ActuallySetUnit(const G4String& theUnitName)
 	if (fOutputToRoot || fOutputToXml) {
 		if (fPm->ParameterExists(GetFullParmName("HistogramMin"))) {
 			if (fPm->GetUnitCategoryOfParameter(GetFullParmName("HistogramMin")) != fPm->GetUnitCategory(theUnitName)) {
-				G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+				G4cerr << "OpenTOPAS is exiting due to a serious error in scoring." << G4endl;
 				G4cerr << "The scorer named: " << GetName() << " has inappropriate unit category in HistogramMin." << G4endl;
 				fPm->AbortSession(1);
 			}
 		} else {
-			G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+			G4cerr << "OpenTOPAS is exiting due to a serious error in scoring." << G4endl;
 			G4cerr << "The scorer named: " << GetName() << " specifies root or xml output but has no HistogramMin defined" << G4endl;
 			fPm->AbortSession(1);
 		}
 
 		if (fPm->ParameterExists(GetFullParmName("HistogramMax"))) {
 			if (fPm->GetUnitCategoryOfParameter(GetFullParmName("HistogramMax")) != fPm->GetUnitCategory(theUnitName)) {
-				G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+				G4cerr << "OpenTOPAS is exiting due to a serious error in scoring." << G4endl;
 				G4cerr << "The scorer named: " << GetName() << " has inappropriate unit category in HistogramMax." << G4endl;
 				fPm->AbortSession(1);
 			}
 		} else {
-			G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+			G4cerr << "OpenTOPAS is exiting due to a serious error in scoring." << G4endl;
 			G4cerr << "The scorer named: " << GetName() << " specifies root or xml output but has no HistogramMax defined" << G4endl;
 			fPm->AbortSession(1);
 		}
@@ -834,7 +834,7 @@ void TsVBinnedScorer::ActuallySetUnit(const G4String& theUnitName)
 	} else {
 		unitValue = fPm->GetUnitValue(theUnitName);
 		if (unitValue==0) {
-			G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+			G4cerr << "OpenTOPAS is exiting due to a serious error in scoring." << G4endl;
 			G4cerr << "Scorer name: " << GetName() << " is using an unknown unit: " << theUnitName << G4endl;
 			fPm->AbortSession(1);
 		}
@@ -856,7 +856,7 @@ void TsVBinnedScorer::ActuallySetUnit(const G4String& theUnitName)
 	// can know whether to open 1 or 2D histogram and can create histogram
 	if (fOutputToRoot || fOutputToXml) {
 		if (!fPm->ParameterExists(GetFullParmName("HistogramBins"))) {
-			G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+			G4cerr << "OpenTOPAS is exiting due to a serious error in scoring." << G4endl;
 			G4cerr << "The scorer named: " << GetName() << " specifies root or xml output but has no HistogramBins defined" << G4endl;
 			fPm->AbortSession(1);
 		}
@@ -872,21 +872,21 @@ void TsVBinnedScorer::ActuallySetUnit(const G4String& theUnitName)
 #endif
 
 		if (!fPm->ParameterExists(GetFullParmName("ColorNames"))) {
-			G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+			G4cerr << "OpenTOPAS is exiting due to a serious error in scoring." << G4endl;
 			G4cerr << "You have set the parameter Sc/" << GetName() << "/ColorBy" << G4endl;
 			G4cerr << "but have not set the associated ColorNames parameter." << G4endl;
 			fPm->AbortSession(1);
 		}
 
 		if (!fPm->ParameterExists(GetFullParmName("ColorValues"))) {
-			G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+			G4cerr << "OpenTOPAS is exiting due to a serious error in scoring." << G4endl;
 			G4cerr << "You have set the parameter Sc/" << GetName() << "/ColorBy" << G4endl;
 			G4cerr << "but have not set the associated ColorValues parameter." << G4endl;
 			fPm->AbortSession(1);
 		}
 
 		if (fPm->GetVectorLength(GetFullParmName("ColorNames")) != ( fPm->GetVectorLength(GetFullParmName("ColorValues")) + 1) ) {
-			G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+			G4cerr << "OpenTOPAS is exiting due to a serious error in scoring." << G4endl;
 			G4cerr << "The number of Sc/" << GetName() << "/ColorNames must be exactly one more than the number of Sc/" << GetName() << "/ColorValues." << G4endl;
 			fPm->AbortSession(1);
 		}
@@ -940,7 +940,7 @@ void TsVBinnedScorer::ActuallySetUnit(const G4String& theUnitName)
 			}
 			colorValues = fPm->GetDoubleVector(GetFullParmName("ColorValues"), fPm->GetUnitCategory(theUnitName));
 		} else {
-			G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+			G4cerr << "OpenTOPAS is exiting due to a serious error in scoring." << G4endl;
 			G4cerr << "The parameter Sc/" << GetName() << "/ColorBy has an unknown option: " << fColorBy << G4endl;
 			G4cerr << "Should be sum, mean, histories, count_in_bin, standard_deviation, min or max" << G4endl;
 			fPm->AbortSession(1);
@@ -1008,10 +1008,10 @@ void TsVBinnedScorer::CreateHistogram(G4String title, G4bool volumeHistogram) {
 		}
 	} else {
 		if (fNDivisions > 1 && !volumeHistogram) {
-			G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+			G4cerr << "OpenTOPAS is exiting due to a serious error in scoring." << G4endl;
 			G4cerr << "Histogramming has been requested for scorer name: " << GetName() << G4endl;
 			G4cerr << "But the scorer has binning both by component division and by either energy or time." << G4endl;
-			G4cerr << "Topas can histogram by component division or by energy or time, but not by both." << G4endl;
+			G4cerr << "OpenTOPAS can histogram by component division or by energy or time, but not by both." << G4endl;
 			G4cerr << "Suggest you instead output to csv or binary and then use an external plotting tool." << G4endl;
 			fPm->AbortSession(1);
 		} else {
@@ -1269,7 +1269,7 @@ void TsVBinnedScorer::RestoreResultsFromFile()
 	else if (inputType == "binary")
 		inputFileSpec = fPm->GetStringParameter(GetFullParmName("InputFile")) + ".binheader";
 	else if (inputType == "dicom") {
-		G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+		G4cerr << "OpenTOPAS is exiting due to a serious error in scoring." << G4endl;
 		G4cerr << "Called RestoreResultsFromFile for Scorer name: " << GetName() << G4endl;
 		G4cerr << "but inputType is neither to Csv nor Binary" << G4endl;
 		fPm->AbortSession(1);
@@ -1277,7 +1277,7 @@ void TsVBinnedScorer::RestoreResultsFromFile()
 
 	std::ifstream inFile(inputFileSpec);
 	if (!inFile) {
-		G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+		G4cerr << "OpenTOPAS is exiting due to a serious error in scoring." << G4endl;
 		G4cerr << "Ts/RestoreResultsFromFile has been set true," << G4endl;
 		G4cerr << "but unable to open input file: " << inputFileSpec << " for Scorer name: " << GetName() << G4endl;
 		fPm->AbortSession(1);
@@ -1289,7 +1289,7 @@ void TsVBinnedScorer::RestoreResultsFromFile()
 	while (fReadLine.substr(0,9)!="# Scored ") {
 		getline(inFile,fReadLine);
 		if (inFile.eof()) {
-			G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+			G4cerr << "OpenTOPAS is exiting due to a serious error in scoring." << G4endl;
 			G4cerr << "Ts/RestoreResultsFromFile has been set true," << G4endl;
 			G4cerr << "but got end of file too early in input file: " << inputFileSpec << " for Scorer name: " << GetName() << G4endl;
 			fPm->AbortSession(1);
@@ -1308,7 +1308,7 @@ void TsVBinnedScorer::RestoreResultsFromFile()
 	// Check that quantity in header matches expected quantity
 	G4int quantityLength = fQuantity.length();
 	if (fReadLine.substr(2, quantityLength) != fQuantity) {
-		G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+		G4cerr << "OpenTOPAS is exiting due to a serious error in scoring." << G4endl;
 		G4cerr << "Ts/RestoreResultsFromFile has been set true," << G4endl;
 		G4cerr << "but input file: " << inputFileSpec << " has wrong quantity for Scorer name: " << GetName() << G4endl;
 		G4cerr << "Expected: " << fQuantity << G4endl;
@@ -1364,91 +1364,91 @@ void TsVBinnedScorer::RestoreResultsFromFile()
 	// Evaluate whether we have appropriate data to satisfy report options.
 	// In some cases, we will need to perform new calculations to produce the data to report.
 	if (fReportSum && (!fReadBackHasSum && (!fReadBackHasMean || !fReadBackHasHistories))) {
-		G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+		G4cerr << "OpenTOPAS is exiting due to a serious error in scoring." << G4endl;
 		G4cerr << "Unable to restore requested report options for Scorer name: " << GetName() << G4endl;
 		G4cerr << "Reporting Sum requires input of Sum or of Mean plus Number of Histories" << G4endl;
 		fPm->AbortSession(1);
 	}
 
 	if (fReadBackHasSum && fReadBackHasMean && !fReadBackHasHistories) {
-		G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+		G4cerr << "OpenTOPAS is exiting due to a serious error in scoring." << G4endl;
 		G4cerr << "Unable to restore requested report options for Scorer name: " << GetName() << G4endl;
 		G4cerr << "When reading back both Sum and Mean we also require Number of Histories" << G4endl;
 		fPm->AbortSession(1);
 	}
 
 	if (fReportMean && (!fReadBackHasMean && (!fReadBackHasSum || !fReadBackHasHistories))) {
-		G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+		G4cerr << "OpenTOPAS is exiting due to a serious error in scoring." << G4endl;
 		G4cerr << "Unable to restore requested report options for Scorer name: " << GetName() << G4endl;
 		G4cerr << "Reporting Mean requires input of Mean or of Sum plus Number of Histories" << G4endl;
 		fPm->AbortSession(1);
 	}
 
 	if (fReportHistories && (!fReadBackHasHistories && (!fReadBackHasSum || !fReadBackHasMean))) {
-		G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+		G4cerr << "OpenTOPAS is exiting due to a serious error in scoring." << G4endl;
 		G4cerr << "Unable to restore requested report options for Scorer name: " << GetName() << G4endl;
 		G4cerr << "Reporting Number of Histories requires input of Number of Histories or of Sum plus Mean" << G4endl;
 		fPm->AbortSession(1);
 	}
 
 	if (fReportCountInBin && !fReadBackHasCountInBin) {
-		G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+		G4cerr << "OpenTOPAS is exiting due to a serious error in scoring." << G4endl;
 		G4cerr << "Unable to restore requested report options for Scorer name: " << GetName() << G4endl;
 		G4cerr << "Reporting Count_In_Bin requires input of Count_In_Bin" << G4endl;
 		fPm->AbortSession(1);
 	}
 
 	if (fReportSecondMoment && !fReadBackHasSecondMoment && !fReadBackHasVariance  && !fReadBackHasStandardDeviation) {
-		G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+		G4cerr << "OpenTOPAS is exiting due to a serious error in scoring." << G4endl;
 		G4cerr << "Unable to restore requested report options for Scorer name: " << GetName() << G4endl;
 		G4cerr << "Reporting Second_Moment requires input of Second_Moment, Variance or Standard_Deviation" << G4endl;
 		fPm->AbortSession(1);
 	}
 
 	if (fReportSecondMoment && !fReadBackHasSecondMoment && !fReadBackHasHistories) {
-		G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+		G4cerr << "OpenTOPAS is exiting due to a serious error in scoring." << G4endl;
 		G4cerr << "Unable to restore requested report options for Scorer name: " << GetName() << G4endl;
 		G4cerr << "Reporting Second_Moment requires input of Second_Moment or Number of Histories" << G4endl;
 		fPm->AbortSession(1);
 	}
 
 	if (fReportVariance && !fReadBackHasVariance && !fReadBackHasSecondMoment && !fReadBackHasStandardDeviation) {
-		G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+		G4cerr << "OpenTOPAS is exiting due to a serious error in scoring." << G4endl;
 		G4cerr << "Unable to restore requested report options for Scorer name: " << GetName() << G4endl;
 		G4cerr << "Reporting Variance requires input of Variance, Second_Moment or Standard_Deviation" << G4endl;
 		fPm->AbortSession(1);
 	}
 
 	if (fReportVariance && !fReadBackHasVariance && !fReadBackHasHistories && !fReadBackHasStandardDeviation) {
-		G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+		G4cerr << "OpenTOPAS is exiting due to a serious error in scoring." << G4endl;
 		G4cerr << "Unable to restore requested report options for Scorer name: " << GetName() << G4endl;
 		G4cerr << "Reporting Variance requires input of Variance, Standard_Deviation or Number of Histories" << G4endl;
 		fPm->AbortSession(1);
 	}
 
 	if (fReportStandardDeviation && !fReadBackHasStandardDeviation && !fReadBackHasSecondMoment && !fReadBackHasVariance) {
-		G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+		G4cerr << "OpenTOPAS is exiting due to a serious error in scoring." << G4endl;
 		G4cerr << "Unable to restore requested report options for Scorer name: " << GetName() << G4endl;
 		G4cerr << "Reporting Standard_Deviation requires input of Standard_Deviation, Second_Moment or Variance" << G4endl;
 		fPm->AbortSession(1);
 	}
 
 	if (fReportStandardDeviation && !fReadBackHasStandardDeviation && !fReadBackHasHistories && !fReadBackHasVariance) {
-		G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+		G4cerr << "OpenTOPAS is exiting due to a serious error in scoring." << G4endl;
 		G4cerr << "Unable to restore requested report options for Scorer name: " << GetName() << G4endl;
 		G4cerr << "Reporting Standard_Deviation requires input of Standard_Deviation, Variance or Number of Histories" << G4endl;
 		fPm->AbortSession(1);
 	}
 
 	if (fReportMin && !fReadBackHasMin) {
-		G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+		G4cerr << "OpenTOPAS is exiting due to a serious error in scoring." << G4endl;
 		G4cerr << "Unable to restore requested report options for Scorer name: " << GetName() << G4endl;
 		G4cerr << "Reporting Min requires input of Min" << G4endl;
 		fPm->AbortSession(1);
 	}
 
 	if (fReportMax && !fReadBackHasMax) {
-		G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+		G4cerr << "OpenTOPAS is exiting due to a serious error in scoring." << G4endl;
 		G4cerr << "Unable to restore requested report options for Scorer name: " << GetName() << G4endl;
 		G4cerr << "Reporting Max requires input of Max" << G4endl;
 		fPm->AbortSession(1);
@@ -1462,7 +1462,7 @@ void TsVBinnedScorer::RestoreResultsFromFile()
 			+ " bins of " + G4UIcommand::ConvertToString(fBinWidth) + " MeV"
 			+ " from " + G4UIcommand::ConvertToString(fBinMin) + " MeV to " + G4UIcommand::ConvertToString(fBinMax) + " MeV";
 			if (fReadLine != expectedLine) {
-				G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+				G4cerr << "OpenTOPAS is exiting due to a serious error in scoring." << G4endl;
 				G4cerr << "Ts/RestoreResultsFromFile has been set true," << G4endl;
 				G4cerr << "but in input file: " << inputFileSpec << " for Scorer name: " << GetName() << G4endl;
 				G4cerr << "has different energy binning than this scorer." << G4endl;
@@ -1471,7 +1471,7 @@ void TsVBinnedScorer::RestoreResultsFromFile()
 			getline(inFile,fReadLine);
 			getline(inFile,fReadLine);
 		} else {
-			G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+			G4cerr << "OpenTOPAS is exiting due to a serious error in scoring." << G4endl;
 			G4cerr << "Ts/RestoreResultsFromFile has been set true," << G4endl;
 			G4cerr << "but in input file: " << inputFileSpec << " for Scorer name: " << GetName() << G4endl;
 			G4cerr << "has energy binning while this scorer does not." << G4endl;
@@ -1485,7 +1485,7 @@ void TsVBinnedScorer::RestoreResultsFromFile()
 			+ " bins of " + G4UIcommand::ConvertToString(fBinWidth) + " MeV"
 			+ " from " + G4UIcommand::ConvertToString(fBinMin) + " MeV to " + G4UIcommand::ConvertToString(fBinMax) + " MeV";
 			if (fReadLine != expectedLine) {
-				G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+				G4cerr << "OpenTOPAS is exiting due to a serious error in scoring." << G4endl;
 				G4cerr << "Ts/RestoreResultsFromFile has been set true," << G4endl;
 				G4cerr << "but in input file: " << inputFileSpec << " for Scorer name: " << GetName() << G4endl;
 				G4cerr << "has different energy binning than this scorer." << G4endl;
@@ -1494,7 +1494,7 @@ void TsVBinnedScorer::RestoreResultsFromFile()
 			getline(inFile,fReadLine);
 			getline(inFile,fReadLine);
 		} else {
-			G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+			G4cerr << "OpenTOPAS is exiting due to a serious error in scoring." << G4endl;
 			G4cerr << "Ts/RestoreResultsFromFile has been set true," << G4endl;
 			G4cerr << "but in input file: " << inputFileSpec << " for Scorer name: " << GetName() << G4endl;
 			G4cerr << "has energy binning while this scorer does not." << G4endl;
@@ -1508,7 +1508,7 @@ void TsVBinnedScorer::RestoreResultsFromFile()
 			+ " bins of " + G4UIcommand::ConvertToString(fBinWidth) + " MeV"
 			+ " from " + G4UIcommand::ConvertToString(fBinMin) + " MeV to " + G4UIcommand::ConvertToString(fBinMax) + " MeV";
 			if (fReadLine != expectedLine) {
-				G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+				G4cerr << "OpenTOPAS is exiting due to a serious error in scoring." << G4endl;
 				G4cerr << "Ts/RestoreResultsFromFile has been set true," << G4endl;
 				G4cerr << "but in input file: " << inputFileSpec << " for Scorer name: " << GetName() << G4endl;
 				G4cerr << "has different energy binning than this scorer." << G4endl;
@@ -1517,7 +1517,7 @@ void TsVBinnedScorer::RestoreResultsFromFile()
 			getline(inFile,fReadLine);
 			getline(inFile,fReadLine);
 		} else {
-			G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+			G4cerr << "OpenTOPAS is exiting due to a serious error in scoring." << G4endl;
 			G4cerr << "Ts/RestoreResultsFromFile has been set true," << G4endl;
 			G4cerr << "but in input file: " << inputFileSpec << " for Scorer name: " << GetName() << G4endl;
 			G4cerr << "has energy binning while this scorer does not." << G4endl;
@@ -1531,7 +1531,7 @@ void TsVBinnedScorer::RestoreResultsFromFile()
 			+ " bins of " + G4UIcommand::ConvertToString(fBinWidth) + " MeV"
 			+ " from " + G4UIcommand::ConvertToString(fBinMin) + " MeV to " + G4UIcommand::ConvertToString(fBinMax) + " MeV";
 			if (fReadLine != expectedLine) {
-				G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+				G4cerr << "OpenTOPAS is exiting due to a serious error in scoring." << G4endl;
 				G4cerr << "Ts/RestoreResultsFromFile has been set true," << G4endl;
 				G4cerr << "but in input file: " << inputFileSpec << " for Scorer name: " << GetName() << G4endl;
 				G4cerr << "has different energy binning than this scorer." << G4endl;
@@ -1540,7 +1540,7 @@ void TsVBinnedScorer::RestoreResultsFromFile()
 			getline(inFile,fReadLine);
 			getline(inFile,fReadLine);
 		} else {
-			G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+			G4cerr << "OpenTOPAS is exiting due to a serious error in scoring." << G4endl;
 			G4cerr << "Ts/RestoreResultsFromFile has been set true," << G4endl;
 			G4cerr << "but in input file: " << inputFileSpec << " for Scorer name: " << GetName() << G4endl;
 			G4cerr << "has energy binning while this scorer does not." << G4endl;
@@ -1554,7 +1554,7 @@ void TsVBinnedScorer::RestoreResultsFromFile()
 			+ " bins of " + G4UIcommand::ConvertToString(fBinWidth) + " ns"
 			+ " from " + G4UIcommand::ConvertToString(fBinMin) + " ns to " + G4UIcommand::ConvertToString(fBinMax) + " ns";
 			if (fReadLine != expectedLine) {
-				G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+				G4cerr << "OpenTOPAS is exiting due to a serious error in scoring." << G4endl;
 				G4cerr << "Ts/RestoreResultsFromFile has been set true," << G4endl;
 				G4cerr << "but in input file: " << inputFileSpec << " for Scorer name: " << GetName() << G4endl;
 				G4cerr << "has different time binning that this scorer." << G4endl;
@@ -1563,7 +1563,7 @@ void TsVBinnedScorer::RestoreResultsFromFile()
 			getline(inFile,fReadLine);
 			getline(inFile,fReadLine);
 		} else {
-			G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+			G4cerr << "OpenTOPAS is exiting due to a serious error in scoring." << G4endl;
 			G4cerr << "Ts/RestoreResultsFromFile has been set true," << G4endl;
 			G4cerr << "but in input file: " << inputFileSpec << " for Scorer name: " << GetName() << G4endl;
 			G4cerr << "has time binning while this scorer does not." << G4endl;
@@ -1576,7 +1576,7 @@ void TsVBinnedScorer::RestoreResultsFromFile()
 			for (int j = 0; j < fNj; j++) {
 				for (int k = 0; k < fNk; k++) {
 					if (inFile.eof()) {
-						G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+						G4cerr << "OpenTOPAS is exiting due to a serious error in scoring." << G4endl;
 						G4cerr << "Ts/RestoreResultsFromFile has been set true," << G4endl;
 						G4cerr << "but got end of file too early in input file: " << inputFileSpec << " for Scorer name: " << GetName() << G4endl;
 						fPm->AbortSession(1);
@@ -1636,7 +1636,7 @@ void TsVBinnedScorer::RestoreResultsFromFile()
 			for (int j = 0; j < fNj; j++) {
 				for (int k = 0; k < fNk; k++) {
 					if (fReadFile.eof()) {
-						G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+						G4cerr << "OpenTOPAS is exiting due to a serious error in scoring." << G4endl;
 						G4cerr << "Ts/RestoreResultsFromFile has been set true," << G4endl;
 						G4cerr << "but got end of file too early in input file: " << dataFileSpec << " for Scorer name: " << GetName() << G4endl;
 						fPm->AbortSession(1);
@@ -1982,7 +1982,7 @@ void TsVBinnedScorer::Output()
 					PrintASCII(ofile);
 					ofile.close();
 				} else {
-					G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+					G4cerr << "OpenTOPAS is exiting due to a serious error in scoring." << G4endl;
 					G4cerr << "Output file: " << fOutFileSpec1 << " cannot be opened for Scorer name: " << GetName() << G4endl;
 					fPm->AbortSession(1);
 				}
@@ -1993,7 +1993,7 @@ void TsVBinnedScorer::Output()
 					hfile << "# Binary file: " << fOutFileSpec2 << G4endl;
 					hfile.close();
 				} else {
-					G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+					G4cerr << "OpenTOPAS is exiting due to a serious error in scoring." << G4endl;
 					G4cerr << "Output file: " << fOutFileSpec1 << " cannot be opened for Scorer name: " << GetName() << G4endl;
 					fPm->AbortSession(1);
 				}
@@ -2003,7 +2003,7 @@ void TsVBinnedScorer::Output()
 					PrintBinary(ofile);
 					ofile.close();
 				} else {
-					G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+					G4cerr << "OpenTOPAS is exiting due to a serious error in scoring." << G4endl;
 					G4cerr << "Output file: " << fOutFileSpec2 << " cannot be opened for Scorer name: " << GetName() << G4endl;
 					fPm->AbortSession(1);
 				}
@@ -2075,7 +2075,7 @@ void TsVBinnedScorer::Output()
 				G4double voxelSizeZ = fComponent->GetFullWidth(2) / fComponent->GetDivisionCount(2);
 				TsBox* scorerBox = dynamic_cast<TsBox*>(fComponent);
 				if (!scorerBox) {
-					G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+					G4cerr << "OpenTOPAS is exiting due to a serious error in scoring." << G4endl;
 					G4cerr << "Scorer: " << GetName() << " tried to write DICOM file, but is not attached to TsBox or Patient component." << G4endl;
 					fPm->AbortSession(1);
 				}
@@ -2234,7 +2234,7 @@ void TsVBinnedScorer::Output()
 					PrintVHASCII(ofile);
 					ofile.close();
 				} else {
-					G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+					G4cerr << "OpenTOPAS is exiting due to a serious error in scoring." << G4endl;
 					G4cerr << "Output file: " << fVHOutFileSpec1 << " cannot be opened for Scorer name: " << GetName() << G4endl;
 					fPm->AbortSession(1);
 				}
@@ -2245,7 +2245,7 @@ void TsVBinnedScorer::Output()
 					hfile << "# Binary file: " << fVHOutFileSpec2 << G4endl;
 					hfile.close();
 				} else {
-					G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+					G4cerr << "OpenTOPAS is exiting due to a serious error in scoring." << G4endl;
 					G4cerr << "Output file: " << fVHOutFileSpec1 << " cannot be opened for Scorer name: " << GetName() << G4endl;
 					fPm->AbortSession(1);
 				}
@@ -2255,7 +2255,7 @@ void TsVBinnedScorer::Output()
 					PrintVHBinary(ofile);
 					ofile.close();
 				} else {
-					G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+					G4cerr << "OpenTOPAS is exiting due to a serious error in scoring." << G4endl;
 					G4cerr << "Output file: " << fVHOutFileSpec2 << " cannot be opened for Scorer name: " << GetName() << G4endl;
 					fPm->AbortSession(1);
 				}
@@ -2379,19 +2379,19 @@ G4String TsVBinnedScorer::ConfirmCanOpen(G4String fileName, G4String fileExt, G4
 				increment++;
 				fileSpec = ConfirmCanOpen(fileName, fileExt, increment);
 			} else if (howToHandle == "exit") {
-				G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+				G4cerr << "OpenTOPAS is exiting due to a serious error in scoring." << G4endl;
 				G4cerr << "Output file: " << fileSpec << " already exists for Scorer name: " << GetName() << G4endl;
 				G4cerr << "If you really want to allow this, specify: " << G4endl;
 				G4cerr << GetFullParmName("IfOutputFileAlreadyExists") << " as Overwrite or Increment." << G4endl;
 				fPm->AbortSession(1);
 			} else {
-				G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+				G4cerr << "OpenTOPAS is exiting due to a serious error in scoring." << G4endl;
 				G4cerr << "Scorer name: " << GetName() << " has invalid value for parameter: " << GetFullParmName("IfOutputFileAlreadyExists") << G4endl;
 				G4cerr << "Allowed values are Exit, Overwrite or Increment" << G4endl;
 				fPm->AbortSession(1);
 			}
 		} else {
-			G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+			G4cerr << "OpenTOPAS is exiting due to a serious error in scoring." << G4endl;
 			G4cerr << "Output file: " << fileSpec << " already exists for Scorer name: " << GetName() << G4endl;
 			G4cerr << "If you really want to allow this, specify: " << G4endl;
 			G4cerr << GetFullParmName("IfOutputFileAlreadyExists") << " as Overwrite or Increment." << G4endl;
@@ -2406,7 +2406,7 @@ G4String TsVBinnedScorer::ConfirmCanOpen(G4String fileName, G4String fileExt, G4
 		// Confirmed the file can be opened. Close it for now.
 		ofile.close();
 	} else {
-		G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+		G4cerr << "OpenTOPAS is exiting due to a serious error in scoring." << G4endl;
 		G4cerr << "Output file: " << fileSpec << " cannot be opened for Scorer name: " << GetName() << G4endl;
 		fPm->AbortSession(1);
 	}

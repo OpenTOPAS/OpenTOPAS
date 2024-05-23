@@ -190,11 +190,11 @@ TsParameterFile::TsParameterFile(TsParameterManager* pM, const G4String& fileSpe
 		std::ifstream infile(fileSpec);
 		if (!infile) {
 			if (fileSpec == "TsUserParameters.txt") {
-				G4cerr << "Topas quitting. Unable to find top level parameter file." << G4endl;
+				G4cerr << "OpenTOPAS quitting. Unable to find top level parameter file." << G4endl;
 				G4cerr << "Specify the top level parameter file on the command line," << G4endl;
 				G4cerr << "or provide a file named TsUserParameters.txt." << G4endl;
 			} else {
-				G4cerr << "Topas quitting, unable to open parameter file:" << fileSpec << G4endl;
+				G4cerr << "OpenTOPAS quitting, unable to open parameter file:" << fileSpec << G4endl;
 			}
 			fPm->AbortSession(1);
 		} else {
@@ -2210,7 +2210,7 @@ void TsParameterFile::CheckFilterParameterNamesStartingWith(const G4String& pref
 				}
 
 				if (!found) {
-					G4cerr << "Topas is exiting due to a serious error in parameter file: " << fFileSpec << G4endl;
+					G4cerr << "OpenTOPAS is exiting due to a serious error in parameter file: " << fFileSpec << G4endl;
 					G4cerr << "Parameter name: " << iter->second->GetName() << " is not a known " << prefix << " filter." << G4endl;
 					G4cerr << "Complete list of known " << prefix << " filters is as follows:" << G4endl;
 					for (iToken=0; !found && iToken<length; iToken++)
@@ -2265,7 +2265,7 @@ void TsParameterFile::Quit(TsTempParameter* tempParameter, const char* message) 
 		return;
 	}
 
-	G4cerr << "Topas is exiting due to a serious error in parameter file: " << fFileSpec << G4endl;
+	G4cerr << "OpenTOPAS is exiting due to a serious error in parameter file: " << fFileSpec << G4endl;
 	G4cerr << "Parameter name: " << tempParameter->GetType() << ":" << tempParameter->GetName() << G4endl;
 	G4cerr << "has unsupported value: " << tempParameter->GetValue() << G4endl;
 	G4cerr << message << G4endl;
@@ -2280,7 +2280,7 @@ void TsParameterFile::Quit(const G4String& name, const char* message) {
 		return;
 	}
 
-	G4cerr << "Topas is exiting due to a serious error in parameter file: " << fFileSpec << G4endl;
+	G4cerr << "OpenTOPAS is exiting due to a serious error in parameter file: " << fFileSpec << G4endl;
 	G4cerr << "Parameter name: " << name << G4endl;
 	G4cerr << message << G4endl;
 	fPm->AbortSession(1);
@@ -2294,7 +2294,7 @@ void TsParameterFile::Undefined(const G4String& name) {
 		return;
 	}
 
-	G4cerr << "Topas is exiting due to a serious error." << G4endl;
+	G4cerr << "OpenTOPAS is exiting due to a serious error." << G4endl;
 	G4cerr << "Parameter name: " << name << " has not been defined." << G4endl;
 	fPm->AbortSession(1);
 }

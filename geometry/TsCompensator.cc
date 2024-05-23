@@ -66,7 +66,7 @@ G4VPhysicalVolume* TsCompensator::Construct()
 	fFileName = fPm->GetStringParameter(GetFullParmName("InputFile"));
 	std::ifstream inCompensator(fFileName);
 	if (!inCompensator) {
-		G4cerr << "Topas is exiting due to a serious error." << G4endl;
+		G4cerr << "OpenTOPAS is exiting due to a serious error." << G4endl;
 		G4cerr << "Unable to open compensator file: " << fFileName << G4endl;
 		fPm->AbortSession(1);
 	}
@@ -102,7 +102,7 @@ G4VPhysicalVolume* TsCompensator::Construct()
 		inCompensator >> fNumRows >> fMainCylinderThickness >> fDrillHoleRadius;
 		fDrillHoleRadius *= .5;
 	} else {
-		G4cerr << "Topas is exiting due to a serious error." << G4endl;
+		G4cerr << "OpenTOPAS is exiting due to a serious error." << G4endl;
 		G4cerr << fPm->GetStringParameter(GetFullParmName("FileFormat")) << " has invalid value: " << fPm->GetStringParameter(GetFullParmName("FileFormat")) << G4endl;
 		G4cerr << "Must be either MGH or RowsAndDepths." << G4endl;
 		fPm->AbortSession(1);
@@ -110,7 +110,7 @@ G4VPhysicalVolume* TsCompensator::Construct()
 
 	if (fNumRows <= 0 || fMainCylinderThickness <= 0. || fDrillHoleRadius <= 0. ||
 		fNumRows > 1E6 || fMainCylinderThickness > 1E6 || fDrillHoleRadius > 1E6) {
-		G4cerr << "Topas is exiting due to a serious error." << G4endl;
+		G4cerr << "OpenTOPAS is exiting due to a serious error." << G4endl;
 		G4cout << "Incorrect data format in Compensator file: " << fFileName << G4endl;
 		fPm->AbortSession(1);
 	}
@@ -140,7 +140,7 @@ G4VPhysicalVolume* TsCompensator::Construct()
 		{
 			inCompensator >> depth;
 			if (depth > fMainCylinderThickness) {
-				G4cerr << "Topas is exiting due to a serious error." << G4endl;
+				G4cerr << "OpenTOPAS is exiting due to a serious error." << G4endl;
 				G4cout << "At least one depth in Compensator file " << fFileName << " exceeds the compensator thickness." << G4endl;
 				fPm->AbortSession(1);
 			}
@@ -170,7 +170,7 @@ G4VPhysicalVolume* TsCompensator::Construct()
 	else if (method == "unioncylinders")
 		BuildAsUnionSolid();
 	else {
-		G4cerr << "Topas is exiting due to a serious error." << G4endl;
+		G4cerr << "OpenTOPAS is exiting due to a serious error." << G4endl;
 		G4cerr << fPm->GetStringParameter(GetFullParmName("Method")) << " has invalid value: " << fPm->GetStringParameter(GetFullParmName("Method")) << G4endl;
 		G4cerr << "Must be either Polyhedra, ExtrudedSolid, SubtractionCylinders or UnionCylinders." << G4endl;
 		fPm->AbortSession(1);
@@ -268,7 +268,7 @@ void TsCompensator::BuildAsPolyhedra()
 
 		if ( fabs( idealPosY - fYStarts[rowIter] ) > yTolerance )
 		{
-			G4cerr << "Topas is exiting due to a serious error." << G4endl;
+			G4cerr << "OpenTOPAS is exiting due to a serious error." << G4endl;
 			G4cerr << "Compensator file cannot be represented with Polyhedra method." << G4endl;
 			G4cerr << "The file's row " << rowIter << " has Y Postion too far from a regular haxagonal grid." << G4endl;
 			G4cerr << "Y distance from grid is " << fabs( idealPosY - fYStarts[rowIter] ) << " mm while the yTolerance is " << yTolerance << " mm" << G4endl;
@@ -300,7 +300,7 @@ void TsCompensator::BuildAsPolyhedra()
 
 				if ( fabs( idealPosX - realPosX ) > xTolerance )
 				{
-					G4cerr << "Topas is exiting due to a serious error." << G4endl;
+					G4cerr << "OpenTOPAS is exiting due to a serious error." << G4endl;
 					G4cerr << "Compensator file cannot be represented with Polyhedra method." << G4endl;
 					G4cerr << "The file's point at row " << rowIter << ", column " << columnIter << " has X Postion too far from a regular haxagonal grid." << G4endl;
 					G4cerr << "X distance from grid is " << fabs( idealPosX - realPosX ) << " mm while the XTolerance is " << xTolerance << " mmm" << G4endl;
@@ -308,7 +308,7 @@ void TsCompensator::BuildAsPolyhedra()
 				}
 
 				if (idealPosX*idealPosX + idealPosY*idealPosY > fMainCylinderRadiusSquared) {
-					G4cerr << "Topas is exiting due to a serious error." << G4endl;
+					G4cerr << "OpenTOPAS is exiting due to a serious error." << G4endl;
 					G4cout << "At least point in Compensator file " << fFileName << " exceeds the compensator radius." << G4endl;
 					fPm->AbortSession(1);
 				}
@@ -345,7 +345,7 @@ void TsCompensator::BuildAsExtrudedSolid()
 		G4double yStart = fYStarts[0] + yStep * rowIter;
 
 		if (xStart*xStart + yStart*yStart > fMainCylinderRadiusSquared) {
-			G4cerr << "Topas is exiting due to a serious error." << G4endl;
+			G4cerr << "OpenTOPAS is exiting due to a serious error." << G4endl;
 			G4cout << "At least point in Compensator file " << fFileName << " exceeds the compensator radius." << G4endl;
 			fPm->AbortSession(1);
 		}
@@ -453,7 +453,7 @@ std::vector<G4ThreeVector*> TsCompensator::GetDrillHoleLocations()
 	{
 		if ( fabs(fXSteps[rowIter]) > fDrillHoleRadius*2. )
 		{
-			G4cerr << "Topas is exiting due to a serious error." << G4endl;
+			G4cerr << "OpenTOPAS is exiting due to a serious error." << G4endl;
 			G4cerr << "Compensator file cannot be represented with SubtractionCylinders or UnionCylinders method" << G4endl;
 			G4cerr << "since columns one or more columns are farther apart than drill hole diameter." << G4endl;
 			fPm->AbortSession(1);
@@ -463,7 +463,7 @@ std::vector<G4ThreeVector*> TsCompensator::GetDrillHoleLocations()
 		{
 			if ( fabs( fYStarts[rowIter] - fYStarts[rowIter-1] ) > fDrillHoleRadius*2. )
 			{
-				G4cerr << "Topas is exiting due to a serious error." << G4endl;
+				G4cerr << "OpenTOPAS is exiting due to a serious error." << G4endl;
 				G4cerr << "Compensator file cannot be represented with SubtractionCylinders or UnionCylinders method" << G4endl;
 				G4cerr << "since one or more rows are farther apart than drill hole diameter." << G4endl;
 				fPm->AbortSession(1);
@@ -475,7 +475,7 @@ std::vector<G4ThreeVector*> TsCompensator::GetDrillHoleLocations()
 				drillY = fYStarts[rowIter];
 
 				if (drillX*drillX + drillY*drillY > fMainCylinderRadiusSquared) {
-					G4cerr << "Topas is exiting due to a serious error." << G4endl;
+					G4cerr << "OpenTOPAS is exiting due to a serious error." << G4endl;
 					G4cout << "At least point in Compensator file " << fFileName << " exceeds the compensator radius." << G4endl;
 					fPm->AbortSession(1);
 				}

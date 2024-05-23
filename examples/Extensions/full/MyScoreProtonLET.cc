@@ -43,7 +43,7 @@ MyScoreProtonLET::MyScoreProtonLET(TsParameterManager* pM, TsMaterialManager* mM
 	} else if (weightType == "fluence" || weightType == "track") {
 		fDoseWeighted = false;
 	} else {
-		G4cerr << "Topas is exiting due to a serious error in scoring setup." << G4endl;
+		G4cerr << "OpenTOPAS is exiting due to a serious error in scoring setup." << G4endl;
 		G4cerr << GetFullParmName("WeightBy") << " refers to an unknown weighting: " << weightType << G4endl;
 		exit(1);
 	}
@@ -69,7 +69,7 @@ MyScoreProtonLET::MyScoreProtonLET(TsParameterManager* pM, TsMaterialManager* mM
 		fMaxScoredLET = 0;
 
 		if (fPm->ParameterExists(GetFullParmName("MaxScoredLET"))) {
-			G4cerr << "Topas is exiting due to a serious error in scoring setup." << G4endl;
+			G4cerr << "OpenTOPAS is exiting due to a serious error in scoring setup." << G4endl;
 			G4cerr << GetFullParmName("MaxScoredLET") << " is only available for dose-weighted LET scorers." << G4endl;
 			exit(1);
 		}
@@ -91,7 +91,7 @@ MyScoreProtonLET::MyScoreProtonLET(TsParameterManager* pM, TsMaterialManager* mM
 		fNeglectSecondariesBelowDensity = 0;
 
 		if (fPm->ParameterExists(GetFullParmName("NeglectSecondariesBelowDensity"))) {
-			G4cerr << "Topas is exiting due to a serious error in scoring setup." << G4endl;
+			G4cerr << "OpenTOPAS is exiting due to a serious error in scoring setup." << G4endl;
 			G4cerr << GetFullParmName("NeglectSecondariesBelowDensity") << " is only available for dose-weighted LET scorers." << G4endl;
 			exit(1);
 		}
@@ -103,7 +103,7 @@ MyScoreProtonLET::MyScoreProtonLET(TsParameterManager* pM, TsMaterialManager* mM
 	fUseFluenceWeightedBelowDensity = 0;
 	if (fPm->ParameterExists(GetFullParmName("UseFluenceWeightedBelowDensity"))) {
 		if (!fDoseWeighted) {
-			G4cerr << "Topas is exiting due to a serious error in scoring setup." << G4endl;
+			G4cerr << "OpenTOPAS is exiting due to a serious error in scoring setup." << G4endl;
 			G4cerr << GetFullParmName("UseFluenceWeightedBelowDensity") << " is only available for dose-weighted LET scorers." << G4endl;
 			exit(1);
 		}

@@ -64,7 +64,7 @@ fProtonStoppingPowerRatio(0), fElectronStoppingPowerRatio(0), fOtherStoppingPowe
 		G4String materialName = fPm->GetStringParameter(GetFullParmName("Material"));
 		fReferenceMaterial = GetMaterial(materialName);
 		if (!fReferenceMaterial) {
-			G4cout << "Topas is exiting due to error in scoring setup." << G4endl;
+			G4cout << "OpenTOPAS is exiting due to error in scoring setup." << G4endl;
 			G4cout << "Unknown material, " << materialName << ", specified in: " << GetFullParmName("Material") << G4endl;
 			fPm->AbortSession(1);
 		}
@@ -137,7 +137,7 @@ void TsScoreDoseToMaterial::UpdateForSpecificParameterChange(G4String parameter)
 		G4String materialName = fPm->GetStringParameter(GetFullParmName("Material"));
 		fReferenceMaterial = GetMaterial(materialName);
 		if (!fReferenceMaterial) {
-			G4cout << "Topas is exiting due to error in scoring setup." << G4endl;
+			G4cout << "OpenTOPAS is exiting due to error in scoring setup." << G4endl;
 			G4cout << "Unknown material, " << materialName << ", specified in: " << GetFullParmName("Material") << G4endl;
 			fPm->AbortSession(1);
 		}

@@ -160,12 +160,12 @@ void TsRangeModulator::ConstructTracks(TrackLocation location, G4double Rin, G4d
 		G4double* Angles      = fPm->GetDoubleVector( G4String(SegParm+"/Angles"), "Angle");
 
 		if (NbDivisions != fPm->GetVectorLength(G4String(SegParm+"/Heights"))) {
-			G4cerr << "Topas is exiting due to a serious error attempting to construct Range Modulator: " << fName << G4endl;
+			G4cerr << "OpenTOPAS is exiting due to a serious error attempting to construct Range Modulator: " << fName << G4endl;
 			G4cerr << "Number of angle divisions should be same with number of Heights" << G4endl;
 			fPm->AbortSession(1);
 		}
 		if (NbDivisions != fPm->GetVectorLength(G4String(SegParm+"/Materials"))) {
-			G4cerr << "Topas is exiting due to a serious error attempting to construct Range Modulator: " << fName << G4endl;
+			G4cerr << "OpenTOPAS is exiting due to a serious error attempting to construct Range Modulator: " << fName << G4endl;
 			G4cerr << "Number of angle divisions should be same with number of Materials" << G4endl;
 			fPm->AbortSession(1);
 		}

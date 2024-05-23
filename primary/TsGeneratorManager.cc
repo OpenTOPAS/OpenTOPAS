@@ -103,7 +103,7 @@ TsGeneratorManager::TsGeneratorManager(TsParameterManager* pM, TsExtensionManage
 			} else if (generatorType == "environment") {
 			  	generator = new TsGeneratorEnvironment(fPm, fGm, this, generatorName);
 	        } else {
-				G4cerr << "Topas is exiting. Particle source \"" << generatorName << "\" has unknown Type \"" << generatorType << "\"" << G4endl;
+				G4cerr << "OpenTOPAS is exiting. Particle source \"" << generatorName << "\" has unknown Type \"" << generatorType << "\"" << G4endl;
 				fPm->AbortSession(1);
 			}
 		}
@@ -171,7 +171,7 @@ void TsGeneratorManager::GeneratePrimaries(G4Event* anEvent)
 			G4cout << "Ts/FindSeedForHistory has found seed for Run: " << fPm->FindSeedRun() << ", History: " << fPm->FindSeedHistory() << G4endl;
 			G4cout << "Seed: " << SeedPart1 << ", " << SeedPart2 << ", " << SeedPart3 << ", " << SeedPart4 << G4endl;
 
-			G4String filespec = "TopasSeedForRun_" + G4UIcommand::ConvertToString(fPm->FindSeedRun()) + "_History_" + G4UIcommand::ConvertToString(fPm->FindSeedHistory()) + ".txt";
+			G4String filespec = "OpenTOPASSeedForRun_" + G4UIcommand::ConvertToString(fPm->FindSeedRun()) + "_History_" + G4UIcommand::ConvertToString(fPm->FindSeedHistory()) + ".txt";
 			std::ofstream seedFile(filespec);
 			if (!seedFile) {
 				G4cerr << "ERROR: Failed to open file " << filespec << G4endl;

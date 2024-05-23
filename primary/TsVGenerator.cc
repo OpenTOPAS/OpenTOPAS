@@ -209,7 +209,7 @@ void TsVGenerator::ResolveParameters() {
 		fIsGenericIon = true;
 
 		if ( resolvedDef.ionZ == -1 || resolvedDef.ionA == -1) {
-			G4cerr << "Topas is exiting. Particle source: " << fSourceName << G4endl;
+			G4cerr << "OpenTOPAS is exiting. Particle source: " << fSourceName << G4endl;
 			G4cerr <<" is attempting to use wild card in Generic Ion Z or A: " << fPm->GetStringParameter(GetFullParmName("BeamParticle")) << G4endl;
 			fPm->AbortSession(1);
 		}
@@ -243,7 +243,7 @@ void TsVGenerator::CacheGeometryPointers() {
 
 	fComponent = fGm->GetComponent(componentName);
 	if (!fComponent) {
-		G4cerr << "Topas is exiting. Particle source: " << fSourceName << G4endl;
+		G4cerr << "OpenTOPAS is exiting. Particle source: " << fSourceName << G4endl;
 		G4cerr <<" has been placed relative to unknown Geometry Component: " << componentName << G4endl;
 		fPm->AbortSession(1);
 	}
@@ -284,7 +284,7 @@ void TsVGenerator::SetEnergy(TsPrimaryParticle &p) const
 			else
 				p.kEnergy = G4RandGauss::shoot(fEnergy, fEnergySpread);
 		} else {
-			G4cerr << "Topas is exiting. Particle source: " << fSourceName << G4endl;
+			G4cerr << "OpenTOPAS is exiting. Particle source: " << fSourceName << G4endl;
 			G4cerr << "is missing the required parameter: BeamEnergy" << G4endl;
 			fPm->AbortSession(1);
 		}

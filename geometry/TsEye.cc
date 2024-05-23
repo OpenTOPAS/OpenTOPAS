@@ -176,7 +176,7 @@ G4VPhysicalVolume* TsEye::Construct()
     // optical nerve
 	G4int nPoints = fPm->GetVectorLength(GetFullParmName("OpticNerve/Z"));
 	if (fPm->GetVectorLength(GetFullParmName("OpticNerve/R")) != nPoints) {
-		G4cerr << "Topas is exiting due to a serious error in geometry setup." << G4endl;
+		G4cerr << "OpenTOPAS is exiting due to a serious error in geometry setup." << G4endl;
 		G4cerr << GetFullParmName("OpticNerve/Z") << " has different number of values than " <<
 		GetFullParmName("OpticNerve/R") << G4endl;
 		fPm->AbortSession(1);

@@ -54,7 +54,7 @@ TsNiemerkoModel::TsNiemerkoModel(TsParameterManager* pM, G4String parName)
 		G4cout << "Using Niemerko model in " << fMode << " mode" << G4endl;
 		f50 = fPm->GetUnitlessParameter( GetFullParmName( fModelName, "TCD50" ) );
 	} else {
-		G4cerr << "Topas is exiting due to a serious error in scoring setup." << G4endl;
+		G4cerr << "OpenTOPAS is exiting due to a serious error in scoring setup." << G4endl;
 		G4cerr << GetFullParmName(fModelName, "Mode") << " refers to an unknown mode: "
 			   << fPm->GetStringParameter(GetFullParmName(fModelName, "Mode")) << G4endl;
 		fPm->AbortSession(1);

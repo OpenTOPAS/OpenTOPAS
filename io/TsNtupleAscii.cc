@@ -49,7 +49,7 @@ void TsNtupleAscii::WriteBuffer()
 	std::ofstream outFile(fPathData, std::ios::app);
 
 	if (!outFile.good()) {
-		G4cerr << "Topas is exiting due to a serious error in file output." << G4endl;
+		G4cerr << "OpenTOPAS is exiting due to a serious error in file output." << G4endl;
 		G4cerr << "Output file: " << fPathData << " cannot be opened" << G4endl;
 		fPm->AbortSession(1);
 	}
@@ -85,7 +85,7 @@ void TsNtupleAscii::WriteBuffer()
 				iColI8++;
 			} else {
 				outFile.close();
-				G4cerr << "Topas is exiting due to a serious error in file output." << G4endl;
+				G4cerr << "OpenTOPAS is exiting due to a serious error in file output." << G4endl;
 				G4cerr << "A column could not be found in buffer" << G4endl;
 				fPm->AbortSession(1);
 			}
@@ -124,7 +124,7 @@ void TsNtupleAscii::GenerateColumnDescription()
 		} else if (fNamesI8.find(iCol) != fNamesI8.end()) {
 			desc << std::setw(nDigits) << iCol+1 << ": " << fNamesI8.find(iCol)->second << G4endl;
 		} else {
-			G4cerr << "Topas is exiting due to a serious error in file output." << G4endl;
+			G4cerr << "OpenTOPAS is exiting due to a serious error in file output." << G4endl;
 			G4cerr << "A column could not be found" << G4endl;
 			fPm->AbortSession(1);
 		}

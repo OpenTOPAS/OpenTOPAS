@@ -77,7 +77,7 @@ G4bool TsFilterByIncidentParticleGeneration::Accept(const G4Step* aStep) const {
 
 
 G4bool TsFilterByIncidentParticleGeneration::AcceptTrack(const G4Track*) const {
-	G4cerr << "Topas is exiting due to a serious error in source setup." << G4endl;
+	G4cerr << "OpenTOPAS is exiting due to a serious error in source setup." << G4endl;
 	G4cerr << "Sources cannot be filtered by " << GetName() << G4endl;
 	fPm->AbortSession(1);
 	return false;

@@ -134,7 +134,7 @@ void TsGraphicsView::CreateView() {
 		}
 	} else {
 		if (!fIncludeTrajectories && !fIncludeStepPoints) {
-			G4cerr << "Topas is exiting due to error in graphics setup." << G4endl;
+			G4cerr << "OpenTOPAS is exiting due to error in graphics setup." << G4endl;
 			G4cerr << "Graphics has all three of geometry, trajectories and step points turned off." << G4endl;
 			G4cerr << "That doesn't leave anything to draw." << G4endl;
 			fPm->AbortSession(1);
@@ -169,7 +169,7 @@ void TsGraphicsView::CreateView() {
 
 			G4UImanager::GetUIpointer()->ApplyCommand(axesCommand);
 		} else {
-			G4cerr << "Topas is exiting due to error in graphics setup." << G4endl;
+			G4cerr << "OpenTOPAS is exiting due to error in graphics setup." << G4endl;
 			G4cerr << "Gr/" << fViewerName << "/AxesComponent is set to unknown component: " << axesComponentName << G4endl;
 			fPm->AbortSession(1);
 		}
@@ -199,7 +199,7 @@ void TsGraphicsView::CreateView() {
 	else if (fViewerType=="dawn") fViewerType = "DAWNFILE";
 	else if (fViewerType=="gmocren") fViewerType = "gMocrenFile";
 	else {
-	    G4cerr << "Topas is exiting due to error in graphics setup." << G4endl;
+	    G4cerr << "OpenTOPAS is exiting due to error in graphics setup." << G4endl;
 	    G4cerr << "Parameter " << GetFullParmName("Type") << " specifies unknown viewer type: " << fPm->GetStringParameter(GetFullParmName("Type")) << G4endl;
 	    fPm->AbortSession(1);
 	}
@@ -225,7 +225,7 @@ void TsGraphicsView::CreateView() {
 			G4UImanager::GetUIpointer()->ApplyCommand("/vis/scene/endOfEventAction refresh");
 			G4UImanager::GetUIpointer()->ApplyCommand("/vis/scene/endOfRunAction refresh");
 		} else {
-			G4cerr << "Topas is exiting due to error in graphics setup." << G4endl;
+			G4cerr << "OpenTOPAS is exiting due to error in graphics setup." << G4endl;
 			G4cerr << "Gr/RefreshEvery has invalid value: " << fPm->GetStringParameter("Gr/RefreshEvery") << G4endl;
 			G4cerr << "Should be either History, Run or Session." << G4endl;
 			fPm->AbortSession(1);
@@ -286,7 +286,7 @@ void TsGraphicsView::CreateView() {
 		if (component)
 			G4UImanager::GetUIpointer()->ApplyCommand("/vis/gMocren/setVolumeName " + componentName);
 		else {
-			G4cerr << "Topas is exiting due to error in graphics setup." << G4endl;
+			G4cerr << "OpenTOPAS is exiting due to error in graphics setup." << G4endl;
 			G4cerr << "Gr/" << fViewerName << "/Component is set to unknown component: " << componentName << G4endl;
 			fPm->AbortSession(1);
 		}
@@ -320,7 +320,7 @@ void TsGraphicsView::CreateView() {
 				if (fPm->ParameterExists(GetFullParmName("ColorByChargeColors"))) {
 					G4String* chargeColors = fPm->GetStringVector(GetFullParmName("ColorByChargeColors"));
 					if (fPm->GetVectorLength(GetFullParmName("ColorByChargeColors")) != 3) {
-						G4cerr << "Topas is exiting due to error in graphics setup." << G4endl;
+						G4cerr << "OpenTOPAS is exiting due to error in graphics setup." << G4endl;
 						G4cerr << GetFullParmName("ColorByChargeColors") << " must have exactly three colors." << G4endl;
 						fPm->AbortSession(1);
 					}
@@ -350,7 +350,7 @@ void TsGraphicsView::CreateView() {
 				G4String* typeColors = fPm->GetStringVector(GetFullParmName("ColorByParticleTypeColors"));
 				G4int length = fPm->GetVectorLength(GetFullParmName("ColorByParticleTypeNames"));
 				if (fPm->GetVectorLength(GetFullParmName("ColorByParticleTypeColors")) != length) {
-					G4cerr << "Topas is exiting due to error in graphics setup." << G4endl;
+					G4cerr << "OpenTOPAS is exiting due to error in graphics setup." << G4endl;
 					G4cerr << "Number of tokens in " << GetFullParmName("ColorByParticleTypeNames") <<
 					" does not match number of tokens in: " << GetFullParmName("ColorByParticleTypeColors") << G4endl;
 					fPm->AbortSession(1);
@@ -381,7 +381,7 @@ void TsGraphicsView::CreateView() {
 					} else {
 						TsParticleDefinition resolvedDef = fPm->GetParticleDefinition(typeNames[i]);
 						if (!resolvedDef.particleDefinition) {
-							G4cerr << "Topas is exiting due to error in graphics setup." << G4endl;
+							G4cerr << "OpenTOPAS is exiting due to error in graphics setup." << G4endl;
 							G4cerr << "Parameter " << GetFullParmName("ColorByParticleTypeNames") << " specifies unknown particle type: " << typeNames[i] << G4endl;
 							fPm->AbortSession(1);
 						}
@@ -399,7 +399,7 @@ void TsGraphicsView::CreateView() {
 				G4String* volumeColors = fPm->GetStringVector(GetFullParmName("ColorByOriginVolumeColors"));
 				G4int length = fPm->GetVectorLength(GetFullParmName("ColorByOriginVolumeNames"));
 				if (fPm->GetVectorLength(GetFullParmName("ColorByOriginVolumeColors")) != length) {
-					G4cerr << "Topas is exiting due to error in graphics setup." << G4endl;
+					G4cerr << "OpenTOPAS is exiting due to error in graphics setup." << G4endl;
 					G4cerr << "Number of tokens in " << GetFullParmName("ColorByOriginVolumeNames") <<
 					" does not match number of tokens in: " << GetFullParmName("ColorByOriginVolumeColors") << G4endl;
 					fPm->AbortSession(1);
@@ -409,13 +409,13 @@ void TsGraphicsView::CreateView() {
 					if (fGm->GetPhysicalVolume(volumeNames[i]))
 						G4UImanager::GetUIpointer()->ApplyCommand("/vis/modeling/trajectories/" + fViewerName + "_" + fColorModel + "/setRGBA " + volumeNames[i] + " " + GetColorAsRGBA(volumeColors[i]));
 					else {
-						G4cerr << "Topas is exiting due to error in graphics setup." << G4endl;
+						G4cerr << "OpenTOPAS is exiting due to error in graphics setup." << G4endl;
 						G4cerr << "Gr/" << fViewerName << "ColorByOriginVolumeNames refers to an unknown Volume: " << volumeNames[i] << G4endl;
 						fPm->AbortSession(1);
 					}
 				}
 			} else {
-				G4cerr << "Topas is exiting due to error in graphics setup." << G4endl;
+				G4cerr << "OpenTOPAS is exiting due to error in graphics setup." << G4endl;
 				G4cerr << "Gr/" << fViewerName << " /ColorBy has been set to OriginVolume but you are missing a required" << G4endl;
 				G4cerr << "associated parameter ColorByOriginVolumeNames or ColorByOriginVolumeColors." << G4endl;
 				fPm->AbortSession(1);
@@ -429,7 +429,7 @@ void TsGraphicsView::CreateView() {
 				G4String* componentColors = fPm->GetStringVector(GetFullParmName("ColorByOriginComponentColors"));
 				G4int length = fPm->GetVectorLength(GetFullParmName("ColorByOriginComponentNames"));
 				if (fPm->GetVectorLength(GetFullParmName("ColorByOriginComponentColors")) != length) {
-					G4cerr << "Topas is exiting due to error in graphics setup." << G4endl;
+					G4cerr << "OpenTOPAS is exiting due to error in graphics setup." << G4endl;
 					G4cerr << "Number of tokens in " << GetFullParmName("ColorByOriginComponentNames") <<
 					" does not match number of tokens in: " << GetFullParmName("ColorByOriginComponentColors") << G4endl;
 					fPm->AbortSession(1);
@@ -442,13 +442,13 @@ void TsGraphicsView::CreateView() {
 						for ( size_t iVol = 0; iVol < physicalVolumes.size(); iVol++)
 							G4UImanager::GetUIpointer()->ApplyCommand("/vis/modeling/trajectories/" + fViewerName + "_" + fColorModel + "/setRGBA " + physicalVolumes[iVol]->GetName() + " " + GetColorAsRGBA(componentColors[i]));
 					} else {
-						G4cerr << "Topas is exiting due to error in graphics setup." << G4endl;
+						G4cerr << "OpenTOPAS is exiting due to error in graphics setup." << G4endl;
 						G4cerr << "Gr/" << fViewerName << "ColorByOriginComponentNames refers to an unknown Component: " << componentNames[i] << G4endl;
 						fPm->AbortSession(1);
 					}
 				}
 			} else {
-				G4cerr << "Topas is exiting due to error in graphics setup." << G4endl;
+				G4cerr << "OpenTOPAS is exiting due to error in graphics setup." << G4endl;
 				G4cerr << "Gr/" << fViewerName << "/ColorBy has been set to OriginComponent but you are missing a required" << G4endl;
 				G4cerr << "associated parameter ColorByOriginComponentNames or ColorByOriginComponentColors." << G4endl;
 				fPm->AbortSession(1);
@@ -462,7 +462,7 @@ void TsGraphicsView::CreateView() {
 				G4String* componentColors = fPm->GetStringVector(GetFullParmName("ColorByOriginComponentColors"));
 				G4int length = fPm->GetVectorLength(GetFullParmName("ColorByOriginComponentNames"));
 				if (fPm->GetVectorLength(GetFullParmName("ColorByOriginComponentColors")) != length) {
-					G4cerr << "Topas is exiting due to error in graphics setup." << G4endl;
+					G4cerr << "OpenTOPAS is exiting due to error in graphics setup." << G4endl;
 					G4cerr << "Number of tokens in " << GetFullParmName("ColorByOriginComponentNames") <<
 					" does not match number of tokens in: " << GetFullParmName("ColorByOriginComponentColors") << G4endl;
 					fPm->AbortSession(1);
@@ -489,13 +489,13 @@ void TsGraphicsView::CreateView() {
 							}
 						}
 					} else {
-						G4cerr << "Topas is exiting due to error in graphics setup." << G4endl;
+						G4cerr << "OpenTOPAS is exiting due to error in graphics setup." << G4endl;
 						G4cerr << "Gr/" << fViewerName << "ColorByOriginComponentNames refers to an unknown Component: " << componentNames[i] << G4endl;
 						fPm->AbortSession(1);
 					}
 				}
 			} else {
-				G4cerr << "Topas is exiting due to error in graphics setup." << G4endl;
+				G4cerr << "OpenTOPAS is exiting due to error in graphics setup." << G4endl;
 				G4cerr << "Gr/" << fViewerName << "/ColorBy has been set to OriginComponentOrSubComonentOf but you are missing a required" << G4endl;
 				G4cerr << "associated parameter ColorByOriginComponentNames or ColorByOriginComponentColors." << G4endl;
 				fPm->AbortSession(1);
@@ -510,7 +510,7 @@ void TsGraphicsView::CreateView() {
 				G4String* energyColors = fPm->GetStringVector(GetFullParmName("ColorByEnergyColors"));
 				G4int length = fPm->GetVectorLength(GetFullParmName("ColorByEnergyRanges"));
 				if (fPm->GetVectorLength(GetFullParmName("ColorByEnergyColors")) != length+1) {
-					G4cerr << "Topas is exiting due to error in graphics setup." << G4endl;
+					G4cerr << "OpenTOPAS is exiting due to error in graphics setup." << G4endl;
 					G4cerr << "Number of tokens in " << GetFullParmName("ColorByEnergyRanges") <<
 					" needs to be one less than number of tokens in: " << GetFullParmName("ColorByEnergyColors") << G4endl;
 					fPm->AbortSession(1);
@@ -539,7 +539,7 @@ void TsGraphicsView::CreateView() {
 					minValue = maxValue;
 				}
 			} else {
-				G4cerr << "Topas is exiting due to error in graphics setup." << G4endl;
+				G4cerr << "OpenTOPAS is exiting due to error in graphics setup." << G4endl;
 				G4cerr << "Gr/" << fViewerName << "/ColorBy has been set to Energy but you are missing a required" << G4endl;
 				G4cerr << "associated parameter ColorByEnergyRanges or ColorByEnergyColors." << G4endl;
 				fPm->AbortSession(1);
@@ -554,7 +554,7 @@ void TsGraphicsView::CreateView() {
 				G4String* momentumColors = fPm->GetStringVector(GetFullParmName("ColorByMomentumColors"));
 				G4int length = fPm->GetVectorLength(GetFullParmName("ColorByMomentumRanges"));
 				if (fPm->GetVectorLength(GetFullParmName("ColorByMomentumColors")) != length+1) {
-					G4cerr << "Topas is exiting due to error in graphics setup." << G4endl;
+					G4cerr << "OpenTOPAS is exiting due to error in graphics setup." << G4endl;
 					G4cerr << "Number of tokens in " << GetFullParmName("ColorByMomentumRanges") <<
 					" needs to be one less than number of tokens in: " << GetFullParmName("ColorByMomentumColors") << G4endl;
 					fPm->AbortSession(1);
@@ -583,7 +583,7 @@ void TsGraphicsView::CreateView() {
 					minValue = maxValue;
 				}
 			} else {
-				G4cerr << "Topas is exiting due to error in graphics setup." << G4endl;
+				G4cerr << "OpenTOPAS is exiting due to error in graphics setup." << G4endl;
 				G4cerr << "Gr/" << fViewerName << "/ColorBy has been set to Momentum but you are missing a required" << G4endl;
 				G4cerr << "associated parameter ColorByMomentumRanges or ColorByMomentumColors." << G4endl;
 				fPm->AbortSession(1);
@@ -594,7 +594,7 @@ void TsGraphicsView::CreateView() {
 				G4UImanager::GetUIpointer()->ApplyCommand("/vis/modeling/trajectories/" + fViewerName + "_" + fColorModel + "/setAttribute PID");
 				G4String* generationColors = fPm->GetStringVector(GetFullParmName("ColorByGenerationColors"));
 				if (fPm->GetVectorLength(GetFullParmName("ColorByGenerationColors")) != 2) {
-					G4cerr << "Topas is exiting due to error in graphics setup." << G4endl;
+					G4cerr << "OpenTOPAS is exiting due to error in graphics setup." << G4endl;
 					G4cerr << GetFullParmName("ColorByGenerationColors") << " must have exactly two colors." << G4endl;
 					fPm->AbortSession(1);
 				}
@@ -604,7 +604,7 @@ void TsGraphicsView::CreateView() {
 
 				G4UImanager::GetUIpointer()->ApplyCommand("/vis/modeling/trajectories/" + fViewerName + "_" + fColorModel + "/default/setLineColourRGBA " + GetColorAsRGBA(generationColors[1]));
 			} else {
-				G4cerr << "Topas is exiting due to error in graphics setup." << G4endl;
+				G4cerr << "OpenTOPAS is exiting due to error in graphics setup." << G4endl;
 				G4cerr << "Gr/" << fViewerName << "/ColorBy has been set to Generation but you are missing the required" << G4endl;
 				G4cerr << "associated parameter ColorByGenerationColors." << G4endl;
 				fPm->AbortSession(1);
@@ -619,7 +619,7 @@ void TsGraphicsView::CreateView() {
 				G4String* processColors = fPm->GetStringVector(GetFullParmName("ColorByCreatorProcessColors"));
 				G4int length = fPm->GetVectorLength(GetFullParmName("ColorByCreatorProcessNames"));
 				if (fPm->GetVectorLength(GetFullParmName("ColorByCreatorProcessColors")) != length) {
-					G4cerr << "Topas is exiting due to error in graphics setup." << G4endl;
+					G4cerr << "OpenTOPAS is exiting due to error in graphics setup." << G4endl;
 					G4cerr << "Number of tokens in " << GetFullParmName("ColorByCreatorProcessNames") <<
 					" does not match number of tokens in: " << GetFullParmName("ColorByCreatorProcessColors") << G4endl;
 					fPm->AbortSession(1);
@@ -649,13 +649,13 @@ void TsGraphicsView::CreateView() {
 
 				}
 			} else {
-				G4cerr << "Topas is exiting due to error in graphics setup." << G4endl;
+				G4cerr << "OpenTOPAS is exiting due to error in graphics setup." << G4endl;
 				G4cerr << "Gr/" << fViewerName << "/ColorBy has been set to CreatorProcess but you are missing a required" << G4endl;
 				G4cerr << "associated parameter ColorByCreatorProcessNames or ColorByCreatorProcessColors." << G4endl;
 				fPm->AbortSession(1);
 			}
 		} else {
-			G4cerr << "Topas is exiting due to error in graphics setup." << G4endl;
+			G4cerr << "OpenTOPAS is exiting due to error in graphics setup." << G4endl;
 			G4cerr << "Gr/" << fViewerName << "/ColorBy is set to unknown mode." << G4endl;
 			fPm->AbortSession(1);
 		}
@@ -664,7 +664,7 @@ void TsGraphicsView::CreateView() {
 		if (fPm->ParameterExists(GetFullParmName("TrajectoryLinewidth"))) {
 			G4int trajectoryLineWidth = fPm->GetIntegerParameter(GetFullParmName("TrajectoryLinewidth"));
 			if (trajectoryLineWidth < 1) {
-				G4cerr << "Topas is exiting due to error in graphics setup." << G4endl;
+				G4cerr << "OpenTOPAS is exiting due to error in graphics setup." << G4endl;
 				G4cerr << "Gr/" << fViewerName << "/TrajectoryLinewidth must be greater than 0." << G4endl;
 				fPm->AbortSession(1);
 			}
@@ -683,7 +683,7 @@ void TsGraphicsView::CreateView() {
 				TsParticleDefinition resolvedDef = fPm->GetParticleDefinition(tokens[i]);
 
 				if (!resolvedDef.particleDefinition) {
-					G4cerr << "Topas is exiting due to error in graphics setup." << G4endl;
+					G4cerr << "OpenTOPAS is exiting due to error in graphics setup." << G4endl;
 					G4cerr << "Gr/OnlyIncludeParticlesNamed has unknown particle name: " << tokens[i] << G4endl;
 					fPm->AbortSession(1);
 				}
@@ -726,7 +726,7 @@ void TsGraphicsView::CreateView() {
 				if (fGm->GetPhysicalVolume(tokens[i]))
 					G4UImanager::GetUIpointer()->ApplyCommand("/vis/filtering/trajectories/" + fViewerName + "_volumeFilter/add " + tokens[i]);
 				else {
-					G4cerr << "Topas is exiting due to a serious error in graphics setup." << G4endl;
+					G4cerr << "OpenTOPAS is exiting due to a serious error in graphics setup." << G4endl;
 					G4cerr << "OnlyIncludeParticlesFromVolume = " << tokens[i] << " refers to an unknown Volume." << G4endl;
 					fPm->AbortSession(1);
 				}
@@ -746,7 +746,7 @@ void TsGraphicsView::CreateView() {
 					for ( size_t iVol = 0; iVol < physicalVolumes.size(); iVol++)
 						G4UImanager::GetUIpointer()->ApplyCommand("/vis/filtering/trajectories/" + fViewerName + "_componentFilter/add " + physicalVolumes[iVol]->GetName());
 				} else {
-					G4cerr << "Topas is exiting due to a serious error in graphics setup." << G4endl;
+					G4cerr << "OpenTOPAS is exiting due to a serious error in graphics setup." << G4endl;
 					G4cerr << "OnlyIncludeParticlesFromComponent = " << tokens[i] << " refers to an unknown Component." << G4endl;
 					fPm->AbortSession(1);
 				}
@@ -780,7 +780,7 @@ void TsGraphicsView::CreateView() {
 						}
 					}
 				} else {
-					G4cerr << "Topas is exiting due to a serious error in graphics setup." << G4endl;
+					G4cerr << "OpenTOPAS is exiting due to a serious error in graphics setup." << G4endl;
 					G4cerr << "OnlyIncludeParticlesFromComponentOrSubComponentsOf = " << tokens[i] << " refers to an unknown Component." << G4endl;
 					fPm->AbortSession(1);
 				}
@@ -892,7 +892,7 @@ void TsGraphicsView::UpdateForSpecificParameterChange(G4String parameter) {
 	} else if (parameter==GetFullParmNameLower("TrajectoryLinewidth")) {
 		G4int trajectoryLineWidth = fPm->GetIntegerParameter(GetFullParmName("TrajectoryLinewidth"));
 		if (trajectoryLineWidth < 1) {
-			G4cerr << "Topas is exiting due to error in graphics setup." << G4endl;
+			G4cerr << "OpenTOPAS is exiting due to error in graphics setup." << G4endl;
 			G4cerr << "Gr/" << fViewerName << "/TrajectoryLinewidth must be greater than 0." << G4endl;
 			fPm->AbortSession(1);
 		}
@@ -958,7 +958,7 @@ void TsGraphicsView::UpdateForEndOfRun() {
 				if (fPm->ParameterExists(GetFullParmName("ParticleFlightTimeEnd"))) {
 					timeEnd = fPm->GetDoubleParameter(GetFullParmName("ParticleFlightTimeEnd"), "Time");
 				} else {
-					G4cerr << "Topas is exiting due to error in graphics setup." << G4endl;
+					G4cerr << "OpenTOPAS is exiting due to error in graphics setup." << G4endl;
 					G4cerr << GetFullParmName("ParticleFlightNumberOfFrames") << " has been set without setting" << G4endl;
 					G4cerr << GetFullParmName("ParticleFlightTimeEnd") << G4endl;
 					fPm->AbortSession(1);
@@ -1129,7 +1129,7 @@ void TsGraphicsView::SetView() {
 		} else if (projection == "orthogonal") {
 			G4UImanager::GetUIpointer()->ApplyCommand("/vis/viewer/set/projection " + projection);
 		} else {
-			G4cerr << "Topas is exiting due to error in graphics setup." << G4endl;
+			G4cerr << "OpenTOPAS is exiting due to error in graphics setup." << G4endl;
 			G4cerr << "Gr/" << fViewerName << "/Projection has been set to an unknown value." << G4endl;
 			G4cerr << "Should be either Perspective or Orthogonal." << G4endl;
 			fPm->AbortSession(1);
@@ -1161,7 +1161,7 @@ void TsGraphicsView::SetView() {
 
 			G4UImanager::GetUIpointer()->ApplyCommand(targetCommand);
 		} else {
-			G4cerr << "Topas is exiting due to error in graphics setup." << G4endl;
+			G4cerr << "OpenTOPAS is exiting due to error in graphics setup." << G4endl;
 			G4cerr << "Gr/" << fViewerName << "/CenterOn is set to unknown component: " << targetComponentName << G4endl;
 			fPm->AbortSession(1);
 		}
@@ -1185,7 +1185,7 @@ void TsGraphicsView::SetView() {
 
 	if (fPm->ParameterExists(GetFullParmName("Scale"))) {
 		if (fPm->GetVectorLength(GetFullParmName("Scale")) != 3) {
-			G4cerr << "Topas is exiting due to error in graphics setup." << G4endl;
+			G4cerr << "OpenTOPAS is exiting due to error in graphics setup." << G4endl;
 			G4cerr << "Gr/" << fViewerName << "/Scale has wrong number of value. Must have 3 values." << G4endl;
 			fPm->AbortSession(1);
 		}
@@ -1208,7 +1208,7 @@ void TsGraphicsView::SetView() {
 		if (zoomToFitComponent) {
 			zoom = zoomToFitComponent->GetExtent().GetExtentRadius() * .7;
 		} else {
-			G4cerr << "Topas is exiting due to error in graphics setup." << G4endl;
+			G4cerr << "OpenTOPAS is exiting due to error in graphics setup." << G4endl;
 			G4cerr << "Gr/" << fViewerName << "/ZoomToFit has been set to a non-existant component name: " << zoomToFitComponentName << G4endl;
 			fPm->AbortSession(1);
 		}
@@ -1220,7 +1220,7 @@ void TsGraphicsView::SetView() {
 
 	if (fPm->ParameterExists(GetFullParmName("UpVector"))) {
 		if (fPm->GetVectorLength(GetFullParmName("UpVector")) != 3) {
-			G4cerr << "Topas is exiting due to error in graphics setup." << G4endl;
+			G4cerr << "OpenTOPAS is exiting due to error in graphics setup." << G4endl;
 			G4cerr << "Gr/" << fViewerName << "/UpVector has wrong length. Must be 3." << G4endl;
 			fPm->AbortSession(1);
 		}
@@ -1244,7 +1244,7 @@ void TsGraphicsView::SetView() {
 		else if (rotationStyle == "free")
 			G4UImanager::GetUIpointer()->ApplyCommand("/vis/viewer/set/rotationStyle freeRotation");
 		else {
-			G4cerr << "Topas is exiting due to error in graphics setup." << G4endl;
+			G4cerr << "OpenTOPAS is exiting due to error in graphics setup." << G4endl;
 			G4cerr << "Gr/" << fViewerName << "/RotationStyle has invalid value: " <<  fPm->GetStringParameter(GetFullParmName("RotationStyle")) << G4endl;
 			G4cerr << "Must be either Constrained or Free." << G4endl;
 			fPm->AbortSession(1);
@@ -1254,7 +1254,7 @@ void TsGraphicsView::SetView() {
 	if (fPm->ParameterExists(GetFullParmName("nCutawayPlanes"))) {
 		G4int nCutawayPlanes = fPm->GetIntegerParameter(GetFullParmName("nCutawayPlanes"));
 		if (nCutawayPlanes < 0) {
-			G4cerr << "Topas is exiting due to error in graphics setup." << G4endl;
+			G4cerr << "OpenTOPAS is exiting due to error in graphics setup." << G4endl;
 			G4cerr << "Gr/" << fViewerName << "/nCutawayPlanes has been set to a negative number." << G4endl;
 			fPm->AbortSession(1);
 		}

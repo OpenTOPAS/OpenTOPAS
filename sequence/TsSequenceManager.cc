@@ -99,7 +99,7 @@ fIsExecutingSequence(false)
 
 #if defined(G4UI_USE_QT) && !defined(G4VIS_USE_OPENGLX)
 	if (!fUseQt && fGrm->UsingOpenGL()) {
-		G4cout << "TOPAS is activating the Qt graphical user interface even though" << G4endl;
+		G4cout << "OpenTOPAS is activating the Qt graphical user interface even though" << G4endl;
 		G4cout << "you did not turn this feature on, as this is the only way to provide" << G4endl;
 		G4cout << "your requested OpenGL graphics on your current operating system."<< G4endl;
 		fUseQt = true;
@@ -108,8 +108,8 @@ fIsExecutingSequence(false)
 
 #if !defined(G4UI_USE_QT)
 	if (fUseQt) {
-		G4cout << "TOPAS is ignoring your request to use the Qt graphical user interface," << G4endl;
-		G4cout << "as Qt is not available for the TOPAS build on your current operating system." << G4endl;
+		G4cout << "OpenTOPAS is ignoring your request to use the Qt graphical user interface," << G4endl;
+		G4cout << "as Qt is not available for the OpenTOPAS build on your current operating system." << G4endl;
 		fUseQt = false;
 	}
 #endif
@@ -129,16 +129,16 @@ fIsExecutingSequence(false)
 		numberOfThreads = G4Threading::G4GetNumberOfCores() + numberOfThreads;
 
 	if (numberOfThreads > 1 && fPm->IsRandomMode()) {
-		G4cerr << "TOPAS can not run in Random Time Mode with more than one thread." << G4endl;
+		G4cerr << "OpenTOPAS can not run in Random Time Mode with more than one thread." << G4endl;
 		G4cerr << "Either set Tf/RandomizeTimeDistribution = \"False\" or set Ts/NumberOfThreads = 1" << G4endl;
 		exit(1);
 	}
 
-	G4cout << "TOPAS is in MT mode, setting number of threads to: " << numberOfThreads << "\n" << G4endl;
+	G4cout << "OpenTOPAS is in MT mode, setting number of threads to: " << numberOfThreads << "\n" << G4endl;
 	SetNumberOfThreads(numberOfThreads);
 #else
 	if (numberOfThreads != 1) {
-		G4cout << "TOPAS is not in MT mode - ignoring attempt to set number of threads to: " << numberOfThreads << "\n" << G4endl;
+		G4cout << "OpenTOPAS is not in MT mode - ignoring attempt to set number of threads to: " << numberOfThreads << "\n" << G4endl;
 	}
 #endif
 
@@ -176,8 +176,8 @@ fIsExecutingSequence(false)
 	next();
 	G4String geant4VersionString = next();
 	if (geant4VersionString != fPm->GetStringParameter("Ts/Geant4VersionString")) {
-		G4cerr << "TOPAS quitting with serious error." << G4endl;
-		G4cerr << "This version of TOPAS expects the Geant4 version string to be: " << fPm->GetStringParameter("Ts/Geant4VersionString") << G4endl;
+		G4cerr << "OpenTOPAS quitting with serious error." << G4endl;
+		G4cerr << "This version of OpenTOPAS expects the Geant4 version string to be: " << fPm->GetStringParameter("Ts/Geant4VersionString") << G4endl;
 		G4cerr << "But the Geant4 version you have linked against has version string:" << geant4VersionString << G4endl;
 		exit(1);
 	}
@@ -211,9 +211,9 @@ fIsExecutingSequence(false)
 		G4cout << G4endl;
 		G4cout << "Pausing at Geant4 command line before initializing Geant4 physics." << G4endl;
 		G4cout << "This pause is occurring because Ts/PauseBeforeInit = \"True\"" << G4endl;
-		G4cout << "Enter any desired Geant4 commands and then return to TOPAS by typing \"exit\"" << G4endl;
+		G4cout << "Enter any desired Geant4 commands and then return to OpenTOPAS by typing \"exit\"" << G4endl;
 		G4cout << "This feature should only be used by experts. Changes you make in Geant4 at this command line" << G4endl;
-		G4cout << "are outside of TOPAS control and can result in unreliable behavior." << G4endl;
+		G4cout << "are outside of OpenTOPAS control and can result in unreliable behavior." << G4endl;
 		ui->SessionStart();
 	}
 
@@ -244,17 +244,17 @@ fIsExecutingSequence(false)
 		G4UIQt* UIQt = static_cast<G4UIQt*> (G4UImanager::GetUIpointer()->GetG4UIWindow());
 		if (UIQt) fTsQt = new TsQt(fPm, fEm, fMm, fGm, fScm, this, fGrm, fSom);
 		G4cout << "Pausing at Geant4 command line before starting run sequence." << G4endl;
-		G4cout << "Use Qt widgets to adjust TOPAS Parameters, Components, Scorers, etc." << G4endl;
-		G4cout << "Then hit the right arrow on the right side of the main menu to execute the TOPAS Run Sequence." << G4endl;
+		G4cout << "Use Qt widgets to adjust OpenTOPAS Parameters, Components, Scorers, etc." << G4endl;
+		G4cout << "Then hit the right arrow on the right side of the main menu to execute the OpenTOPAS Run Sequence." << G4endl;
 		G4cout << "You can also enter Geant4 commands on this command line, but note that changes made" << G4endl;
-		G4cout << "this way are outside of TOPAS control and can result in unreliable behavior." << G4endl;
+		G4cout << "this way are outside of OpenTOPAS control and can result in unreliable behavior." << G4endl;
 		ui->SessionStart();
 #endif
 	} else if (fPm->GetBooleanParameter("Ts/PauseBeforeSequence") && !getenv("TOPAS_HEADLESS_MODE")) {
 		G4cout << "This pause is occurring because Ts/PauseBeforeSequence = \"True\"" << G4endl;
-		G4cout << "Enter any desired Geant4 commands and then return to TOPAS by typing \"exit\"" << G4endl;
+		G4cout << "Enter any desired Geant4 commands and then return to OpenTOPAS by typing \"exit\"" << G4endl;
 		G4cout << "This feature should only be used by experts. Changes you make in Geant4 at this command line" << G4endl;
-		G4cout << "are outside of TOPAS control and can result in unreliable behavior." << G4endl;
+		G4cout << "are outside of OpenTOPAS control and can result in unreliable behavior." << G4endl;
 		ui->SessionStart();
 	}
 
@@ -374,7 +374,7 @@ void TsSequenceManager::Sequence() {
 			if (fPm->IsRandomMode()) {
 				// Random Time Mode: keep doing runs of one event per run until one of the geenrators reaches its target number of histories.
 				if ( timelineTotal <= 0. ) {
-					G4cerr << "Topas quitting. Total time interval has been set less than or equal to zero in Random Time Mode." << G4endl;
+					G4cerr << "OpenTOPAS quitting. Total time interval has been set less than or equal to zero in Random Time Mode." << G4endl;
 					exit(1);
 				}
 				while ( fSom->RandomModeNeedsMoreRuns() )
@@ -384,13 +384,13 @@ void TsSequenceManager::Sequence() {
 				// Sequential Time Mode: have one run for each sequential time.
 				G4int numTimes = fPm->GetIntegerParameter("Tf/NumberOfSequentialTimes");
 				if ( numTimes < 1 ) {
-					G4cerr << "Topas quitting. NumberOfSequentialTimes has been set less than 1 in Fixed or Sequential Time Mode." << G4endl;
+					G4cerr << "OpenTOPAS quitting. NumberOfSequentialTimes has been set less than 1 in Fixed or Sequential Time Mode." << G4endl;
 					exit(1);
 				} else if (numTimes == 1 ) {
 					Run(timelineStart);
 				} else {
 					if ( timelineTotal < 0. ) {
-						G4cerr << "Topas quitting. Total time interval has been set less than zero in Sequential Time Mode." << G4endl;
+						G4cerr << "OpenTOPAS quitting. Total time interval has been set less than zero in Sequential Time Mode." << G4endl;
 						exit(1);
 					}
 					G4double timelineInterval = timelineTotal / numTimes;
@@ -404,7 +404,7 @@ void TsSequenceManager::Sequence() {
 	    if (fPm->UseVarianceReduction())
 	        fVm->Clear();
 
-		G4cout << "\nTOPAS run sequence complete." << G4endl;
+		G4cout << "\nOpenTOPAS run sequence complete." << G4endl;
 		if ( fPm->GetIntegerParameter("Tf/Verbosity") > 0 ) fBCMFile.close();
 	}
 
@@ -422,68 +422,68 @@ void TsSequenceManager::Sequence() {
 	fTimer[2].Stop();
 
 	if (fKilledTrackCount > 0) {
-		G4cerr << "\nNote that TOPAS killed one or more tracks during this session because they appeared to be stuck." << G4endl;
+		G4cerr << "\nNote that OpenTOPAS killed one or more tracks during this session because they appeared to be stuck." << G4endl;
 		G4cerr << "Specifically, their number of steps exceeded the value of " << fPm->GetIntegerParameter("Ts/MaxStepNumber") <<
 		" set in the parameter Ts/MaxStepNumber." << G4endl;
 		G4cerr << "The total number of affected tracks was: " << fKilledTrackCount << G4endl;
 		G4cerr << "The total energy of affected tracks was: " << fKilledTrackEnergy << " MeV" << G4endl;
-		G4cerr << "For details on each stuck track, see the console log for lines starting with: \"Topas killed a stuck track\"" << G4endl;
+		G4cerr << "For details on each stuck track, see the console log for lines starting with: \"OpenTOPAS killed a stuck track\"" << G4endl;
 		G4cerr << "If you have only a small number of stuck tracks, there is generally no cause for alarm." << G4endl;
 		G4cerr << "If you have a large number of stuck tracks, this may be due to invalid geometry, specifically overlaps." << G4endl;
 		G4cerr << "In that case, be sure you have the parameter Ge/CheckForOverlaps set to true (its default value)," << G4endl;
-		G4cerr << "and review the overlap report at the start of the TOPAS session." << G4endl;
-		G4cerr << "You can set TOPAS to limit the number of messages about killed tracks by setting" << G4endl;
+		G4cerr << "and review the overlap report at the start of the OpenTOPAS session." << G4endl;
+		G4cerr << "You can set OpenTOPAS to limit the number of messages about killed tracks by setting" << G4endl;
 		G4cerr << "the parameter Ts/KilledTrackMaxReports" << G4endl;
-		G4cerr << "You can set TOPAS to exit if it exceeds a given number of killed tracks by setting" << G4endl;
+		G4cerr << "You can set OpenTOPAS to exit if it exceeds a given number of killed tracks by setting" << G4endl;
 		G4cerr << "the parameter Ts/KilledTrackMaxCount" << G4endl;
-		G4cerr << "You can set TOPAS to exit if it exceeds a given total energy from killed tracks by setting" << G4endl;
+		G4cerr << "You can set OpenTOPAS to exit if it exceeds a given total energy from killed tracks by setting" << G4endl;
 		G4cerr << "the parameter Ts/KilledTrackMaxEnergy" << G4endl;
 	}
 
 	if (fUnscoredHitCount > 0) {
-		G4cerr << "\nNote that TOPAS omitted scoring one or more hits during this session because" << G4endl;
+		G4cerr << "\nNote that OpenTOPAS omitted scoring one or more hits during this session because" << G4endl;
 		G4cerr << "appropriate stopping power information was lacking for the given energy." << G4endl;
 		G4cerr << "The total number of affected hits was: " << fUnscoredHitCount << G4endl;
 		G4cerr << "The total energy of affected hits was: " << fUnscoredHitEnergy << " MeV" << G4endl;
-		G4cerr << "For details on each unscored hit, see the console log for lines starting with: \"Topas omitted scoring a hit\"" << G4endl;
+		G4cerr << "For details on each unscored hit, see the console log for lines starting with: \"OpenTOPAS omitted scoring a hit\"" << G4endl;
 		G4cerr << "If you have only a small number of unscored hits, there is generally no cause for alarm." << G4endl;
 		G4cerr << "If you have a large number of unscored hits, this may be due to invalid physics settings." << G4endl;
-		G4cerr << "You can set TOPAS to limit the number of messages about unscored hits by setting" << G4endl;
+		G4cerr << "You can set OpenTOPAS to limit the number of messages about unscored hits by setting" << G4endl;
 		G4cerr << "the parameter Ts/UnscoredHitMaxReports" << G4endl;
-		G4cerr << "You can set TOPAS to exit if it exceeds a given number of unscored hits by setting" << G4endl;
+		G4cerr << "You can set OpenTOPAS to exit if it exceeds a given number of unscored hits by setting" << G4endl;
 		G4cerr << "the parameter Ts/UnscoredHitMaxCount" << G4endl;
-		G4cerr << "You can set TOPAS to exit if it exceeds a given total energy from unscored hits by setting" << G4endl;
+		G4cerr << "You can set OpenTOPAS to exit if it exceeds a given total energy from unscored hits by setting" << G4endl;
 		G4cerr << "the parameter Ts/UnscoredHitMaxEnergy" << G4endl;
 	}
 
 	if (fParameterizationErrorCount > 0) {
-		G4cerr << "\nNote that TOPAS omitted scoring one or more hits during this session because" << G4endl;
+		G4cerr << "\nNote that OpenTOPAS omitted scoring one or more hits during this session because" << G4endl;
 		G4cerr << "Geant4 navigation seemed to be at the wrong level of the parameterization for this scorer." << G4endl;
 		G4cerr << "The total number of affected hits was: " << fParameterizationErrorCount << G4endl;
 		G4cerr << "The total energy of affected hits was: " << fParameterizationErrorEnergy << " MeV" << G4endl;
 		G4cerr << "For details on each unscored hit, see the console log for lines starting with:" << G4endl;
-		G4cerr << "\"Topas experienced a potentially serious error in scoring\"" << G4endl;
+		G4cerr << "\"OpenTOPAS experienced a potentially serious error in scoring\"" << G4endl;
 		G4cerr << "If you have only a small number of unscored hits, there is generally no cause for alarm." << G4endl;
 		G4cerr << "If you have a large number of unscored hits, this may be due to a problem in Geant4 navigation." << G4endl;
-		G4cerr << "You can set TOPAS to limit the number of messages about this parameterization error by setting" << G4endl;
+		G4cerr << "You can set OpenTOPAS to limit the number of messages about this parameterization error by setting" << G4endl;
 		G4cerr << "the parameter Ts/ParameterizationErrorMaxReports" << G4endl;
-		G4cerr << "You can set TOPAS to exit if it exceeds a given number of unscored hits by setting" << G4endl;
+		G4cerr << "You can set OpenTOPAS to exit if it exceeds a given number of unscored hits by setting" << G4endl;
 		G4cerr << "the parameter Ts/ParameterizationErrorMaxCount" << G4endl;
-		G4cerr << "You can set TOPAS to exit if it exceeds a given total energy from unscored hits by setting" << G4endl;
+		G4cerr << "You can set OpenTOPAS to exit if it exceeds a given total energy from unscored hits by setting" << G4endl;
 		G4cerr << "the parameter Ts/ParameterizationErrorMaxEnergy" << G4endl;
 	}
 
 	if (fInterruptedHistoryCount > 0) {
-		G4cerr << "\nNote that TOPAS interrupted one or more histories during this session" << G4endl;
+		G4cerr << "\nNote that OpenTOPAS interrupted one or more histories during this session" << G4endl;
 		G4cerr << "due to errors reported by Geant4." << G4endl;
 		G4cerr << "The total number of interrupted histories was: " << fInterruptedHistoryCount << G4endl;
 		G4cerr << "For details on each of these errors, see the console log for \"G4Exception\"" << G4endl;
 		G4cerr << "If only a very small proportion of your histories were affected," << G4endl;
 		G4cerr << "you may be able to still use the overall result," << G4endl;
 		G4cerr << "but this is a judgement call you need to make for yourself." << G4endl;
-		G4cerr << "You can set TOPAS to limit the number of messages about interrupted histories by setting" << G4endl;
+		G4cerr << "You can set OpenTOPAS to limit the number of messages about interrupted histories by setting" << G4endl;
 		G4cerr << "the parameter Ts/InterruptedHistoryMaxReports" << G4endl;
-		G4cerr << "You can set TOPAS to exit if it exceeds a given number of interrupted histories by setting" << G4endl;
+		G4cerr << "You can set OpenTOPAS to exit if it exceeds a given number of interrupted histories by setting" << G4endl;
 		G4cerr << "the parmameter Ts/MaxInterruptedHistories" << G4endl;
 	}
 
@@ -517,9 +517,9 @@ void TsSequenceManager::Sequence() {
 	}
 
 	if (fPm->HasGeometryOverlap()) {
-		G4cerr << "\nThis TOPAS session found geometry overlap issues." << G4endl;
+		G4cerr << "\nThis OpenTOPAS session found geometry overlap issues." << G4endl;
 		G4cerr << "Details are shown earlier in this console (near start of session)." << G4endl;
-		G4cerr << "While normally TOPAS will quit in such situations," << G4endl;
+		G4cerr << "While normally OpenTOPAS will quit in such situations," << G4endl;
 		G4cerr << "in this case it continued  because you set the parameter Ge/QuitIfOverlapDetected to False." << G4endl;
 		G4cerr << "Be advised that simulation results can not be trusted when any overlap exists." << G4endl;
 	}
@@ -543,7 +543,7 @@ void TsSequenceManager::ExtraSequence(G4String extraSequenceFileSpec) {
 	G4cout << "SleepLimit (seconds): " << sleepLimit / s << G4endl;
 
 	while (!infile && sleepTime < sleepLimit) {
-		G4cout << "TOPAS was unable to open ExtraSequenceFile: " << extraSequenceFileSpec << G4endl;
+		G4cout << "OpenTOPAS was unable to open ExtraSequenceFile: " << extraSequenceFileSpec << G4endl;
 		G4cout << "Will sleep " << sleepInterval / s << " seconds and then try again." << G4endl;
 		sleep(sleepInterval / s);
 		sleepTime += sleepInterval;
@@ -551,7 +551,7 @@ void TsSequenceManager::ExtraSequence(G4String extraSequenceFileSpec) {
 	}
 
 	if (!infile) {
-		G4cerr << "Topas quitting. Unable to find ExtraSequence file." << G4endl;
+		G4cerr << "OpenTOPAS quitting. Unable to find ExtraSequence file." << G4endl;
 		G4cerr << "Exceeded allowed sleep limit of " << sleepLimit / s << " seconds." << G4endl;
 		exit(1);
 	}
@@ -571,7 +571,7 @@ void TsSequenceManager::ExtraSequence(G4String extraSequenceFileSpec) {
 		nameLower.toLower();
 #endif
 		if (nameLower == "includefile") {
-			G4cerr << "Topas quitting. ExtraSequence file contains IncludeFile." << G4endl;
+			G4cerr << "OpenTOPAS quitting. ExtraSequence file contains IncludeFile." << G4endl;
 			G4cerr << "This is not permitted in an ExtraSequence file." << G4endl;
 			exit(1);
 		}
@@ -814,7 +814,7 @@ void TsSequenceManager::NoteKilledTrack(G4double energy, G4String particleName, 
 	fKilledTrackEnergy += energy;
 
 	if ((fKilledTrackMaxReports == 0) || (fKilledTrackCount <= fKilledTrackMaxReports)) {
-		G4cerr << "\nTopas killed a stuck track, defined as that the number of steps has exceeded value of " << fMaxStepNumber << G4endl;
+		G4cerr << "\nOpenTOPAS killed a stuck track, defined as that the number of steps has exceeded value of " << fMaxStepNumber << G4endl;
 		G4cerr << "which is set in parameter Ts/MaxStepNumber." << G4endl;
 		G4cerr << "Run: " << fPm->GetRunID() << ", History: " << G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID() << G4endl;
 		G4Tokenizer next(G4RunManager::GetRunManager()->GetRandomNumberStatusForThisEvent());
@@ -829,7 +829,7 @@ void TsSequenceManager::NoteKilledTrack(G4double energy, G4String particleName, 
 		token = next();
 		G4int SeedPart4 = G4UIcommand::ConvertToInt(token);
 		G4cerr << "Seed: " << SeedPart1 << ", " << SeedPart2 << ", " << SeedPart3 << ", " << SeedPart4 << G4endl;
-		G4cerr << "TOPAS Time (the value used in time features): " << GetTime() / s << " s" << G4endl;
+		G4cerr << "OpenTOPAS Time (the value used in time features): " << GetTime() / s << " s" << G4endl;
 		G4cerr << "Particle type: " << particleName << G4endl;
 		G4cerr << "Origin process: " << processName << G4endl;
 		G4cerr << "Current volume: " << volumeName << G4endl;
@@ -842,39 +842,39 @@ void TsSequenceManager::NoteKilledTrack(G4double energy, G4String particleName, 
 	}
 
 	if ((fKilledTrackMaxCount != 0) && (fKilledTrackCount > fKilledTrackMaxCount)) {
-		G4cerr << "\nTOPAS is exiting because the number of killed tracks in this session has exceeded: " << fKilledTrackMaxCount << G4endl;
+		G4cerr << "\nOpenTOPAS is exiting because the number of killed tracks in this session has exceeded: " << fKilledTrackMaxCount << G4endl;
 		G4cerr << "These tracks were killed because they appeared to be stuck." << G4endl;
 		G4cerr << "Specifically, their number of steps exceeded the value of " << fMaxStepNumber << G4endl;
 		G4cerr << "which is set in parameter Ts/MaxStepNumber." << G4endl;
 		G4cerr << "The total number of killed tracks was: " << fKilledTrackCount << G4endl;
 		G4cerr << "The total energy of killed tracks was: " << fKilledTrackEnergy << " MeV" << G4endl;
-		G4cerr << "For details on each killed track, see the console log for lines starting with: \"Topas killed a track\"" << G4endl;
+		G4cerr << "For details on each killed track, see the console log for lines starting with: \"OpenTOPAS killed a track\"" << G4endl;
 		G4cerr << "If you have only a small number of killed tracks, there is generally no cause for alarm." << G4endl;
 		G4cerr << "If you have a large number of killed tracks, this may be due to ." << G4endl;
-		G4cerr << "You can set TOPAS to limit the number of messages about killed tracks by setting" << G4endl;
+		G4cerr << "You can set OpenTOPAS to limit the number of messages about killed tracks by setting" << G4endl;
 		G4cerr << "the parameter Ts/KilledTrackMaxReports" << G4endl;
-		G4cerr << "You can set TOPAS to exit if it exceeds a given number of killed tracks by setting" << G4endl;
+		G4cerr << "You can set OpenTOPAS to exit if it exceeds a given number of killed tracks by setting" << G4endl;
 		G4cerr << "the parameter Ts/KilledTrackMaxCount" << G4endl;
-		G4cerr << "You can set TOPAS to exit if it exceeds a given total energy from killed tracks by setting" << G4endl;
+		G4cerr << "You can set OpenTOPAS to exit if it exceeds a given total energy from killed tracks by setting" << G4endl;
 		G4cerr << "the parameter Ts/KilledTrackMaxEnergy" << G4endl;
 		exit(1);
 	}
 
 	if ((fKilledTrackMaxEnergy != 0.) && (fKilledTrackEnergy > fKilledTrackMaxEnergy)){
-		G4cerr << "\nTOPAS is exiting because the total energy of killed tracks in this session has exceeded: " << fKilledTrackMaxEnergy << " MeV" << G4endl;
+		G4cerr << "\nOpenTOPAS is exiting because the total energy of killed tracks in this session has exceeded: " << fKilledTrackMaxEnergy << " MeV" << G4endl;
 		G4cerr << "These tracks were killed because they appeared to be stuck." << G4endl;
 		G4cerr << "Specifically, their number of steps exceeded the value of " << fMaxStepNumber << G4endl;
 		G4cerr << "which is set in parameter Ts/MaxStepNumber." << G4endl;
 		G4cerr << "The total number of killed tracks was: " << fKilledTrackCount << G4endl;
 		G4cerr << "The total energy of killed tracks was: " << fKilledTrackEnergy << " MeV" << G4endl;
-		G4cerr << "For details on each killed track, see the console log for lines starting with: \"Topas killed a track\"" << G4endl;
+		G4cerr << "For details on each killed track, see the console log for lines starting with: \"OpenTOPAS killed a track\"" << G4endl;
 		G4cerr << "If you have only a small number of killed tracks, there is generally no cause for alarm." << G4endl;
 		G4cerr << "If you have a large number of killed tracks, this may be due to ." << G4endl;
-		G4cerr << "You can set TOPAS to limit the number of messages about killed tracks by setting" << G4endl;
+		G4cerr << "You can set OpenTOPAS to limit the number of messages about killed tracks by setting" << G4endl;
 		G4cerr << "the parameter Ts/KilledTrackaxReports" << G4endl;
-		G4cerr << "You can set TOPAS to exit if it exceeds a given number of killed tracks by setting" << G4endl;
+		G4cerr << "You can set OpenTOPAS to exit if it exceeds a given number of killed tracks by setting" << G4endl;
 		G4cerr << "the parameter Ts/KilledTrackMaxCount" << G4endl;
-		G4cerr << "You can set TOPAS to exit if it exceeds a given total energy from killed tracks by setting" << G4endl;
+		G4cerr << "You can set OpenTOPAS to exit if it exceeds a given total energy from killed tracks by setting" << G4endl;
 		G4cerr << "the parameter Ts/KilledTrackMaxEnergy" << G4endl;
 		exit(1);
 	}
@@ -901,37 +901,37 @@ void TsSequenceManager::NoteUnscoredHit(G4double energy, G4String scorerName) {
 	}
 
 	if ((fUnscoredHitMaxCount != 0) && (fUnscoredHitCount > fUnscoredHitMaxCount)){
-		G4cerr << "\nTOPAS is exiting because the number of unscored hits in this session has exceeded: " << fUnscoredHitMaxCount << G4endl;
+		G4cerr << "\nOpenTOPAS is exiting because the number of unscored hits in this session has exceeded: " << fUnscoredHitMaxCount << G4endl;
 		G4cout << "This hits could not be counted since the relevant material stopping power was unknown." << G4endl;
 		G4cerr << "We think this may sometimes happen because Geant4 navigation gets into a corrupted state." << G4endl;
 		G4cerr << "The total number of affected hits was: " << fUnscoredHitCount << G4endl;
 		G4cerr << "The total energy of affected hits was: " << fUnscoredHitEnergy << " MeV" << G4endl;
-		G4cerr << "For details on each unscored hit, see the console log for lines starting with: \"Topas omitted scoring a hit\"" << G4endl;
+		G4cerr << "For details on each unscored hit, see the console log for lines starting with: \"OpenTOPAS omitted scoring a hit\"" << G4endl;
 		G4cerr << "If you have only a small number of unscored hits, there is generally no cause for alarm." << G4endl;
 		G4cerr << "If you have a large number of unscored hits, this may be due to invalid physics settings." << G4endl;
-		G4cerr << "You can set TOPAS to limit the number of messages about unscored hits by setting" << G4endl;
+		G4cerr << "You can set OpenTOPAS to limit the number of messages about unscored hits by setting" << G4endl;
 		G4cerr << "the parameter Ts/UnscoredHitMaxReports" << G4endl;
-		G4cerr << "You can set TOPAS to exit if it exceeds a given number of unscored hits by setting" << G4endl;
+		G4cerr << "You can set OpenTOPAS to exit if it exceeds a given number of unscored hits by setting" << G4endl;
 		G4cerr << "the parameter Ts/UnscoredHitMaxCount" << G4endl;
-		G4cerr << "You can set TOPAS to exit if it exceeds a given total energy from unscored hits by setting" << G4endl;
+		G4cerr << "You can set OpenTOPAS to exit if it exceeds a given total energy from unscored hits by setting" << G4endl;
 		G4cerr << "the parameter Ts/UnscoredHitMaxEnergy" << G4endl;
 		exit(1);
 	}
 
 	if ((fUnscoredHitMaxEnergy != 0.) && (fUnscoredHitEnergy > fUnscoredHitMaxEnergy)){
-		G4cerr << "\nTOPAS is exiting because the total energy of unscored hits in this session has exceeded: " << fUnscoredHitMaxEnergy << " MeV" << G4endl;
+		G4cerr << "\nOpenTOPAS is exiting because the total energy of unscored hits in this session has exceeded: " << fUnscoredHitMaxEnergy << " MeV" << G4endl;
 		G4cout << "This hits could not be counted since the relevant material stopping power was unknown." << G4endl;
 		G4cerr << "We think this may sometimes happen because Geant4 navigation gets into a corrupted state." << G4endl;
 		G4cerr << "The total number of affected hits was: " << fUnscoredHitCount << G4endl;
 		G4cerr << "The total energy of affected hits was: " << fUnscoredHitEnergy << " MeV" << G4endl;
-		G4cerr << "For details on each unscored hit, see the console log for lines starting with: \"Topas omitted scoring a hit\"" << G4endl;
+		G4cerr << "For details on each unscored hit, see the console log for lines starting with: \"OpenTOPAS omitted scoring a hit\"" << G4endl;
 		G4cerr << "If you have only a small number of unscored hits, there is generally no cause for alarm." << G4endl;
 		G4cerr << "If you have a large number of unscored hits, this may be due to invalid physics settings." << G4endl;
-		G4cerr << "You can set TOPAS to limit the number of messages about unscored hits by setting" << G4endl;
+		G4cerr << "You can set OpenTOPAS to limit the number of messages about unscored hits by setting" << G4endl;
 		G4cerr << "the parameter Ts/UnscoredHitMaxReports" << G4endl;
-		G4cerr << "You can set TOPAS to exit if it exceeds a given number of unscored hits by setting" << G4endl;
+		G4cerr << "You can set OpenTOPAS to exit if it exceeds a given number of unscored hits by setting" << G4endl;
 		G4cerr << "the parameter Ts/UnscoredHitMaxCount" << G4endl;
-		G4cerr << "You can set TOPAS to exit if it exceeds a given total energy from unscored hits by setting" << G4endl;
+		G4cerr << "You can set OpenTOPAS to exit if it exceeds a given total energy from unscored hits by setting" << G4endl;
 		G4cerr << "the parameter Ts/UnscoredHitMaxEnergy" << G4endl;
 		exit(1);
 	}
@@ -947,7 +947,7 @@ void TsSequenceManager::NoteParameterizationError(G4double energy, G4String comp
 	fParameterizationErrorEnergy += energy;
 
 	if ((fParameterizationErrorMaxReports == 0) || (fParameterizationErrorCount <= fParameterizationErrorMaxReports)) {
-		G4cerr << "\nTopas experienced an error in scoring." << G4endl;
+		G4cerr << "\nOpenTOPAS experienced an error in scoring." << G4endl;
 		G4cerr << "A scorer in the Component: \"" << componentName << "\"" << G4endl;
 		G4cerr << "has been called for a hit in the non-parameterized volume named: \"" << volumeName << "\"" << G4endl;
 		G4cerr << "But this deos not make sense, as this scorer should only get called for hits" << G4endl;
@@ -965,34 +965,34 @@ void TsSequenceManager::NoteParameterizationError(G4double energy, G4String comp
 	}
 
 	if ((fParameterizationErrorMaxCount != 0) && (fParameterizationErrorCount > fParameterizationErrorMaxCount)){
-		G4cerr << "\nTOPAS is exiting because the number of hits with parameterized volume anomalies has exceeded: "
+		G4cerr << "\nOpenTOPAS is exiting because the number of hits with parameterized volume anomalies has exceeded: "
 			<< fParameterizationErrorMaxCount << G4endl;
 		G4cerr << "The total number of affected hits was: " << fParameterizationErrorCount << G4endl;
 		G4cerr << "The total energy of affected hits was: " << fParameterizationErrorEnergy << " MeV" << G4endl;
 		G4cerr << "For details on each such hit, see the console log for lines starting with:" << G4endl;
-		G4cerr << "\"Topas experienced a potentially serious error in scoring\"" << G4endl;
+		G4cerr << "\"OpenTOPAS experienced a potentially serious error in scoring\"" << G4endl;
 		G4cerr << "If you have only a small number of such hits, there is generally no cause for alarm." << G4endl;
-		G4cerr << "You can set TOPAS to limit the number of messages about such hits by setting" << G4endl;
+		G4cerr << "You can set OpenTOPAS to limit the number of messages about such hits by setting" << G4endl;
 		G4cerr << "the parameter Ts/ParameterizationErrorMaxReports" << G4endl;
-		G4cerr << "You can set TOPAS to exit if it exceeds a given number of such hits by setting" << G4endl;
+		G4cerr << "You can set OpenTOPAS to exit if it exceeds a given number of such hits by setting" << G4endl;
 		G4cerr << "the parameter Ts/ParameterizationErrorMaxCount" << G4endl;
-		G4cerr << "You can set TOPAS to exit if it exceeds a given total energy from such hits by setting" << G4endl;
+		G4cerr << "You can set OpenTOPAS to exit if it exceeds a given total energy from such hits by setting" << G4endl;
 		G4cerr << "the parameter Ts/ParameterizationErrorMaxEnergy" << G4endl;
 		exit(1);
 	}
 
 	if ((fParameterizationErrorMaxEnergy != 0.) && (fParameterizationErrorEnergy > fParameterizationErrorMaxEnergy)){
-		G4cerr << "\nTOPAS is exiting because the total energy of hits with parameterized volume anomalies has exceeded: " << fParameterizationErrorMaxEnergy << " MeV" << G4endl;
+		G4cerr << "\nOpenTOPAS is exiting because the total energy of hits with parameterized volume anomalies has exceeded: " << fParameterizationErrorMaxEnergy << " MeV" << G4endl;
 		G4cerr << "The total number of affected hits was: " << fParameterizationErrorCount << G4endl;
 		G4cerr << "The total energy of affected hits was: " << fParameterizationErrorEnergy << " MeV" << G4endl;
 		G4cerr << "For details on each such hit, see the console log for lines starting with:" << G4endl;
-		G4cerr << "\"Topas experienced a potentially serious error in scoring\"" << G4endl;
+		G4cerr << "\"OpenTOPAS experienced a potentially serious error in scoring\"" << G4endl;
 		G4cerr << "If you have only a small number of such hits, there is generally no cause for alarm." << G4endl;
-		G4cerr << "You can set TOPAS to limit the number of messages about unscored hits by setting" << G4endl;
+		G4cerr << "You can set OpenTOPAS to limit the number of messages about unscored hits by setting" << G4endl;
 		G4cerr << "the parameter Ts/ParameterizationErrorMaxReports" << G4endl;
-		G4cerr << "You can set TOPAS to exit if it exceeds a given number of unscored hits by setting" << G4endl;
+		G4cerr << "You can set OpenTOPAS to exit if it exceeds a given number of unscored hits by setting" << G4endl;
 		G4cerr << "the parameter Ts/ParameterizationErrorMaxCount" << G4endl;
-		G4cerr << "You can set TOPAS to exit if it exceeds a given total energy from unscored hits by setting" << G4endl;
+		G4cerr << "You can set OpenTOPAS to exit if it exceeds a given total energy from unscored hits by setting" << G4endl;
 		G4cerr << "the parameter Ts/ParameterizationErrorMaxEnergy" << G4endl;
 		exit(1);
 	}
@@ -1009,7 +1009,7 @@ void TsSequenceManager::NoteIndexError(G4double energy, G4String componentName,
 	fIndexErrorEnergy += energy;
 
 	if ((fIndexErrorMaxReports == 0) || (fIndexErrorCount <= fIndexErrorMaxReports)) {
-		G4cerr << "\nTopas experienced an error in scoring." << G4endl;
+		G4cerr << "\nOpenTOPAS experienced an error in scoring." << G4endl;
 		G4cerr << "A scorer in the Component: \"" << componentName << "\"" << G4endl;
 		G4cerr << "returned " << coordinate << " index: " << value << " outside of the valid range of 0 to " << limit << G4endl;
 		G4cerr << "We think this may sometimes happen because Geant4 navigation gets into a corrupted state." << G4endl;
@@ -1025,34 +1025,34 @@ void TsSequenceManager::NoteIndexError(G4double energy, G4String componentName,
 	}
 
 	if ((fIndexErrorMaxCount != 0) && (fIndexErrorCount > fIndexErrorMaxCount)){
-		G4cerr << "\nTOPAS is exiting because the number of hits with parameterized volume anomalies has exceeded: "
+		G4cerr << "\nOpenTOPAS is exiting because the number of hits with parameterized volume anomalies has exceeded: "
 			<< fIndexErrorMaxCount << G4endl;
 		G4cerr << "The total number of affected hits was: " << fIndexErrorCount << G4endl;
 		G4cerr << "The total energy of affected hits was: " << fIndexErrorEnergy << " MeV" << G4endl;
 		G4cerr << "For details on each such hit, see the console log for lines starting with:" << G4endl;
-		G4cerr << "\"Topas experienced a potentially serious error in scoring\"" << G4endl;
+		G4cerr << "\"OpenTOPAS experienced a potentially serious error in scoring\"" << G4endl;
 		G4cerr << "If you have only a small number of such hits, there is generally no cause for alarm." << G4endl;
-		G4cerr << "You can set TOPAS to limit the number of messages about such hits by setting" << G4endl;
+		G4cerr << "You can set OpenTOPAS to limit the number of messages about such hits by setting" << G4endl;
 		G4cerr << "the parameter Ts/IndexErrorMaxReports" << G4endl;
-		G4cerr << "You can set TOPAS to exit if it exceeds a given number of such hits by setting" << G4endl;
+		G4cerr << "You can set OpenTOPAS to exit if it exceeds a given number of such hits by setting" << G4endl;
 		G4cerr << "the parameter Ts/IndexErrorMaxCount" << G4endl;
-		G4cerr << "You can set TOPAS to exit if it exceeds a given total energy from such hits by setting" << G4endl;
+		G4cerr << "You can set OpenTOPAS to exit if it exceeds a given total energy from such hits by setting" << G4endl;
 		G4cerr << "the parameter Ts/IndexErrorMaxEnergy" << G4endl;
 		exit(1);
 	}
 
 	if ((fIndexErrorMaxEnergy != 0.) && (fIndexErrorEnergy > fIndexErrorMaxEnergy)){
-		G4cerr << "\nTOPAS is exiting because the total energy of hits with parameterized volume anomalies has exceeded: " << fIndexErrorMaxEnergy << " MeV" << G4endl;
+		G4cerr << "\nOpenTOPAS is exiting because the total energy of hits with parameterized volume anomalies has exceeded: " << fIndexErrorMaxEnergy << " MeV" << G4endl;
 		G4cerr << "The total number of affected hits was: " << fIndexErrorCount << G4endl;
 		G4cerr << "The total energy of affected hits was: " << fIndexErrorEnergy << " MeV" << G4endl;
 		G4cerr << "For details on each such hit, see the console log for lines starting with:" << G4endl;
-		G4cerr << "\"Topas experienced a potentially serious error in scoring\"" << G4endl;
+		G4cerr << "\"OpenTOPAS experienced a potentially serious error in scoring\"" << G4endl;
 		G4cerr << "If you have only a small number of such hits, there is generally no cause for alarm." << G4endl;
-		G4cerr << "You can set TOPAS to limit the number of messages about such hits by setting" << G4endl;
+		G4cerr << "You can set OpenTOPAS to limit the number of messages about such hits by setting" << G4endl;
 		G4cerr << "the parameter Ts/IndexErrorMaxReports" << G4endl;
-		G4cerr << "You can set TOPAS to exit if it exceeds a given number of such hits by setting" << G4endl;
+		G4cerr << "You can set OpenTOPAS to exit if it exceeds a given number of such hits by setting" << G4endl;
 		G4cerr << "the parameter Ts/IndexErrorMaxCount" << G4endl;
-		G4cerr << "You can set TOPAS to exit if it exceeds a given total energy from such hits by setting" << G4endl;
+		G4cerr << "You can set OpenTOPAS to exit if it exceeds a given total energy from such hits by setting" << G4endl;
 		G4cerr << "the parameter Ts/IndexErrorMaxEnergy" << G4endl;
 		exit(1);
 	}
@@ -1067,15 +1067,15 @@ void TsSequenceManager::NoteInterruptedHistory() {
 	fInterruptedHistoryCount++;
 
 	if ((fInterruptedHistoryMaxCount != 0) && (fInterruptedHistoryCount > fInterruptedHistoryMaxCount)){
-		G4cerr << "\nTOPAS is exiting because the number of interrupted histories in this session has reached: " << fInterruptedHistoryCount << G4endl;
+		G4cerr << "\nOpenTOPAS is exiting because the number of interrupted histories in this session has reached: " << fInterruptedHistoryCount << G4endl;
 		G4cerr << "These histories were interrupted due errors reported by Geant4." << G4endl;
 		G4cerr << "For details on each of these errors, see the console log for \"G4Exception\"" << G4endl;
 		G4cerr << "If only a very small proportion of your histories were affected," << G4endl;
 		G4cerr << "you may want to adjust the limit set in Ts/MaxInterruptedHistories" << G4endl;
 		G4cerr << "but this is a judgement call you need to make for yourself." << G4endl;
-		G4cerr << "You can set TOPAS to limit the number of messages about interrupted histories by setting" << G4endl;
+		G4cerr << "You can set OpenTOPAS to limit the number of messages about interrupted histories by setting" << G4endl;
 		G4cerr << "the parameter Ts/InterruptedHistoryMaxReports" << G4endl;
-		G4cerr << "You can set TOPAS to exit if it exceeds a given number of interrupted histories by setting" << G4endl;
+		G4cerr << "You can set OpenTOPAS to exit if it exceeds a given number of interrupted histories by setting" << G4endl;
 		G4cerr << "the parmameter Ts/MaxInterruptedHistories" << G4endl;
 		exit(1);
 	}

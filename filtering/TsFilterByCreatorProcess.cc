@@ -67,7 +67,7 @@ void TsFilterByCreatorProcess::ResolveParameters() {
 			fProcesses->insert((*oneVector)[j]);
 
 		if (fProcesses->size()==0) {
-			G4cerr << "Topas is exiting due to a serious error in scoring setup." << G4endl;
+			G4cerr << "OpenTOPAS is exiting due to a serious error in scoring setup." << G4endl;
 			G4cerr << GetName() << " = " << processNames[i] << " refers to an unknown process." << G4endl;
 			fPm->AbortSession(1);
 		}
@@ -105,7 +105,7 @@ G4bool TsFilterByCreatorProcess::Accept(const G4Step* aStep) const {
 
 
 G4bool TsFilterByCreatorProcess::AcceptTrack(const G4Track*) const {
-	G4cerr << "Topas is exiting due to a serious error in source setup." << G4endl;
+	G4cerr << "OpenTOPAS is exiting due to a serious error in source setup." << G4endl;
 	G4cerr << "Sources cannot be filtered by " << GetName() << G4endl;
 	fPm->AbortSession(1);
 	return false;

@@ -53,7 +53,7 @@ TsInelasticSplitOperator::TsInelasticSplitOperator(TsParameterManager* pM, G4Str
 		for (G4int j = 0; j < length; j++) {
 			TsParticleDefinition resolvedDef = fPm->GetParticleDefinition(particleNames[j]);
 			if (!resolvedDef.particleDefinition && ! resolvedDef.isGenericIon) {
-				G4cerr << "Topas is exiting due to a serious error in variance reduction setup." << G4endl;
+				G4cerr << "OpenTOPAS is exiting due to a serious error in variance reduction setup." << G4endl;
 				G4cerr << particleNames[j] << " used for Russian Roulette refers to an unknown particle type." << G4endl;
 				fPm->AbortSession(1);
 			}

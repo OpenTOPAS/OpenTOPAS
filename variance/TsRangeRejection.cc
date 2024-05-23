@@ -62,7 +62,7 @@ void TsRangeRejection::ResolveParameters() {
 			
 	if (fPm->ParameterExists(GetFullParmName("ParticlesNamed")) &&
 		fPm->ParameterExists(GetFullParmName("ParticlesNotNamed"))) {
-		G4cerr << "Topas is exiting due to error in variance reduction setup." << G4endl;
+		G4cerr << "OpenTOPAS is exiting due to error in variance reduction setup." << G4endl;
 		G4cerr << "Parameter:" << G4endl;
 		G4cerr << GetFullParmName("ParticlesNamed") << G4endl;
 		G4cerr << "is incompatible with parameter:" << G4endl;
@@ -89,7 +89,7 @@ void TsRangeRejection::ResolveParameters() {
 	for ( G4int i = 0; i < sizeOfParticleName; i++ ) {
 		TsParticleDefinition resolvedDef = fPm->GetParticleDefinition(fParticleName[i]);
 		if (!resolvedDef.particleDefinition) {
-			G4cerr << "Topas is exiting due to error in variance reduction setup." << G4endl;
+			G4cerr << "OpenTOPAS is exiting due to error in variance reduction setup." << G4endl;
 			if (!fInvertFilter)
 				G4cerr << GetFullParmName("ParticlesNamed") + " has unknown particle name: "
 				<< fParticleName[i] << G4endl;
@@ -108,7 +108,7 @@ void TsRangeRejection::ResolveParameters() {
 	}
 	
 	if ( !fPm->ParameterExists(GetFullParmName("Regions"))) {
-		G4cerr << "Topas is exiting due to error in variance reduction setup." << G4endl;
+		G4cerr << "OpenTOPAS is exiting due to error in variance reduction setup." << G4endl;
 		G4cerr << GetFullParmName("Regions") + " has not been defined. " << G4endl;
 		fPm->AbortSession(1);
 	}
@@ -128,7 +128,7 @@ void TsRangeRejection::ResolveParameters() {
 		if ( lowerCaseName == "defaultregionfortheworld" ) {
 			fRegions.push_back( G4RegionStore::GetInstance()->FindOrCreateRegion("DefaultRegionForTheWorld") );
 		} else if ( G4RegionStore::GetInstance()->GetRegion(lowerCaseName) == nullptr ) {
-			G4cerr << "Topas is exiting due to error in variance reduction setup." << G4endl;
+			G4cerr << "OpenTOPAS is exiting due to error in variance reduction setup." << G4endl;
 			G4cerr << GetFullParmName("Regions") + ". Region " << aRegionName << " does not exists." << G4endl;
 			fPm->AbortSession(1);
 		} else {

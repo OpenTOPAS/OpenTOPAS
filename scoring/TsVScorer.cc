@@ -141,19 +141,19 @@ void TsVScorer::PostConstructor()
 			fSurfaceName = volumePlusSurface.substr(pos2+1);
 
 		} else if (fPm->ParameterExists(GetFullParmName("Component"))) {
-			G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+			G4cerr << "OpenTOPAS is exiting due to a serious error in scoring." << G4endl;
 			G4cerr << "Scorer name: " << GetName() << " has no Surface specified." << G4endl;
 			G4cerr << "If this is a user volume scorer, remove SetSurfaceScorer() from its constructor." << G4endl;
 			fPm->AbortSession(1);
 		} else {
-			G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+			G4cerr << "OpenTOPAS is exiting due to a serious error in scoring." << G4endl;
 			G4cerr << "Scorer name: " << GetName() << " has no Surface specified." << G4endl;
 			fPm->AbortSession(1);
 		}
 
 		// If scorer needs surface area calculation, check that component provides this feature
 		if (fNeedsSurfaceAreaCalculation &! fComponent->CanCalculateSurfaceArea()) {
-			G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+			G4cerr << "OpenTOPAS is exiting due to a serious error in scoring." << G4endl;
 			G4cerr << "Scorer name: " << GetName() << " requires surface area calculation." << G4endl;
 			G4cerr << "But the component: " << fComponent->GetName() << " is of a type" << G4endl;
 			G4cerr << "that does not provide this calculation." << G4endl;
@@ -176,7 +176,7 @@ void TsVScorer::PostConstructor()
 			else if (going == "out")
 				fOnlyIncludeParticlesGoingOut = true;
 			else {
-				G4cerr << "Topas is exiting due to a serious error in scoring setup.";
+				G4cerr << "OpenTOPAS is exiting due to a serious error in scoring setup.";
 				G4cerr << "Parameter " << GetFullParmName("OnlyIncludeParticlesGoing") << " has invalid value: "
 				<< fPm->GetStringParameter(GetFullParmName("OnlyIncludeParticlesGoing")) << G4endl;
 				G4cerr << "Only allowed values are in and out." << G4endl;
@@ -189,18 +189,18 @@ void TsVScorer::PostConstructor()
 			GetAppropriatelyBinnedCopyOfComponent(fPm->GetStringParameter(GetFullParmName("Component")));
 
 		} else if (fPm->ParameterExists(GetFullParmName("Surface"))) {
-			G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+			G4cerr << "OpenTOPAS is exiting due to a serious error in scoring." << G4endl;
 			G4cerr << "Scorer name: " << GetName() << " has no Component specified." << G4endl;
 			G4cerr << "If this is a user surface scorer, add SetSurfaceScorer() to its constructor." << G4endl;
 			fPm->AbortSession(1);
 		} else {
-			G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+			G4cerr << "OpenTOPAS is exiting due to a serious error in scoring." << G4endl;
 			G4cerr << "Scorer name: " << GetName() << " has no Component specified." << G4endl;
 			fPm->AbortSession(1);
 		}
 
 		if (fPm->ParameterExists(GetFullParmName("OnlyIncludeParticlesGoing"))) {
-			G4cerr << "Topas is exiting due to a serious error in scoring setup.";
+			G4cerr << "OpenTOPAS is exiting due to a serious error in scoring setup.";
 			G4cerr << "Parameter " << GetFullParmName("OnlyIncludeParticlesGoing") << " is not appropriate for volume scorers." << G4endl;
 			fPm->AbortSession(1);
 		}
@@ -213,7 +213,7 @@ void TsVScorer::PostConstructor()
 	if (fPm->ParameterExists(GetFullParmName("SetBinToMinusOneIfNotInRTStructure")) &&
 		fPm->GetBooleanParameter(GetFullParmName("SetBinToMinusOneIfNotInRTStructure"))) {
 		if (fComponent->OriginalComponent()) {
-			G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+			G4cerr << "OpenTOPAS is exiting due to a serious error in scoring." << G4endl;
 			G4cerr << "The parameter " << GetFullParmName("SetBinToMinusOneIfNotInRTStructure") << G4endl;
 			G4cerr << "Can not be used when the scoring component is a parallel world copy." << G4endl;
 			fPm->AbortSession(1);
@@ -232,7 +232,7 @@ void TsVScorer::GetAppropriatelyBinnedCopyOfComponent(G4String componentName)
 	componentNameLower.toLower();
 #endif
 	if (componentNameLower == "world") {
-		G4cerr << "Topas is exiting due to a serious error in scoring setup." << G4endl;
+		G4cerr << "OpenTOPAS is exiting due to a serious error in scoring setup." << G4endl;
 		G4cerr << GetName() << " is attempting to score in the World component." << G4endl;
 		G4cerr << "This is the one component that can not have scorers." << G4endl;
 		fPm->AbortSession(1);
@@ -247,13 +247,13 @@ void TsVScorer::GetAppropriatelyBinnedCopyOfComponent(G4String componentName)
 #endif
 	if (componentType == "group") {
 		if (fIsSurfaceScorer) {
-			G4cerr << "Topas is exiting due to a serious error in scoring setup." << G4endl;
+			G4cerr << "OpenTOPAS is exiting due to a serious error in scoring setup." << G4endl;
 			G4cerr << GetName() << " is attempting to set up a Surface Scorer in the Group component: " << componentName << G4endl;
 			G4cerr << "Group components do not have any surfaces." << G4endl;
 			fPm->AbortSession(1);
 		} else if (!(fPm->ParameterExists(GetFullParmName("PropagateToChildren"))) ||
 				   !(fPm->GetBooleanParameter(GetFullParmName("PropagateToChildren")))) {
-			G4cerr << "Topas is exiting due to a serious error in scoring setup." << G4endl;
+			G4cerr << "OpenTOPAS is exiting due to a serious error in scoring setup." << G4endl;
 			G4cerr << GetName() << " is attempting to set up Volume Scorer in the Group component: " << componentName << G4endl;
 			G4cerr << "Group components can only have Volume Scoring if the scorer also has PropagateToChildren" << G4endl;
 			G4cerr << "since a Group comonent has no volume of its own." << G4endl;
@@ -263,7 +263,7 @@ void TsVScorer::GetAppropriatelyBinnedCopyOfComponent(G4String componentName)
 
 	fComponent = fGm->GetComponent(componentName);
 	if (!fComponent) {
-		G4cerr << "Topas is exiting due to a serious error in scoring setup." << G4endl;
+		G4cerr << "OpenTOPAS is exiting due to a serious error in scoring setup." << G4endl;
 		G4cerr << GetName() << " has unfound component:" << componentName << G4endl;
 		fPm->AbortSession(1);
 	}
@@ -700,7 +700,7 @@ void TsVScorer::InstantiateSubScorer(G4String quantityName, G4String outFileName
 	G4String subScorerKey = identifier.empty() ? quantityName : identifier;
 
 	if (fSubScorers.count(subScorerKey) > 0) {
-		G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+		G4cerr << "OpenTOPAS is exiting due to a serious error in scoring." << G4endl;
 		G4cerr << "Scorer " << GetName() << " attempted to instantiate multiple" << G4endl;
 		G4cerr << quantityName << " sub-scorers with the identifier " << subScorerKey << G4endl;
 		fPm->AbortSession(1);
@@ -718,7 +718,7 @@ void TsVScorer::InstantiateSubScorer(G4String quantityName, G4String outFileName
 		if (!G4Threading::IsWorkerThread()) {
 		#endif
 			if (fPm->ParameterExists("Sc/" + subScorerName + "/Quantity")) {
-				G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+				G4cerr << "OpenTOPAS is exiting due to a serious error in scoring." << G4endl;
 				G4cerr << "Scorer " << GetName() << " attempted to instantiate a " << quantityName << " sub-scorer" << G4endl;
 				G4cerr << "called " << subScorerName << ", but this scorer already exists." << G4endl;
 				fPm->AbortSession(1);
@@ -772,7 +772,7 @@ void TsVScorer::LinkReferencedSubScorers()
 			}
 		}
 		if (!subScorer) {
-			G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+			G4cerr << "OpenTOPAS is exiting due to a serious error in scoring." << G4endl;
 			G4cerr << "Unable to find " << GetFullParmName(G4String("ReferencedSubScorer_" + subScorerKey)) << ": " << subScorerName << G4endl;
 			if (matchedScorers.size() > 0)
 				G4cerr << "This may be because SplitByTimeFeature and/or OutputAfterRun" << G4endl;
@@ -780,7 +780,7 @@ void TsVScorer::LinkReferencedSubScorers()
 			fPm->AbortSession(1);
 		}
 		if (subScorer->GetQuantity() != quantityName) {
-			G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+			G4cerr << "OpenTOPAS is exiting due to a serious error in scoring." << G4endl;
 			G4cerr << GetFullParmName(G4String("ReferencedSubScorer_" + subScorerKey)) << " is not a " << quantityName << " scorer." << G4endl;
 			fPm->AbortSession(1);
 		}
@@ -794,7 +794,7 @@ TsVScorer* TsVScorer::GetSubScorer(const G4String& key)
 {
 	std::map<G4String, TsVScorer*>::iterator it = fSubScorers.find(key);
 	if (it == fSubScorers.end()) {
-		G4cerr << "Topas is exiting due to a serious error in scoring setup." << G4endl;
+		G4cerr << "OpenTOPAS is exiting due to a serious error in scoring setup." << G4endl;
 		G4cerr << "Unable to find " << key << " sub-scorer for scorer: " << GetName() << G4endl;
 		fPm->AbortSession(1);
 	}
@@ -865,13 +865,13 @@ G4int TsVScorer::GetIndex(G4Step* aStep)
 
 G4int TsVScorer::GetBin(G4int index, G4int iBin) {
 	if (index < 0) {
-		G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+		G4cerr << "OpenTOPAS is exiting due to a serious error in scoring." << G4endl;
 		G4cerr << "The scorer named " << GetName() << " is calling GetBin with a negative index." << G4endl;
 		fPm->AbortSession(1);
 	}
 
 	if (iBin < 0 || iBin > 2) {
-		G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+		G4cerr << "OpenTOPAS is exiting due to a serious error in scoring." << G4endl;
 		G4cerr << "The scorer named " << GetName() << " is calling GetBin with an incorrect bin number." << G4endl;
 		G4cerr << "The bin number can only be 0, 1 or 2." << G4endl;
 		fPm->AbortSession(1);
@@ -894,7 +894,7 @@ G4Material* TsVScorer::GetMaterial(const char* c) {
 G4bool TsVScorer::IsSelectedSurface(G4Step* theStep)
 {
 	if (!fIsSurfaceScorer) {
-		G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+		G4cerr << "OpenTOPAS is exiting due to a serious error in scoring." << G4endl;
 		G4cerr << "Scorer name: " << GetName() << " is a volume scorer" << G4endl;
 		G4cerr << "but uses the method IsSelectedSurface()" << G4endl;
 		fPm->AbortSession(1);
@@ -949,7 +949,7 @@ G4bool TsVScorer::IsSelectedSurface(G4Step* theStep)
 G4double TsVScorer::GetAreaOfSelectedSurface(G4Step* aStep)
 {
 	if (!fIsSurfaceScorer) {
-		G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+		G4cerr << "OpenTOPAS is exiting due to a serious error in scoring." << G4endl;
 		G4cerr << "Scorer name: " << GetName() << " is a volume scorer" << G4endl;
 		G4cerr << "but uses the method GetAreaOfSelectedSurface()" << G4endl;
 		fPm->AbortSession(1);
@@ -989,7 +989,7 @@ G4int TsVScorer::GetDirection()
 
 void TsVScorer::OutOfRange(G4String parameterName, G4String requirement)
 {
-	G4cerr << "Topas is exiting due to a serious error." << G4endl;
+	G4cerr << "OpenTOPAS is exiting due to a serious error." << G4endl;
 	G4cerr << parameterName << " " << requirement << G4endl;
 	fPm->AbortSession(1);
 }

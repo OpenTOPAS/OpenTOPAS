@@ -43,7 +43,7 @@ TsImagingToMaterialByTagNumber::TsImagingToMaterialByTagNumber(TsParameterManage
 	G4int numberOfMaterials = fPm->GetVectorLength(GetFullParmName("MaterialTagNumbers"));
 
 	if (fPm->GetVectorLength(GetFullParmName("MaterialNames")) != numberOfMaterials) {
-		G4cerr << "Topas is exiting due to a serious error." << G4endl;
+		G4cerr << "OpenTOPAS is exiting due to a serious error." << G4endl;
 		G4cerr << "The length of the vector paremeter " << GetFullParmName("MaterialTagNumbers") << G4endl;
 		G4cerr << "does not match the length of the vector paremeter " << GetFullParmName("MaterialNames") << G4endl;
 		fPm->AbortSession(1);
@@ -89,7 +89,7 @@ unsigned short TsImagingToMaterialByTagNumber::AssignMaterial(std::vector< signe
 	std::map<G4int, unsigned short>::iterator it = fMapTagNumberToMaterialListIndex->find((*imagingValues)[0]);
 	
 	if(it == fMapTagNumberToMaterialListIndex->end()) {
-		G4cerr << "Topas is exiting due to a serious error." << G4endl;
+		G4cerr << "OpenTOPAS is exiting due to a serious error." << G4endl;
 		G4cerr << "The ImageCube contains the material tag number: " << (*imagingValues)[0] << G4endl;
 		G4cerr << "However this tag number does not appear in " << GetFullParmName("MaterialTagNumbers") << G4endl;
 		fPm->AbortSession(1);

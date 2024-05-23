@@ -46,7 +46,7 @@ TsNtupleBinary::~TsNtupleBinary()
 
 void TsNtupleBinary::RegisterColumnS(G4String*, const G4String&)
 {
-	G4cerr << "Topas is exiting due to a serious error in file output." << G4endl;
+	G4cerr << "OpenTOPAS is exiting due to a serious error in file output." << G4endl;
 	G4cerr << "Binary output is unable to support strings." << G4endl;
 	fPm->AbortSession(1);
 }
@@ -57,7 +57,7 @@ void TsNtupleBinary::WriteBuffer()
 	std::ofstream outFile(fPathData, std::ios::app|std::ios::binary);
 
 	if (!outFile.good()) {
-		G4cerr << "Topas is exiting due to a serious error in file output." << G4endl;
+		G4cerr << "OpenTOPAS is exiting due to a serious error in file output." << G4endl;
 		G4cerr << "Output file: " << fPathData << " cannot be opened" << G4endl;
 		fPm->AbortSession(1);
 	}
@@ -90,7 +90,7 @@ void TsNtupleBinary::WriteBuffer()
 				iColI8++;
 			} else {
 				outFile.close();
-				G4cerr << "Topas is exiting due to a serious error in file output." << G4endl;
+				G4cerr << "OpenTOPAS is exiting due to a serious error in file output." << G4endl;
 				G4cerr << "A column could not be found in buffer" << G4endl;
 				fPm->AbortSession(1);
 			}
@@ -130,7 +130,7 @@ void TsNtupleBinary::GenerateColumnDescription()
 			desc << "i" << size << ": " << fNamesI8.find(iCol)->second << G4endl;
 			nBytes += size;
 		} else {
-			G4cerr << "Topas is exiting due to a serious error in file output." << G4endl;
+			G4cerr << "OpenTOPAS is exiting due to a serious error in file output." << G4endl;
 			G4cerr << "A column could not be found" << G4endl;
 			fPm->AbortSession(1);
 		}

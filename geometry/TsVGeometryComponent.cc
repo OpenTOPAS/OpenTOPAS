@@ -243,7 +243,7 @@ void TsVGeometryComponent::InstantiateAndConstructChild(G4String childName) {
 
 			G4int nDivisions = fDivisionCounts[0] * fDivisionCounts[1] * fDivisionCounts[2];
 			if (nDivisions > 1 && (!childIsParallel || (childIsParallel && fIsParallel))) {
-				G4cerr << "Topas is exiting due to a serious error." << G4endl;
+				G4cerr << "OpenTOPAS is exiting due to a serious error." << G4endl;
 				G4cerr << "Attempt to instantiate child: " << childName << " inside divided component: " << fName << G4endl;
 				G4cerr << "This is only permitted if the child is in a parallel world and parent is not." << G4endl;
 				fPm->AbortSession(1);
@@ -253,7 +253,7 @@ void TsVGeometryComponent::InstantiateAndConstructChild(G4String childName) {
 				child->Construct();
 
 				if (!(child->fIsGroup) && !(child->fEnvelopeLog)) {
-					G4cerr << "Topas is exiting due to a serious error in geometry setup." << G4endl;
+					G4cerr << "OpenTOPAS is exiting due to a serious error in geometry setup." << G4endl;
 					G4cerr << "Something seems to be wrong in the C++ code used to build the component named: " << childName << G4endl;
 					G4cerr << "The class has failed to fill the base class variable fEnvelopeLog." << G4endl;
 					G4cerr << "A common cause of this is that the class has defined its own local copy of fEnvelopeLog." << G4endl;
@@ -263,7 +263,7 @@ void TsVGeometryComponent::InstantiateAndConstructChild(G4String childName) {
 				}
 
 				if (!(child->fEnvelopePhys)) {
-					G4cerr << "Topas is exiting due to a serious error in geometry setup." << G4endl;
+					G4cerr << "OpenTOPAS is exiting due to a serious error in geometry setup." << G4endl;
 					G4cerr << "Something seems to be wrong in the C++ code used to build the component named: " << childName << G4endl;
 					G4cerr << "The class has failed to fill the base class variable fEnvelopePhys." << G4endl;
 					G4cerr << "A common cause of this is that the class has defined its own local copy of fEnvelopePhys." << G4endl;
@@ -315,7 +315,7 @@ void TsVGeometryComponent::InstantiateAndConstructChild(G4String childName) {
 							size_t pos = componentPlusSurface.find_last_of("/");
 							componentName = componentPlusSurface.substr(0,pos);
 						} else {
-							G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+							G4cerr << "OpenTOPAS is exiting due to a serious error in scoring." << G4endl;
 							G4cerr << "Scorer: " << scorerParmNameBase << " does not specify Component or Surface." << G4endl;
 							fPm->AbortSession(1);
 						}
@@ -425,7 +425,7 @@ void TsVGeometryComponent::InstantiateFields() {
 				} else if ( fieldType == "uniformelectromagnetic") {
 					electroMagneticField = new TsElectroMagneticFieldUniform(fPm, fGm, this);
 				} else if (fieldType != "none") {
-					G4cerr << "Topas is exiting due to a serious error." << G4endl;
+					G4cerr << "OpenTOPAS is exiting due to a serious error." << G4endl;
 					G4cerr << "Component: " << GetName() << " has unknown Field value: " << fieldType << G4endl;
 					fPm->AbortSession(1);
 				}
@@ -624,7 +624,7 @@ G4String TsVGeometryComponent::GetResolvedMaterialName(G4String& subComponentNam
 	else if (fPm->ParameterExists(GetFullParmName(subComponentName, "ImagingToMaterialConverter")))
 		materialName = "parent";
 	else {
-		G4cerr << "Topas is exiting due to a serious error." << G4endl;
+		G4cerr << "OpenTOPAS is exiting due to a serious error." << G4endl;
 		G4cerr << "Unable to find Parameter name: " << parmName << G4endl;
 		fPm->AbortSession(1);
 	}
@@ -702,7 +702,7 @@ G4LogicalVolume* TsVGeometryComponent::CreateLogicalVolume(G4String& subComponen
 	// If defined, set Max Step Size
 	if (!fIsCopy && fPm->ParameterExists(GetFullParmName(subComponentName, "MaxStepSize"))) {
 		if (fIsParallel) {
-			G4cerr << "Topas is exiting due to a serious error in definition of geometry component: " << GetName() << G4endl;
+			G4cerr << "OpenTOPAS is exiting due to a serious error in definition of geometry component: " << GetName() << G4endl;
 			G4cerr << "Components in parallel worlds may not have MaxStepSize." << G4endl;
 			fPm->AbortSession(1);
 		}
@@ -905,7 +905,7 @@ void TsVGeometryComponent::CheckForOverlaps(G4VPhysicalVolume* pvol) {
 
 		if (pvol->CheckOverlaps(resolution, tolerance)) {
 			if (!fPm->GetBooleanParameter("Ts/UseQt") && fPm->GetBooleanParameter("Ge/QuitIfOverlapDetected")) {
-				G4cerr << "Topas is quitting due to the above geometry overlap problem." << G4endl;
+				G4cerr << "OpenTOPAS is quitting due to the above geometry overlap problem." << G4endl;
 				G4cerr << "Simulation results can not be trusted when any overlap exists." << G4endl;
 				G4cerr << "If you still want the TOPAS session to continue" << G4endl;
 				G4cerr << "(such as to use visualization to study the overlap),"  << G4endl;
@@ -913,7 +913,7 @@ void TsVGeometryComponent::CheckForOverlaps(G4VPhysicalVolume* pvol) {
 				fPm->AbortSession(1);
 			} else {
 				G4cerr << "Since you have set the parameter Ge/QuitIfOverlapDetected to False" << G4endl;
-				G4cerr << "Topas is continuing despite the above geometry overlap problem." << G4endl;
+				G4cerr << "OpenTOPAS is continuing despite the above geometry overlap problem." << G4endl;
 				G4cerr << "However simulation results can not be trusted when any overlap exists." << G4endl;
 				G4cerr << "In general, the parameter Ge/QuitIfOverlapDetected should be left at its default value of True." << G4endl;
 				fPm->NoteGeometryOverlap(true);
@@ -932,7 +932,7 @@ void TsVGeometryComponent::SetLogicalVolumeToBeSensitive(G4LogicalVolume* lvol){
 // Component is a parallel scoring copy. Set number of divisions, overriding values that came from the parameter file
 void TsVGeometryComponent::SetParallelScoringCopyDivisions(G4int* nDivisions) {
 	if (!fIsDividable && (nDivisions[0]!=1 || nDivisions[1]!=1 || nDivisions[2]!=1)) {
-		G4cerr << "Topas is exiting due to a serious error." << G4endl;
+		G4cerr << "OpenTOPAS is exiting due to a serious error." << G4endl;
 		G4cerr << "A scorer is attempting to divide a component that is not dividable: " << fName << G4endl;
 		fPm->AbortSession(1);
 	}
@@ -975,7 +975,7 @@ void TsVGeometryComponent::BeginConstruction() {
 
 	// Components in mass world are forbidden to have parent components in a parallel world
 	if ( !fIsParallel && fParentComponent && fParentComponent->IsParallel() ) {
-		G4cerr << "Topas is exiting due to a serious error attempting to construct component: " << fName << G4endl;
+		G4cerr << "OpenTOPAS is exiting due to a serious error attempting to construct component: " << fName << G4endl;
 		G4cerr << "Components in mass world are forbidden to have parent components in a parallel world" << G4endl;
 		fPm->AbortSession(1);
 	}
@@ -1226,7 +1226,7 @@ G4VisAttributes* TsVGeometryComponent::GetVisAttributes(G4String subComponentNam
 				visAtt->SetForceNumberOfCloudPoints(fPm->GetIntegerParameter(GetFullParmName(subComponentName, "NumberOfCloudPoints")));
 		}
 		else {
-			G4cerr << "Topas is exiting due to a serious error attempting to construct component: " << fName << G4endl;
+			G4cerr << "OpenTOPAS is exiting due to a serious error attempting to construct component: " << fName << G4endl;
 			G4cerr << "DrawingStyle has unknown value: " << fPm->GetStringParameter(GetFullParmName(subComponentName, "DrawingStyle")) << G4endl;
 			fPm->AbortSession(1);
 		}
@@ -1466,7 +1466,7 @@ TsVGeometryComponent::SurfaceType TsVGeometryComponent::GetSurfaceID(G4String su
 	surfaceNameLower.toLower();
 #endif
 	if (surfaceNameLower!="anysurface") {
-		G4cerr << "Topas is exiting due to a serious error." << G4endl;
+		G4cerr << "OpenTOPAS is exiting due to a serious error." << G4endl;
 		G4cerr << "TsVGeometryComponent::GetSurfaceID called for surface: " << surfaceName <<
 		" of a component that does not have any specific surfaces designated: " << fName << G4endl;
 		fPm->AbortSession(1);
@@ -1509,7 +1509,7 @@ G4bool TsVGeometryComponent::IsOnBoundary(G4ThreeVector, G4VSolid*, SurfaceType)
 
 
 G4double TsVGeometryComponent::GetAreaOfSelectedSurface(G4VSolid*, SurfaceType, G4int, G4int, G4int) {
-	G4cerr << "Topas is exiting due to a serious error." << G4endl;
+	G4cerr << "OpenTOPAS is exiting due to a serious error." << G4endl;
 	G4cerr << "TsVGeometryComponent::GetAreaOfSelectedSurface called for component that does not handle surface scoring: " << fName << G4endl;
 	fPm->AbortSession(1);
 	return 0.;
@@ -1616,7 +1616,7 @@ G4bool TsVGeometryComponent::IsInNamedStructure(G4int structureID, const G4Step*
 
 G4bool TsVGeometryComponent::IsInNamedStructure(G4int structureID, G4int index) {
 	if (fOriginalComponent) {
-		G4cerr << "Topas is exiting due to a serious error in scoring or filtering." << G4endl;
+		G4cerr << "OpenTOPAS is exiting due to a serious error in scoring or filtering." << G4endl;
 		G4cerr << "TsVGeometryComponent::IsInNamedStructure(G4int structureID, G4int index)" << G4endl;
 		G4cerr << "has been called for a component that is a parallel scoring copy." << G4endl;
 		fPm->AbortSession(1);
@@ -1626,7 +1626,7 @@ G4bool TsVGeometryComponent::IsInNamedStructure(G4int structureID, G4int index) 
 
 
 void TsVGeometryComponent::OutOfRange(G4String parameterName, G4String requirement) {
-	G4cerr << "Topas is exiting due to a serious error." << G4endl;
+	G4cerr << "OpenTOPAS is exiting due to a serious error." << G4endl;
 	G4cerr << parameterName << " " << requirement << G4endl;
 	fPm->AbortSession(1);
 }
@@ -1719,7 +1719,7 @@ G4bool TsVGeometryComponent::CanCalculateSurfaceArea() {
 
 
 void TsVGeometryComponent::Quit(const G4String& name, const char* message) {
-	G4cerr << "Topas is exiting due to a serious error in geometry setup." << G4endl;
+	G4cerr << "OpenTOPAS is exiting due to a serious error in geometry setup." << G4endl;
 	G4cerr << "Parameter name: " << name << G4endl;
 	G4cerr << message << G4endl;
 	fPm->AbortSession(1);

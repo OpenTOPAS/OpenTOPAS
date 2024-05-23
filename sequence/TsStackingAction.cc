@@ -103,7 +103,7 @@ void TsStackingAction::NewStage()
 
 
 void TsStackingAction::Quit(G4String name, G4String message) {
-	G4cerr << "Topas is exiting due to a serious error in variance reduction setup." << G4endl;
+	G4cerr << "OpenTOPAS is exiting due to a serious error in variance reduction setup." << G4endl;
 	G4cerr << "Parameter name: " << name << G4endl;
 	G4cerr << message << G4endl;
 	fPm->AbortSession(1);

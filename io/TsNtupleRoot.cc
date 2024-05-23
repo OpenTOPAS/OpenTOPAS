@@ -69,7 +69,7 @@ void TsNtupleRoot::ConfirmCanOpen()
 		return;
 
 	if (fExtensionData.empty()) {
-		G4cerr << "Topas is exiting due to a serious error in file IO." << G4endl;
+		G4cerr << "OpenTOPAS is exiting due to a serious error in file IO." << G4endl;
 		G4cerr << "Encountered file type that does not call SetFileExtensions() in constructor." << G4endl;
 		fPm->AbortSession(1);
 	}
@@ -104,7 +104,7 @@ void TsNtupleRoot::ConfirmCanOpen()
 			fAnalysisManager->CreateNtupleIColumn(fNtupleID, CreateValidBranchName(fNamesI8[iCol]));
 			iColI8++;
 		} else {
-			G4cerr << "Topas is exiting due to a serious error in file output." << G4endl;
+			G4cerr << "OpenTOPAS is exiting due to a serious error in file output." << G4endl;
 			G4cerr << "A column could not be found" << G4endl;
 			fPm->AbortSession(1);
 		}
@@ -147,7 +147,7 @@ void TsNtupleRoot::WriteBuffer()
 				fAnalysisManager->FillNtupleIColumn(fNtupleID, iCol, fBufferI8[iColI8][iRow]);
 				iColI8++;
 			} else {
-				G4cerr << "Topas is exiting due to a serious error in file output." << G4endl;
+				G4cerr << "OpenTOPAS is exiting due to a serious error in file output." << G4endl;
 				G4cerr << "A column could not be found in buffer" << G4endl;
 				fPm->AbortSession(1);
 			}

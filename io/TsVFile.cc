@@ -100,7 +100,7 @@ void TsVFile::SetFileName(G4String newBaseFileName, G4int increment)
 	case EXIT:
 		if (dataExists || (fHasHeader && headerExists)) {
 			G4String foundPath = dataExists ? newPathData : newPathHeader;
-			G4cerr << "Topas is exiting due to a serious error in file IO." << G4endl;
+			G4cerr << "OpenTOPAS is exiting due to a serious error in file IO." << G4endl;
 			G4cerr << "Output file: " << foundPath << " already exists" << G4endl;
 			G4cerr << "If you really want to allow this, specify: " << G4endl;
 			G4cerr << "IfOutputFileAlreadyExists as Overwrite or Increment." << G4endl;
@@ -127,7 +127,7 @@ void TsVFile::ConfirmCanOpen()
 		return;
 
 	if (fExtensionData.empty()) {
-		G4cerr << "Topas is exiting due to a serious error in file IO." << G4endl;
+		G4cerr << "OpenTOPAS is exiting due to a serious error in file IO." << G4endl;
 		G4cerr << "Encountered file type that does not call SetFileExtensions() in constructor." << G4endl;
 		fPm->AbortSession(1);
 	}
@@ -139,7 +139,7 @@ void TsVFile::ConfirmCanOpen()
 
 	if (!dataWriteable || (fHasHeader && !headerWriteable)) {
 		G4String unwriteablePath = !dataWriteable ? fPathData : fPathHeader;
-		G4cerr << "Topas is exiting due to a serious error in file IO." << G4endl;
+		G4cerr << "OpenTOPAS is exiting due to a serious error in file IO." << G4endl;
 		G4cerr << "Cannot write to output file: " << unwriteablePath << G4endl;
 		fPm->AbortSession(1);
 	}

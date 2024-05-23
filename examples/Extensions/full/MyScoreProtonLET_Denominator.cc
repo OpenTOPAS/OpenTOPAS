@@ -41,7 +41,7 @@ MyScoreProtonLET_Denominator::MyScoreProtonLET_Denominator(TsParameterManager* p
 	} else if (weightType == "fluence" || weightType == "track") {
 		fDoseWeighted = false;
 	} else {
-		G4cerr << "Topas is exiting due to a serious error in scoring setup." << G4endl;
+		G4cerr << "OpenTOPAS is exiting due to a serious error in scoring setup." << G4endl;
 		G4cerr << GetFullParmName("WeightBy") << " refers to an unknown weighting: " << weightType << G4endl;
 		exit(1);
 	}

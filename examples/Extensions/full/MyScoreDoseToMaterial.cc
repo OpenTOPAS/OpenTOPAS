@@ -30,12 +30,12 @@ fEmCalculator()
 		fReferenceMaterial = GetMaterial(materialName);
 
 		if (!fReferenceMaterial) {
-			G4cout << "Topas is exiting due to error in scoring setup." << G4endl;
+			G4cout << "OpenTOPAS is exiting due to error in scoring setup." << G4endl;
 			G4cout << "Unknown material, " << materialName << ", specified in: " << GetFullParmName("Material") << G4endl;
 			exit(1);
 		}
 	} else {
-		G4cout << "Topas is exiting due to error in scoring setup." << G4endl;
+		G4cout << "OpenTOPAS is exiting due to error in scoring setup." << G4endl;
 		G4cout << "Scorer " << GetName() << " has quantity DoseToMaterial" << G4endl;
 		G4cout << "But you have not specified what material." << G4endl;
 		G4cout << "Need a parameter: " << GetFullParmName("Material") << G4endl;

@@ -68,7 +68,7 @@ G4String TsVParameter::GetUnit() {
 
 
 G4int TsVParameter::GetVectorLength() {
-	G4cerr << "Topas is exiting due to a serious error triggered by:" << G4endl;
+	G4cerr << "OpenTOPAS is exiting due to a serious error triggered by:" << G4endl;
 	G4cerr << fPm->GetLastDirectAction() << " for parameter: " << fPm->GetLastDirectParameterName() << G4endl;
 	G4cerr << "Attempt to get vector length from a non-vector parameter.";
 	G4cerr << "Parameter name was: " << fName << " from parameter file: " << fPf->GetFileName() << G4endl;
@@ -167,7 +167,7 @@ void TsVParameter::QuitIfMustBeAbsolute() {
 	}
 
 	if (fTempParameter->MustBeAbsolute()) {
-		G4cerr << "Topas is exiting due to a serious error." << G4endl;
+		G4cerr << "OpenTOPAS is exiting due to a serious error." << G4endl;
 		G4cerr << "Parameter is set in two different include file chains." << G4endl;
 		G4cerr << "This is only allowed if top file sets this parameter to an absolute value (not relative to any other parameters)." << G4endl;
 		G4cerr << "Parameter name was: " << fName << " from parameter file: " << fPf->GetFileName() << G4endl;
@@ -271,7 +271,7 @@ G4int TsVParameter::SafeConvertToInteger(const char* value) {
 	std::istringstream is(value);
 	is >> val;
 	if (is.fail()) {
-		G4cerr << "Topas is exiting due to a serious error triggered by:" << G4endl;
+		G4cerr << "OpenTOPAS is exiting due to a serious error triggered by:" << G4endl;
 		G4cerr << fPm->GetLastDirectAction() << " for parameter: " << fPm->GetLastDirectParameterName() << G4endl;
 		G4cerr << "Parameter name: " << fTempParameter->GetType() << ":" << fName << G4endl;
 		G4cerr << "has out-of-bounds value: " << fTempParameter->GetValue() << G4endl;
@@ -336,7 +336,7 @@ void TsVParameter::CheckUnitAgreement(const G4String& otherParameterName) {
 			return;
 		}
 
-		G4cerr << "Topas is exiting due to a serious error." << G4endl;
+		G4cerr << "OpenTOPAS is exiting due to a serious error." << G4endl;
 		G4cerr << "Parameter name: " << fName << " expects units of: " << fPm->GetUnitCategory(fPf->GetUnitOfParameter(fName)) << G4endl;
 		G4cerr << "But its value is computed from parameter name: " << otherParameterName <<
 		" which has units of: " << fPm->GetUnitCategory(fPf->GetUnitOfParameter(otherParameterName)) << G4endl;
@@ -354,7 +354,7 @@ void TsVParameter::CheckVectorLengthAgreement(const G4String& otherParameterName
 			return;
 		}
 
-		G4cerr << "Topas is exiting due to a serious error." << G4endl;
+		G4cerr << "OpenTOPAS is exiting due to a serious error." << G4endl;
 		G4cerr << "Parameter name: " << fName << " has vector length of: " << fPf->GetVectorLength(fName) << G4endl;
 		G4cerr << "But is being computed from parameter name: " << otherParameterName <<
 		" which has vector length of: " << fPf->GetVectorLength(otherParameterName) << G4endl;
@@ -471,7 +471,7 @@ void TsVParameter::OtherParameterMissing(const char* nameOfOtherParameter) {
 		return;
 	}
 
-	G4cerr << "Topas is exiting due to a serious error triggered by:" << G4endl;
+	G4cerr << "OpenTOPAS is exiting due to a serious error triggered by:" << G4endl;
 	G4cerr << fPm->GetLastDirectAction() << " for parameter: " << fPm->GetLastDirectParameterName() << G4endl;
 	G4cerr << "Parameter name was: " << fName << " from parameter file: " << fPf->GetFileName() << G4endl;
 
@@ -490,7 +490,7 @@ void TsVParameter::WrongType(const char* type) {
 		return;
 	}
 
-	G4cerr << "Topas is exiting due to a serious error triggered by:" << G4endl;
+	G4cerr << "OpenTOPAS is exiting due to a serious error triggered by:" << G4endl;
 	G4cerr << fPm->GetLastDirectAction() << " for parameter: " << fPm->GetLastDirectParameterName() << G4endl;
 	G4cerr << "Attempt to get " << type << " value from a parameter that does not have appropriate type." << G4endl;
 	G4cerr << "Parameter name was: " << fName << " from parameter file: " << fPf->GetFileName() << G4endl;
@@ -505,7 +505,7 @@ void TsVParameter::WrongUnitCategory() {
 		return;
 	}
 
-	G4cerr << "Topas is exiting due to a serious error triggered by:" << G4endl;
+	G4cerr << "OpenTOPAS is exiting due to a serious error triggered by:" << G4endl;
 	G4cerr << fPm->GetLastDirectAction() << " for parameter: " << fPm->GetLastDirectParameterName() << G4endl;
 	G4cerr << "Unit category does not match unit of parent file." << G4endl;
 	G4cerr << "Parameter name was: " << fName << " from parameter file: " << fPf->GetFileName() << G4endl;
@@ -520,7 +520,7 @@ void TsVParameter::MissingUnit() {
 		return;
 	}
 
-	G4cerr << "Topas is exiting due to a serious error triggered by:" << G4endl;
+	G4cerr << "OpenTOPAS is exiting due to a serious error triggered by:" << G4endl;
 	G4cerr << fPm->GetLastDirectAction() << " for parameter: " << fPm->GetLastDirectParameterName() << G4endl;
 	G4cerr << "Unable to find a unit for dimensioned double parameter." << G4endl;
 	G4cerr << "Parameter name was: " << fName << " from parameter file: " << fPf->GetFileName() << G4endl;
@@ -535,7 +535,7 @@ void TsVParameter::UnrecognizedUnit(const G4String& unit) {
 		return;
 	}
 
-	G4cerr << "Topas is exiting due to a serious error triggered by:" << G4endl;
+	G4cerr << "OpenTOPAS is exiting due to a serious error triggered by:" << G4endl;
 	G4cerr << fPm->GetLastDirectAction() << " for parameter: " << fPm->GetLastDirectParameterName() << G4endl;
 	G4cerr << "Unrecognized unit: " << unit << G4endl;
 	G4cerr << "Parameter name was: " << fName << " from parameter file: " << fPf->GetFileName() << G4endl;
@@ -550,7 +550,7 @@ void TsVParameter::VectorCountTooLow() {
 		return;
 	}
 
-	G4cerr << "Topas is exiting due to a serious error triggered by:" << G4endl;
+	G4cerr << "OpenTOPAS is exiting due to a serious error triggered by:" << G4endl;
 	G4cerr << fPm->GetLastDirectAction() << " for parameter: " << fPm->GetLastDirectParameterName() << G4endl;
 	G4cerr << "The first token in a vector parameter was less than 1." << G4endl;
 	G4cerr << "Parameter name was: " << fName << " from parameter file: " << fPf->GetFileName() << G4endl;
@@ -566,7 +566,7 @@ void TsVParameter::WrongSyntax() {
 	}
 
 	G4cerr << "" << G4endl;
-	G4cerr << "Topas is exiting due to a serious error triggered by:" << G4endl;
+	G4cerr << "OpenTOPAS is exiting due to a serious error triggered by:" << G4endl;
 	G4cerr << fPm->GetLastDirectAction() << " for parameter: " << fPm->GetLastDirectParameterName() << G4endl;
 	G4cerr << "Parameter name: " << fTempParameter->GetType() << ":" << fName << G4endl;
 	G4cerr << "has unsupported value: " << fTempParameter->GetValue() << G4endl;

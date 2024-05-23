@@ -54,7 +54,7 @@ TsImagingToMaterialXcat::TsImagingToMaterialXcat(TsParameterManager* pM, TsVGeom
 		
 		std::ifstream infile(fileName);
 		if (!infile) {
-			G4cerr << "Topas is exiting due to a serious error." << G4endl;
+			G4cerr << "OpenTOPAS is exiting due to a serious error." << G4endl;
 			G4cerr << "Unable to open XCAT file: " << fileName << G4endl;
 			fPm->AbortSession(1);
 		} else {
@@ -142,7 +142,7 @@ TsImagingToMaterialXcat::TsImagingToMaterialXcat(TsParameterManager* pM, TsVGeom
 		}
 		
 		if (pixelWidthString == "") {
-			G4cerr << "Topas is exiting due to a serious error." << G4endl;
+			G4cerr << "OpenTOPAS is exiting due to a serious error." << G4endl;
 			G4cerr << "MetaDataFile: " << fileName << " does not specify a pixel width." << G4endl;
 			fPm->AbortSession(1);
 		}
@@ -152,7 +152,7 @@ TsImagingToMaterialXcat::TsImagingToMaterialXcat(TsParameterManager* pM, TsVGeom
 		fVoxelSizeFromMetaDataFile[1] = pixelWidth;
 
 		if (sliceWidthString == "") {
-			G4cerr << "Topas is exiting due to a serious error." << G4endl;
+			G4cerr << "OpenTOPAS is exiting due to a serious error." << G4endl;
 			G4cerr << "MetaDataFile: " << fileName << " does not specify a slice width." << G4endl;
 			fPm->AbortSession(1);
 		}
@@ -161,7 +161,7 @@ TsImagingToMaterialXcat::TsImagingToMaterialXcat(TsParameterManager* pM, TsVGeom
 		fVoxelSizeFromMetaDataFile[2] = sliceWidth;
 
 		if (arraySize == -1) {
-			G4cerr << "Topas is exiting due to a serious error." << G4endl;
+			G4cerr << "OpenTOPAS is exiting due to a serious error." << G4endl;
 			G4cerr << "MetaDataFile: " << fileName << " does not specify an array_size." << G4endl;
 			fPm->AbortSession(1);
 		}
@@ -170,12 +170,12 @@ TsImagingToMaterialXcat::TsImagingToMaterialXcat(TsParameterManager* pM, TsVGeom
 		fNumberOfVoxelsFromMetaDataFile[1] = arraySize;
 		
 		if (startingSlice == -1) {
-			G4cerr << "Topas is exiting due to a serious error." << G4endl;
+			G4cerr << "OpenTOPAS is exiting due to a serious error." << G4endl;
 			G4cerr << "MetaDataFile: " << fileName << " does not specify a starting slice number." << G4endl;
 			fPm->AbortSession(1);
 		}
 		if (endingSlice == -1) {
-			G4cerr << "Topas is exiting due to a serious error." << G4endl;
+			G4cerr << "OpenTOPAS is exiting due to a serious error." << G4endl;
 			G4cerr << "MetaDataFile: " << fileName << " does not specify an ending slice number." << G4endl;
 			fPm->AbortSession(1);
 		}
@@ -301,7 +301,7 @@ unsigned short TsImagingToMaterialXcat::AssignMaterialFloat(std::vector< float >
 				materialName = it->second;
 		
 		if (materialName=="") {
-			G4cerr << "Topas is exiting due to a serious error." << G4endl;
+			G4cerr << "OpenTOPAS is exiting due to a serious error." << G4endl;
 			G4cerr << "No material name has been defined for the value: " << imagingValue << G4endl;
 			if (fHasMetaDataFile)
 				G4cerr << "This was expected to be in the Meta Data File: " <<

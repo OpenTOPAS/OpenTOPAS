@@ -80,7 +80,7 @@ TsGeometryManager::TsGeometryManager(TsParameterManager* pM, TsExtensionManager*
 	fVerbosity = fPm->GetIntegerParameter("Ge/Verbosity");
 
 	if (fPm->ParameterExists("Ge/World/Field")) {
-		G4cerr << "Topas is exiting due to a serious error in geometry setup." << G4endl;
+		G4cerr << "OpenTOPAS is exiting due to a serious error in geometry setup." << G4endl;
 		G4cerr << "The World component has been set to have a Field." << G4endl;
 		G4cerr << "This is not permitted." << G4endl;
 		G4cerr << "If you really want a field around your entire setup," << G4endl;
@@ -288,7 +288,7 @@ void TsGeometryManager::NoteAnyUseOfChangeableParameters(const G4String& name)
 #endif
 
 		if (directParmLower == fCurrentComponent->GetFullParmNameLower("Type")) {
-			G4cerr << "Topas is exiting due to a serious error." << G4endl;
+			G4cerr << "OpenTOPAS is exiting due to a serious error." << G4endl;
 			G4cerr << "The Type parameter of component " << fCurrentComponent->GetNameWithCopyId() << " has been set to depend on a time feature." << G4endl;
 			G4cerr << "This is not permitted." << G4endl;
 			fPm->AbortSession(1);
@@ -340,7 +340,7 @@ void TsGeometryManager::NoteAnyUseOfChangeableParameters(const G4String& name)
 #endif
 
 		if (directParmLower == mComponent->GetFullParmNameLower("Field")) {
-			G4cerr << "Topas is exiting due to a serious error." << G4endl;
+			G4cerr << "OpenTOPAS is exiting due to a serious error." << G4endl;
 			G4cerr << "The Field parameter of component " << mComponent->GetNameWithCopyId() << " has been set to depend on a time feature." << G4endl;
 			G4cerr << "This is not permitted." << G4endl;
 			fPm->AbortSession(1);
@@ -392,7 +392,7 @@ void TsGeometryManager::NoteAnyUseOfChangeableParameters(const G4String& name)
 #endif
 
 		if (directParmLower == mComponent->GetFullParmNameLower("Field")) {
-			G4cerr << "Topas is exiting due to a serious error." << G4endl;
+			G4cerr << "OpenTOPAS is exiting due to a serious error." << G4endl;
 			G4cerr << "The Field parameter of component " << mComponent->GetNameWithCopyId() << " has been set to depend on a time feature." << G4endl;
 			G4cerr << "This is not permitted." << G4endl;
 			fPm->AbortSession(1);
@@ -752,7 +752,7 @@ void TsGeometryManager::RegisterToIgnoreInUnusedComponentCheck(G4String name) {
 
 void TsGeometryManager::SetGeometricalTolerance(G4double newTolerance){
 	G4GeometryManager::GetInstance()->SetWorldMaximumExtent(newTolerance);
-	G4cout << "TOPAS set the tolerances based on the World size to:" << G4endl;
+	G4cout << "OpenTOPAS set the tolerances based on the World size to:" << G4endl;
 	G4cout << "      Surface tolerance = " << G4GeometryTolerance::GetInstance()->GetSurfaceTolerance()/nm
 	<< " nm, and radial tolerance = " << G4GeometryTolerance::GetInstance()->GetRadialTolerance()/nm << " nm." << G4endl;
 }
@@ -912,7 +912,7 @@ G4String TsGeometryManager::GetFullSurfaceParmName(G4String surfaceName, const c
 
 
 void TsGeometryManager::Quit(const G4String& name, const char* message) {
-	G4cerr << "Topas is exiting due to a serious error in surface setup." << G4endl;
+	G4cerr << "OpenTOPAS is exiting due to a serious error in surface setup." << G4endl;
 	G4cerr << "Parameter name: " << name << G4endl;
 	G4cerr << message << G4endl;
 	fPm->AbortSession(1);

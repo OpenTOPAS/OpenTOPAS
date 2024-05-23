@@ -71,7 +71,7 @@ void TsFilterByOrigin::CacheGeometryPointers() {
 			if (volume) {
 				fVolumes.push_back(volume);
 			} else {
-				G4cerr << "Topas is exiting due to a serious error in scoring setup." << G4endl;
+				G4cerr << "OpenTOPAS is exiting due to a serious error in scoring setup." << G4endl;
 				G4cerr << GetName() << " = " << fNames[i] << " refers to an unknown Volume." << G4endl;
 				fPm->AbortSession(1);
 			}
@@ -98,7 +98,7 @@ void TsFilterByOrigin::CacheGeometryPointers() {
 					}
 				}
 			} else {
-				G4cerr << "Topas is exiting due to a serious error in scoring setup." << G4endl;
+				G4cerr << "OpenTOPAS is exiting due to a serious error in scoring setup." << G4endl;
 				G4cerr << GetName() << " = " << fNames[i] << " refers to an unknown Component." << G4endl;
 				fPm->AbortSession(1);
 			}
@@ -138,7 +138,7 @@ G4bool TsFilterByOrigin::Accept(const G4Step* aStep) const {
 
 
 G4bool TsFilterByOrigin::AcceptTrack(const G4Track*) const {
-	G4cerr << "Topas is exiting due to a serious error in source setup." << G4endl;
+	G4cerr << "OpenTOPAS is exiting due to a serious error in source setup." << G4endl;
 	G4cerr << "Sources cannot be filtered by " << GetName() << G4endl;
 	fPm->AbortSession(1);
 	return false;

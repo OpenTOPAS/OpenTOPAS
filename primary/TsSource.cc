@@ -96,7 +96,7 @@ void TsSource::ResolveParameters() {
 	G4String componentName = fPm->GetStringParameter(GetFullParmName("Component"));
 	fComponent = fPsm->GetGeometryManager()->GetComponent(componentName);
 	if (!fComponent) {
-		G4cerr << "Topas is exiting. Particle source: " << fSourceName << G4endl;
+		G4cerr << "OpenTOPAS is exiting. Particle source: " << fSourceName << G4endl;
 		G4cerr <<" has been placed relative to unknown Geometry Component: " << componentName << G4endl;
 		fPm->AbortSession(1);
 	}
@@ -104,7 +104,7 @@ void TsSource::ResolveParameters() {
 	if (fPm->ParameterExists(GetFullParmName("NumberOfHistoriesInRun"))) {
 		fNumberOfHistoriesInRun = fPm->GetIntegerParameter(GetFullParmName("NumberOfHistoriesInRun"));
 		if (fNumberOfHistoriesInRun > 1E9) {
-			G4cerr << "Topas is exiting. Particle source: " << fSourceName << G4endl;
+			G4cerr << "OpenTOPAS is exiting. Particle source: " << fSourceName << G4endl;
 			G4cerr << "has NumberOfHistoriesInRun set greater than 10^9." << G4endl;
 			fPm->AbortSession(1);
 		}

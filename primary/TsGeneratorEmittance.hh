@@ -58,7 +58,7 @@ public:
 
 	inline void SetParameters(G4double a, G4double b, G4double e){
 		if( e <= 0.0 || b <= 0.0 ){
-			G4cerr << "Topas is exiting due to a serious error in beam source setup.. " << G4endl;
+			G4cerr << "OpenTOPAS is exiting due to a serious error in beam source setup." << G4endl;
 				G4cerr << "Emittance and Beta can't be less than zero: " << name << G4endl;
 			exit(1);
 		}

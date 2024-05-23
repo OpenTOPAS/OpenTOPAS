@@ -55,7 +55,7 @@ void TsKillOtherParticles::ResolveParameters() {
 			
 	if (fPm->ParameterExists(GetFullParmName("OnlyTrackParticlesNamed")) &&
 		fPm->ParameterExists(GetFullParmName("OnlyTrackParticlesNotNamed"))) {
-		G4cerr << "Topas is exiting due to error in variance reduction setup." << G4endl;
+		G4cerr << "OpenTOPAS is exiting due to error in variance reduction setup." << G4endl;
 		G4cerr << "Parameter:" << G4endl;
 		G4cerr << GetFullParmName("OnlyTrackParticlesNamed") << G4endl;
 		G4cerr << "is incompatible with parameter:" << G4endl;
@@ -82,7 +82,7 @@ void TsKillOtherParticles::ResolveParameters() {
 	for ( G4int i = 0; i < sizeOfParticleName; i++ ) {
 		TsParticleDefinition resolvedDef = fPm->GetParticleDefinition(fParticleName[i]);
 		if (!resolvedDef.particleDefinition) {// } && ! resolvedDef.isGenericIon) {
-			G4cerr << "Topas is exiting due to error in variance reduction setup." << G4endl;
+			G4cerr << "OpenTOPAS is exiting due to error in variance reduction setup." << G4endl;
 			if (!fInvertFilter)
 				G4cerr << GetFullParmName("OnlyTrackParticlesNamed") + " has unknown particle name: " << fParticleName[i] << G4endl;
 			else

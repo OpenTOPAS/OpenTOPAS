@@ -52,7 +52,7 @@ TsOutcomeModelList::TsOutcomeModelList(TsParameterManager* pm, TsExtensionManage
 {
 	G4String parmPrefix = "Sc/" + fScorerName + "/";
 	if ( fUnitName != "Gy") {
-		G4cerr << "Topas is exiting due to a serious error in outcome scoring setup" << G4endl;
+		G4cerr << "OpenTOPAS is exiting due to a serious error in outcome scoring setup" << G4endl;
 		G4cerr << "Expected the parameter named: " << parmPrefix + "Quantity" << " to have unit category: Dose" << G4endl;
 		G4cerr << "But instead found unit category: " << fPm->GetUnitCategory(fUnitName) << G4endl;
 		fPm->AbortSession(1);
@@ -99,7 +99,7 @@ TsOutcomeModelList::TsOutcomeModelList(TsParameterManager* pm, TsExtensionManage
 			fModelName.push_back(modelName);
 		} else {
 			G4cerr << G4endl;
-			G4cerr << "Topas is exiting due to a serious error in scoring setup." << G4endl;
+			G4cerr << "OpenTOPAS is exiting due to a serious error in scoring setup." << G4endl;
 			G4cerr << parmPrefix + "ModelName" << " refers to an unknown model name: " << modelName << G4endl;
 			fPm->AbortSession(1);
 		}

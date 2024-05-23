@@ -82,7 +82,7 @@ G4VPhysicalVolume* TsCylinder::Construct()
 	if (fPm->ParameterExists(GetFullParmName("VoxelMaterials"))) {
 		G4int nDivisions = fDivisionCounts[0] * fDivisionCounts[1] * fDivisionCounts[2];
 		if (fPm->GetVectorLength(GetFullParmName("VoxelMaterials")) != nDivisions) {
-			G4cerr << "Topas is exiting due to a serious error in geometry setup." << G4endl;
+			G4cerr << "OpenTOPAS is exiting due to a serious error in geometry setup." << G4endl;
 			G4cerr << GetName() << " has " << nDivisions << " voxels," << G4endl;
 			G4cerr << "but " << GetFullParmName("VoxelMaterials") << " has length of " << fPm->GetVectorLength(GetFullParmName("VoxelMaterials")) << G4endl;
 			fPm->AbortSession(1);
@@ -276,7 +276,7 @@ TsVGeometryComponent::SurfaceType TsCylinder::GetSurfaceID(G4String surfaceName)
 		surfaceID = AnySurface;
 	else {
 		surfaceID = None;
-		G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+		G4cerr << "OpenTOPAS is exiting due to a serious error in scoring." << G4endl;
 		G4cerr << "Scorer name: " << GetName() << " has unknown surface name: " << surfaceName << G4endl;
 		fPm->AbortSession(1);
 	}
@@ -328,7 +328,7 @@ G4bool TsCylinder::IsOnBoundary(G4ThreeVector localpos, G4VSolid* solid, Surface
 		}
 
 		default:
-			G4cerr << "Topas is exiting due to a serious error." << G4endl;
+			G4cerr << "OpenTOPAS is exiting due to a serious error." << G4endl;
 			G4cerr << "TsCylinder::IsOnBoundary called for unknown surface of component: " << fName << G4endl;
 			fPm->AbortSession(1);
 			return false;
@@ -365,7 +365,7 @@ G4double TsCylinder::GetAreaOfSelectedSurface(G4VSolid* solid, SurfaceType surfa
 				 + (2. * (r_outer - r_inner) * delta_z);
 
 		default:
-			G4cerr << "Topas is exiting due to a serious error." << G4endl;
+			G4cerr << "OpenTOPAS is exiting due to a serious error." << G4endl;
 			G4cerr << "TsCylinder::GetAreaOfSelectedSurface called for unknown surface of component: " << fName << G4endl;
 			fPm->AbortSession(1);
 			return 0.;
@@ -410,7 +410,7 @@ void TsCylinder::ComputeTransformation(const G4int copyNo, G4VPhysicalVolume* ph
 void TsCylinder::ComputeDimensions(G4Tubs& tubs, const G4int copyNo, const G4VPhysicalVolume* pvol) const
 {
 	if (copyNo < 0) {
-		G4cerr << "Topas is exiting due to a serious error." << G4endl;
+		G4cerr << "OpenTOPAS is exiting due to a serious error." << G4endl;
 		G4cerr << "TsCylinder::ComputeDimensions called for volume: " << pvol->GetName() << " with invalid copyNo: " << copyNo << G4endl;
 		fPm->AbortSession(1);
 	}

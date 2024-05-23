@@ -64,7 +64,7 @@ void TsFilterByType::ResolveParameters() {
 		TsParticleDefinition resolvedDef = fPm->GetParticleDefinition(particleNames[i]);
 
 		if (!resolvedDef.particleDefinition && ! resolvedDef.isGenericIon) {
-			G4cerr << "Topas is exiting due to a serious error in filter setup." << G4endl;
+			G4cerr << "OpenTOPAS is exiting due to a serious error in filter setup." << G4endl;
 			G4cerr << GetName() << " = " << particleNames[i] << " refers to an unknown particle type." << G4endl;
 			fPm->AbortSession(1);
 		}
@@ -89,7 +89,7 @@ G4bool TsFilterByType::Accept(const G4Step* aStep) const {
 
 G4bool TsFilterByType::AcceptTrack(const G4Track* aTrack) const {
 	if (fIncludeAncestors) {
-		G4cerr << "Topas is exiting due to a serious error in source setup." << G4endl;
+		G4cerr << "OpenTOPAS is exiting due to a serious error in source setup." << G4endl;
 		G4cerr << "Sources cannot be filtered by " << GetName() << G4endl;
 		fPm->AbortSession(1);
 	}

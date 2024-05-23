@@ -51,7 +51,7 @@ TsVNtupleScorer::TsVNtupleScorer(TsParameterManager* pM, TsMaterialManager* mM, 
 	fOutFile = fileHub.InstantiateFile(fPm, fEm, fOutFileName, fOutFileMode, fOutFileType, masterFile);
 	fNtuple = dynamic_cast<TsVNtuple*>(fOutFile);
 	if (!fNtuple) {
-		G4cerr << "Topas is exiting due to a serious error in scoring setup." << G4endl;
+		G4cerr << "OpenTOPAS is exiting due to a serious error in scoring setup." << G4endl;
 		G4cerr << "The scorer named " << GetName() << " has unsupported OutputType: " << fOutFileType << G4endl;
 		G4cerr << "Ntuple OutputType must be ASCII, Binary or ROOT." << G4endl;
 		G4cerr << "Phasespace scorers can additionally be of Limited OutputType." << G4endl;
@@ -63,7 +63,7 @@ TsVNtupleScorer::TsVNtupleScorer(TsParameterManager* pM, TsMaterialManager* mM, 
 
 	G4String parmName = GetFullParmName("RepeatSequenceUntilSumGreaterThan");
 	if (fPm->ParameterExists(parmName)) {
-		G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+		G4cerr << "OpenTOPAS is exiting due to a serious error in scoring." << G4endl;
 		G4cerr << "The parameter name: " << parmName << " can not be used since this is an nTuple scorer." << G4endl;
 		G4cerr << "It can only be used with binned scorers." << G4endl;
 		fPm->AbortSession(1);
@@ -71,7 +71,7 @@ TsVNtupleScorer::TsVNtupleScorer(TsParameterManager* pM, TsMaterialManager* mM, 
 
 	parmName = GetFullParmName("RepeatSequenceUntilStandardDeviationLessThan");
 	if (fPm->ParameterExists(parmName)) {
-		G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+		G4cerr << "OpenTOPAS is exiting due to a serious error in scoring." << G4endl;
 		G4cerr << "The parameter name: " << parmName << " can not be used since this is an nTuple scorer." << G4endl;
 		G4cerr << "It can only be used with binned scorers." << G4endl;
 		fPm->AbortSession(1);
@@ -79,7 +79,7 @@ TsVNtupleScorer::TsVNtupleScorer(TsParameterManager* pM, TsMaterialManager* mM, 
 
 	parmName = GetFullParmName("RepeatSequenceUntilCountGreaterThan");
 	if (fPm->ParameterExists(parmName)) {
-		G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+		G4cerr << "OpenTOPAS is exiting due to a serious error in scoring." << G4endl;
 		G4cerr << "The parameter name: " << parmName << " can not be used since this is an nTuple scorer." << G4endl;
 		G4cerr << "It can only be used with binned scorers." << G4endl;
 		fPm->AbortSession(1);
@@ -102,7 +102,7 @@ void TsVNtupleScorer::PostConstructor()
 
 void TsVNtupleScorer::RestoreResultsFromFile()
 {
-	G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+	G4cerr << "OpenTOPAS is exiting due to a serious error in scoring." << G4endl;
 	G4cerr << "Called RestoreResultsFromFile for Scorer name: " << GetName() << G4endl;
 	G4cerr << "but this is an ntuple scorer" << G4endl;
 	fPm->AbortSession(1);

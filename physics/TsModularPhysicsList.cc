@@ -225,7 +225,7 @@ void TsModularPhysicsList::AddModule(const G4String& name)
 
 	if (iter != fPhysicsTable.end()) {
 		if (fTransportationOnly && fNumberBuilt > 0) {
-			G4cerr << "Topas is exiting due to a serious error in physics setup." << G4endl;
+			G4cerr << "OpenTOPAS is exiting due to a serious error in physics setup." << G4endl;
 			G4cerr << "When Transportation_Only is in your Module parameter, no other modules are allowed." << G4endl;
 			fPm->AbortSession(1);
 		}
@@ -236,7 +236,7 @@ void TsModularPhysicsList::AddModule(const G4String& name)
 		fNumberBuilt++;
 	}
 	else {
-		G4cerr << "Topas is exiting due to a serious error in physics setup." << G4endl;
+		G4cerr << "OpenTOPAS is exiting due to a serious error in physics setup." << G4endl;
 		G4cerr << "Attempt to register unknown module, " << name << ", in your physics list." << G4endl;
 		fPm->AbortSession(1);
 	}
@@ -251,7 +251,7 @@ void TsModularPhysicsList::ConstructProcess()
 #endif
 
 	if (fNumberBuilt == 0) {
-		G4cerr << "Topas is exiting due to a serious error in physics setup." << G4endl;
+		G4cerr << "OpenTOPAS is exiting due to a serious error in physics setup." << G4endl;
 		G4cerr << "Geant4_Modular physics list requires at least one value in: " << GetFullParmName("Modules") << G4endl;
 		fPm->AbortSession(1);
 	}
@@ -303,7 +303,7 @@ void TsModularPhysicsList::AddTransportationAndParallelScoring()
 	if (fGm->HaveParallelComponentsThatAreNotGroups()) {
 		// Chemistry does not support parallel world physics
 		if (fPm->NeedsChemistry()) {
-			G4cerr << "Topas is exiting due to a serious error in physics setup." << G4endl;
+			G4cerr << "OpenTOPAS is exiting due to a serious error in physics setup." << G4endl;
 			G4cerr << "The geometry is asking for creation of a parallel world" << G4endl;
 			G4cerr << "(either because some component explicitly has IsParallel set true, or because" << G4endl;
 			G4cerr << "some scorer is asking for different geometry divisions than its component)." << G4endl;
@@ -354,7 +354,7 @@ void TsModularPhysicsList::AddTransportationAndParallelScoring()
 					found = true;
 
 			if (!found) {
-				G4cerr << "Topas is exiting due to a serious error in physics setup." << G4endl;
+				G4cerr << "OpenTOPAS is exiting due to a serious error in physics setup." << G4endl;
 				G4cerr << "Parallel world " << *it << " has material," << G4endl;
 				G4cerr << "but this world not specified in the parameter " << GetFullParmName("LayeredMassGeometryWorlds") << G4endl;
 				fPm->AbortSession(1);
@@ -384,7 +384,7 @@ void TsModularPhysicsList::AddTransportationAndParallelScoring()
 					found = true;
 
 			if (!found) {
-				G4cerr << "Topas is exiting due to a serious error in physics setup." << G4endl;
+				G4cerr << "OpenTOPAS is exiting due to a serious error in physics setup." << G4endl;
 				G4cerr << GetFullParmName("LayeredMassGeometryWorlds") << G4endl;
 				G4cerr << "includes a world that does not exist: " << layeredMassWorlds[iLayeredMassWorld] << G4endl;
 				G4cerr << "The only known worlds are:" << G4endl;
@@ -584,7 +584,7 @@ void TsModularPhysicsList::ActiveG4DNAPerRegion(G4String moduleName)
 
 	if (fPm->ParameterExists(GetFullParmName("ActiveG4DNAInRegionsNamed"))) {
 		if (moduleName.substr(0, 8) == "g4em-dna") {
-			G4cerr << "Topas is exiting due to a serious error in modular physics setup." << G4endl;
+			G4cerr << "OpenTOPAS is exiting due to a serious error in modular physics setup." << G4endl;
 			G4cerr << "Parameter name: " << GetFullParmName("ActiveG4DNAInRegionsNamed") << G4endl;
 			G4cerr << "Cannot be used if g4em-dna or g4em-dna_optN is used in the physics modules" << G4endl;
 			fPm->AbortSession(1);
@@ -662,7 +662,7 @@ void TsModularPhysicsList::ActiveG4EmModelPerRegion(G4String moduleName)
 						// and add this physics name to the region through the G4EmParameters.
 						iter = LocatePhysicsModel(emModel, true);
 						if (iter == fPhysicsTable.end()) {
-							G4cerr << "Topas is exiting due to a serious error in modular physics setup." << G4endl;
+							G4cerr << "OpenTOPAS is exiting due to a serious error in modular physics setup." << G4endl;
 							G4cerr << "Parameter name: " << GetFullParmName("ForRegion") + "/" + aRegionName + "/" + "ActiveG4EmModelFromModule" << G4endl;
 							G4cerr << "Physics module: " << emModel << " was not found." << G4endl;
 							fPm->AbortSession(1);
@@ -711,7 +711,7 @@ void TsModularPhysicsList::ActiveG4EmModelPerRegion(G4String moduleName)
 							if (activatorNameLower.find("activator") == std::string::npos) {
 								G4cout << G4endl;
 								G4cout << "WARNING in TsModularPhysicsList::ActiveG4EmModelPerRegion" << G4endl;
-								G4cout << "Topas requires a physics activator (e.g. G4EmDNAPhysicsActivator)" << G4endl;
+								G4cout << "OpenTOPAS requires a physics activator (e.g. G4EmDNAPhysicsActivator)" << G4endl;
 								G4cout << "to activate different EM DNA models per region." << G4endl;
 								G4cout << GetFullParmName("EmDNAPhysicsActivator") << " is set to " << activatorName << G4endl;
 								G4cout << "This does not look like an activator, but we will use it anyways -- VERIFY YOUR RESULTS" << G4endl;
@@ -723,7 +723,7 @@ void TsModularPhysicsList::ActiveG4EmModelPerRegion(G4String moduleName)
 							if (iter == fPhysicsTable.end()) {
 								G4cout << G4endl;
 								G4cout << "WARNING in TsModularPhysicsList::ActiveG4EmModelPerRegion" << G4endl;
-								G4cout << "Topas could not find the EM DNA physics activator module: " << activatorName << G4endl;
+								G4cout << "OpenTOPAS could not find the EM DNA physics activator module: " << activatorName << G4endl;
 								G4cout << "Specified by: " << GetFullParmName("EmDNAPhysicsActivator") << G4endl;
 								G4cout << "We will use G4EmDNAPhysicsActivator instead." << G4endl;
 								G4cout << "Beware, this requires to use built-in Geant4 EM DNA modules with specific names:" << G4endl;
@@ -734,7 +734,7 @@ void TsModularPhysicsList::ActiveG4EmModelPerRegion(G4String moduleName)
 								iter = LocatePhysicsModel("g4em-dna-activator");
 							}
 							if (iter == fPhysicsTable.end()) {
-								G4cerr << "Topas is exiting due to a serious error in modular physics setup." << G4endl;
+								G4cerr << "OpenTOPAS is exiting due to a serious error in modular physics setup." << G4endl;
 								G4cerr << "Could not locate: " << GetFullParmName("EmDNAPhysicsActivator") + " = " << activatorName << G4endl;
 								G4cerr << "Nor the backup: g4em-dna-activator (G4EmDNAPhysicsActivator)" << G4endl;
 								G4cerr << "Something is really wrong." << G4endl;
@@ -746,14 +746,14 @@ void TsModularPhysicsList::ActiveG4EmModelPerRegion(G4String moduleName)
 							RegisterPhysics(ph);
 							activated = true;
 							if (GetVerboseLevel() > 0) {
-								G4cout << "Topas registered " << activatorName << " as EM DNA physics activator." << G4endl;
+								G4cout << "OpenTOPAS registered " << activatorName << " as EM DNA physics activator." << G4endl;
 							}
 						}
 
 						iter = LocatePhysicsModel(emModel);
 
 						if (iter == fPhysicsTable.end()) {
-							G4cerr << "Topas is exiting due to a serious error in modular physics setup." << G4endl;
+							G4cerr << "OpenTOPAS is exiting due to a serious error in modular physics setup." << G4endl;
 							G4cerr << "Parameter name: " << GetFullParmName("ForRegion") + "/" + aRegionName + "/" + "ActiveG4EmModelFromModule" << G4endl;
 							G4cerr << "Physics module: " << emModel << " was not found." << G4endl;
 							fPm->AbortSession(1);
@@ -784,7 +784,7 @@ void TsModularPhysicsList::SetEmParameters()
 		G4EmParameters::Instance()->SetNumberOfBinsPerDecade(fPm->GetIntegerParameter(GetFullParmName("EMBinsPerDecade")));
 
 	else if (fPm->ParameterExists(GetFullParmName("EMBins")) && fPm->ParameterExists(GetFullParmName("EMBinsPerDecade"))) {
-		G4cerr << "Topas is exiting due to a serious error in physics setup." << G4endl;
+		G4cerr << "OpenTOPAS is exiting due to a serious error in physics setup." << G4endl;
 		G4cerr << GetFullParmName("EMBins") << " and " << GetFullParmName("EMBinsPerDecade") << "are not compatible at the same time." << G4endl;
 		G4cerr << "Remove either of them and re-run Topas." << G4endl;
 		fPm->AbortSession(1);
@@ -798,13 +798,13 @@ void TsModularPhysicsList::SetEmParameters()
 #endif
 
 	if (fPm->ParameterExists(GetFullParmName("dEdXBins"))) {
-		G4cerr << "Topas is exiting due to a serious error in physics setup." << G4endl;
+		G4cerr << "OpenTOPAS is exiting due to a serious error in physics setup." << G4endl;
 		G4cerr << GetFullParmName("dEdXBins") << " is no longer supported in Geant4.10" << G4endl;
 		fPm->AbortSession(1);
 	}
 
 	if (fPm->ParameterExists(GetFullParmName("LambdaBins"))) {
-		G4cerr << "Topas is exiting due to a serious error in physics setup." << G4endl;
+		G4cerr << "OpenTOPAS is exiting due to a serious error in physics setup." << G4endl;
 		G4cerr << GetFullParmName("LambdaBins") << " is no longer supported in Geant4.10" << G4endl;
 		fPm->AbortSession(1);
 	}
@@ -863,7 +863,7 @@ void TsModularPhysicsList::SetEmParameters()
 			G4EmParameters::Instance()->SetMscStepLimitType(fUseDistanceToBoundary);
 		}
 		else {
-			G4cerr << "Topas is exiting due to a serious error in physics setup." << G4endl;
+			G4cerr << "OpenTOPAS is exiting due to a serious error in physics setup." << G4endl;
 			G4cerr << GetFullParmName("MSCStepLimitType") << " refers to an unknown type of step limit for multiplescattering" << G4endl;
 			fPm->AbortSession(1);
 		}
@@ -894,7 +894,7 @@ void TsModularPhysicsList::SetEmParameters()
 			G4EmParameters::Instance()->SetDNAeSolvationSubType(fKreipl2009eSolvation);
 		}
 		else {
-			G4cerr << "Topas is exiting due to a serious error in physics setup." << G4endl;
+			G4cerr << "OpenTOPAS is exiting due to a serious error in physics setup." << G4endl;
 			G4cerr << GetFullParmName("SolvatedElectronThermalizationModel") << " refers to an unknown model" << G4endl;
 			fPm->AbortSession(1);
 		}

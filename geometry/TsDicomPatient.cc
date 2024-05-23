@@ -833,7 +833,7 @@ void TsDicomPatient::CreateDoseGrid() {
     	reader.SetFileName(rtDoseFile.c_str());	
 
 		if(!reader.Read()){
-			G4cerr << "Topas is exiting because of a problem in DICOM setup." << G4endl;
+			G4cerr << "OpenTOPAS is exiting because of a problem in DICOM setup." << G4endl;
 			G4cerr << "Unable to read file: " << rtDoseFile << G4endl;
 			G4cerr << "specified in parameter: " << GetFullParmName("CloneRTDoseGridFrom") << G4endl;
 			fPm->AbortSession(1);

@@ -49,7 +49,7 @@ TsCriticalElementModel::TsCriticalElementModel(TsParameterManager* pM, G4String 
 			fGamma = parameters[0];
 			fTD50 = parameters[1];
 		} else {
-			G4cerr << "Topas is exiting due to a serious error in scoring for outcome setup." << G4endl;
+			G4cerr << "OpenTOPAS is exiting due to a serious error in scoring for outcome setup." << G4endl;
 			G4cerr << organName << " refers to an unknown organ in database" << G4endl;
 			fPm->AbortSession(1);
 		}

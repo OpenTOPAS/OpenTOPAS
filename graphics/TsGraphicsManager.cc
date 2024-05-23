@@ -156,7 +156,7 @@ void TsGraphicsManager::Initialize() {
 #endif
 			if (viewerType == "heprep") {
 				if (haveHepRep) {
-					G4cerr << "Topas is exiting due to error in graphics setup." << G4endl;
+					G4cerr << "OpenTOPAS is exiting due to error in graphics setup." << G4endl;
 					G4cerr << "There can only be one HepRep view per session." << G4endl;
 					fPm->AbortSession(1);
 				} else {

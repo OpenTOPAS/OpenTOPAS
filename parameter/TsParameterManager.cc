@@ -228,7 +228,7 @@ G4double TsParameterManager::GetDoubleParameter(const G4String& stringValue, con
 	G4double result = IGetDoubleParameter(stringValue);
 
 	if (GetUnitCategoryOfParameter(stringValue) != unitCategory) {
-		G4cerr << "Topas is exiting due to a serious error." << G4endl;
+		G4cerr << "OpenTOPAS is exiting due to a serious error." << G4endl;
 		G4cerr << "Expected the parameter named: " << stringValue << " to have unit category: " << unitCategory << G4endl;
 		G4cerr << "But instead found unit category: " << GetUnitCategoryOfParameter(stringValue) << G4endl;
 		AbortSession(1);
@@ -379,7 +379,7 @@ G4double* TsParameterManager::GetDoubleVector(const G4String& stringValue, const
 	G4double* result = IGetDoubleVector(stringValue);
 
 	if (GetUnitCategoryOfParameter(stringValue) != unitCategory) {
-		G4cerr << "Topas is exiting due to a serious error." << G4endl;
+		G4cerr << "OpenTOPAS is exiting due to a serious error." << G4endl;
 		G4cerr << "Expected the parameter named: " << stringValue << " to have unit category: " << unitCategory << G4endl;
 		G4cerr << "But instead found unit category: " << GetUnitCategoryOfParameter(stringValue) << G4endl;
 		AbortSession(1);
@@ -549,13 +549,13 @@ G4TwoVector TsParameterManager::GetTwoVectorParameter(const G4String& stringValu
 	G4double* values = fParameterFile->GetDoubleVector(stringValue);
 
 	if (fParameterFile->GetVectorLength(stringValue) !=2) {
-		G4cerr << "Topas is exiting due to request for a 2Vector from a parameter that does not have appropriate form." << G4endl;
+		G4cerr << "OpenTOPAS is exiting due to request for a 2Vector from a parameter that does not have appropriate form." << G4endl;
 		G4cerr << "Parameter name: " << stringValue << G4endl;
 		AbortSession(1);
 	}
 
 	if (GetUnitCategoryOfParameter(stringValue) != unitCategory) {
-		G4cerr << "Topas is exiting due to a serious error." << G4endl;
+		G4cerr << "OpenTOPAS is exiting due to a serious error." << G4endl;
 		G4cerr << "Expected the parameter named: " << stringValue << " to have unit category: " << unitCategory << G4endl;
 		G4cerr << "But instead found unit category: " << GetUnitCategoryOfParameter(stringValue) << G4endl;
 		AbortSession(1);
@@ -585,13 +585,13 @@ G4ThreeVector TsParameterManager::GetThreeVectorParameter(const G4String& string
 	G4double* values = fParameterFile->GetDoubleVector(stringValue);
 
 	if (fParameterFile->GetVectorLength(stringValue) !=3) {
-		G4cerr << "Topas is exiting due to request for a 3Vector from a parameter that does not have appropriate form." << G4endl;
+		G4cerr << "OpenTOPAS is exiting due to request for a 3Vector from a parameter that does not have appropriate form." << G4endl;
 		G4cerr << "Parameter name: " << stringValue << G4endl;
 		AbortSession(1);
 	}
 
 	if (GetUnitCategoryOfParameter(stringValue) != unitCategory) {
-		G4cerr << "Topas is exiting due to a serious error." << G4endl;
+		G4cerr << "OpenTOPAS is exiting due to a serious error." << G4endl;
 		G4cerr << "Expected the parameter named: " << stringValue << " to have unit category: " << unitCategory << G4endl;
 		G4cerr << "But instead found unit category: " << GetUnitCategoryOfParameter(stringValue) << G4endl;
 		AbortSession(1);
@@ -612,7 +612,7 @@ void TsParameterManager::AddParameter(const G4String& name, const G4String& valu
 		// Need this until we rework Schneider handling to more flexibly handle multiple dicoms
 		if (tempParameter->GetName().substr(0,16)=="Ma/PatientTissue") return;
 
-		G4cerr << "Topas is exiting due to C++ code calling AddParameter for an unchangeable parameter that already exists." << G4endl;
+		G4cerr << "OpenTOPAS is exiting due to C++ code calling AddParameter for an unchangeable parameter that already exists." << G4endl;
 		G4cerr << "Parameter name: " << name << G4endl;
 		G4cerr << "Parameter value: " << value << G4endl;
 		AbortSession(1);
@@ -1223,7 +1223,7 @@ void TsParameterManager::DumpParameters(G4double currentTime, G4bool includeDefa
 	G4int nPadding = GetIntegerParameter("Ts/RunIDPadding");
 	for (G4int index = 1; index < nPadding; index++)
 		if (runID < pow(10,index)) runID_padding += "0";
-	G4String filespec = "TopasParameterDump_Run_" + runID_padding + G4UIcommand::ConvertToString(runID) + ".html";
+	G4String filespec = "OpenTOPASParameterDump_Run_" + runID_padding + G4UIcommand::ConvertToString(runID) + ".html";
 	std::ofstream htmlFile(filespec);
 	if (!htmlFile) {
 		G4cerr << "ERROR: Failed to open file " << filespec << G4endl;
@@ -1390,7 +1390,7 @@ void TsParameterManager::DumpParametersToSimpleFile(G4double currentTime) {
 	G4int nPadding = GetIntegerParameter("Ts/RunIDPadding");
 	for (G4int index = 1; index < nPadding; index++)
 		if (runID < pow(10,index)) runID_padding += "0";
-	G4String filespec = "TopasParameterDump_Run_" + runID_padding + G4UIcommand::ConvertToString(runID) + ".txt";
+	G4String filespec = "OpenTOPASParameterDump_Run_" + runID_padding + G4UIcommand::ConvertToString(runID) + ".txt";
 	std::ofstream outFile(filespec);
 	if (!outFile) {
 		G4cerr << "ERROR: Failed to open file " << filespec << G4endl;
@@ -1519,7 +1519,7 @@ void TsParameterManager::DumpParametersToSemicolonSeparatedFile(G4double current
 	G4int nPadding = GetIntegerParameter("Ts/RunIDPadding");
 	for (G4int index = 1; index < nPadding; index++)
 		if (runID < pow(10,index)) runID_padding += "0";
-	G4String filespec = "TopasParameterDumpSSF_Run_" + runID_padding + G4UIcommand::ConvertToString(runID) + ".txt";
+	G4String filespec = "OpenTOPASParameterDumpSSF_Run_" + runID_padding + G4UIcommand::ConvertToString(runID) + ".txt";
 	std::ofstream outFile(filespec);
 	if (!outFile) {
 		G4cerr << "ERROR: Failed to open file " << filespec << G4endl;
@@ -1860,7 +1860,7 @@ void TsParameterManager::ReadFile(G4String fileSpec, std::ifstream& infile,
 					else if (badChar=='\t') badString = "Tab";
 					else if (badChar=='\n') badString = "Line Feed";
 					else if (badChar=='\r') badString = "Carriage Return";
-					G4cerr << "Topas quitting, parameter name: " << name << " in parameter file:" << fileSpec <<
+					G4cerr << "OpenTOPAS quitting, parameter name: " << name << " in parameter file:" << fileSpec <<
 					" uses the following reserved character in its name: \"" << badString << "\"" << G4endl;
 					AbortSession(1);
 				}
@@ -1874,7 +1874,7 @@ void TsParameterManager::ReadFile(G4String fileSpec, std::ifstream& infile,
 					G4String badString = badChar;
 #endif
 					if (badChar=='\r') badString = "Carriage Return";
-					G4cerr << "Topas quitting, parameter name: " << name << " in parameter file:" << fileSpec <<
+					G4cerr << "OpenTOPAS quitting, parameter name: " << name << " in parameter file:" << fileSpec <<
 					" uses the following reserved character in its value: \"" << badString << "\"" << G4endl;
 					AbortSession(1);
 				}

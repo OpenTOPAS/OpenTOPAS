@@ -48,7 +48,7 @@ TsLKBModel::TsLKBModel(TsParameterManager* pM, G4String parmName)
 			fM = parameters[1];
 			fTD50 = parameters[2];
 		} else {
-			G4cerr << "Topas is exiting due to a serious error in scoring for outcome setup." << G4endl;
+			G4cerr << "OpenTOPAS is exiting due to a serious error in scoring for outcome setup." << G4endl;
 			G4cerr << organName << " refers to an unknown organ in database" << G4endl;
 			fPm->AbortSession(1);
 		}

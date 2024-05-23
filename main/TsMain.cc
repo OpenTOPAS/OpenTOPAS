@@ -68,7 +68,7 @@ TsMain::TsMain(int argc, char** argv)
 
 	// This is the one place in TOPAS that we use std::cout rather than G4cout (G4cout is not available yet).
 	std::cout << std::endl;
-	std::cout << "Welcome to TOPAS, Tool for Particle Simulation (Version " << topasVersion << ")" << std::endl;
+	std::cout << "Welcome to OpenTOPAS, Tool for Particle Simulation (Version " << topasVersion << ")" << std::endl;
 
 	// Instantiate the parameter manager.
 	TsParameterManager* parameterManager= new TsParameterManager(argc, argv, topasVersion);
@@ -99,10 +99,10 @@ TsMain::TsMain(int argc, char** argv)
 	if (parameterManager->ParameterExists("Ts/SeedFile")) {
 		G4cout << "" << G4endl;
 		if (parameterManager->ParameterExists("Ts/SeedDirectory")) {
-			G4cout << "TOPAS reading seed from directory: " << parameterManager->GetStringParameter("Ts/SeedDirectory") << G4endl;
+			G4cout << "OpenTOPAS reading seed from directory: " << parameterManager->GetStringParameter("Ts/SeedDirectory") << G4endl;
 			G4UImanager::GetUIpointer()->ApplyCommand("/random/setDirectoryName " + parameterManager->GetStringParameter("Ts/SeedDirectory"));
 		}
-		G4cout << "TOPAS reading seed from file: " << parameterManager->GetStringParameter("Ts/SeedFile") << G4endl;
+		G4cout << "OpenTOPAS reading seed from file: " << parameterManager->GetStringParameter("Ts/SeedFile") << G4endl;
 		G4UImanager::GetUIpointer()->ApplyCommand("/random/resetEngineFrom " + parameterManager->GetStringParameter("Ts/SeedFile"));
 	}
 
@@ -202,7 +202,7 @@ void setDataEnvVars(G4String dataDirectory)
 
 #else
 	G4cout << "\nUnable to use Ts/G4DataDirectory parameter or TOPAS_G4_DATA_DIR environment variable" << G4endl;
-	G4cout << "as TOPAS does not know the set of data files needed for this Geant4 release." << G4endl;
+	G4cout << "as OpenTOPAS does not know the set of data files needed for this Geant4 release." << G4endl;
 	G4cout << "You should instead set all data file environment variables individually." << G4endl;
 	exit(1);
 #endif
