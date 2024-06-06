@@ -1,7 +1,7 @@
 //
 // ********************************************************************
 // *                                                                  *
-// * Copyright 2024 The OpenTOPAS Collaboration                       *
+// * Copyright 2024 The TOPAS Collaboration                           *
 // * Copyright 2022 The TOPAS Collaboration                           *
 // *                                                                  *
 // * Permission is hereby granted, free of charge, to any person      *
