@@ -89,7 +89,7 @@ If you have not done so already, download the Geant4 data files which correspond
         wget https://cern.ch/geant4-data/datasets/G4TENDL.1.4.tar.gz
         wget ftp://gdo-nuclear.ucllnl.org/LEND_GND1.3/LEND_GND1.3_ENDF.BVII.1.tar.gz
 
-and ecompress them using `tar -zxf`.
+and decompress them using `tar -zxf`.
 
         tar -zxf G4NDL.4.7.tar.gz
         tar -zxf G4EMLOW.8.2.tar.gz
