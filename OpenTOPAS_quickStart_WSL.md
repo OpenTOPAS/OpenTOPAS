@@ -232,6 +232,6 @@ The output should look like this:
 
        cat ~/shellScripts/topas
 
-![image8](./images/WSL_CheckingEnvironment.png)
+![image8](https://github.com/OpenTOPAS/OpenTOPAS_Documentation/blob/8060e85cd1aa68d054f9f3a6df4ae6020f7b3a2c/getting-started/images/WSL_CheckingEnvironment.png)
 
 If there is an additional " or ' anywhere in the output, then make sure to correct it by using vi/nano or any other text editor. Also, make sure that your user is shown in the sections where [naokikondo] appears.
