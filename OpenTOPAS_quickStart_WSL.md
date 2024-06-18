@@ -20,7 +20,7 @@ Open the Windows command prompt by typing
 
 in the Windows search bar. The next image shows the program you should open:
 
-<img src="https://github.com/OpenTOPAS/OpenTOPAS_Documentation/blob/8060e85cd1aa68d054f9f3a6df4ae6020f7b3a2c/getting-started/images/WSL_CMD_Image.png" alt="WSL CMD" width="400px">
+<img src="https://github.com/OpenTOPAS/OpenTOPAS_Documentation/blob/8060e85cd1aa68d054f9f3a6df4ae6020f7b3a2c/getting-started/images/WSL_CMD_Image.png" alt="WSL CMD" width="600px">
 
 ## Step 2 
 
