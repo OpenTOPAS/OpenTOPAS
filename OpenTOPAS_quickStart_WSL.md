@@ -1,17 +1,11 @@
 # QuickStart Guide for WSL
 This page details the steps to be followed by <ins>Windows users</ins> in order to install OpenTOPAS in <ins>WSL</ins> and launch your first simulation. 
 
-```{admonition} Warning
-:class: warning
+> [!WARNING]
+> We recommend Windows 11 or higher since it includes all the visualization libraries built in. We take no responsibility if users encounter an issue with their PCs while following this guide.
 
-We recommend Windows 11 or higher since it includes all the visualization libraries built in. We take no responsibility if users encounter an issue with their PCs while following this guide.
-```
-
-```{admonition} Note
-:class: note
-
-**Steps 1-4 are used to install and prepare your WSL for installation of OpenTOPAS. You can skip steps 1 to 4 if your system has already installed a Debian base Linux distribution in WSL.**
-```
+> [!NOTE]
+> **Steps 1-4 are used to install and prepare your WSL for installation of OpenTOPAS.** You can skip steps 1 to 4 if your system has already installed a Debian based Linux distribution in WSL.
 
 ## Step 1
 Open the Windows command prompt by typing
@@ -28,7 +22,7 @@ Install WSL by typing:
 
         wsl --install
 
-in the Windows command prompt. Accept the pop-up wundows asking for permissions (all software should come from Microsoft itself). The process may take a few minutes. After installation, verify that all components were sucessfully installed by typing the next command:
+in the Windows command prompt. Accept the pop-up windows asking for permissions (all software should come from Microsoft itself). The process may take a few minutes. After installation, verify that all components were sucessfully installed by typing the next command:
 
         wsl --version
 
@@ -39,11 +33,8 @@ The output should look like this after installation and verification:
 ## Step 3
 Install a Linux distribution (Ubuntu, Debian, Suse, Oracle, etc)
 
-```{admonition} Note
-:class: note
-
-**The rest of this guide will assume Ubutnu 24.04 as Linux distribution. Users may use a different distribution but they are responsible for checking out the different commands of each Linux distribution by themselves**
-```
+> [!NOTE]
+> **The rest of this guide will assume Ubuntu 24.04 as Linux distribution. Users may use a different distribution but they are responsible for checking out the different commands of each Linux distribution by themselves.**
 
 To install Ubuntu 24.04, type in the terminal:
 
@@ -53,11 +44,8 @@ Aftwe downloading all the necesary files, it will ask you to create a new user f
 
 ![image3](https://github.com/OpenTOPAS/OpenTOPAS_Documentation/blob/8060e85cd1aa68d054f9f3a6df4ae6020f7b3a2c/getting-started/images/WSL_InstallingUbuntu24.png)
 
-```{admonition} Tip
-:class: tip
-
-To exit the Ubuntu terminal, users can use the "exit" command. Similarly, to access it again, users can type "wsl" or "bash" in the windows command prompt. Users can have multiple Linux distributions installed at the same time in windows. In which case, WSL will ask for the user to specify which distribution to use by providing it's name.
-```
+> [!TIP]
+> To exit the Ubuntu terminal, users can use the "exit" command. Similarly, to access it again, users can type "wsl" or "bash" in the windows command prompt. Users can have multiple Linux distributions installed at the same time in windows. In which case, WSL will ask for the user to specify which distribution to use by providing its name.
 
 ## Step 4
 Update the repositories of the Ubuntu distribution by typing the following commands in the Ubuntu terminal:
@@ -73,11 +61,11 @@ By default, the Ubuntu terminal session will always be located at some "virtual"
 
         /mnt/c/Users/[WindowsUser]
 
-To avoid incorrect directory linking, create and "Applications" folder in the Ubuntu home directory. To do so we will use the following commands:
+To avoid incorrect directory linking, create an "Applications" folder in the Ubuntu home directory. To do so we will use the following commands:
 
         mkdir ~/Applications
 
-To verify that this procedure was successful, move to the home directory and print it's contents by using the next commands:
+To verify that this procedure was successful, move to the home directory and print its contents by using the next commands:
 
         cd $HOME
         ls -l
@@ -101,7 +89,7 @@ Install all the required libraries for Geant4 and TOPAS by using the following c
 
 ## Step 7
 Install Gean4 11.1.3.
-Make sure you are located at the "Applications" folder by doing the following command:
+Make sure you are located in the "Applications" folder by doing the following command:
 
         cd ~/Applications
 
@@ -133,7 +121,7 @@ Now we can finish up the installation of Geant4 by using the following commands:
         make -j10
         make install
 
-Next, download the Geant4 data files. By typing the following commands in the terminal:
+Next, download the Geant4 data files by typing the following commands in the terminal:
 
         cd ~/Applications/GEANT4/G4DATA
         wget https://cern.ch/geant4-data/datasets/G4NDL.4.7.tar.gz
@@ -167,7 +155,7 @@ Then, decompress the files with tar -zxf and clean the folder:
         tar -zxf LEND_GND1.3_ENDF.BVII.1.tar.gz
         rm *tar.gz
 
-Your folder should look like follows:
+Your folder should look as follows:
 
 ![image7](https://github.com/OpenTOPAS/OpenTOPAS_Documentation/blob/8060e85cd1aa68d054f9f3a6df4ae6020f7b3a2c/getting-started/images/WSL_G4DataFiles.png)
 
@@ -177,12 +165,12 @@ All versions of TOPAS downloaded from the OpenTOPAS GitHub contain the source co
 
         mkdir ~/Applications/TOPAS
 
-Then, download OpentTOPAS from the GitHub repository using:
+Then, download OpenTOPAS from the GitHub repository using:
 
         cd ~/Applications/TOPAS
         git clone https://github.com/OpenTOPAS/OpenTOPAS.git
 
-Compile GDCM by following:
+Compile GDCM as follows:
 
         cd OpenTOPAS
         mkdir gdcm-install
@@ -192,7 +180,7 @@ Compile GDCM by following:
         cmake ../gdcm-2.6.8 -DGDCM_BUILD_SHARED_LIBS=ON -DGCM_BUILD_DOCBOOK_MANPAGES:BOOL=OFF -DCMAKE_INSTALL_PREFIX=../gdcm-install
         sudo make -j10 install
 
-Compile OpenTOPAS by using the following commands
+Compile OpenTOPAS by using the following commands:
 
         cd ~/Applications/TOPAS
         mkdir OpenTOPAS-build
@@ -239,14 +227,11 @@ The output should look like this:
 
 ![image9](https://github.com/OpenTOPAS/OpenTOPAS_Documentation/blob/8060e85cd1aa68d054f9f3a6df4ae6020f7b3a2c/getting-started/images/WSL_QTExample.png)
 
-```{admonition} Note
-:class: note
-
-**Because every keyboard input is interpreted differently, there is a chance that the last commands for setting up the environment variables might have gone wrong. To check that it is okay, compare the output of the following command is like the image shown next:**
+> [!NOTE]
+> **Because every keyboard input is interpreted differently, there is a chance that the last commands for setting up the environment variables might have gone wrong.** To check that it is okay, ensure that the output of the following command is the same as the following image:
 
        cat ~/shellScripts/topas
 
 ![image8](./images/WSL_CheckingEnvironment.png)
 
-**If there is and additional " or ' anywhere in the output, then make sure to correct it by using vi/nano or any other text editor. Also, make sure that your user is shown in the sections where [naokikondo] appears.**
-```
+If there is an additional " or ' anywhere in the output, then make sure to correct it by using vi/nano or any other text editor. Also, make sure that your user is shown in the sections where [naokikondo] appears.
