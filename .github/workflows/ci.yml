@@ -56,7 +56,7 @@ jobs:
         cd ~/geant4-data
         while read url; do
           wget "$url"
-        done < $GITHUB_WORKSPACE/.github/workflows/data_urls.txt
+        done < $GITHUB_WORKSPACE/.github/workflows/g4data_urls.txt
         for file in *.tar.gz; do
           tar -xzf "$file"
           rm "$file"
