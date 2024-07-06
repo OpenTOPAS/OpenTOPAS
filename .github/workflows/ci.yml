@@ -8,6 +8,7 @@ on:
         description: 'Log level'     
         required: true
         default: 'warning'
+  push:
 
 jobs:
   build:
