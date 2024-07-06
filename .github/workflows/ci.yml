@@ -81,8 +81,9 @@ jobs:
         make -j$(nproc) install
 
     - name: Compile GDCM
+      run: |
         cp gdcm-2.6.8.tar.gz ~/
-        cd ~/
+        cd ~
         tar -zxf gdcm-2.6.8.tar.gz
         mkdir gdcm-{build,install}
         cd gdcm-build
