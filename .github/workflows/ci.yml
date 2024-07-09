@@ -109,15 +109,22 @@ jobs:
         pip3 install nrtest
         pip3 install git+https://github.com/davidchall/nrtest-topas.git
 
+    # Clone qi-test and add test configuration file
+    - name: Clone qi-test and add configuration file
+      run: |
+        cd ~
+        git clone https://github.com/OpenTOPAS/qi-opentopas.git
+        cp $GITHUB_WORKSPACE/.github/workflows/qi-topas-v4.0.json ~/qi-opentopas/apps/
+
     # Run nrtest
     - name: Run nrtest
       run: |
+        cd ~/qi-opentopas
         TODAY=$(date +%Y-%m-%d)
-        nrtest execute apps/topas-HEAD_4.11.1.2.json tests/ -o benchmark/$TODAY
-        
+        nrtest execute apps/qi-topas-v4.0.json tests/ -o benchmark/$TODAY
     # Optional: Upload test results as artifacts
     - name: Upload test results
       uses: actions/upload-artifact@v3
       with:
         name: nrtest-results
-        path: benchmark/
+        path: ~/qi-opentopas/benchmark/$TODAY
