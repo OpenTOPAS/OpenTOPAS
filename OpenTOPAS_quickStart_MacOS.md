@@ -244,7 +244,7 @@ The OpenTOPAS tests are located [here](https://github.com/OpenTOPAS/qi-opentopas
 
 Modify the `apps/topas-v4.0.json` metadata file according to your directories and configuration (remember to set your environment variables) and execute the entire test suite as follows:
 
-        nrtest execute apps/topas-v4.0.json tests/ -o benchmark/todayDate
+        nrtest execute apps/topas-v4.0.json tests/ -o benchmarks/todayDate
 
 Comparisons can also be made with the following command:
         
