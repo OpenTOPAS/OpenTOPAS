@@ -234,15 +234,17 @@ As an additional step for those interested in running quality checks, the contin
 
         brew install python
 
-The OpenTOPAS tests are located in the “tests” folder of the OpenTOPAS source code directory, and testing is performed using `nrtest` and the OpenTOPAS-specific plugins contained in [nrtest-topas](https://github.com/davidchall/nrtest-topas):
+The OpenTOPAS tests are located [here](https://github.com/OpenTOPAS/qi-opentopas.git), listed in the OpenTOPAS organization repositories, and testing is performed using `nrtest` and the OpenTOPAS-specific plugins contained in [nrtest-topas](https://github.com/davidchall/nrtest-topas):
 
-        cd /Applications/TOPAS/OpenTOPAS
+        cd /Applications/TOPAS
+        git clone https://github.com/OpenTOPAS/qi-opentopas.git
+        cd qi-opentopas
         pip3 install nrtest
         pip3 install git+https://github.com/davidchall/nrtest-topas.git
 
-Modify the `apps/topas-HEAD_4.11.1.2.json` metadata file according to your directories and configuration (remember to set your environment variables) and execute the entire test suite as follows:
+Modify the `apps/topas-v4.0.json` metadata file according to your directories and configuration (remember to set your environment variables) and execute the entire test suite as follows:
 
-        nrtest execute apps/topas-HEAD_4.11.1.2.json tests/ -o benchmark/todayDate
+        nrtest execute apps/topas-v4.0.json tests/ -o benchmarks/todayDate
 
 Comparisons can also be made with the following command:
         
