@@ -207,7 +207,7 @@ The output should look as follows if OpenTPAS was succesfully installed:
 ## Step 9
 Setup the environment variables so that the Geant4, GDCM and TOPAS paths don't need to be loaded every time a new terminal is open. We recommend creating a folder dedicated to your shell scripts with the following commands:
 
-        mkdir ~/shellScipts
+        mkdir ~/shellScripts
         echo "export PATH=~/shellScripts:$PATH" >> ~/.bashrc
         cd ~/shellScripts
         touch topas
