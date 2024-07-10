@@ -132,5 +132,4 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: nrtest-results
-        path: |
-          $HOME/qi-opentopas/benchmark/$TODAY
+        path: ${{ env.HOME }}/qi-opentopas/benchmark/
