@@ -122,10 +122,19 @@ jobs:
       run: |
         cd ~/qi-opentopas
         TODAY=$(date +%Y-%m-%d)
-        which topas
-        echo $GITHUB_PATH
+        echo "Current directory: $(pwd)"
+        echo "Contents of current directory:"
+        ls -la
+        echo "Contents of apps directory:"
+        ls -la apps/
+        echo "Contents of tests directory:"
+        ls -la tests/
+        echo "Which topas: $(which topas)"
+        echo "GITHUB_PATH: $GITHUB_PATH"
+        echo "PATH: $PATH"
+        echo "Running nrtest..."
         nrtest execute apps/qi-topas-v4.0.json tests/ -o benchmark/$TODAY
-    # Optional: Upload test results as artifacts
+
     - name: Upload test results
       uses: actions/upload-artifact@v3
       with:
