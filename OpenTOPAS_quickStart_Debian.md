@@ -212,3 +212,29 @@ Running your first OpenTOPAS simulation in a new terminal window.
 
 > [!TIP]
 > If you require assistance with any of your OpenTOPAS simulations, don't hesitate to request help from the developers and other users on the [Discussions](https://github.com/OpenTOPAS/OpenTOPAS/discussions) tab of the OpenTOPAS [GitHub](https://github.com/OpenTOPAS/OpenTOPAS) page.
+
+______________________________________________________________________________________________
+
+## Step 11
+As an additional step for those interested in running quality checks, the continuous integration test suite for OpenTOPAS can be used. Python and `pip3` will be needed. 
+
+> [!WARNING]
+> We recommend that installation be performed using [Homebrew](https://brew.sh/) to avoid messing with your system Python. The following command installs Python 3.x and `pip3` is installed automatically.
+
+        brew install python
+
+The OpenTOPAS tests are located [here](https://github.com/OpenTOPAS/qi-opentopas.git), listed in the OpenTOPAS organization repositories, and testing is performed using `nrtest` and the OpenTOPAS-specific plugins contained in [nrtest-topas](https://github.com/davidchall/nrtest-topas):
+
+        cd $HOME/Applications/TOPAS
+        git clone https://github.com/OpenTOPAS/qi-opentopas.git
+        cd qi-opentopas
+        pip3 install nrtest
+        pip3 install git+https://github.com/davidchall/nrtest-topas.git
+
+Modify the `apps/topas-v4.0.json` metadata file according to your directories and configuration (remember to set your environment variables) and execute the entire test suite as follows:
+
+        nrtest execute apps/topas-v4.0.json tests/ -o benchmarks/todayDate
+
+Comparisons can also be made with the following command:
+        
+        nrtest compare benchmarks/today benchmarks/yesterday
