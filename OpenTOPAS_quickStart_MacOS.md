@@ -192,6 +192,8 @@ Setup the environment.
         mkdir ~/shellScripts
         cd ~/shellScripts
         touch topas
+        echo '#!/bin/bash' >> topas
+        echo '' >> topas
         echo 'export QT_QPA_PLATFORM_PLUGIN_PATH=/Applications/TOPAS/OpenTOPAS-install/Frameworks' >> topas
         echo 'export TOPAS_G4_DATA_DIR=/Applications/GEANT4/G4DATA' >> topas
         echo 'export DYLD_LIBRARY_PATH=/Applications/TOPAS/OpenTOPAS-install/lib:$DYLD_LIBRARY_PATH' >> topas
