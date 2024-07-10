@@ -93,7 +93,7 @@ jobs:
                             -DCMAKE_INSTALL_PREFIX=../gdcm-install 
         make -j$(nproc) install
 
-    - name: Compile TOPAS
+    - name: Compile TOPAS and add to PATH
       run: |
         cd ~
         mkdir OpenTOPAS-{build,install}
@@ -102,6 +102,7 @@ jobs:
         export GDCM_DIR=~/gdcm-install/
         cmake $GITHUB_WORKSPACE -DCMAKE_INSTALL_PREFIX=../OpenTOPAS-install
         make -j$(nproc) install
+        echo "~/OpenTOPAS-install/bin/" >> $GITHUB_PATH
 
     # Install nrtest and nrtest-topas
     - name: Install nrtest and nrtest-topas
