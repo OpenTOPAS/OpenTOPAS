@@ -757,6 +757,8 @@ G4String TsParameterManager::GetUnitCategory(const G4String& unitString) {
 	else if (unitString == "/M/s") category = "perMolarConcentration perTime";
 	else if (unitString == "m2/s") category = "surface perTime";
 	else if (unitString == "nm2/s") category = "surface perTime";
+    else if (unitString == "um3") category = "Volume";
+    else if (unitString == "nm3") category = "Volume";
 	else if (!G4UnitDefinition::IsUnitDefined(unitString)) category = "None";
 	else category = G4UIcommand::CategoryOf(unitString);
 
@@ -799,6 +801,8 @@ G4double TsParameterManager::GetUnitValue(const G4String& unitString) {
 	else if (unitString == "/M/s") value = 1.0e-3*m*m*m/(mole*s);
 	else if (unitString == "m2/s") value = m*m/s;
 	else if (unitString == "nm2/s") value = nm*nm/s;
+    else if (unitString == "um3") value = um*um*um;
+    else if (unitString == "nm3") value = nm*nm*nm;
 	else value = G4UIcommand::ValueOf(unitString);
 
 	return value;
@@ -944,7 +948,7 @@ TsParticleDefinition TsParameterManager::GetParticleDefinition(G4String name) {
 			p.ionA = G4UIcommand::ConvertToInt(someDigits);
 			someDigits = name.substr(9,1);
 
-			if ((someDigits != "0") &!GetBooleanParameter("Ts/TreatExcitedIonsAsGroundState")) {
+			if ((someDigits != "0") && !GetBooleanParameter("Ts/TreatExcitedIonsAsGroundState")) {
 				G4cerr << "A phase space input file or filter parameter is using a PDG" << G4endl;
 				G4cerr << "particle code that corresponds to an ion in an excited state." << G4endl;
 				G4cerr << "This is any ten digit PDG code that does not end in a zero." << G4endl;
