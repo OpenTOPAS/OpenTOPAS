@@ -113,11 +113,10 @@ jobs:
     # Clone qi-test and add test configuration file
     - name: Clone qi-test and add configuration file
       run: |
-        cd $HOME
         git clone https://github.com/OpenTOPAS/qi-opentopas.git
-        cp $GITHUB_WORKSPACE/.github/workflows/qi-topas-v4.0.json $HOME/qi-opentopas/apps/
+        cp $GITHUB_WORKSPACE/.github/workflows/qi-topas-v4.0.json ./qi-opentopas/apps/
 
-    # Run nrtest
+    # Run nrtest and upload artefact
     - name: Run nrtest
       run: |
         cd $HOME/qi-opentopas
@@ -127,11 +126,17 @@ jobs:
         export LD_LIBRARY_PATH=$HOME/geant4-install/lib:$LD_LIBRARY_PATH
         topas --version
         nrtest execute apps/qi-topas-v4.0.json tests/ -o benchmark/$TODAY
-        ls -la $HOME/qi-opentopas/benchmark
 
-    - name: Upload test results
+    - name: Upload test results test 1
       if: always()
       uses: actions/upload-artifact@v4
       with:
         name: nrtest-results
-        path: $HOME/qi-opentopas/
+        path: ${{ env.HOME }}/qi-opentopas/benchmark/
+
+    - name: Upload test results test 2
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: nrtest-results
+        path: qi-opentopas/benchmark/
