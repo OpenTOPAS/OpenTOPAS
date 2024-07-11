@@ -128,23 +128,9 @@ jobs:
         nrtest execute apps/qi-topas-v4.0.json tests/ -o benchmark/$TODAY
         echo $(readlink -f benchmark/$TODAY)
 
-    - name: Upload test results test 1
-      if: always()
-      uses: actions/upload-artifact@v4
-      with:
-        name: nrtest-results
-        path: ${{ env.HOME }}/qi-opentopas/benchmark/
-
-    - name: Upload test results test 2
+    - name: Upload test results
       if: always()
       uses: actions/upload-artifact@v4
       with:
         name: nrtest-results
         path: qi-opentopas/benchmark/
-
-    - name: Upload test results test 3
-      if: always()
-      uses: actions/upload-artifact@v4
-      with:
-        name: nrtest-results
-        path: ./qi-opentopas/benchmark/
