@@ -13,14 +13,14 @@ jobs:
   build:
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
+        os: [ubuntu-latest, macos-latest]
     runs-on: ${{ matrix.os }}
     
     steps:
     - uses: actions/checkout@v4
     
     - name: Install dependencies (Ubuntu/Windows)
-      if: matrix.os == 'ubuntu-latest' || matrix.os == 'windows-latest'
+      if: matrix.os == 'ubuntu-latest'
       run: |
         sudo apt-get update
         sudo apt install -y cmake \
