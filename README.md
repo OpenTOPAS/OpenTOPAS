@@ -1,5 +1,5 @@
 > [!NOTE]
-This site is under development. We expect it to be fully ready for our users by April 2024.
+This site is under development. We will continue to add functionality and features over the coming months.
 
 # TOPAS: Tool for Particle Simulation
 
