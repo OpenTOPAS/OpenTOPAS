@@ -122,8 +122,9 @@ jobs:
       run: |
         cd $HOME/qi-opentopas
         TODAY=$(date +%Y-%m-%d)
-        export Geant4_DIR=$HOME/geant4-install/
-        export GDCM_DIR=$HOME/gdcm-install/
+        export TOPAS_G4_DATA_DIR=$HOME/geant4-data
+        export LD_LIBRARY_PATH=$HOME/OpenTOPAS-install/lib:$LD_LIBRARY_PATH
+        export LD_LIBRARY_PATH=$HOME/geant4-install/lib:$LD_LIBRARY_PATH
         topas --version
         nrtest execute apps/qi-topas-v4.0.json tests/ -o benchmark/$TODAY
         ls -la $HOME/qi-opentopas/benchmark
@@ -133,4 +134,4 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: nrtest-results
-        path: $HOME/qi-opentopas/benchmark/
+        path: $HOME/qi-opentopas/
