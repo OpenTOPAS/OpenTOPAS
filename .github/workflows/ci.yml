@@ -1,6 +1,5 @@
 name: CI
 
-# Make workflow manually triggerable
 on:
   workflow_dispatch:
     inputs:
@@ -12,14 +11,16 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
     
     steps:
-    # Check out the repository code
     - uses: actions/checkout@v4
     
-    # Install necessary system dependencies
-    - name: Install dependencies
+    - name: Install dependencies (Ubuntu/Windows)
+      if: matrix.os == 'ubuntu-latest' || matrix.os == 'windows-latest'
       run: |
         sudo apt-get update
         sudo apt install -y cmake \
@@ -34,8 +35,13 @@ jobs:
                             qtchooser \
                             qt5-qmake \
                             qtbase5-dev-tools
+      shell: bash
 
-    # Set up Qt framework
+    - name: Install dependencies (macOS)
+      if: matrix.os == 'macos-latest'
+      run: |
+        brew install qt@5 git wget cmake
+
     - name: Setup Qt
       uses: jurplel/install-qt-action@v3
       with:
@@ -45,7 +51,7 @@ jobs:
       uses: actions/cache@v4
       id: cache-data
       with:
-        path: $HOME/geant4-data
+        path: ${{ env.HOME }}/geant4-data
         key: ${{ runner.os }}-geant4-data-v11.1.3-${{ hashFiles('.github/workflows/g4data_urls.txt') }}
         restore-keys: |
           ${{ runner.os }}-geant4-data-v11.1.3-
@@ -62,11 +68,13 @@ jobs:
           tar -xzf "$file"
           rm "$file"
         done
+      shell: bash
 
     - name: Clone Geant4
       run: |
         cd $HOME
         git clone https://github.com/Geant4/geant4 --branch v11.1.3
+      shell: bash
 
     - name: Install Geant4
       run: |
@@ -80,6 +88,7 @@ jobs:
                         -DGEANT4_USE_RAYTRACER_X11=ON \
                         -DCMAKE_INSTALL_PREFIX=$HOME/geant4-install
         make -j$(nproc) install
+      shell: bash
 
     - name: Compile GDCM
       run: |
@@ -92,6 +101,7 @@ jobs:
                             -DGDCM_BUILD_DOCBOOK_MANPAGES:BOOL=OFF\
                             -DCMAKE_INSTALL_PREFIX=../gdcm-install 
         make -j$(nproc) install
+      shell: bash
 
     - name: Compile TOPAS and add to PATH
       run: |
@@ -103,20 +113,20 @@ jobs:
         cmake $GITHUB_WORKSPACE -DCMAKE_INSTALL_PREFIX=../OpenTOPAS-install
         make -j$(nproc) install
         echo "$(readlink -f $HOME/OpenTOPAS-install/bin/)" >> $GITHUB_PATH
+      shell: bash
 
-    # Install nrtest and nrtest-topas
     - name: Install nrtest and nrtest-topas
       run: |
         pip3 install nrtest
         pip3 install git+https://github.com/davidchall/nrtest-topas.git
+      shell: bash
 
-    # Clone qi-test and add test configuration file
     - name: Clone qi-test and add configuration file
       run: |
         git clone https://github.com/OpenTOPAS/qi-opentopas.git
         cp $GITHUB_WORKSPACE/.github/workflows/qi-topas-v4.0.json ./qi-opentopas/apps/
+      shell: bash
 
-    # Run nrtest and upload artefact
     - name: Run nrtest
       run: |
         cd qi-opentopas
@@ -127,10 +137,11 @@ jobs:
         topas --version
         nrtest execute apps/qi-topas-v4.0.json tests/ -o benchmark/$TODAY
         echo $(readlink -f benchmark/$TODAY)
+      shell: bash
 
     - name: Upload test results
       if: always()
       uses: actions/upload-artifact@v4
       with:
-        name: nrtest-results
+        name: nrtest-results-${{ matrix.os }}
         path: qi-opentopas/benchmark/
