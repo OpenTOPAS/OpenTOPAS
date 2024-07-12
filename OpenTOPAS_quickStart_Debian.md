@@ -183,8 +183,7 @@ Setup the environment.
 
         mkdir ~/shellScripts
         cd ~/shellScripts
-        touch topas
-        echo '#!/bin/bash' >> topas
+        echo '#!/bin/bash' > topas
         echo '' >> topas
         echo 'export QT_QPA_PLATFORM_PLUGIN_PATH=$HOME/Applications/TOPAS/OpenTOPAS-install/Frameworks' >> topas
         echo 'export TOPAS_G4_DATA_DIR=$HOME/Applications/GEANT4/G4DATA' >> topas
