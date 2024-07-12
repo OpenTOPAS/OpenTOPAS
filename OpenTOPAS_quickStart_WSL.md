@@ -210,8 +210,7 @@ Setup the environment variables so that the Geant4, GDCM and TOPAS paths don't n
         mkdir ~/shellScripts
         echo "export PATH=~/shellScripts:$PATH" >> ~/.bashrc
         cd ~/shellScripts
-        touch topas
-        echo '#!/bin/bash' >> topas
+        echo '#!/bin/bash' > topas
         echo '' >> topas
         echo ’export QT_QPA_PLATFORM_PLUGIN_PATH=~/Applications/TOPAS/OpenTOPAS-install/Frameworks’ >> topas
         echo ’export TOPAS_G4_DATA_DIR=~/Applications/GEANT4/G4DATA’ >> topas
