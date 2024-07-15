@@ -42,11 +42,6 @@ jobs:
       run: |
         brew install qt@5 git wget cmake xquartz
 
-    - name: Setup Qt
-      uses: jurplel/install-qt-action@v3
-      with:
-        version: '5.15.2'
-
     - name: Cache Geant4 data
       uses: actions/cache@v4
       id: cache-data
