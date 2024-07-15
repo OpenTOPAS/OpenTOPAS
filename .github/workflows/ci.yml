@@ -102,8 +102,7 @@ jobs:
                         -DCMAKE_PREFIX_PATH=/opt/homebrew/Cellar/qt@5/5.15.11 \
                         -DGEANT4_USE_QT=ON \
                         -DGEANT4_USE_OPENGL_X11=ON \
-                        -DGEANT4_USE_RAYTRACER_X11=ON \
-                        -DCMAKE_OSX_ARCHITECTURES=arm64
+                        -DGEANT4_USE_RAYTRACER_X11=ON
         make -j$(nproc) install
       shell: bash
 
