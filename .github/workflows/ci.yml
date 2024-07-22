@@ -13,40 +13,44 @@ jobs:
   build:
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest]
+        include:
+          - os: ubuntu-latest
+            qt_path: /usr/lib/qt5
+            make_command: make -j$(nproc) install
+            install_dependencies_command: |
+              sudo apt-get update
+              sudo apt install -y cmake \
+                                  libexpat1-dev \
+                                  libgl1-mesa-dev \
+                                  libglu1-mesa-dev \
+                                  libxt-dev \
+                                  xorg-dev \
+                                  build-essential \
+                                  libharfbuzz-dev \
+                                  qtbase5-dev \
+                                  qtchooser \
+                                  qt5-qmake \
+                                  qtbase5-dev-tools
+          - os: macos-latest
+            qt_path: /opt/homebrew/opt/qt@5
+            make_command: make -j$(sysctl -n hw.logicalcpu) install
+            install_dependencies_command: |
+              brew install qt@5 git wget cmake xquartz
+
     runs-on: ${{ matrix.os }}
     
     steps:
     - uses: actions/checkout@v4
-    
-    - name: Install dependencies (Ubuntu)
-      if: matrix.os == 'ubuntu-latest'
-      run: |
-        sudo apt-get update
-        sudo apt install -y cmake \
-                            libexpat1-dev \
-                            libgl1-mesa-dev \
-                            libglu1-mesa-dev \
-                            libxt-dev \
-                            xorg-dev \
-                            build-essential \
-                            libharfbuzz-dev \
-                            qtbase5-dev \
-                            qtchooser \
-                            qt5-qmake \
-                            qtbase5-dev-tools
-      shell: bash
 
-    - name: Install dependencies (macOS)
-      if: matrix.os == 'macos-latest'
-      run: |
-        brew install qt@5 git wget cmake xquartz
+    - name: Install dependencies
+      run: ${{ matrix.install_dependencies_command }}
+      shell: bash
 
     - name: Cache Geant4 data
       uses: actions/cache@v4
       id: cache-data
       with:
-        path: ${{ env.HOME }}/geant4-data
+        path: $HOME/geant4-data
         key: ${{ runner.os }}-geant4-data-v11.1.3-${{ hashFiles('.github/workflows/g4data_urls.txt') }}
         restore-keys: |
           ${{ runner.os }}-geant4-data-v11.1.3-
@@ -65,53 +69,32 @@ jobs:
         done
       shell: bash
 
-    - name: Clone Geant4
+    - name: Clone and install Geant4
       run: |
         cd $HOME
         git clone https://github.com/Geant4/geant4 --branch v11.1.3
-      shell: bash
-
-    - name: Install Geant4 (Ubuntu)
-      if: matrix.os == 'ubuntu-latest'
-      run: |
-        cd $HOME
         mkdir geant4-build && cd geant4-build
         cmake ../geant4 -DGEANT4_INSTALL_DATA=OFF \
                         -DGEANT4_BUILD_MULTITHREADED=ON \
-                        -DCMAKE_PREFIX_PATH=/usr/lib/qt5 \
+                        -DCMAKE_PREFIX_PATH=${{ matrix.qt_path }} \
                         -DGEANT4_USE_QT=ON \
                         -DGEANT4_USE_OPENGL_X11=ON \
                         -DGEANT4_USE_RAYTRACER_X11=ON \
                         -DCMAKE_INSTALL_PREFIX=$HOME/geant4-install
-        make -j$(nproc) install
-      shell: bash
-
-    - name: Install Geant4 (macOS)
-      if: matrix.os == 'macos-latest'
-      run: |
-        cd $HOME
-        mkdir geant4-build && cd geant4-build
-        cmake ../geant4 -DGEANT4_INSTALL_DATA=OFF \
-                        -DGEANT4_BUILD_MULTITHREADED=ON \
-                        -DCMAKE_INSTALL_PREFIX=$HOME/geant4-install \
-                        -DCMAKE_PREFIX_PATH=/opt/homebrew/opt/qt@5 \
-                        -DGEANT4_USE_QT=ON \
-                        -DGEANT4_USE_OPENGL_X11=ON \
-                        -DGEANT4_USE_RAYTRACER_X11=ON
-        make -j$(sysctl -n hw.logicalcpu) install
+        ${{ matrix.make_command }}
       shell: bash
 
     - name: Compile GDCM
       run: |
-        cp gdcm-2.6.8.tar.gz $HOME/
-        cd $HOME
+        cp gdcm-2.6.8.tar.gz ~/
+        cd ~
         tar -zxf gdcm-2.6.8.tar.gz
         mkdir gdcm-{build,install}
         cd gdcm-build
         cmake ../gdcm-2.6.8 -DGDCM_BUILD_SHARED_LIBS=ON\
                             -DGDCM_BUILD_DOCBOOK_MANPAGES:BOOL=OFF\
                             -DCMAKE_INSTALL_PREFIX=../gdcm-install 
-        make -j$(nproc) install
+        ${{ matrix.make_command }}
       shell: bash
 
     - name: Compile TOPAS and add to PATH
@@ -122,7 +105,7 @@ jobs:
         export Geant4_DIR=$HOME/geant4-install/
         export GDCM_DIR=$HOME/gdcm-install/
         cmake $GITHUB_WORKSPACE -DCMAKE_INSTALL_PREFIX=../OpenTOPAS-install
-        make -j$(nproc) install
+        ${{ matrix.make_command }}
         echo "$(readlink -f $HOME/OpenTOPAS-install/bin/)" >> $GITHUB_PATH
       shell: bash
 
