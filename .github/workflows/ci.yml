@@ -106,7 +106,6 @@ jobs:
         mkdir OpenTOPAS-{build,install}
         cd OpenTOPAS-build
         export Geant4_DIR=$HOME/geant4-install/
-        export GDCM_DIR=$HOME/gdcm-install/
         cmake $GITHUB_WORKSPACE -DCMAKE_INSTALL_PREFIX=../OpenTOPAS-install
         ${{ matrix.make_command }}
         echo "$(readlink -f $HOME/OpenTOPAS-install/bin/)" >> $GITHUB_PATH
@@ -133,8 +132,10 @@ jobs:
         export TOPAS_G4_DATA_DIR=$HOME/geant4-data
         export LD_LIBRARY_PATH=$HOME/OpenTOPAS-install/lib:$LD_LIBRARY_PATH
         export LD_LIBRARY_PATH=$HOME/geant4-install/lib:$LD_LIBRARY_PATH
-        export DYLD_LIBRARY_PATH=$HOME/OpenTOPAS-install/lib:$DYLD_LIBRARY_PATH
-        export DYLD_LIBRARY_PATH=$HOME/geant4-install/lib:$DYLD_LIBRARY_PATH
+        echo $(which topas)
+        otool -l topas | grep rpath -A2
+        tree $(which topas)/../Frameworks
+        DYLD_PRINT_LIBRARIES=1 topas
         topas --version
         source $HOME/nrtest-env/bin/activate
         nrtest execute apps/qi-topas-v4.0.json tests/ -o benchmark/$TODAY
