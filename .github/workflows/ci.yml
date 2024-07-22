@@ -14,7 +14,8 @@ jobs:
     strategy:
       matrix:
         include:
-          - os: ubuntu-latest
+          - name: Ubuntu
+            os: ubuntu-latest
             qt_path: /usr/lib/qt5
             make_command: make -j$(nproc) install
             install_dependencies_command: |
@@ -31,12 +32,14 @@ jobs:
                                   qtchooser \
                                   qt5-qmake \
                                   qtbase5-dev-tools
-          - os: macos-latest
+          - name: MacOS
+            os: macos-latest
             qt_path: /opt/homebrew/opt/qt@5
             make_command: make -j$(sysctl -n hw.logicalcpu) install
             install_dependencies_command: |
               brew install qt@5 git wget cmake xquartz
 
+    name: Build and Test (${{ matrix.os }})
     runs-on: ${{ matrix.os }}
     
     steps:
