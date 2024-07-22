@@ -133,8 +133,8 @@ jobs:
         export TOPAS_G4_DATA_DIR=$HOME/geant4-data
         export LD_LIBRARY_PATH=$HOME/OpenTOPAS-install/lib:$LD_LIBRARY_PATH
         export LD_LIBRARY_PATH=$HOME/geant4-install/lib:$LD_LIBRARY_PATH
-        export DYLD_LIBRARY_PATH=$HOME/OpenTOPAS-install/lib:$LD_LIBRARY_PATH
-        export DYLD_LIBRARY_PATH=$HOME/geant4-install/lib:$LD_LIBRARY_PATH
+        export DYLD_LIBRARY_PATH=$HOME/OpenTOPAS-install/lib:$DYLD_LIBRARY_PATH
+        export DYLD_LIBRARY_PATH=$HOME/geant4-install/lib:$DYLD_LIBRARY_PATH
         topas --version
         source $HOME/nrtest-env/bin/activate
         nrtest execute apps/qi-topas-v4.0.json tests/ -o benchmark/$TODAY
