@@ -114,8 +114,10 @@ jobs:
 
     - name: Install nrtest and nrtest-topas
       run: |
-        pip3 install nrtest
-        pip3 install git+https://github.com/davidchall/nrtest-topas.git
+        python3 -m venv $HOME/nrtest-env
+        source $HOME/nrtest-env/bin/activate
+        python3 -m pip install nrtest
+        python3 -m pip install git+https://github.com/davidchall/nrtest-topas.git
       shell: bash
 
     - name: Clone qi-test and add configuration file
@@ -132,6 +134,7 @@ jobs:
         export LD_LIBRARY_PATH=$HOME/OpenTOPAS-install/lib:$LD_LIBRARY_PATH
         export LD_LIBRARY_PATH=$HOME/geant4-install/lib:$LD_LIBRARY_PATH
         topas --version
+        source $HOME/nrtest-env/bin/activate
         nrtest execute apps/qi-topas-v4.0.json tests/ -o benchmark/$TODAY
         echo $(readlink -f benchmark/$TODAY)
       shell: bash
