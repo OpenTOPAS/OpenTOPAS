@@ -134,7 +134,7 @@ jobs:
         export LD_LIBRARY_PATH=$HOME/geant4-install/lib:$LD_LIBRARY_PATH
         echo $(which topas)
         otool -l $(which topas) | grep rpath -A2
-        tree $(which topas)/../Frameworks
+        tree $(dirname $(which topas))/../Frameworks
         DYLD_PRINT_LIBRARIES=1 topas
         topas --version
         source $HOME/nrtest-env/bin/activate
