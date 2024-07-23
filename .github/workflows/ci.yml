@@ -20,6 +20,9 @@ jobs:
             os: ubuntu-latest
             qt_path: /usr/lib/qt5
             make_command: make -j$(nproc) install
+            make_environment:
+              export LD_LIBRARY_PATH=$HOME/OpenTOPAS-install/lib:$LD_LIBRARY_PATH
+              export LD_LIBRARY_PATH=$HOME/geant4-install/lib:$LD_LIBRARY_PATH
             install_dependencies_command: |
               sudo apt-get update
               sudo apt install -y cmake \
@@ -38,6 +41,9 @@ jobs:
             os: macos-latest
             qt_path: /opt/homebrew/opt/qt@5
             make_command: make -j$(sysctl -n hw.logicalcpu) install
+            make_environment:
+              export DYLD_LIBRARY_PATH=$HOME/OpenTOPAS-install/lib:$DYLD_LIBRARY_PATH
+              export DYLD_LIBRARY_PATH=$HOME/geant4-install/lib:$DYLD_LIBRARY_PATH
             install_dependencies_command: |
               brew install qt@5 git wget cmake xquartz
             extra_gdcm_cmake_options: |
@@ -138,8 +144,7 @@ jobs:
         cd qi-opentopas
         TODAY=$(date +%Y-%m-%d)
         export TOPAS_G4_DATA_DIR=$HOME/geant4-data
-        export LD_LIBRARY_PATH=$HOME/OpenTOPAS-install/lib:$LD_LIBRARY_PATH
-        export LD_LIBRARY_PATH=$HOME/geant4-install/lib:$LD_LIBRARY_PATH
+        ${{ matrix.make_environment }}
         echo $(which topas)
         source $HOME/nrtest-env/bin/activate
         nrtest execute apps/qi-topas-v4.0.json tests/ -o benchmark/$TODAY
