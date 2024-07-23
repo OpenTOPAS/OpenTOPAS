@@ -38,6 +38,9 @@ jobs:
             make_command: make -j$(sysctl -n hw.logicalcpu) install
             install_dependencies_command: |
               brew install qt@5 git wget cmake xquartz tree
+            extra_gdcm_cmake_options: |
+              -DCMAKE_INSTALL_RPATH=@loader_path \
+              -DCMAKE_MACOSX_RPATH=ON
 
     name: Build and Test (${{ matrix.os }})
     runs-on: ${{ matrix.os }}
@@ -96,7 +99,8 @@ jobs:
         cd gdcm-build
         cmake ../gdcm-2.6.8 -DGDCM_BUILD_SHARED_LIBS=ON\
                             -DGDCM_BUILD_DOCBOOK_MANPAGES:BOOL=OFF\
-                            -DCMAKE_INSTALL_PREFIX=../gdcm-install 
+                            -DCMAKE_INSTALL_PREFIX=../gdcm-install\
+                            ${{ matrix.extra_gdcm_cmake_options }}
         ${{ matrix.make_command }}
       shell: bash
 
