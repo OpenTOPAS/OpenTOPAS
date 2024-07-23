@@ -160,4 +160,4 @@ jobs:
       #   if: steps.test_results.outputs.all_tests_passed != 'true'
       #   run: |
       #     echo "Results: ${{ steps.test_results.outputs.passed_tests }}/${{ steps.test_results.outputs.total_tests }} passed" >> $GITHUB_STEP_SUMMARY
-        exit 1
+      #     exit 1
