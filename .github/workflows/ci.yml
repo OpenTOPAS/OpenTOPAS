@@ -37,7 +37,7 @@ jobs:
             qt_path: /opt/homebrew/opt/qt@5
             make_command: make -j$(sysctl -n hw.logicalcpu) install
             install_dependencies_command: |
-              brew install qt@5 git wget cmake xquartz tree
+              brew install qt@5 git wget cmake xquartz
             extra_gdcm_cmake_options: |
               -DCMAKE_INSTALL_RPATH=@loader_path \
               -DCMAKE_MACOSX_RPATH=ON
@@ -52,15 +52,6 @@ jobs:
       run: ${{ matrix.install_dependencies_command }}
       shell: bash
 
-    - name: Cache Geant4 data
-      uses: actions/cache@v4
-      id: cache-data
-      with:
-        path: $HOME/geant4-data
-        key: ${{ runner.os }}-geant4-data-v11.1.3-${{ hashFiles('.github/workflows/g4data_urls.txt') }}
-        restore-keys: |
-          ${{ runner.os }}-geant4-data-v11.1.3-
-
     - name: Download Geant4 data
       if: steps.cache-data.outputs.cache-hit != 'true'
       run: |
@@ -74,6 +65,15 @@ jobs:
           rm "$file"
         done
       shell: bash
+
+    - name: Cache Geant4 data
+      uses: actions/cache@v4
+      id: cache-data
+      with:
+        path: $HOME/geant4-data
+        key: ${{ runner.os }}-geant4-data-v11.1.3-${{ hashFiles('.github/workflows/g4data_urls.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-geant4-data-v11.1.3-
 
     - name: Clone and install Geant4
       run: |
