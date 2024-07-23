@@ -142,7 +142,6 @@ jobs:
         source $HOME/nrtest-env/bin/activate
         nrtest execute apps/qi-topas-v4.0.json tests/ -o benchmark/$TODAY
         python $GITHUB_WORKSPACE/testing/parse_test_results.py benchmark/$TODAY/manifest.json >> "$GITHUB_OUTPUT"
-        echo "$(tail -n 1 $GITHUB_OUTPUT)" >> $GITHUB_STEP_SUMMARY
       shell: bash
 
     - name: Upload test results
@@ -154,4 +153,6 @@ jobs:
 
     - name: Check test results
       if: steps.test_results.outputs.all_tests_passed != 'true'
-      run: exit 1
+      run: |
+        echo "Results: ${{ steps.test_results.outputs.passed_tests }}/${{ steps.test_results.outputs.total_tests }} passed" >> $GITHUB_STEP_SUMMARY
+        exit 1
