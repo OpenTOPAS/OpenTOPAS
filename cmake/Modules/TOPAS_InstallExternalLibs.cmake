@@ -16,8 +16,6 @@ file (GLOB gdcmlibs
 	"${GDCM_LIBRARY_DIRS}/*.a" 
 	"${GDCM_LIBRARY_DIRS}/*.dylib"
 	"${GDCM_LIBRARY_DIRS}/*.lib")
-message(STATUS "GDCM_LIBRARY_DIRS: ${GDCM_LIBRARY_DIRS}")
-message(STATUS "gdcmlibs: ${gdcmlibs}")
 file (GLOB excludegdcmlibs 
 	"${GDCM_LIBRARY_DIRS}/libgdcmMEXD.*" 
 	"${GDCM_LIBRARY_DIRS}/libsocketxx.*")
