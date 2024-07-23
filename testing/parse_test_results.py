@@ -21,5 +21,5 @@ if __name__ == "__main__":
     # Syntax below is used for github actions testing
     print(f"passed_tests={passed}")
     print(f"failed_tests={failed}")
+    print(f"total_tests={passed + failed}")
     print(f"all_tests_passed={failed == 0}")
-    print(f"Results: ({passed}/{passed+failed}) passed")
