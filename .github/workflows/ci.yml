@@ -89,8 +89,8 @@ jobs:
 
     - name: Compile GDCM
       run: |
-        cp gdcm-2.6.8.tar.gz ~/
-        cd ~
+        cp gdcm-2.6.8.tar.gz $HOME/
+        cd $HOME
         tar -zxf gdcm-2.6.8.tar.gz
         mkdir gdcm-{build,install}
         cd gdcm-build
@@ -106,6 +106,7 @@ jobs:
         mkdir OpenTOPAS-{build,install}
         cd OpenTOPAS-build
         export Geant4_DIR=$HOME/geant4-install/
+        export GDCM_DIR=$HOME/gdcm-install/
         cmake $GITHUB_WORKSPACE -DCMAKE_INSTALL_PREFIX=../OpenTOPAS-install
         ${{ matrix.make_command }}
         echo "$(readlink -f $HOME/OpenTOPAS-install/bin/)" >> $GITHUB_PATH
