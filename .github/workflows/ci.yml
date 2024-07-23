@@ -123,10 +123,11 @@ jobs:
     - name: Clone qi-test and add configuration file
       run: |
         git clone https://github.com/OpenTOPAS/qi-opentopas.git
-        cp $GITHUB_WORKSPACE/.github/workflows/qi-topas-v4.0.json ./qi-opentopas/apps/
+        cp $GITHUB_WORKSPACE/testing/qi-topas-v4.0.json ./qi-opentopas/apps/
       shell: bash
 
     - name: Run nrtest
+      id: test_results
       run: |
         cd qi-opentopas
         TODAY=$(date +%Y-%m-%d)
@@ -141,7 +142,8 @@ jobs:
         topas --version
         source $HOME/nrtest-env/bin/activate
         nrtest execute apps/qi-topas-v4.0.json tests/ -o benchmark/$TODAY
-        echo $(readlink -f benchmark/$TODAY)
+        python $GITHUB_WORKSPACE/testing/parse_test_results.py benchmark/$TODAY/manifest.json >> "$GITHUB_OUTPUT"
+        echo "$(tail -n 1 $GITHUB_OUTPUT)" >> $GITHUB_STEP_SUMMARY
       shell: bash
 
     - name: Upload test results
@@ -150,3 +152,7 @@ jobs:
       with:
         name: nrtest-results-${{ matrix.os }}
         path: qi-opentopas/benchmark/
+
+    - name: Check test results
+      if: steps.test_results.outputs.all_tests_passed != 'true'
+      run: exit 1

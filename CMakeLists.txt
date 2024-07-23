@@ -114,6 +114,13 @@ target_link_libraries (topas
 # executable
 install (TARGETS topas RUNTIME DESTINATION bin)
 
+# Manually set RPATH for the target on Apple OSs
+if(APPLE)
+    set_target_properties(topas PROPERTIES
+        INSTALL_RPATH "@executable_path/../Frameworks"
+    )
+endif()
+
 # LICENSE/README, headers, libraries, etc.
 # LICENSE & README
 install (FILES
