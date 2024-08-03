@@ -6,7 +6,7 @@ if (TOPAS_WITH_STATIC_GEANT4)
 		"${Geant4_DIR}/../*.a")
 else ()
 	file (GLOB geant4libs 
-		"${Geant4_DIR}/../*.so*" 
+		"${Geant4_DIR}/../*.so*"
 		"${Geant4_DIR}/../*.dylib"
 		"${Geant4_DIR}/../*.lib")
 endif ()
