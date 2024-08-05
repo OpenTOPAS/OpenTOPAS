@@ -9,7 +9,7 @@ on:
         default: 'warning'
   pull_request:
     branches:
-      - master
+      - main
 
 jobs:
   build:
