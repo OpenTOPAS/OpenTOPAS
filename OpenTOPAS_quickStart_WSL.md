@@ -14,7 +14,7 @@ Open the Windows command prompt by typing
 
 in the Windows search bar. The next image shows the program you should open:
 
-<img src="https://github.com/OpenTOPAS/OpenTOPAS_Documentation/blob/8060e85cd1aa68d054f9f3a6df4ae6020f7b3a2c/getting-started/images/WSL_CMD_Image.png" alt="WSL CMD" width="600px">
+<img src="https://github.com/OpenTOPAS/TOPAS_Official_Documentation/blob/1773e3bc1e4978f7fb77e8939415cf01867c6529/getting-started/images/WSL_CMD_Image.png" alt="WSL CMD" width="600px">
 
 ## Step 2 
 
@@ -28,7 +28,7 @@ in the Windows command prompt. Accept the pop-up windows asking for permissions 
 
 The output should look like this after installation and verification:
 
-![image2](https://github.com/OpenTOPAS/OpenTOPAS_Documentation/blob/8060e85cd1aa68d054f9f3a6df4ae6020f7b3a2c/getting-started/images/WSL_InstallingWSL.png)
+![image2](https://github.com/OpenTOPAS/TOPAS_Official_Documentation/blob/1773e3bc1e4978f7fb77e8939415cf01867c6529/getting-started/images/WSL_InstallingWSL.png)
 
 ## Step 3
 Install a Linux distribution (Ubuntu, Debian, Suse, Oracle, etc)
@@ -42,7 +42,7 @@ To install Ubuntu 24.04, type in the terminal:
 
 Aftwe downloading all the necesary files, it will ask you to create a new user for this Linux distribution and a password. Both wil be needed when installing programs to access super user (sudo) privileges. Once the account has been created, it will automatically enter into Ubuntu terminal mode. This will be evident by the change in coloring of the text.
 
-![image3](https://github.com/OpenTOPAS/OpenTOPAS_Documentation/blob/8060e85cd1aa68d054f9f3a6df4ae6020f7b3a2c/getting-started/images/WSL_InstallingUbuntu24.png)
+![image3](https://github.com/OpenTOPAS/TOPAS_Official_Documentation/blob/1773e3bc1e4978f7fb77e8939415cf01867c6529/getting-started/images/WSL_InstallingUbuntu24.png)
 
 > [!TIP]
 > To exit the Ubuntu terminal, users can use the "exit" command. Similarly, to access it again, users can type "wsl" or "bash" in the windows command prompt. Users can have multiple Linux distributions installed at the same time in windows. In which case, WSL will ask for the user to specify which distribution to use by providing its name.
@@ -72,7 +72,7 @@ To verify that this procedure was successful, move to the home directory and pri
 
 The contents of this directory will be printed in the terminal, similar to:
 
-![image4](https://github.com/OpenTOPAS/OpenTOPAS_Documentation/blob/8060e85cd1aa68d054f9f3a6df4ae6020f7b3a2c/getting-started/images/WSL_MovingHome.png)
+![image4](https://github.com/OpenTOPAS/TOPAS_Official_Documentation/blob/1773e3bc1e4978f7fb77e8939415cf01867c6529/getting-started/images/WSL_MovingHome.png)
 
 ## Step 6
 Install all the required libraries for Geant4 and TOPAS by using the following commands:
@@ -102,7 +102,7 @@ Then follow the next commands to create a Geant4 folder and download Geant4 from
 
 Your GEANT4 folder should look like this
 
-![image5](https://github.com/OpenTOPAS/OpenTOPAS_Documentation/blob/8060e85cd1aa68d054f9f3a6df4ae6020f7b3a2c/getting-started/images/WSL_DownloadingG4.png)
+![image5](https://github.com/OpenTOPAS/TOPAS_Official_Documentation/blob/1773e3bc1e4978f7fb77e8939415cf01867c6529/getting-started/images/WSL_DownloadingG4.png)
 
 Now we will prepare the folders for the Geant4 installation and Geant4 data files. For that, run the following commands:
 
@@ -112,7 +112,7 @@ Now we will prepare the folders for the Geant4 installation and Geant4 data file
 
 Again, the GEANT4 folder should look as follows:
 
-![image6](https://github.com/OpenTOPAS/OpenTOPAS_Documentation/blob/8060e85cd1aa68d054f9f3a6df4ae6020f7b3a2c/getting-started/images/WSL_G4Folders.png)
+![image6](https://github.com/OpenTOPAS/TOPAS_Official_Documentation/blob/1773e3bc1e4978f7fb77e8939415cf01867c6529/getting-started/images/WSL_G4Folders.png)
 
 Now we can finish up the installation of Geant4 by using the following commands:
 
@@ -157,7 +157,7 @@ Then, decompress the files with tar -zxf and clean the folder:
 
 Your folder should look as follows:
 
-![image7](https://github.com/OpenTOPAS/OpenTOPAS_Documentation/blob/8060e85cd1aa68d054f9f3a6df4ae6020f7b3a2c/getting-started/images/WSL_G4DataFiles.png)
+![image7](https://github.com/OpenTOPAS/TOPAS_Official_Documentation/blob/1773e3bc1e4978f7fb77e8939415cf01867c6529/getting-started/images/WSL_G4DataFiles.png)
 
 ## Step 8
 Install GDCM and TOPAS.
@@ -202,7 +202,7 @@ Whithout closing this same terminal, check if the installation was succesful usi
 
 The output should look as follows if OpenTPAS was succesfully installed:
 
-![image8](https://github.com/OpenTOPAS/OpenTOPAS_Documentation/blob/8060e85cd1aa68d054f9f3a6df4ae6020f7b3a2c/getting-started/images/WSL_Running_TOPAS.png)
+![image8](https://github.com/OpenTOPAS/TOPAS_Official_Documentation/blob/1773e3bc1e4978f7fb77e8939415cf01867c6529/getting-started/images/WSL_Running_TOPAS.png)
 
 ## Step 9
 Setup the environment variables so that the Geant4, GDCM and TOPAS paths don't need to be loaded every time a new terminal is open. We recommend creating a folder dedicated to your shell scripts with the following commands:
@@ -227,14 +227,14 @@ Restart the Ubuntu terminal by typing "exit" and then "wsl". Then, use the follo
 
 The output should look like this:
 
-![image9](https://github.com/OpenTOPAS/OpenTOPAS_Documentation/blob/8060e85cd1aa68d054f9f3a6df4ae6020f7b3a2c/getting-started/images/WSL_QTExample.png)
+![image9](https://github.com/OpenTOPAS/TOPAS_Official_Documentation/blob/1773e3bc1e4978f7fb77e8939415cf01867c6529/getting-started/images/WSL_QTExample.png)
 
 > [!NOTE]
 > **Because every keyboard input is interpreted differently, there is a chance that the last commands for setting up the environment variables might have gone wrong.** To check that it is okay, ensure that the output of the following command is the same as the following image:
 
        cat ~/shellScripts/topas
 
-![image8](https://github.com/OpenTOPAS/OpenTOPAS_Documentation/blob/8060e85cd1aa68d054f9f3a6df4ae6020f7b3a2c/getting-started/images/WSL_CheckingEnvironment.png)
+![image8](https://github.com/OpenTOPAS/TOPAS_Official_Documentation/blob/1773e3bc1e4978f7fb77e8939415cf01867c6529/getting-started/images/WSL_CheckingEnvironment.png)
 
 If there is an additional " or ' anywhere in the output, then make sure to correct it by using vi/nano or any other text editor. Also, make sure that your user is shown in the sections where [naokikondo] appears.
 
