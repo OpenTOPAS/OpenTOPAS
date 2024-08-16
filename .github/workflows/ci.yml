@@ -9,7 +9,9 @@ on:
         default: 'warning'
   pull_request:
     branches:
-      - master
+      - main
+    paths-ignore:
+      - '*.md'
 
 jobs:
   build:
