@@ -39,6 +39,7 @@
 
 class TsParameterManager;
 class G4Region;
+class G4LogicalVolume;
 
 class TsPeriodicBoundaryConditionProcess : public G4VBiasingOperation
 {	
@@ -66,16 +67,16 @@ public:
 														 const G4Step*   );
 	
 	
-	void SetRegions(G4String*);
-	void SetNumberOfRegions(G4int);
+	void SetLogicalVolumes(G4String*);
+	void SetNumberOfLogicalVolumes(G4int);
 	
 private:
 	G4ParticleChange fParticleChange;
 	G4ParticleChangeForNothing fParticleChangeForNothing;
 	G4String fName;
-	G4String* fNamesOfRegions;
-	G4int fNumberOfRegions;
-	std::vector<G4Region*> fRegions;
+	G4String* fNamesOfLogicalVolumes;
+	G4int fNumberOfLogicalVolumes;
+	std::vector<G4LogicalVolume*> fLogicalVolumes;
 	G4double kCarTolerance;
 	G4int fMinParentID;
 };

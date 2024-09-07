@@ -40,6 +40,7 @@
 #include "TsInelasticSplitManager.hh"
 #include "TsAutomaticImportanceSamplingManager.hh"
 #include "TsAutomaticImportanceSamplingParallelManager.hh"
+#include "TsPeriodicBoundaryConditionManager.hh"
 
 #include "G4StepLimiterPhysics.hh"
 #include "G4EmParameters.hh"
@@ -136,6 +137,12 @@ G4VUserPhysicsList* TsPhysicsManager::GetPhysicsList() {
 					(fVm->GetBiasingProcessFromList(index))->GetGenericBiasingPhysics();
 					tsList->RegisterPhysics(bPAISP);
 				}
+                index = -1;
+                if ( fVm->BiasingProcessExists("periodicboundarycondition", index)) {
+                    G4GenericBiasingPhysics* bPBC = dynamic_cast<TsPeriodicBoundaryConditionManager*>
+                    (fVm->GetBiasingProcessFromList(index))->GetGenericBiasingPhysics();
+                    tsList->RegisterPhysics(bPBC);
+                }
 			}
 
 			if (!fPm->ParameterExists("Ph/SetEmParametersInTsModularPhysicsList") || !fPm->GetBooleanParameter("Ph/SetEmParametersInTsModularPhysicsList"))
