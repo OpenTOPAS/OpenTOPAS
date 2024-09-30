@@ -1070,7 +1070,7 @@ void TsVBinnedScorer::AccumulateHit(G4Step* aStep, G4double value, G4int index)
 				else
 					edep = aStep->GetTrack()->GetVertexKineticEnergy();
 			} else if (fBinByPreStepEnergy)
-				edep = aStep->GetPreStepPoint()->GetKineticEnergy();
+				edep = aStep->GetTrack()->GetKineticEnergy();
 			else
 				edep = aStep->GetTotalEnergyDeposit();
 
