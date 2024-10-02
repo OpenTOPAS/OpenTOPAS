@@ -51,7 +51,6 @@ void TsFilterByTimeOfFlight::ResolveParameters() {
 G4bool TsFilterByTimeOfFlight::Accept(const G4Step* aStep) const {
 	if (fParentFilter && !fParentFilter->Accept(aStep)) return false;
 
-	G4cout << "Time: " << aStep->GetTrack()->GetGlobalTime() / ns << G4endl;
 	if (aStep->GetTrack()->GetGlobalTime() > fTimeOfFlightLimit) {
 		if (fInvert) return false;
 		else return true;
