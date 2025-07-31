@@ -36,6 +36,7 @@
 #include "G4Tubs.hh"
 #include "G4Sphere.hh"
 #include "G4VisExtent.hh"
+#include "G4Version.hh"
 
 class TsParameterManager;
 class TsExtensionManager;
@@ -49,10 +50,15 @@ class G4Step;
 class G4VisAttributes;
 class G4UserLimits;
 class G4LogicalVolume;
-class G4VTouchable;
 class G4LogicalSkinSurface;
 class G4Material;
 class G4BoundingExtentScene;
+
+#if G4VERSION_NUMBER < 1102
+  class G4VTouchable;
+#else
+  #include "G4VTouchable.hh"
+#endif
 
 class TsVGeometryComponent
 {
