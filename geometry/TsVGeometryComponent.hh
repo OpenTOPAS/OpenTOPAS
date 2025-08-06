@@ -36,7 +36,6 @@
 #include "G4Tubs.hh"
 #include "G4Sphere.hh"
 #include "G4VisExtent.hh"
-#include "G4TouchableHistory.hh"
 #include "G4VTouchable.hh"
 
 class TsParameterManager;
