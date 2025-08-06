@@ -318,6 +318,20 @@ G4bool TsParameterManager::GetBooleanParameter(const G4String& stringValue)
 	return IGetBooleanParameter(stringValue);
 }
 
+G4bool TsParameterManager::GetBooleanParameterOrDefault(const char* c, G4bool default_value)
+{
+	G4String stringValue = c;
+	return GetBooleanParameterOrDefault(stringValue, default_value);
+}
+
+G4bool TsParameterManager::GetBooleanParameterOrDefault(const G4String& parameterName, G4bool default_value)
+{
+	if (ParameterExists(parameterName))
+		return GetBooleanVector(parameterName);
+	else
+		return default_value;
+}
+
 
 G4bool TsParameterManager::IGetBooleanParameter(const G4String& stringValue)
 {

@@ -89,6 +89,8 @@ public:
 	// Get Boolean value of parameter
 	G4bool GetBooleanParameter(const G4String& parameterName);
 	G4bool GetBooleanParameter(const char* parameterName);
+	G4bool GetBooleanParameterOrDefault(const G4String& parameterName, G4bool default_value);
+	G4bool GetBooleanParameterOrDefault(const char* parameterName, G4bool default_value);
 
 	// Get string value of parameter (whether it is actually a string parameter of not)
 	G4String GetStringParameter(const G4String& parameterName);
