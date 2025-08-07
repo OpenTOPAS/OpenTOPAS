@@ -37,6 +37,7 @@
 #include "TsVScorer.hh"
 #include "TsSteppingAction.hh"
 
+#include "G4DNAChemistryManager.hh"
 #include "G4RunManager.hh"
 #include "G4Run.hh"
 #include "G4Event.hh"
@@ -53,6 +54,10 @@ TsEventAction::~TsEventAction()
 
 
 void TsEventAction::BeginOfEventAction(const G4Event* event) {
+	// ensure that the chemistry is notified! [COULD MOVE THIS TO TsChemMgr...]
+	if (G4DNAChemistryManager::GetInstanceIfExists() != nullptr)
+	  G4DNAChemistryManager::Instance()->BeginOfEventAction(event);
+	
 	G4int counter;
 	if (fPm->IsRandomMode())
 		counter = fPm->GetRunID();
@@ -95,6 +100,10 @@ void TsEventAction::BeginOfEventAction(const G4Event* event) {
 
 
 void TsEventAction::EndOfEventAction(const G4Event* event) {
+	// ensure that the chemistry is notified! [COULD MOVE THIS TO TsChemMgr...]
+	if (G4DNAChemistryManager::GetInstanceIfExists() != nullptr)
+		G4DNAChemistryManager::Instance()->EndOfEventAction(event);
+	
 	if (event->IsAborted())
 		fSqm->NoteInterruptedHistory();
 
