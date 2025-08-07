@@ -652,6 +652,7 @@ void TsSequenceManager::UpdateForNewRunOrQtChange() {
 	fScm->UpdateForNewRun(rebuiltSomeComponents);
 	fGrm->UpdateForNewRun(rebuiltSomeComponents);
 	fVm ->UpdateForNewRun(rebuiltSomeComponents);
+	fChm->UpdateForNewRun(rebuiltSomeComponents);
 
 	std::vector<TsGeneratorManager*>::iterator gIter;
 	for (gIter=fGeneratorManagers.begin(); gIter!=fGeneratorManagers.end(); gIter++)
@@ -775,6 +776,7 @@ void TsSequenceManager::Run(G4double currentTime) {
 	BeamOn(nEvents);
 
 	// Advise scoring manager and geometry manager that the run is over.
+	fChm->UpdateForEndOfRun();
 	fSom->UpdateForEndOfRun();
 	fScm->UpdateForEndOfRun();
 	fGrm->UpdateForEndOfRun();

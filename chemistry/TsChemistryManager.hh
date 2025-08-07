@@ -39,13 +39,18 @@ class TsChemistryManager
 {
 public:
 	TsChemistryManager(TsParameterManager* pM);
-	~TsChemistryManager();
+	~TsChemistryManager() = default;
 	
 	void Configure();
 	
+	void UpdateForNewRun(G4bool);
+	void UpdateForEndOfRun();
+	
 private:
 	void ResolveParameters();
-	G4String GetFullParmName(G4String);
+	G4String GetFullParmName(G4String) const;
+	
+	void BuildMoleculeCounters() const;
 	
 private:
 	TsParameterManager* fPm;
@@ -57,8 +62,18 @@ private:
 	G4double fMaxChemicalStageTime;
 	G4bool   fUseTimmingCut;
 	G4bool   fUseStepNumberingCut;
+
+	G4int fCounterManagerVerbosity;
+	G4bool fResetCountersBeforeEvent;
+	G4bool fResetCountersBeforeRun;
+	G4bool fAccumulateWorkerCountersIntoMaster;
+	G4bool fResetMasterCounterWithWorkers;
 	
 	G4int    fVerbosity;
+	
+public:
+	static G4String GetDefaultFixedPrecisionCounterName() { return "DefaultFixedPrecision"; }
+	static G4String GetDefaultVariablePrecisionCounterName() { return "DefaultVariablePrecision"; }
 	
 };
 #endif
