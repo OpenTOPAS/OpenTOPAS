@@ -327,7 +327,7 @@ G4bool TsParameterManager::GetBooleanParameterOrDefault(const char* c, G4bool de
 G4bool TsParameterManager::GetBooleanParameterOrDefault(const G4String& parameterName, G4bool default_value)
 {
 	if (ParameterExists(parameterName))
-		return GetBooleanVector(parameterName);
+		return GetBooleanParameter(parameterName);
 	else
 		return default_value;
 }
