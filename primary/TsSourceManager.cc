@@ -40,6 +40,7 @@
 #include "TsSourcePhaseSpace.hh"
 #include "TsSourcePhaseSpaceOld.hh"
 #include "TsSourceEnvironment.hh"
+#include "TsSourceActivityMap.hh"
 
 TsSourceManager::TsSourceManager(TsParameterManager* pM, TsGeometryManager* gM, TsExtensionManager* eM)
 	: fPm(pM), fGm(gM), fEm(eM), fSqm(0), fVerbosity(0), fCurrentSource(0), fSources(0)
@@ -91,6 +92,8 @@ void TsSourceManager::Initialize(TsSequenceManager* sqM) {
 				new TsSourcePhaseSpaceOld(fPm, this, sourceName);
 			else if (sourceType=="environment")
 				new TsSourceEnvironment(fPm, this, sourceName);
+			else if (sourceType=="activitymap")
+				new TsSourceActivityMap(fPm, this, sourceName);
 			else
 				new TsSource(fPm, this, sourceName);
 		}
