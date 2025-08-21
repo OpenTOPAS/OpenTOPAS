@@ -35,7 +35,7 @@ void TsGeneratorActivityMap::GeneratePrimaries(G4Event* anEvent)
 
 	// Get radionuclide name
 	G4String radionuclideName = fSource->GetRadionuclideName();
-	radionuclideName.toLower();
+	G4StrUtil::to_lower(radionuclideName);
 	G4int A = 0;
 	G4int Z = 0;
 	G4double excitEnergy = 0;
@@ -55,7 +55,7 @@ void TsGeneratorActivityMap::GeneratePrimaries(G4Event* anEvent)
 		ion = G4IonTable::GetIonTable()->GetIon(Z, A, excitEnergy);
 	}
 	else // Assuming 'GenericIon(Z,A,E)' or 'GenericIon(Z,A)'
-		ion = G4ParticleDefinition::GetParticleTable()->FindParticle(radionuclideName);
+		ion = G4ParticleTable::GetParticleTable()->FindParticle(radionuclideName);
 
 	G4double xVoxelSize = fSource->GetActivityMap()->GetVoxelSizeX();
 	G4double yVoxelSize = fSource->GetActivityMap()->GetVoxelSizeY();
