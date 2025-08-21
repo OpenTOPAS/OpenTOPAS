@@ -43,6 +43,7 @@
 #include "TsGeneratorPhaseSpaceOld.hh"
 #include "TsGeneratorEmittance.hh"
 #include "TsGeneratorEnvironment.hh"
+#include "TsGeneratorActivityMap.hh"
 #include "TsExtensionManager.hh"
 #include "TsSequenceManager.hh"
 
@@ -102,6 +103,8 @@ TsGeneratorManager::TsGeneratorManager(TsParameterManager* pM, TsExtensionManage
 				generator = new TsGeneratorEmittance(fPm, fGm, this, generatorName);
 			} else if (generatorType == "environment") {
 			  	generator = new TsGeneratorEnvironment(fPm, fGm, this, generatorName);
+	        } else if (generatorType == "activitymap") {
+	        	generator = new TsGeneratorActivityMap(fPm, fGm, this, generatorName);
 	        } else {
 				G4cerr << "Topas is exiting. Particle source \"" << generatorName << "\" has unknown Type \"" << generatorType << "\"" << G4endl;
 				fPm->AbortSession(1);
