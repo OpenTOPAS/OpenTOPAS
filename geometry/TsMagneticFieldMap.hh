@@ -47,6 +47,15 @@ public:
 	void GetFieldValue(const double p[3], double* Field) const;
 	void ResolveParameters();
 
+protected:
+	// Read the field map file in CSV format
+	// Expected header: x [unit], y [unit], z [unit], Bx [unit], By [unit], Bz [unit]
+	// Allowed units: mm, cm, m, T, G
+	void ReadCSVFile(const G4String& filename);
+
+	// Read the field map file in Opera3D TABLE format
+	void ReadOpera3DFile(const G4String& filename);
+
 private:
 	// Physical limits of the defined region
 	G4double fMinX, fMinY, fMinZ, fMaxX, fMaxY, fMaxZ;
