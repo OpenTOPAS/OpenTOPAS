@@ -420,7 +420,7 @@ void TsVGeometryComponent::InstantiateFields() {
 					magneticField = new TsMagneticFieldDipole(fPm, fGm, this);
 				} else if (fieldType == "quadrupolemagnet") {
 					magneticField = new TsMagneticFieldQuadrupole(fPm, fGm, this);
-				} else if ( fieldType == "mappedmagnet") {
+				} else if ( fieldType == "mappedmagnet" || fieldType == "magneticfieldmap" ) {
 					magneticField = new TsMagneticFieldMap(fPm, fGm, this);
 				} else if ( fieldType == "uniformelectromagnetic") {
 					electroMagneticField = new TsElectroMagneticFieldUniform(fPm, fGm, this);
