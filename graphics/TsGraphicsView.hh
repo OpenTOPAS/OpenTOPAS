@@ -80,6 +80,7 @@ private:
 	G4bool fIsActive;
 	G4bool fAlreadyCreated;
 	G4int fMagneticFieldArrowDensity;
+	G4int fElectricFieldArrowDensity;
 	G4bool fHadParameterChangeSinceLastRun;
 };
 
