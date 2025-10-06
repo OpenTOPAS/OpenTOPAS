@@ -80,6 +80,8 @@ void TsMagneticFieldMap::ResolveParameters() {
     }
     G4cout << "File extension: " << fileExtension << G4endl;
 
+	file.close();
+
     if (fileExtension != "csv" && fileExtension != "TABLE") {
         G4cerr << "" << G4endl;
         G4cerr << "Topas is exiting due to a serious error." << G4endl;
