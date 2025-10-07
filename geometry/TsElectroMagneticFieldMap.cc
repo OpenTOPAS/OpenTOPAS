@@ -107,9 +107,7 @@ void TsElectroMagneticFieldMap::ResolveParameters() {
 
     // Call appropriate reader based on file extension
     if (fileExtension == "TABLE") {
-        // ReadOpera3DFile(filename, "E");
-        G4cerr << "Not implemented yet: reading Opera3D TABLE files for electric field maps for ElectroMagneticFieldMap." << G4endl;
-        fPm->AbortSession(1);
+        ReadOpera3DFile(filename, "E");
     } else if (fileExtension == "csv") {
         ReadCSVFile(filename, "E");
     }
@@ -152,9 +150,7 @@ void TsElectroMagneticFieldMap::ResolveParameters() {
 
     // Call appropriate reader based on file extension
     if (fileExtension == "TABLE") {
-        // ReadOpera3DFile(filename, "B");
-        G4cerr << "Not implemented yet: reading Opera3D TABLE files for magnetic field maps for ElectroMagneticFieldMap." << G4endl;
-        fPm->AbortSession(1);
+        ReadOpera3DFile(filename, "B");
     } else if (fileExtension == "csv") {
         ReadCSVFile(filename, "B");
     }
@@ -659,228 +655,472 @@ void TsElectroMagneticFieldMap::ReadCSVFile(const G4String& filename, const G4St
 
 }
 
-// void TsElectroMagneticFieldMap::ReadOpera3DFile(const G4String& filename, const G4String& fieldType) {
-//     G4cerr << "Opera3D file reading not yet implemented." << G4endl;
-//     fPm->AbortSession(1);
-//     // ** --- **
-//     // TODO (@srmarcballestero): Implement Opera3D file reading
-//     std::ifstream file(filename);
-//     if (!file) {
-//         G4cerr << "" << G4endl;
-//         G4cerr << "Topas is exiting due to a serious error." << G4endl;
-//         G4cerr << "The parameter: " << fComponent->GetFullParmName("ElectricField3DTable") << G4endl;
-//         G4cerr << "references a ElectricField3DTable file that cannot be found:" << G4endl;
-//         G4cerr << fPm->GetStringParameter(fComponent->GetFullParmName("ElectricField3DTable")) << G4endl;
-//         fPm->AbortSession(1);
-//     }
+void TsElectroMagneticFieldMap::ReadOpera3DFileE(const G4String& filename) {
+    std::ifstream file(filename);
 
-//     G4String line;
-//         bool ReadingHeader = true;
-//         G4int counter = 0;
-//         double xval = 0.,yval = 0.,zval = 0.,ex,ey,ez;
-//         int ix = 0;
-//         int iy = 0;
-//         int iz = 0;
-//         std::map<G4String,double> headerUnits;
-//         std::vector<G4String> headerUnitStrings;
-//         std::vector<G4String> headerFields;
+    // Error: file not found
+    if (!file) {
+        G4cerr << "" << G4endl;
+        G4cerr << "Topas is exiting due to a serious error." << G4endl;
+        G4cerr << "The parameter: " << fComponent->GetFullParmName("ElectricField3DTable") << G4endl;
+        G4cerr << "references a ElectricField3DTable file that cannot be found:" << G4endl;
+        G4cerr << fPm->GetStringParameter(fComponent->GetFullParmName("ElectricField3DTable")) << G4endl;
+        fPm->AbortSession(1);
+    }
 
-//         while (file.good()) {
-//             getline(file,line);
-//             if (line.find_last_not_of(" \t\f\v\n\r") == std::string::npos)
-//                 continue;
+    G4String line;
+    bool ReadingHeader = true;
+    G4int counter = 0;
+    double xval = 0., yval = 0., zval = 0., ex, ey, ez;
+    int ix = 0;
+    int iy = 0;
+    int iz = 0;
+    std::map<G4String,double> headerUnits;
+    std::vector<G4String> headerUnitStrings;
+    std::vector<G4String> headerFields;
 
-//             std::string::size_type pos = line.find_last_not_of(' ');
-//             if(pos != std::string::npos) {
-//                 line.erase(pos + 1);
-//                 pos = line.find_first_not_of(" \t\n\f\v\r\n");
-//                 if(pos != std::string::npos) line.erase(0, pos);
-//             } else {
-//                 line.erase(line.begin(), line.end());
-//             }
+    while (file.good()) {
+        getline(file,line);
+        if (line.find_last_not_of(" \t\f\v\n\r") == std::string::npos)
+            continue;
 
-//             std::vector<G4String> thisRow;
+        std::string::size_type pos = line.find_last_not_of(' ');
+        if(pos != std::string::npos) {
+            line.erase(pos + 1);
+            pos = line.find_first_not_of(" \t\n\f\v\r\n");
+            if(pos != std::string::npos) line.erase(0, pos);
+        } else {
+            line.erase(line.begin(), line.end());
+        }
 
-//             G4Tokenizer next(line);
-//             G4String token = next();
-//             while (token != "" && token != "\t" && token != "\n" && token != "\r" && token != "\f" && token != "\v") {
-//                 thisRow.push_back(token);
-//                 token = next();
-//             }
+        std::vector<G4String> thisRow;
 
-//             if ((thisRow[0] == "0") && (counter > 0)) {
-//                 // Found end of header, signal start of data read
-//                 if (headerUnitStrings.size() == 0) {
-//                     if (headerFields.size() > 6) {
-//                         G4cerr << "" << G4endl;
-//                         G4cerr << "Topas is exiting due to a serious error." << G4endl;
-//                         G4cerr << "Header information was not usable from ElectricField3DTable file:" << G4endl;
-//                         G4cerr << fPm->GetStringParameter(fComponent->GetFullParmName("ElectricField3DTable")) << G4endl;
-//                         G4cerr << "Only six fields (x,y,z,Ex,Ey,Ez) are allowed without specified units. Please include explicit unit declaration in the header" << G4endl;
-//                         fPm->AbortSession(1);
-//                     } else {
-//                         G4cout << "No units specified, setting to 'm' for x,y,z and 'V/m' for Ex,Ey,Ez" << G4endl;
-//                         headerUnitStrings.push_back("m");
-//                         headerUnitStrings.push_back("m");
-//                         headerUnitStrings.push_back("m");
-//                         headerUnitStrings.push_back("V/m");
-//                         headerUnitStrings.push_back("V/m");
-//                         headerUnitStrings.push_back("V/m");
-//                     }
-//                 }
+        G4Tokenizer next(line);
+        G4String token = next();
+        while (token != "" && token != "\t" && token != "\n" && token != "\r" && token != "\f" && token != "\v") {
+            thisRow.push_back(token);
+            token = next();
+        }
 
-//                 for(G4int i = 0; i < (G4int)headerFields.size(); i++) {
-//                     G4String unitString = headerUnitStrings[i];
-//                     std::locale loc;
+        if ((thisRow[0] == "0") && (counter > 0)) {
+            // Found end of header, signal start of data read
+            if (headerUnitStrings.size() == 0) {
+                if (headerFields.size() > 6) {
+                    G4cerr << "" << G4endl;
+                    G4cerr << "Topas is exiting due to a serious error." << G4endl;
+                    G4cerr << "Header information was not usable from ElectricField3DTable file:" << G4endl;
+                    G4cerr << fPm->GetStringParameter(fComponent->GetFullParmName("ElectricField3DTable")) << G4endl;
+                    G4cerr << "Only six fields (x,y,z,Ex,Ey,Ez) are allowed without specified units. Please include explicit unit declaration in the header" << G4endl;
+                    fPm->AbortSession(1);
+                } else {
+                    G4cout << "No units specified, setting to 'm' for x,y,z and 'V/m' for Ex,Ey,Ez" << G4endl;
+                    headerUnitStrings.push_back("m");
+                    headerUnitStrings.push_back("m");
+                    headerUnitStrings.push_back("m");
+                    headerUnitStrings.push_back("V/m");
+                    headerUnitStrings.push_back("V/m");
+                    headerUnitStrings.push_back("V/m");
+                }
+            }
 
-//                     size_t f = unitString.find("[");
+            for(G4int i = 0; i < (G4int)headerFields.size(); i++) {
+                G4String unitString = headerUnitStrings[i];
+                std::locale loc;
 
-//                     if (f != std::string::npos) {
-//                         unitString.replace(f, std::string("[").length(), "");
-//                     };
+                size_t f = unitString.find("[");
 
-//                     f = unitString.find("]");
+                if (f != std::string::npos) {
+                    unitString.replace(f, std::string("[").length(), "");
+                };
 
-//                     if (f != std::string::npos) {
-//                         unitString.replace(f, std::string("]").length(), "");
-//                     };
+                f = unitString.find("]");
 
-//                     for (std::string::size_type j = 0; j < unitString.length(); j++) {
-//                         unitString[j] = std::tolower(unitString[j],loc);
-//                     }
+                if (f != std::string::npos) {
+                    unitString.replace(f, std::string("]").length(), "");
+                };
 
-//                     if (unitString == "mm") {
-//                         headerUnits[headerFields[i]] = mm;
-//                     } else
-//                         if (unitString == "m" || unitString == "metre" || unitString == "meter") {
-//                             headerUnits[headerFields[i]] = m;
-//                         } else
-//                             if (unitString == "V/m") {
-//                                 headerUnits[headerFields[i]] = volt / m;
-//                             }
-//                             else {
-//                                 headerUnits[headerFields[i]] = 1;
-//                             }
-//                 }
+                for (std::string::size_type j = 0; j < unitString.length(); j++) {
+                    unitString[j] = std::tolower(unitString[j],loc);
+                }
 
-//                 fFieldX.resize(fNX);
-//                 fFieldY.resize(fNX);
-//                 fFieldZ.resize(fNX);
-//                 for (int index_x=0; index_x<fNX; index_x++) {
-//                     fFieldX[index_x].resize(fNY);
-//                     fFieldY[index_x].resize(fNY);
-//                     fFieldZ[index_x].resize(fNY);
-//                     for (int index_y=0; index_y<fNY; index_y++) {
-//                         fFieldX[index_x][index_y].resize(fNZ);
-//                         fFieldY[index_x][index_y].resize(fNZ);
-//                         fFieldZ[index_x][index_y].resize(fNZ);
-//                     }
-//                 }
+                if (unitString == "mm") {
+                    headerUnits[headerFields[i]] = mm;
+                } else
+                    if (unitString == "m" || unitString == "metre" || unitString == "meter") {
+                        headerUnits[headerFields[i]] = m;
+                    } else
+                        if (unitString == "V/m") {
+                            headerUnits[headerFields[i]] = volt / m;
+                        }
+                        else {
+                            headerUnits[headerFields[i]] = 1;
+                        }
+            }
 
-//                 ReadingHeader = false;
-//                 counter = 0;
-//                 continue;
-//             }
+            eFieldX.resize(eNX);
+            eFieldY.resize(eNX);
+            eFieldZ.resize(eNX);
+            for (int index_x=0; index_x<eNX; index_x++) {
+                eFieldX[index_x].resize(eNY);
+                eFieldY[index_x].resize(eNY);
+                eFieldZ[index_x].resize(eNY);
+                for (int index_y=0; index_y<eNY; index_y++) {
+                    eFieldX[index_x][index_y].resize(eNZ);
+                    eFieldY[index_x][index_y].resize(eNZ);
+                    eFieldZ[index_x][index_y].resize(eNZ);
+                }
+            }
 
-//             if (ReadingHeader) {
-//                 if (counter == 0) {
-//                     fNX = atoi(thisRow[0]);
-//                     fNY = atoi(thisRow[1]);
-//                     fNZ = atoi(thisRow[2]);
-//                 } else {
-//                     if (thisRow.size() < 2) continue;
+            ReadingHeader = false;
+            counter = 0;
+            continue;
+        }
 
-//                     headerFields.push_back(thisRow[1]);
-//                     if (thisRow.size() == 3)
-//                         headerUnitStrings.push_back(thisRow[2]);
+        if (ReadingHeader) {
+            if (counter == 0) {
+                eNX = atoi(thisRow[0]);
+                eNY = atoi(thisRow[1]);
+                eNZ = atoi(thisRow[2]);
+            } else {
+                if (thisRow.size() < 2) continue;
 
-//                     if (thisRow.size() > 3) {
-//                         G4cerr << "" << G4endl;
-//                         G4cerr << "Topas is exiting due to a serious error." << G4endl;
-//                         G4cerr << "Header information was not usable from ElectricField3DTable file:" << G4endl;
-//                         G4cerr << fPm->GetStringParameter(fComponent->GetFullParmName("ElectricField3DTable")) << G4endl;
-//                         G4cerr << "Header has an unknown format on line" << G4endl;
-//                         G4cerr << line << G4endl;
-//                         G4cerr << "This error can be triggered by mismatch of linux/windows end-of-line characters." << G4endl;
-//                         G4cerr << "If the opera file was created in windows, try converting it with dos2unix" << G4endl;
-//                         fPm->AbortSession(1);
-//                     }
-//                 }
-//             } else {
-//                 if (thisRow.size() != headerFields.size()) {
-//                     G4cerr << "" << G4endl;
-//                     G4cerr << "Topas is exiting due to a serious error." << G4endl;
-//                     G4cerr << "Header information was not usable from ElectricField3DTable file:" << G4endl;
-//                     G4cerr << fPm->GetStringParameter(fComponent->GetFullParmName("ElectricField3DTable")) << G4endl;
-//                     G4cerr << "File contains columns not in the header." << G4endl;
-//                     fPm->AbortSession(1);
-//                 }
+                headerFields.push_back(thisRow[1]);
+                if (thisRow.size() == 3)
+                    headerUnitStrings.push_back(thisRow[2]);
 
-//                 xval = atof(thisRow[0]);
-//                 yval = atof(thisRow[1]);
-//                 zval = atof(thisRow[2]);
-//                 ex = atof(thisRow[3]);
-//                 ey = atof(thisRow[4]);
-//                 ez = atof(thisRow[5]);
+                if (thisRow.size() > 3) {
+                    G4cerr << "" << G4endl;
+                    G4cerr << "Topas is exiting due to a serious error." << G4endl;
+                    G4cerr << "Header information was not usable from ElectricField3DTable file:" << G4endl;
+                    G4cerr << fPm->GetStringParameter(fComponent->GetFullParmName("ElectricField3DTable")) << G4endl;
+                    G4cerr << "Header has an unknown format on line" << G4endl;
+                    G4cerr << line << G4endl;
+                    G4cerr << "This error can be triggered by mismatch of linux/windows end-of-line characters." << G4endl;
+                    G4cerr << "If the opera file was created in windows, try converting it with dos2unix" << G4endl;
+                    fPm->AbortSession(1);
+                }
+            }
+        } else {
+            if (thisRow.size() != headerFields.size()) {
+                G4cerr << "" << G4endl;
+                G4cerr << "Topas is exiting due to a serious error." << G4endl;
+                G4cerr << "Header information was not usable from ElectricField3DTable file:" << G4endl;
+                G4cerr << fPm->GetStringParameter(fComponent->GetFullParmName("ElectricField3DTable")) << G4endl;
+                G4cerr << "File contains columns not in the header." << G4endl;
+                fPm->AbortSession(1);
+            }
 
-//                 if ( ix==0 && iy==0 && iz==0 ) {
-//                     fMinX = xval * headerUnits["X"];
-//                     fMinY = yval * headerUnits["Y"];
-//                     fMinZ = zval * headerUnits["Z"];
-//                 }
+            xval = atof(thisRow[0]);
+            yval = atof(thisRow[1]);
+            zval = atof(thisRow[2]);
+            ex = atof(thisRow[3]);
+            ey = atof(thisRow[4]);
+            ez = atof(thisRow[5]);
 
-//                 fFieldX[ix][iy][iz] = ex * headerUnits["EX"];
-//                 fFieldY[ix][iy][iz] = ey * headerUnits["EY"];
-//                 fFieldZ[ix][iy][iz] = ez * headerUnits["EZ"];
+            if ( ix==0 && iy==0 && iz==0 ) {
+                eMinX = xval * headerUnits["X"];
+                eMinY = yval * headerUnits["Y"];
+                eMinZ = zval * headerUnits["Z"];
+            }
 
-//                 iz++;
-//                 if (iz == fNZ) {
-//                     iy++;
-//                     iz = 0;
-//                 }
+            eFieldX[ix][iy][iz] = ex * headerUnits["EX"];
+            eFieldY[ix][iy][iz] = ey * headerUnits["EY"];
+            eFieldZ[ix][iy][iz] = ez * headerUnits["EZ"];
 
-//                 if (iy == fNY) {
-//                     ix++;
-//                     iy = 0;
-//                 }
-//             }
+            iz++;
+            if (iz == eNZ) {
+                iy++;
+                iz = 0;
+            }
 
-//             counter++;
-//         }
+            if (iy == eNY) {
+                ix++;
+                iy = 0;
+            }
+        }
 
-//         file.close();
+        counter++;
+    }
 
-//         if (fNX == 0) {
-//             G4cerr << "" << G4endl;
-//             G4cerr << "Topas is exiting due to a serious error." << G4endl;
-//             G4cerr << "Header information was not usable from ElectricField3DTable file:" << G4endl;
-//             G4cerr << fPm->GetStringParameter(fComponent->GetFullParmName("ElectricField3DTable")) << G4endl;
-//             fPm->AbortSession(1);
-//         }
+    file.close();
 
-//         fMaxX = xval * headerUnits["X"];
-//         fMaxY = yval * headerUnits["Y"];
-//         fMaxZ = zval * headerUnits["Z"];
+    if (eNX == 0) {
+        G4cerr << "" << G4endl;
+        G4cerr << "Topas is exiting due to a serious error." << G4endl;
+        G4cerr << "Header information was not usable from ElectricField3DTable file:" << G4endl;
+        G4cerr << fPm->GetStringParameter(fComponent->GetFullParmName("ElectricField3DTable")) << G4endl;
+        fPm->AbortSession(1);
+    }
 
-//         if (fMaxX < fMinX) {
-//             std::swap(fMaxX,fMinX);
-//             fInvertX = true;
-//         }
+    eMaxX = xval * headerUnits["X"];
+    eMaxY = yval * headerUnits["Y"];
+    eMaxZ = zval * headerUnits["Z"];
 
-//         if (fMaxY < fMinY) {
-//             std::swap(fMaxY,fMinY);
-//             fInvertY = true;
-//         }
+    if (eMaxX < eMinX) {
+        std::swap(eMaxX,eMinX);
+        eInvertX = true;
+    }
 
-//         if (fMaxZ < fMinZ) {
-//             std::swap(fMaxZ,fMinZ);
-//             fInvertZ = true;
-//         }
+    if (eMaxY < eMinY) {
+        std::swap(eMaxY,eMinY);
+        eInvertY = true;
+    }
 
-//         fDX = fMaxX - fMinX;
-//         fDY = fMaxY - fMinY;
-//         fDZ = fMaxZ - fMinZ;
-// }
+    if (eMaxZ < eMinZ) {
+        std::swap(eMaxZ,eMinZ);
+        eInvertZ = true;
+    }
+
+    eDX = eMaxX - eMinX;
+    eDY = eMaxY - eMinY;
+    eDZ = eMaxZ - eMinZ;
+}
+
+
+void TsElectroMagneticFieldMap::ReadOpera3DFileB(const G4String& filename) {
+    std::ifstream file(filename);
+
+    // Error: file not found
+    if (!file) {
+        G4cerr << "" << G4endl;
+        G4cerr << "Topas is exiting due to a serious error." << G4endl;
+        G4cerr << "The parameter: " << fComponent->GetFullParmName("MagneticField3DTable") << G4endl;
+        G4cerr << "references a MagneticField3DTable file that cannot be found:" << G4endl;
+        G4cerr << fPm->GetStringParameter(fComponent->GetFullParmName("MagneticField3DTable")) << G4endl;
+        fPm->AbortSession(1);
+    }
+
+    G4String line;
+    bool ReadingHeader = true;
+    G4int counter = 0;
+    double xval = 0., yval = 0., zval = 0., bx, by, bz;
+    int ix = 0;
+    int iy = 0;
+    int iz = 0;
+    std::map<G4String,double> headerUnits;
+    std::vector<G4String> headerUnitStrings;
+    std::vector<G4String> headerFields;
+
+    while (file.good()) {
+        getline(file,line);
+        if (line.find_last_not_of(" \t\f\v\n\r") == std::string::npos)
+            continue;
+
+        std::string::size_type pos = line.find_last_not_of(' ');
+        if(pos != std::string::npos) {
+            line.erase(pos + 1);
+            pos = line.find_first_not_of(" \t\n\f\v\r\n");
+            if(pos != std::string::npos) line.erase(0, pos);
+        } else {
+            line.erase(line.begin(), line.end());
+        }
+
+        std::vector<G4String> thisRow;
+
+        G4Tokenizer next(line);
+        G4String token = next();
+        while (token != "" && token != "\t" && token != "\n" && token != "\r" && token != "\f" && token != "\v") {
+            thisRow.push_back(token);
+            token = next();
+        }
+
+        if ((thisRow[0] == "0") && (counter > 0)) {
+            // Found end of header, signal start of data read
+            if (headerUnitStrings.size() == 0) {
+                if (headerFields.size() > 6) {
+                    G4cerr << "" << G4endl;
+                    G4cerr << "Topas is exiting due to a serious error." << G4endl;
+                    G4cerr << "Header information was not usable from MagneticField3DTable file:" << G4endl;
+                    G4cerr << fPm->GetStringParameter(fComponent->GetFullParmName("MagneticField3DTable")) << G4endl;
+                    G4cerr << "Only six fields (x,y,z,Bx,By,Bz) are allowed without specified units. Please include explicit unit declaration in the header" << G4endl;
+                    fPm->AbortSession(1);
+                } else {
+                    G4cout << "No units specified, setting to 'm' for x,y,z and 'tesla' for Bx,By,Bz" << G4endl;
+                    headerUnitStrings.push_back("m");
+                    headerUnitStrings.push_back("m");
+                    headerUnitStrings.push_back("m");
+                    headerUnitStrings.push_back("tesla");
+                    headerUnitStrings.push_back("tesla");
+                    headerUnitStrings.push_back("tesla");
+                }
+            }
+
+            for(G4int i = 0; i < (G4int)headerFields.size(); i++) {
+                G4String unitString = headerUnitStrings[i];
+                std::locale loc;
+
+                size_t f = unitString.find("[");
+
+                if (f != std::string::npos) {
+                    unitString.replace(f, std::string("[").length(), "");
+                };
+
+                f = unitString.find("]");
+
+                if (f != std::string::npos) {
+                    unitString.replace(f, std::string("]").length(), "");
+                };
+
+                for (std::string::size_type j = 0; j < unitString.length(); j++) {
+                    unitString[j] = std::tolower(unitString[j],loc);
+                }
+
+                if (unitString == "mm") {
+                    headerUnits[headerFields[i]] = mm;
+                } else
+                    if (unitString == "m" || unitString == "metre" || unitString == "meter") {
+                        headerUnits[headerFields[i]] = m;
+                    } else
+                        if (unitString == "tesla") {
+                            headerUnits[headerFields[i]] = tesla;
+                        }
+                        else {
+                            headerUnits[headerFields[i]] = 1;
+                        }
+            }
+
+            bFieldX.resize(bNX);
+            bFieldY.resize(bNX);
+            bFieldZ.resize(bNX);
+            for (int index_x=0; index_x<bNX; index_x++) {
+                bFieldX[index_x].resize(bNY);
+                bFieldY[index_x].resize(bNY);
+                bFieldZ[index_x].resize(bNY);
+                for (int index_y=0; index_y<bNY; index_y++) {
+                    bFieldX[index_x][index_y].resize(bNZ);
+                    bFieldY[index_x][index_y].resize(bNZ);
+                    bFieldZ[index_x][index_y].resize(bNZ);
+                }
+            }
+
+            ReadingHeader = false;
+            counter = 0;
+            continue;
+        }
+
+        if (ReadingHeader) {
+            if (counter == 0) {
+                bNX = atoi(thisRow[0]);
+                bNY = atoi(thisRow[1]);
+                bNZ = atoi(thisRow[2]);
+            } else {
+                if (thisRow.size() < 2) continue;
+
+                headerFields.push_back(thisRow[1]);
+                if (thisRow.size() == 3)
+                    headerUnitStrings.push_back(thisRow[2]);
+
+                if (thisRow.size() > 3) {
+                    G4cerr << "" << G4endl;
+                    G4cerr << "Topas is exiting due to a serious error." << G4endl;
+                    G4cerr << "Header information was not usable from MagneticField3DTable file:" << G4endl;
+                    G4cerr << fPm->GetStringParameter(fComponent->GetFullParmName("MagneticField3DTable")) << G4endl;
+                    G4cerr << "Header has an unknown format on line" << G4endl;
+                    G4cerr << line << G4endl;
+                    G4cerr << "This error can be triggered by mismatch of linux/windows end-of-line characters." << G4endl;
+                    G4cerr << "If the opera file was created in windows, try converting it with dos2unix" << G4endl;
+                    fPm->AbortSession(1);
+                }
+            }
+        } else {
+            if (thisRow.size() != headerFields.size()) {
+                G4cerr << "" << G4endl;
+                G4cerr << "Topas is exiting due to a serious error." << G4endl;
+                G4cerr << "Header information was not usable from MagneticField3DTable file:" << G4endl;
+                G4cerr << fPm->GetStringParameter(fComponent->GetFullParmName("MagneticField3DTable")) << G4endl;
+                G4cerr << "File contains columns not in the header." << G4endl;
+                fPm->AbortSession(1);
+            }
+
+            xval = atof(thisRow[0]);
+            yval = atof(thisRow[1]);
+            zval = atof(thisRow[2]);
+            bx = atof(thisRow[3]);
+            by = atof(thisRow[4]);
+            bz = atof(thisRow[5]);
+
+            if ( ix==0 && iy==0 && iz==0 ) {
+                bMinX = xval * headerUnits["X"];
+                bMinY = yval * headerUnits["Y"];
+                bMinZ = zval * headerUnits["Z"];
+            }
+
+            bFieldX[ix][iy][iz] = bx * headerUnits["BX"];
+            bFieldY[ix][iy][iz] = by * headerUnits["BY"];
+            bFieldZ[ix][iy][iz] = bz * headerUnits["BZ"];
+
+            iz++;
+            if (iz == bNZ) {
+                iy++;
+                iz = 0;
+            }
+
+            if (iy == bNY) {
+                ix++;
+                iy = 0;
+            }
+        }
+
+        counter++;
+    }
+
+    file.close();
+
+    if (bNX == 0) {
+        G4cerr << "" << G4endl;
+        G4cerr << "Topas is exiting due to a serious error." << G4endl;
+        G4cerr << "Header information was not usable from MagneticField3DTable file:" << G4endl;
+        G4cerr << fPm->GetStringParameter(fComponent->GetFullParmName("MagneticField3DTable")) << G4endl;
+        fPm->AbortSession(1);
+    }
+
+    bMaxX = xval * headerUnits["X"];
+    bMaxY = yval * headerUnits["Y"];
+    bMaxZ = zval * headerUnits["Z"];
+
+    if (bMaxX < bMinX) {
+        std::swap(bMaxX,bMinX);
+        bInvertX = true;
+    }
+
+    if (bMaxY < bMinY) {
+        std::swap(bMaxY,bMinY);
+        bInvertY = true;
+    }
+
+    if (bMaxZ < bMinZ) {
+        std::swap(bMaxZ,bMinZ);
+        bInvertZ = true;
+    }
+
+    bDX = bMaxX - bMinX;
+    bDY = bMaxY - bMinY;
+    bDZ = bMaxZ - bMinZ;
+
+}
+
+void TsElectroMagneticFieldMap::ReadOpera3DFile(const G4String& filename, const G4String& fieldType) {
+	std::ifstream file(filename);
+
+    if (fieldType == "E") {
+        G4cout << "Reading electric field map from Opera3D TABLE file: " << filename << G4endl;
+        ReadOpera3DFileE(filename);
+        G4cout << "Electric field map dimensions: " << eNX << " x " << eNY << " x " << eNZ << G4endl;
+    }
+    else if (fieldType == "B") {
+        G4cout << "Reading magnetic field map from Opera3D TABLE file: " << filename << G4endl;
+        ReadOpera3DFileB(filename);
+        G4cout << "Magnetic field map dimensions: " << bNX << " x " << bNY << " x " << bNZ << G4endl;
+    }
+    else {
+        G4cerr << "" << G4endl;
+        G4cerr << "Topas is exiting due to a serious error." << G4endl;
+        G4cerr << "Unknown field type '" << fieldType << "' specified for Opera3D file reader." << G4endl;
+        fPm->AbortSession(1);
+    }
+
+}
+
 
 G4ThreeVector TsElectroMagneticFieldMap::GetFieldValueE(const G4ThreeVector localPoint) const {
     // Tabulated 3D table has it's own field area and the region is supposed to be smaller than volume

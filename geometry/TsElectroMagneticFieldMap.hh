@@ -59,13 +59,13 @@ protected:
     void ReadCSVFile(const G4String& filename, const G4String& fieldType);
 
     // Read the field map file in Opera3D TABLE format
-    // void ReadOpera3DFile(const G4String& filename, const G4String& fieldType);
+    void ReadOpera3DFile(const G4String& filename, const G4String& fieldType);
 
 private:
     // Attributes and methods for the electric field map
     // Read the electric field map file
     void ReadCSVFileE(const G4String& filename);
-    // void ReadOpera3DFileE(const G4String& filename);
+    void ReadOpera3DFileE(const G4String& filename);
 
 	// Physical limits of the defined region
 	G4double eMinX, eMinY, eMinZ, eMaxX, eMaxY, eMaxZ;
@@ -92,7 +92,7 @@ private:
     // Attributes and methods for the magnetic field map
     // Read the magnetic field map file
     void ReadCSVFileB(const G4String& filename);
-    // void ReadOpera3DFileB(const G4String& filename);
+    void ReadOpera3DFileB(const G4String& filename);
 
     // Physical limits of the defined region
     G4double bMinX, bMinY, bMinZ, bMaxX, bMaxY, bMaxZ;
