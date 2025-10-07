@@ -38,6 +38,7 @@
 #include "G4Tokenizer.hh"
 #include "G4ChordFinder.hh"
 
+#include <array>
 #include <fstream>
 #include <locale>
 #include <map>
