@@ -94,6 +94,7 @@ jobs:
                         -DGEANT4_USE_QT=ON \
                         -DGEANT4_USE_OPENGL_X11=ON \
                         -DGEANT4_USE_RAYTRACER_X11=ON \
+                        -DGEANT4_USE_SYSTEM_ZLIB=ON \
                         -DCMAKE_INSTALL_PREFIX=$HOME/geant4-install
         ${{ matrix.make_command }}
       shell: bash
