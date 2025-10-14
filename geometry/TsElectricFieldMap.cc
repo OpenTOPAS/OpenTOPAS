@@ -1,4 +1,4 @@
-//
+// * Created on 2025.10.06 by @srmarcballestero <marc.ballestero-ribo@psi.ch>
 // ********************************************************************
 // *                                                                  *
 // * Copyright 2024 The TOPAS Collaboration                           *
@@ -30,7 +30,7 @@
 
 #include "TsParameterManager.hh"
 
-#include "TsMagneticFieldMap.hh"
+#include "TsElectricFieldMap.hh"
 #include "TsVGeometryComponent.hh"
 
 #include "G4SystemOfUnits.hh"
@@ -44,13 +44,13 @@
 #include <map>
 #include <set>
 
-TsMagneticFieldMap::TsMagneticFieldMap(TsParameterManager* pM,TsGeometryManager* gM, TsVGeometryComponent* component):
-TsVMagneticField(pM, gM, component), fInvertX(false), fInvertY(false), fInvertZ(false), fNX(0), fNY(0), fNZ(0) {
+TsElectricFieldMap::TsElectricFieldMap(TsParameterManager* pM, TsGeometryManager* gM, TsVGeometryComponent* component):
+TsVElectroMagneticField(pM, gM, component), fInvertX(false), fInvertY(false), fInvertZ(false), fNX(0), fNY(0), fNZ(0) {
 	ResolveParameters();
 }
 
 
-TsMagneticFieldMap::~TsMagneticFieldMap() {
+TsElectricFieldMap::~TsElectricFieldMap() {
 	fFieldX.clear();
 	fFieldY.clear();
 	fFieldZ.clear();
@@ -58,20 +58,20 @@ TsMagneticFieldMap::~TsMagneticFieldMap() {
 }
 
 
-void TsMagneticFieldMap::ResolveParameters() {
-	G4String filename = fPm->GetStringParameter(fComponent->GetFullParmName("MagneticField3DTable"));
+void TsElectricFieldMap::ResolveParameters() {
+	G4String filename = fPm->GetStringParameter(fComponent->GetFullParmName("ElectricField3DTable"));
 
 	std::ifstream file(filename);
 	if (!file) {
 		G4cerr << "" << G4endl;
 		G4cerr << "Topas is exiting due to a serious error." << G4endl;
-		G4cerr << "The parameter: " << fComponent->GetFullParmName("MagneticField3DTable") << G4endl;
-		G4cerr << "references a MagneticField3DTable file that cannot be found:" << G4endl;
-		G4cerr << fPm->GetStringParameter(fComponent->GetFullParmName("MagneticField3DTable")) << G4endl;
+		G4cerr << "The parameter: " << fComponent->GetFullParmName("ElectricField3DTable") << G4endl;
+		G4cerr << "references a ElectricField3DTable file that cannot be found:" << G4endl;
+		G4cerr << fPm->GetStringParameter(fComponent->GetFullParmName("ElectricField3DTable")) << G4endl;
 		fPm->AbortSession(1);
 	}
 
-	// Get the extension of the file and check if it is supported
+    // Get the extension of the file and check if it is supported
     size_t f = filename.find_last_of(".");
     G4String fileExtension;
     if (f != std::string::npos) {
@@ -81,13 +81,13 @@ void TsMagneticFieldMap::ResolveParameters() {
     }
     G4cout << "File extension: " << fileExtension << G4endl;
 
-	file.close();
+    file.close();
 
     if (fileExtension != "csv" && fileExtension != "TABLE") {
         G4cerr << "" << G4endl;
         G4cerr << "Topas is exiting due to a serious error." << G4endl;
-        G4cerr << "The parameter: " << fComponent->GetFullParmName("MagneticField3DTable") << G4endl;
-        G4cerr << "references a MagneticField3DTable file with an unsupported extension:" << G4endl;
+        G4cerr << "The parameter: " << fComponent->GetFullParmName("ElectricField3DTable") << G4endl;
+        G4cerr << "references a ElectricField3DTable file with an unsupported extension:" << G4endl;
         G4cerr << fileExtension << G4endl;
         G4cerr << "Only .csv and .TABLE (Opera3D) files are supported." << G4endl;
         fPm->AbortSession(1);
@@ -107,15 +107,15 @@ void TsMagneticFieldMap::ResolveParameters() {
 }
 
 
-void TsMagneticFieldMap::ReadCSVFile(const G4String& filename) {
+void TsElectricFieldMap::ReadCSVFile(const G4String& filename) {
 	std::ifstream file(filename);
     // Error: file not found
     if (!file) {
         G4cerr << "" << G4endl;
         G4cerr << "Topas is exiting due to a serious error." << G4endl;
-        G4cerr << "The parameter: " << fComponent->GetFullParmName("MagneticField3DTable") << G4endl;
-        G4cerr << "references an MagneticField3DTable file that cannot be found:" << G4endl;
-        G4cerr << fPm->GetStringParameter(fComponent->GetFullParmName("MagneticField3DTable")) << G4endl;
+        G4cerr << "The parameter: " << fComponent->GetFullParmName("ElectricField3DTable") << G4endl;
+        G4cerr << "references an ElectricField3DTable file that cannot be found:" << G4endl;
+        G4cerr << fPm->GetStringParameter(fComponent->GetFullParmName("ElectricField3DTable")) << G4endl;
         fPm->AbortSession(1);
     }
 
@@ -125,12 +125,12 @@ void TsMagneticFieldMap::ReadCSVFile(const G4String& filename) {
         G4cerr << "" << G4endl;
         G4cerr << "Topas is exiting due to a serious error." << G4endl;
         G4cerr << "CSV file is empty or unreadable:" << G4endl;
-        G4cerr << fPm->GetStringParameter(fComponent->GetFullParmName("MagneticField3DTable")) << G4endl;
+        G4cerr << fPm->GetStringParameter(fComponent->GetFullParmName("ElectricField3DTable")) << G4endl;
         fPm->AbortSession(1);
     }
 
     // Parse header to extract field names and units
-    // Expected format (example): "X [mm]", "Y [mm]", "Z [mm]", "Bx [T]", "By [T]", "Bz [T]"
+    // Expected format (example): "X [mm]", "Y [mm]", "Z [mm]", "Ex [kV/cm]", "Ey [kV/cm]", "Ez [kV/cm]"
     std::vector<G4String> headerFields;
     std::map<G4String, double> headerUnits;
     std::map<G4String, int> columnIndices;
@@ -166,7 +166,7 @@ void TsMagneticFieldMap::ReadCSVFile(const G4String& filename) {
             G4cerr << "" << G4endl;
             G4cerr << "Topas is exiting due to a serious error." << G4endl;
             G4cerr << "CSV header must specify units for all columns in the format: fieldname [unit]" << G4endl;
-            G4cerr << "File: " << fPm->GetStringParameter(fComponent->GetFullParmName("MagneticField3DTable")) << G4endl;
+            G4cerr << "File: " << fPm->GetStringParameter(fComponent->GetFullParmName("ElectricField3DTable")) << G4endl;
             fPm->AbortSession(1);
         }
 
@@ -181,16 +181,20 @@ void TsMagneticFieldMap::ReadCSVFile(const G4String& filename) {
             unitValue = m;
         } else if (unitString == "cm") {
             unitValue = cm;
-        } else if (unitString == "T") {
-            unitValue = tesla;
-        } else if (unitString == "G") {
-            unitValue = tesla * 1.e-4;
+        } else if (unitString == "V/m") {
+            unitValue = volt / m;
+        } else if (unitString == "kV/cm") {
+            unitValue = kilovolt / cm;
+        } else if (unitString == "V/cm") {
+            unitValue = volt / cm;
+        } else if (unitString == "MV/m") {
+            unitValue = megavolt / m;
         } else {
             G4cerr << "" << G4endl;
             G4cerr << "Topas is exiting due to a serious error." << G4endl;
             G4cerr << "Unknown unit '" << unitString << "' for column '" << fieldName << "'" << G4endl;
-            G4cerr << "Supported units: mm, cm, m, T (Tesla), G (Gauss)" << G4endl;
-            G4cerr << "File: " << fPm->GetStringParameter(fComponent->GetFullParmName("MagneticField3DTable")) << G4endl;
+            G4cerr << "Supported units: mm, cm, m, V/m, kV/cm, MV/m" << G4endl;
+            G4cerr << "File: " << fPm->GetStringParameter(fComponent->GetFullParmName("ElectricField3DTable")) << G4endl;
             fPm->AbortSession(1);
         }
 
@@ -202,13 +206,13 @@ void TsMagneticFieldMap::ReadCSVFile(const G4String& filename) {
     if (columnIndices.find("X") == columnIndices.end() ||
         columnIndices.find("Y") == columnIndices.end() ||
         columnIndices.find("Z") == columnIndices.end() ||
-        columnIndices.find("Bx") == columnIndices.end() ||
-        columnIndices.find("By") == columnIndices.end() ||
-        columnIndices.find("Bz") == columnIndices.end()) {
+        columnIndices.find("Ex") == columnIndices.end() ||
+        columnIndices.find("Ey") == columnIndices.end() ||
+        columnIndices.find("Ez") == columnIndices.end()) {
         G4cerr << "" << G4endl;
         G4cerr << "Topas is exiting due to a serious error." << G4endl;
-        G4cerr << "CSV header must contain columns: X, Y, Z, Bx, By, Bz" << G4endl;
-        G4cerr << "File: " << fPm->GetStringParameter(fComponent->GetFullParmName("MagneticField3DTable")) << G4endl;
+        G4cerr << "CSV header must contain columns: X, Y, Z, Ex, Ey, Ez" << G4endl;
+        G4cerr << "File: " << fPm->GetStringParameter(fComponent->GetFullParmName("ElectricField3DTable")) << G4endl;
         fPm->AbortSession(1);
     }
 
@@ -258,8 +262,8 @@ void TsMagneticFieldMap::ReadCSVFile(const G4String& filename) {
     if (xValues.size() == 0) {
         G4cerr << "" << G4endl;
         G4cerr << "Topas is exiting due to a serious error." << G4endl;
-        G4cerr << "No data points found in MagneticField3DTable file:" << G4endl;
-        G4cerr << fPm->GetStringParameter(fComponent->GetFullParmName("MagneticField3DTable")) << G4endl;
+        G4cerr << "No data points found in ElectricField3DTable file:" << G4endl;
+        G4cerr << fPm->GetStringParameter(fComponent->GetFullParmName("ElectricField3DTable")) << G4endl;
         fPm->AbortSession(1);
     }
 
@@ -268,9 +272,9 @@ void TsMagneticFieldMap::ReadCSVFile(const G4String& filename) {
     fNY = uniqueY.size();
     fNZ = uniqueZ.size();
 
-    G4cout << "Magnetic field map dimensions: " << fNX << " x " << fNY << " x " << fNZ << G4endl;
+    G4cout << "Electric field map dimensions: " << fNX << " x " << fNY << " x " << fNZ << G4endl;
 
-    // Sorted vectors for coordinate mapping
+    // Sorted vectors for cocrdinate mapping
     std::vector<double> sortedX(uniqueX.begin(), uniqueX.end());
     std::vector<double> sortedY(uniqueY.begin(), uniqueY.end());
     std::vector<double> sortedZ(uniqueZ.begin(), uniqueZ.end());
@@ -298,7 +302,7 @@ void TsMagneticFieldMap::ReadCSVFile(const G4String& filename) {
     }
 
     // Re-read file to populate field arrays
-    file.open(fPm->GetStringParameter(fComponent->GetFullParmName("MagneticField3DTable")));
+    file.open(fPm->GetStringParameter(fComponent->GetFullParmName("ElectricField3DTable")));
     // Skip header line
     std::getline(file, headerLine);
 
@@ -318,18 +322,18 @@ void TsMagneticFieldMap::ReadCSVFile(const G4String& filename) {
         double x = atof(values[columnIndices["X"]]) * headerUnits["X"];
         double y = atof(values[columnIndices["Y"]]) * headerUnits["Y"];
         double z = atof(values[columnIndices["Z"]]) * headerUnits["Z"];
-        double bx = atof(values[columnIndices["Bx"]]) * headerUnits["Bx"];
-        double by = atof(values[columnIndices["By"]]) * headerUnits["By"];
-        double bz = atof(values[columnIndices["Bz"]]) * headerUnits["Bz"];
+        double ex = atof(values[columnIndices["Ex"]]) * headerUnits["Ex"];
+        double ey = atof(values[columnIndices["Ey"]]) * headerUnits["Ey"];
+        double ez = atof(values[columnIndices["Ez"]]) * headerUnits["Ez"];
 
         // Find indices in sorted coordinate arrays
         int ix = std::distance(sortedX.begin(), std::find(sortedX.begin(), sortedX.end(), x));
         int iy = std::distance(sortedY.begin(), std::find(sortedY.begin(), sortedY.end(), y));
         int iz = std::distance(sortedZ.begin(), std::find(sortedZ.begin(), sortedZ.end(), z));
 
-        fFieldX[ix][iy][iz] = bx;
-        fFieldY[ix][iy][iz] = by;
-        fFieldZ[ix][iy][iz] = bz;
+        fFieldX[ix][iy][iz] = ex;
+        fFieldY[ix][iy][iz] = ey;
+        fFieldZ[ix][iy][iz] = ez;
     }
     file.close();
 
@@ -339,21 +343,21 @@ void TsMagneticFieldMap::ReadCSVFile(const G4String& filename) {
 
 }
 
-void TsMagneticFieldMap::ReadOpera3DFile(const G4String& filename) {
+void TsElectricFieldMap::ReadOpera3DFile(const G4String& filename) {
     std::ifstream file(filename);
     if (!file) {
         G4cerr << "" << G4endl;
         G4cerr << "Topas is exiting due to a serious error." << G4endl;
-        G4cerr << "The parameter: " << fComponent->GetFullParmName("MagneticField3DTable") << G4endl;
-        G4cerr << "references a MagneticField3DTable file that cannot be found:" << G4endl;
-        G4cerr << fPm->GetStringParameter(fComponent->GetFullParmName("MagneticField3DTable")) << G4endl;
+        G4cerr << "The parameter: " << fComponent->GetFullParmName("ElectricField3DTable") << G4endl;
+        G4cerr << "references a ElectricField3DTable file that cannot be found:" << G4endl;
+        G4cerr << fPm->GetStringParameter(fComponent->GetFullParmName("ElectricField3DTable")) << G4endl;
         fPm->AbortSession(1);
     }
 
     G4String line;
         bool ReadingHeader = true;
         G4int counter = 0;
-        double xval = 0.,yval = 0.,zval = 0.,bx,by,bz;
+        double xval = 0.,yval = 0.,zval = 0.,ex,ey,ez;
         int ix = 0;
         int iy = 0;
         int iz = 0;
@@ -390,18 +394,18 @@ void TsMagneticFieldMap::ReadOpera3DFile(const G4String& filename) {
                     if (headerFields.size() > 6) {
                         G4cerr << "" << G4endl;
                         G4cerr << "Topas is exiting due to a serious error." << G4endl;
-                        G4cerr << "Header information was not usable from MagneticField3DTable file:" << G4endl;
-                        G4cerr << fPm->GetStringParameter(fComponent->GetFullParmName("MagneticField3DTable")) << G4endl;
-                        G4cerr << "Only six fields (x,y,z,Bx,By,Bz) are allowed without specified units. Please include explicit unit declaration in the header" << G4endl;
+                        G4cerr << "Header information was not usable from ElectricField3DTable file:" << G4endl;
+                        G4cerr << fPm->GetStringParameter(fComponent->GetFullParmName("ElectricField3DTable")) << G4endl;
+                        G4cerr << "Only six fields (x,y,z,Ex,Ey,Ez) are allowed without specified units. Please include explicit unit declaration in the header" << G4endl;
                         fPm->AbortSession(1);
                     } else {
-                        G4cout << "No units specified, setting to 'mm' for x,y,z and 'tesla' for Bx,By,Bz" << G4endl;
-                        headerUnitStrings.push_back("mm");
-                        headerUnitStrings.push_back("mm");
-                        headerUnitStrings.push_back("mm");
-                        headerUnitStrings.push_back("tesla");
-                        headerUnitStrings.push_back("tesla");
-                        headerUnitStrings.push_back("tesla");
+                        G4cout << "No units specified, setting to 'm' for x,y,z and 'V/m' for Ex,Ey,Ez" << G4endl;
+                        headerUnitStrings.push_back("m");
+                        headerUnitStrings.push_back("m");
+                        headerUnitStrings.push_back("m");
+                        headerUnitStrings.push_back("V/m");
+                        headerUnitStrings.push_back("V/m");
+                        headerUnitStrings.push_back("V/m");
                     }
                 }
 
@@ -431,8 +435,8 @@ void TsMagneticFieldMap::ReadOpera3DFile(const G4String& filename) {
                         if (unitString == "m" || unitString == "metre" || unitString == "meter") {
                             headerUnits[headerFields[i]] = m;
                         } else
-                            if (unitString == "tesla") {
-                                headerUnits[headerFields[i]] = tesla;
+                            if (unitString == "V/m") {
+                                headerUnits[headerFields[i]] = volt / m;
                             }
                             else {
                                 headerUnits[headerFields[i]] = 1;
@@ -473,8 +477,8 @@ void TsMagneticFieldMap::ReadOpera3DFile(const G4String& filename) {
                     if (thisRow.size() > 3) {
                         G4cerr << "" << G4endl;
                         G4cerr << "Topas is exiting due to a serious error." << G4endl;
-                        G4cerr << "Header information was not usable from MagneticField3DTable file:" << G4endl;
-                        G4cerr << fPm->GetStringParameter(fComponent->GetFullParmName("MagneticField3DTable")) << G4endl;
+                        G4cerr << "Header information was not usable from ElectricField3DTable file:" << G4endl;
+                        G4cerr << fPm->GetStringParameter(fComponent->GetFullParmName("ElectricField3DTable")) << G4endl;
                         G4cerr << "Header has an unknown format on line" << G4endl;
                         G4cerr << line << G4endl;
                         G4cerr << "This error can be triggered by mismatch of linux/windows end-of-line characters." << G4endl;
@@ -486,8 +490,8 @@ void TsMagneticFieldMap::ReadOpera3DFile(const G4String& filename) {
                 if (thisRow.size() != headerFields.size()) {
                     G4cerr << "" << G4endl;
                     G4cerr << "Topas is exiting due to a serious error." << G4endl;
-                    G4cerr << "Header information was not usable from MagneticField3DTable file:" << G4endl;
-                    G4cerr << fPm->GetStringParameter(fComponent->GetFullParmName("MagneticField3DTable")) << G4endl;
+                    G4cerr << "Header information was not usable from ElectricField3DTable file:" << G4endl;
+                    G4cerr << fPm->GetStringParameter(fComponent->GetFullParmName("ElectricField3DTable")) << G4endl;
                     G4cerr << "File contains columns not in the header." << G4endl;
                     fPm->AbortSession(1);
                 }
@@ -495,9 +499,9 @@ void TsMagneticFieldMap::ReadOpera3DFile(const G4String& filename) {
                 xval = atof(thisRow[0]);
                 yval = atof(thisRow[1]);
                 zval = atof(thisRow[2]);
-                bx = atof(thisRow[3]);
-                by = atof(thisRow[4]);
-                bz = atof(thisRow[5]);
+                ex = atof(thisRow[3]);
+                ey = atof(thisRow[4]);
+                ez = atof(thisRow[5]);
 
                 if ( ix==0 && iy==0 && iz==0 ) {
                     fMinX = xval * headerUnits["X"];
@@ -505,9 +509,9 @@ void TsMagneticFieldMap::ReadOpera3DFile(const G4String& filename) {
                     fMinZ = zval * headerUnits["Z"];
                 }
 
-                fFieldX[ix][iy][iz] = bx * headerUnits["BX"];
-                fFieldY[ix][iy][iz] = by * headerUnits["BY"];
-                fFieldZ[ix][iy][iz] = bz * headerUnits["BZ"];
+                fFieldX[ix][iy][iz] = ex * headerUnits["EX"];
+                fFieldY[ix][iy][iz] = ey * headerUnits["EY"];
+                fFieldZ[ix][iy][iz] = ez * headerUnits["EZ"];
 
                 iz++;
                 if (iz == fNZ) {
@@ -529,8 +533,8 @@ void TsMagneticFieldMap::ReadOpera3DFile(const G4String& filename) {
         if (fNX == 0) {
             G4cerr << "" << G4endl;
             G4cerr << "Topas is exiting due to a serious error." << G4endl;
-            G4cerr << "Header information was not usable from MagneticField3DTable file:" << G4endl;
-            G4cerr << fPm->GetStringParameter(fComponent->GetFullParmName("MagneticField3DTable")) << G4endl;
+            G4cerr << "Header information was not usable from ElectricField3DTable file:" << G4endl;
+            G4cerr << fPm->GetStringParameter(fComponent->GetFullParmName("ElectricField3DTable")) << G4endl;
             fPm->AbortSession(1);
         }
 
@@ -558,99 +562,114 @@ void TsMagneticFieldMap::ReadOpera3DFile(const G4String& filename) {
         fDZ = fMaxZ - fMinZ;
 }
 
-void TsMagneticFieldMap::GetFieldValue(const G4double Point[3], G4double* Field) const {
-	const G4ThreeVector localPoint = fAffineTransf.Inverse().TransformPoint(G4ThreeVector(Point[0],Point[1],Point[2]));
 
-	// Tabulated 3D table has it's own field area and the region is supposed to be smaller than volume
+void TsElectricFieldMap::GetFieldValue(const G4double Point[3], G4double* Field) const {
+	const G4ThreeVector localPoint = fAffineTransf.Inverse().TransformPoint(G4ThreeVector(Point[0], Point[1], Point[2]));
+
+    // Tabulated 3D table has it's own field area and the region is supposed to be smaller than volume
 	// Therefore it is necessary to check that the point is inside the field area.
 	G4double FieldX;
 	G4double FieldY;
 	G4double FieldZ;
 
-	if ( localPoint.x() >= fMinX && localPoint.x() <= fMaxX && localPoint.y() >= fMinY && localPoint.y() <=fMaxY && localPoint.z() >=fMinZ && localPoint.z() <= fMaxZ ) {
-		// Position of given point within region, normalized to the range [0,1]
-		G4double xFraction = (localPoint.x() - fMinX)/fDX;
-		G4double yFraction = (localPoint.y() - fMinY)/fDY;
-		G4double zFraction = (localPoint.z() - fMinZ)/fDZ;
+    if (localPoint.x() >= fMinX && localPoint.x() <= fMaxX &&
+        localPoint.y() >= fMinY && localPoint.y() <= fMaxY &&
+        localPoint.z() >= fMinZ && localPoint.z() <= fMaxZ) {
 
-		if (fInvertX)
-			xFraction = 1 - xFraction;
-		if (fInvertY)
-			yFraction = 1 - yFraction;
-		if (fInvertZ)
-			zFraction = 1 - zFraction;
+        // Position of a given point within region, normalized to the range [0,1]
+        G4double xFraction = (localPoint.x() - fMinX) / fDX;
+        G4double yFraction = (localPoint.y() - fMinY) / fDY;
+        G4double zFraction = (localPoint.z() - fMinZ) / fDZ;
 
-		// Position of the point within the cuboid defined by the
-		// nearest surrounding tabulated points
-		G4double xDIndex;
-		G4double yDIndex;
-		G4double zDIndex;
-		G4double xLocal = ( std::modf(xFraction*(fNX-1), &xDIndex));
-		G4double yLocal = ( std::modf(yFraction*(fNY-1), &yDIndex));
-		G4double zLocal = ( std::modf(zFraction*(fNZ-1), &zDIndex));
+        if (fInvertX)
+            xFraction = 1 - xFraction;
+        if (fInvertY)
+            yFraction = 1 - yFraction;
+        if (fInvertZ)
+            zFraction = 1 - zFraction;
 
-		// The indices of the nearest tabulated point whose coordinates
-		// are all less than those of the given point
-		G4double xIndex = static_cast<int>(xDIndex);
-		G4double yIndex = static_cast<int>(yDIndex);
-		G4double zIndex = static_cast<int>(zDIndex);
+        // Position of the point within the cuboid defined by the
+        // nearest surrounding tabulated points
+        G4double xDIndex;
+        G4double yDIndex;
+        G4double zDIndex;
 
-		// In rare cases, value is all the way to the end of the first bin.
-		// Need to make sure it is assigned to that bin and not to the non-existant next bin.
-//		if (xIndex + 1 == fNX) xIndex--;
-		if (xIndex + 1 == fNX) {
-			xIndex--;
-			xLocal = 1;
-		}
-//		if (yIndex + 1 == fNY) yIndex--;
-		if (yIndex + 1 == fNY) {
-			yIndex--;
-			yLocal = 1;
-		}
-//		if (zIndex + 1 == fNZ) zIndex--;
-		if (zIndex + 1 == fNZ) {
-			zIndex--;
-			zLocal = 1;
-		}
+        G4double xLocal = ( std::modf(xFraction * (fNX - 1), &xDIndex) );
+        G4double yLocal = ( std::modf(yFraction * (fNY - 1), &yDIndex) );
+        G4double zLocal = ( std::modf(zFraction * (fNZ - 1), &zDIndex) );
 
-		// Full 3-dimensional version
-		FieldX =
-		fFieldX[xIndex  ][yIndex  ][zIndex  ] * (1-xLocal) * (1-yLocal) * (1-zLocal) +
-		fFieldX[xIndex  ][yIndex  ][zIndex+1] * (1-xLocal) * (1-yLocal) *    zLocal  +
-		fFieldX[xIndex  ][yIndex+1][zIndex  ] * (1-xLocal) *    yLocal  * (1-zLocal) +
-		fFieldX[xIndex  ][yIndex+1][zIndex+1] * (1-xLocal) *    yLocal  *    zLocal  +
-		fFieldX[xIndex+1][yIndex  ][zIndex  ] *    xLocal  * (1-yLocal) * (1-zLocal) +
-		fFieldX[xIndex+1][yIndex  ][zIndex+1] *    xLocal  * (1-yLocal) *    zLocal  +
-		fFieldX[xIndex+1][yIndex+1][zIndex  ] *    xLocal  *    yLocal  * (1-zLocal) +
-		fFieldX[xIndex+1][yIndex+1][zIndex+1] *    xLocal  *    yLocal  *    zLocal;
-		FieldY =
-		fFieldY[xIndex  ][yIndex  ][zIndex  ] * (1-xLocal) * (1-yLocal) * (1-zLocal) +
-		fFieldY[xIndex  ][yIndex  ][zIndex+1] * (1-xLocal) * (1-yLocal) *    zLocal  +
-		fFieldY[xIndex  ][yIndex+1][zIndex  ] * (1-xLocal) *    yLocal  * (1-zLocal) +
-		fFieldY[xIndex  ][yIndex+1][zIndex+1] * (1-xLocal) *    yLocal  *    zLocal  +
-		fFieldY[xIndex+1][yIndex  ][zIndex  ] *    xLocal  * (1-yLocal) * (1-zLocal) +
-		fFieldY[xIndex+1][yIndex  ][zIndex+1] *    xLocal  * (1-yLocal) *    zLocal  +
-		fFieldY[xIndex+1][yIndex+1][zIndex  ] *    xLocal  *    yLocal  * (1-zLocal) +
-		fFieldY[xIndex+1][yIndex+1][zIndex+1] *    xLocal  *    yLocal  *    zLocal;
-		FieldZ =
-		fFieldZ[xIndex  ][yIndex  ][zIndex  ] * (1-xLocal) * (1-yLocal) * (1-zLocal) +
-		fFieldZ[xIndex  ][yIndex  ][zIndex+1] * (1-xLocal) * (1-yLocal) *    zLocal  +
-		fFieldZ[xIndex  ][yIndex+1][zIndex  ] * (1-xLocal) *    yLocal  * (1-zLocal) +
-		fFieldZ[xIndex  ][yIndex+1][zIndex+1] * (1-xLocal) *    yLocal  *    zLocal  +
-		fFieldZ[xIndex+1][yIndex  ][zIndex  ] *    xLocal  * (1-yLocal) * (1-zLocal) +
-		fFieldZ[xIndex+1][yIndex  ][zIndex+1] *    xLocal  * (1-yLocal) *    zLocal  +
-		fFieldZ[xIndex+1][yIndex+1][zIndex  ] *    xLocal  *    yLocal  * (1-zLocal) +
-		fFieldZ[xIndex+1][yIndex+1][zIndex+1] *    xLocal  *    yLocal  *    zLocal;
+        // The indices of the nearest tabulated point whose coordinates are
+        // less than or equal to the coordinates of the point
+        G4double xIndex = static_cast<int>(xDIndex);
+        G4double yIndex = static_cast<int>(yDIndex);
+        G4double zIndex = static_cast<int>(zDIndex);
 
-		G4ThreeVector B_local = G4ThreeVector(FieldX,FieldY,FieldZ);
-		G4ThreeVector B_global = fAffineTransf.TransformAxis(B_local);
+        // In rare case, value is all the way to the end of the first bin.
+        // Need to make sure it is assigned to that bin and not to the non-existant next bin.
+        if (xIndex + 1 == fNX) {
+            xIndex--;
+            xLocal = 1;
+        }
 
-		Field[0] = B_global.x() ;
-		Field[1] = B_global.y() ;
-		Field[2] = B_global.z() ;
-	} else {
-		Field[0] = 0.0;
-		Field[1] = 0.0;
-		Field[2] = 0.0;
-	}
+        if (yIndex + 1 == fNY) {
+            yIndex--;
+            yLocal = 1;
+        }
+
+        if (zIndex + 1 == fNZ) {
+            zIndex--;
+            zLocal = 1;
+        }
+
+        // Trilinear interpolation
+        FieldX =
+            fFieldX[xIndex  ][yIndex  ][zIndex  ] * (1-xLocal) * (1-yLocal) * (1-zLocal) +
+            fFieldX[xIndex  ][yIndex  ][zIndex+1] * (1-xLocal) * (1-yLocal) *    zLocal  +
+            fFieldX[xIndex  ][yIndex+1][zIndex  ] * (1-xLocal) *    yLocal  * (1-zLocal) +
+            fFieldX[xIndex  ][yIndex+1][zIndex+1] * (1-xLocal) *    yLocal  *    zLocal  +
+            fFieldX[xIndex+1][yIndex  ][zIndex  ] *    xLocal  * (1-yLocal) * (1-zLocal) +
+            fFieldX[xIndex+1][yIndex  ][zIndex+1] *    xLocal  * (1-yLocal) *    zLocal  +
+            fFieldX[xIndex+1][yIndex+1][zIndex  ] *    xLocal  *    yLocal  * (1-zLocal) +
+            fFieldX[xIndex+1][yIndex+1][zIndex+1] *    xLocal  *    yLocal  *    zLocal;
+        FieldY =
+            fFieldY[xIndex  ][yIndex  ][zIndex  ] * (1-xLocal) * (1-yLocal) * (1-zLocal) +
+            fFieldY[xIndex  ][yIndex  ][zIndex+1] * (1-xLocal) * (1-yLocal) *    zLocal  +
+            fFieldY[xIndex  ][yIndex+1][zIndex  ] * (1-xLocal) *    yLocal  * (1-zLocal) +
+            fFieldY[xIndex  ][yIndex+1][zIndex+1] * (1-xLocal) *    yLocal  *    zLocal  +
+            fFieldY[xIndex+1][yIndex  ][zIndex  ] *    xLocal  * (1-yLocal) * (1-zLocal) +
+            fFieldY[xIndex+1][yIndex  ][zIndex+1] *    xLocal  * (1-yLocal) *    zLocal  +
+            fFieldY[xIndex+1][yIndex+1][zIndex  ] *    xLocal  *    yLocal  * (1-zLocal) +
+            fFieldY[xIndex+1][yIndex+1][zIndex+1] *    xLocal  *    yLocal  *    zLocal;
+        FieldZ =
+            fFieldZ[xIndex  ][yIndex  ][zIndex  ] * (1-xLocal) * (1-yLocal) * (1-zLocal) +
+            fFieldZ[xIndex  ][yIndex  ][zIndex+1] * (1-xLocal) * (1-yLocal) *    zLocal  +
+            fFieldZ[xIndex  ][yIndex+1][zIndex  ] * (1-xLocal) *    yLocal  * (1-zLocal) +
+            fFieldZ[xIndex  ][yIndex+1][zIndex+1] * (1-xLocal) *    yLocal  *    zLocal  +
+            fFieldZ[xIndex+1][yIndex  ][zIndex  ] *    xLocal  * (1-yLocal) * (1-zLocal) +
+            fFieldZ[xIndex+1][yIndex  ][zIndex+1] *    xLocal  * (1-yLocal) *    zLocal  +
+            fFieldZ[xIndex+1][yIndex+1][zIndex  ] *    xLocal  *    yLocal  * (1-zLocal) +
+            fFieldZ[xIndex+1][yIndex+1][zIndex+1] *    xLocal  *    yLocal  *    zLocal;
+
+        G4ThreeVector E_local = G4ThreeVector(FieldX, FieldY, FieldZ);
+        G4ThreeVector E_global = fAffineTransf.TransformAxis(E_local);
+
+        // Electric field
+        Field[0] = 0.0;
+        Field[1] = 0.0;
+        Field[2] = 0.0;
+
+        // Electric field
+        Field[3] = E_global.x();
+        Field[4] = E_global.y();
+        Field[5] = E_global.z();
+
+    } else {
+        // Outside field region: zero field
+        Field[0] = 0.0;
+        Field[1] = 0.0;
+        Field[2] = 0.0;
+        Field[3] = 0.0;
+        Field[4] = 0.0;
+        Field[5] = 0.0;
+    }
 }

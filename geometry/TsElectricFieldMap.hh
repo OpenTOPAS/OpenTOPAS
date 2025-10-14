@@ -1,4 +1,4 @@
-//
+// * Created on 2025.10.06 by @srmarcballestero <marc.ballestero-ribo@psi.ch>
 // ********************************************************************
 // *                                                                  *
 // * Copyright 2024 The TOPAS Collaboration                           *
@@ -28,33 +28,33 @@
 // ********************************************************************
 //
 
-#ifndef TsMagneticFieldMap_hh
-#define TsMagneticFieldMap_hh
+#ifndef TsElectricFieldMap_hh
+#define TsElectricFieldMap_hh
 
-#include "TsVMagneticField.hh"
+#include "TsVElectroMagneticField.hh"
 
 #include "G4AffineTransform.hh"
 
 #include <vector>
 
-class TsMagneticFieldMap : public TsVMagneticField
+class TsElectricFieldMap : public TsVElectroMagneticField
 {
 public:
-	TsMagneticFieldMap(TsParameterManager* pM, TsGeometryManager* gM,
+	TsElectricFieldMap(TsParameterManager* pM, TsGeometryManager* gM,
 					   TsVGeometryComponent* component);
-	~TsMagneticFieldMap();
+	~TsElectricFieldMap();
 
 	void GetFieldValue(const double p[3], double* Field) const;
 	void ResolveParameters();
 
 protected:
-	// Read the field map file in CSV format
-	// Expected header: x [unit], y [unit], z [unit], Bx [unit], By [unit], Bz [unit]
-	// Allowed units: mm, cm, m, T, G
-	void ReadCSVFile(const G4String& filename);
+    // Read the field map file in CSV format
+    // Expected header: x [unit], y [unit], z [unit], Ex [unit], Ey [unit], Ez [unit]
+    // Allowed units: mm, cm, m, V/m, kV/m, MV/m
+    void ReadCSVFile(const G4String& filename);
 
-	// Read the field map file in Opera3D TABLE format
-	void ReadOpera3DFile(const G4String& filename);
+    // Read the field map file in Opera3D TABLE format
+    void ReadOpera3DFile(const G4String& filename);
 
 private:
 	// Physical limits of the defined region

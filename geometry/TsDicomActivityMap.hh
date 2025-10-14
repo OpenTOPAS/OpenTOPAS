@@ -28,55 +28,50 @@
 // ********************************************************************
 //
 
-#ifndef TsMagneticFieldMap_hh
-#define TsMagneticFieldMap_hh
+#ifndef TsDicomActivityMap_hh
+#define TsDicomActivityMap_hh
 
-#include "TsVMagneticField.hh"
+#include "TsBox.hh"
+#include "globals.hh"
 
-#include "G4AffineTransform.hh"
-
-#include <vector>
-
-class TsMagneticFieldMap : public TsVMagneticField
+class TsDicomActivityMap : public TsBox
 {
 public:
-	TsMagneticFieldMap(TsParameterManager* pM, TsGeometryManager* gM,
-					   TsVGeometryComponent* component);
-	~TsMagneticFieldMap();
+	TsDicomActivityMap(TsParameterManager* pM, TsExtensionManager* eM, TsMaterialManager* mM, TsGeometryManager* gM,
+			TsVGeometryComponent* parentComponent, G4VPhysicalVolume* parentVolume, G4String& name);
+	~TsDicomActivityMap();
 
-	void GetFieldValue(const double p[3], double* Field) const;
-	void ResolveParameters();
+	G4VPhysicalVolume* Construct();
+	void UpdateForSpecificParameterChange(G4String parameter);
+	void ReadImage();
 
-protected:
-	// Read the field map file in CSV format
-	// Expected header: x [unit], y [unit], z [unit], Bx [unit], By [unit], Bz [unit]
-	// Allowed units: mm, cm, m, T, G
-	void ReadCSVFile(const G4String& filename);
-
-	// Read the field map file in Opera3D TABLE format
-	void ReadOpera3DFile(const G4String& filename);
+	inline std::vector<G4Point3D> GetSourcePositions()		{ return fSourcePositions; }
+	inline std::vector<G4double> GetSourceCounts()			{ return fSourceCounts; }
+	inline std::vector<G4Point3D> GetSourcePosRelToDicom()	{ return fSourcePosRelToDicom; }
+	inline G4double GetVoxelSizeX()							{ return fVoxelSizeX; }
+	inline G4double GetVoxelSizeY()							{ return fVoxelSizeY; }
+	inline G4double GetVoxelSizeZ()							{ return fVoxelSizeZ; }
 
 private:
-	// Physical limits of the defined region
-	G4double fMinX, fMinY, fMinZ, fMaxX, fMaxY, fMaxZ;
+	G4String fDicomDirectory;
 
-	// Physical extent of the defined region
-	G4double fDX, fDY, fDZ;
+	G4int fCountThreshold;
 
-	// Allows handling of either direction of min and max positions
-	G4bool fInvertX, fInvertY, fInvertZ;
+	G4int fVoxelCountX;
+	G4int fVoxelCountY;
+	G4int fNumberOfSlices;
 
-	// Dimensions of the table
-	G4int fNX, fNY, fNZ;
+	G4double fVoxelSizeX;
+	G4double fVoxelSizeY;
+	G4double fVoxelSizeZ;
 
-	// Storage for the table
-	std::vector< std::vector< std::vector< double > > > fFieldX;
-	std::vector< std::vector< std::vector< double > > > fFieldY;
-	std::vector< std::vector< std::vector< double > > > fFieldZ;
+	G4Point3D fTransFirstVoxelCenterRelToDicom;
 
-	// Affine transformation to the world to resolve the position/rotation
-	// when a daughter is placed in a mother holding the field
-	G4AffineTransform fAffineTransf;
+	std::vector<short> fRawImageShort;
+
+	std::vector<G4Point3D> fSourcePositions;
+	std::vector<G4double> fSourceCounts;
+	std::vector<G4Point3D> fSourcePosRelToDicom;
 };
 
 #endif
