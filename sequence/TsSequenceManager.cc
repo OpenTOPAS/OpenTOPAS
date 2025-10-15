@@ -125,8 +125,29 @@ fIsExecutingSequence(false)
 
 	G4int numberOfThreads = fPm->GetIntegerParameter("Ts/NumberOfThreads");
 #ifdef TOPAS_MT
+	G4int numberOfAvailableThreads;
+	const char* slurm_cpus = std::getenv("SLURM_CPUS_PER_TASK");
+	if (slurm_cpus)
+		numberOfAvailableThreads = std::atoi(slurm_cpus);
+	else
+		numberOfAvailableThreads = G4Threading::G4GetNumberOfCores();
+
+	if (numberOfThreads > numberOfAvailableThreads) {
+		G4cout << "Warning: You requested " << numberOfThreads << " threads, but only "
+		<< numberOfAvailableThreads << " are available on this machine." << G4endl;
+		G4cout << "		 TOPAS will proceed in MT mode with " << numberOfAvailableThreads << " threads." << G4endl;
+		numberOfThreads = numberOfAvailableThreads;
+	}
+	// Allow user to specify negative number of threads to indicate "all but this many"
 	if (numberOfThreads <= 0)
-		numberOfThreads = G4Threading::G4GetNumberOfCores() + numberOfThreads;
+		numberOfThreads = numberOfAvailableThreads + numberOfThreads;
+
+	if (numberOfThreads < 1) {
+		G4cout << "Topas is exiting due to a serious error." << G4endl;
+		G4cout << "The number of threads requested is less than 1." << G4endl;
+		G4cout << "The number of available threads is: " << numberOfAvailableThreads << G4endl;
+		exit(1);
+	}
 
 	if (numberOfThreads > 1 && fPm->IsRandomMode()) {
 		G4cerr << "TOPAS can not run in Random Time Mode with more than one thread." << G4endl;
