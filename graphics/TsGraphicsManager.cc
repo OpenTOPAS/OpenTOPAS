@@ -37,6 +37,14 @@
 #include "G4VisExecutive.hh"
 #include "G4VisManager.hh"
 
+#if __has_include("G4OpenGLStoredQt.hh")
+#  include "G4OpenGLStoredQt.hh"
+#  include "G4OpenGLImmediateQt.hh"
+#  define TOPAS_HAVE_OPENGL_QT 1
+#else
+#  define TOPAS_HAVE_OPENGL_QT 0
+#endif
+
 TsGraphicsManager::TsGraphicsManager(TsParameterManager* pM, TsGeometryManager* gM)
 :fPm(pM), fGm(gM), fUsingOpenGL(false), fUsingRayTracer(false), fCurrentView(0)
 {
@@ -68,6 +76,10 @@ TsGraphicsManager::TsGraphicsManager(TsParameterManager* pM, TsGeometryManager* 
 		fViews = new std::map<G4String, TsGraphicsView*>;
 
 		fVisManager = new G4VisExecutive("Quiet");
+#if TOPAS_HAVE_OPENGL_QT
+		fVisManager->RegisterGraphicsSystem(new G4OpenGLStoredQt);
+		fVisManager->RegisterGraphicsSystem(new G4OpenGLImmediateQt);
+#endif
 		fVisManager->Initialize();
 
 		// Sequence Manager will need to know early on whether there will be any OpenGL or RayTracer views
@@ -85,7 +97,7 @@ TsGraphicsManager::TsGraphicsManager(TsParameterManager* pM, TsGeometryManager* 
 #else
 			viewerType.toLower();
 #endif
-			if (viewerType == "opengl" || viewerType.substr(0,3) == "ogl")
+			if (viewerType.find("opengl") == 0 || (viewerType.size() >= 3 && viewerType.substr(0,3) == "ogl"))
 				fUsingOpenGL = true;
 			if (viewerType == "raytracer")
 				fUsingRayTracer = true;
@@ -121,7 +133,7 @@ void TsGraphicsManager::Initialize() {
 #else
 			viewerType.toLower();
 #endif
-			if (viewerType == "opengl" || viewerType.substr(0,3) == "ogl") {
+			if (viewerType.find("opengl") == 0 || (viewerType.size() >= 3 && viewerType.substr(0,3) == "ogl")) {
 				size_t pos1 = viewerParmName.find("/Type");
 				G4String viewerName = viewerParmName.substr(3, pos1-3);
 				(*fViews)[viewerName] = new TsGraphicsView(fPm, this, fGm, viewerName);

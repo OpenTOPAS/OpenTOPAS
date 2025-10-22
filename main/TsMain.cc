@@ -199,6 +199,22 @@ void setDataEnvVars(G4String dataDirectory)
 	dataVars.push_back({"G4TENDLDATA", "G4TENDL1.4"});
 	dataVars.push_back({"G4PROTONHPDATA", "G4TENDL1.4/Proton"});
 	dataVars.push_back({"G4LENDDATA", "LEND_GND1.3_ENDF.BVII.1"});
+#elif GEANT4_VERSION_MAJOR == 11 && GEANT4_VERSION_MINOR == 3
+	// Geant4 11.3.x
+	dataVars.push_back({"G4LEDATA", "G4EMLOW8.6.1"});
+	dataVars.push_back({"G4NEUTRONHPDATA", "G4NDL4.7.1"});
+	dataVars.push_back({"G4LEVELGAMMADATA", "PhotonEvaporation6.1"});
+	dataVars.push_back({"G4RADIOACTIVEDATA", "RadioactiveDecay6.1.2"});
+	dataVars.push_back({"G4SAIDXSDATA", "G4SAIDDATA2.0"});
+	dataVars.push_back({"G4PARTICLEXSDATA", "G4PARTICLEXS4.1"});
+	dataVars.push_back({"G4PIIDATA", "G4PII1.3"});
+	dataVars.push_back({"G4REALSURFACEDATA", "RealSurface2.2"});
+	dataVars.push_back({"G4ABLADATA", "G4ABLA3.3"});
+	dataVars.push_back({"G4INCLDATA", "G4INCL1.2"});
+	dataVars.push_back({"G4ENSDFSTATEDATA", "G4ENSDFSTATE3.0"});
+	dataVars.push_back({"G4TENDLDATA", "G4TENDL1.4"});
+	dataVars.push_back({"G4PROTONHPDATA", "G4TENDL1.4/Proton"});
+	dataVars.push_back({"G4LENDDATA", "LEND_GND1.3_ENDF.BVII.1"});
 
 #else
 	G4cout << "\nUnable to use Ts/G4DataDirectory parameter or TOPAS_G4_DATA_DIR environment variable" << G4endl;

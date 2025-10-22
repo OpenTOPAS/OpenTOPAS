@@ -3012,9 +3012,17 @@ void TsVBinnedScorer::CalculateOneValue(G4int idx)
 					fStandardDeviation = 0.;
 				} else {
 					if (fReportMean || fAccumulateSecondMoment) {
-						fMean = fFirstMomentMap[idx] / GetUnitValue();
-						fSum = fScoredHistories * fMean;
-
+						if (fAccumulateSecondMoment) {
+							fMean = fFirstMomentMap[idx] / GetUnitValue();
+							fSum = fScoredHistories * fMean;
+						} else {
+						G4double contributingHits = static_cast<G4double>(fCountMap[idx]);
+						if (contributingHits > 0.)
+							fMean = fFirstMomentMap[idx] / contributingHits / GetUnitValue();
+						else
+							fMean = 0.;
+						fSum = fMean * contributingHits;
+						}
 						if (fAccumulateSecondMoment) {
 							fSecondMoment = fSecondMomentMap[idx] / GetUnitValue() / GetUnitValue();
 							if (fScoredHistories > 1)

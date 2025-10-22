@@ -60,6 +60,7 @@
 #include "G4Threading.hh"
 #endif
 
+#include "G4String.hh"
 #include "G4Tokenizer.hh"
 #include "G4UIExecutive.hh"
 #include "G4UImanager.hh"
