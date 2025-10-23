@@ -1632,9 +1632,9 @@ void TsVBinnedScorer::RestoreResultsFromFile()
 			fPm->AbortSession(1);
 		}
 
-		for (int i = 0; i < fNi; i++) {
+		for (int k = 0; k < fNk; k++) {
 			for (int j = 0; j < fNj; j++) {
-				for (int k = 0; k < fNk; k++) {
+				for (int i = 0; i < fNi; i++) {
 					if (fReadFile.eof()) {
 						G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
 						G4cerr << "Ts/RestoreResultsFromFile has been set true," << G4endl;
