@@ -63,10 +63,8 @@ private:
 	
 private:
 	TsParameterManager*           fPm;
-	G4VBiasingOperation* fKillingOperation;
+	G4VBiasingOperation* fPBCOperation;
 	
-	G4String* fNamesOfRegions;
-	G4int     fNumberOfRegions;
 	G4String* fAcceptedLogicalVolumeNames;
 	G4int     fNbOfAcceptedLogicalVolumeNames;
 };

@@ -39,12 +39,9 @@
 TsPeriodicBoundaryConditionOperator::TsPeriodicBoundaryConditionOperator(TsParameterManager* pM, G4String name)
 : G4VBiasingOperator(name), fPm(pM)
 {
-	fKillingOperation = new TsPeriodicBoundaryConditionProcess(fPm, name);
-	fNamesOfRegions = fPm->GetStringVector("Vr/" + name + "/ApplyBiasingInRegionsNamed");
-	fNumberOfRegions = fPm->GetVectorLength("Vr/" + name + "/ApplyBiasingInRegionsNamed");
+    fPBCOperation = new TsPeriodicBoundaryConditionProcess(fPm, name);
 	fAcceptedLogicalVolumeNames = fPm->GetStringVector("Vr/" + name + "/ApplyBiasingInVolumesNamed");
 	fNbOfAcceptedLogicalVolumeNames = fPm->GetVectorLength("Vr/" + name + "/ApplyBiasingInVolumesNamed");
-	
 }
 
 
@@ -56,22 +53,25 @@ TsPeriodicBoundaryConditionOperator::~TsPeriodicBoundaryConditionOperator()
 void TsPeriodicBoundaryConditionOperator::StartRun()
 {
 	G4cout << GetName() << " : starting run " << G4endl;
-	((TsPeriodicBoundaryConditionProcess*)fKillingOperation)->SetNumberOfRegions(fNumberOfRegions);
-	((TsPeriodicBoundaryConditionProcess*)fKillingOperation)->SetRegions(fNamesOfRegions);
+	((TsPeriodicBoundaryConditionProcess*)fPBCOperation)->SetNumberOfLogicalVolumes(fNbOfAcceptedLogicalVolumeNames);
+	((TsPeriodicBoundaryConditionProcess*)fPBCOperation)->SetLogicalVolumes(fAcceptedLogicalVolumeNames);
 }
 
 
 G4VBiasingOperation* TsPeriodicBoundaryConditionOperator::ProposeNonPhysicsBiasingOperation(const G4Track*,
 																			   const G4BiasingProcessInterface* )
 {
-	return fKillingOperation;
+	return fPBCOperation;
 }
 
 
 G4bool TsPeriodicBoundaryConditionOperator::IsApplicable(G4LogicalVolume* logicalVolume) {
 	G4bool applicable = false;
-	for ( int i = 0; i < fNbOfAcceptedLogicalVolumeNames; i++ )
-		if ( logicalVolume->GetName() == fAcceptedLogicalVolumeNames[i] )
-			applicable = true;
+    for ( int i = 0; i < fNbOfAcceptedLogicalVolumeNames; i++ ) {
+        if ( logicalVolume->GetName() == fAcceptedLogicalVolumeNames[i] ) {
+            applicable = true;
+        }
+    }
+    
 	return applicable;
 }

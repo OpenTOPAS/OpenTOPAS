@@ -30,8 +30,9 @@
 
 #include "TsPeriodicBoundaryConditionProcess.hh"
 #include "TsParameterManager.hh"
-#include "G4Region.hh"
-#include "G4RegionStore.hh"
+
+#include "G4LogicalVolume.hh"
+#include "G4LogicalVolumeStore.hh"
 #include "G4TouchableHandle.hh"
 #include "G4VSolid.hh"
 #include "G4ParticleChange.hh"
@@ -73,11 +74,17 @@ G4VParticleChange* TsPeriodicBoundaryConditionProcess::GenerateBiasingFinalState
 
 	G4int ParentID = aTrack->GetParentID();
 	G4int TrackID  = aTrack->GetTrackID();
-	//G4cout << ParentID << "  " << TrackID << "  " << (postStep->GetStepStatus() == fGeomBoundary) << G4endl;
-	
+        
 	if (ParentID >= fMinParentID && TrackID >= 0 && (postStep->GetStepStatus() == fGeomBoundary)) { // particle leaving volume
 		
 		G4TouchableHandle theTouchable = aStep->GetPreStepPoint()->GetTouchableHandle();
+        
+        // Only apply in user-defined volumes
+        if (std::find(fLogicalVolumes.begin(), fLogicalVolumes.end(), theTouchable->GetVolume()->GetLogicalVolume()) == fLogicalVolumes.end()) {
+            fParticleChangeForNothing.Initialize(*aTrack);
+            return &fParticleChangeForNothing;
+        }
+            
 		G4ThreeVector stppos = aStep->GetPostStepPoint()->GetPosition();
 		
 		G4double x, y, z;
@@ -90,6 +97,7 @@ G4VParticleChange* TsPeriodicBoundaryConditionProcess::GenerateBiasingFinalState
 				x = -halfLengthX;
 			else
 				x = halfLengthX;
+            
 			y = stppos.y();
 			z = stppos.z();
 			fParticleChange.Initialize(*aTrack);
@@ -100,11 +108,13 @@ G4VParticleChange* TsPeriodicBoundaryConditionProcess::GenerateBiasingFinalState
 			fParticleChange.ProposeTrackStatus(fStopAndKill);
 			return &fParticleChange;
 		}
+        
 		if ( std::abs(stppos.y()) == halfLengthY ) {
 			if (stppos.y() == halfLengthY )
 				y = -halfLengthY;
 			else
 				y = halfLengthY;
+            
 			x = stppos.x();
 			z = stppos.z();
 			fParticleChange.Initialize(*aTrack);
@@ -120,6 +130,7 @@ G4VParticleChange* TsPeriodicBoundaryConditionProcess::GenerateBiasingFinalState
 				z = -halfLengthZ;
 			else
 				z = halfLengthZ;
+            
 			y = stppos.y();
 			x = stppos.x();
 			fParticleChange.Initialize(*aTrack);
@@ -136,15 +147,16 @@ G4VParticleChange* TsPeriodicBoundaryConditionProcess::GenerateBiasingFinalState
 }
 
 
-void TsPeriodicBoundaryConditionProcess::SetRegions(G4String* names) {
-	fNamesOfRegions = names;
-	fRegions.clear();
-	for ( int i = 0; i < fNumberOfRegions; i++ )
-		fRegions.push_back(G4RegionStore::GetInstance()->FindOrCreateRegion(fNamesOfRegions[i]));
+void TsPeriodicBoundaryConditionProcess::SetLogicalVolumes(G4String* names) {
+    fNamesOfLogicalVolumes = names;
+    fLogicalVolumes.clear();
+    for ( int i = 0; i < fNumberOfLogicalVolumes; i++ ) {
+        fLogicalVolumes.push_back(G4LogicalVolumeStore::GetInstance()->GetVolume(fNamesOfLogicalVolumes[i], false));
+    }
 }
 
 
-void TsPeriodicBoundaryConditionProcess::SetNumberOfRegions(G4int nRegions) {
-	fNumberOfRegions = nRegions;
+void TsPeriodicBoundaryConditionProcess::SetNumberOfLogicalVolumes(G4int nLogicalVolumes) {
+    fNumberOfLogicalVolumes = nLogicalVolumes;
 }
 
