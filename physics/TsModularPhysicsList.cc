@@ -214,7 +214,7 @@ void TsModularPhysicsList::AddModule(const G4String& name)
 	if (nameLower == "transportation_only")
 		fTransportationOnly = true;
 
-	if (nameLower == "g4em-dna-chemistry" || nameLower == "g4em-dna-chemistry_opt1")
+	if (G4StrUtil::contains(nameLower, "chem"))
 		fPm->SetNeedsChemistry();
 
 	std::map<G4String, VPhysicsCreator*>::const_iterator iter;
