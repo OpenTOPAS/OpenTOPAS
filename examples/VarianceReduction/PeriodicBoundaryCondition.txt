@@ -1,0 +1,68 @@
+# Auxiliar envelope where Periodic Boundary Condition will apply,
+# make it slightly bigger than the scoring target
+s:Ge/PBC/Type = "TsBox"
+s:Ge/PBC/Parent = "World"
+s:Ge/PBC/Material = "G4_WATER"
+d:Ge/PBC/HLX = 0.6 mm 
+d:Ge/PBC/HLY = 0.6 mm 
+d:Ge/PBC/HLZ = 0.6 mm 
+
+
+s:Ge/targetPhantom/Type = "TsBox"
+s:Ge/targetPhantom/Parent = "PBC"
+s:Ge/targetPhantom/Material = "G4_WATER"
+d:Ge/targetPhantom/HLX = 0.5 mm 
+d:Ge/targetPhantom/HLY = 0.5 mm 
+d:Ge/targetPhantom/HLZ = 0.5 mm 
+
+#######################################################
+s:Sc/dosePerVoxel/Quantity = "DoseToMedium"
+s:Sc/dosePerVoxel/Component = "targetPhantom"
+s:Sc/dosePerVoxel/OutputType = "csv"
+s:Sc/dosePerVoxel/OutputFile = "PBC"
+s:Sc/dosePerVoxel/IfOutputFileAlreadyExists = "Overwrite"
+
+s:So/radiationField/Type = "Beam" 
+s:So/radiationField/Component = "BeamPosition"
+s:So/radiationField/BeamParticle = "e-"
+d:So/radiationField/BeamEnergy = 9 MeV 
+u:So/radiationField/BeamEnergySpread = 0.0 
+s:So/radiationField/BeamPositionDistribution = "Flat"
+s:So/radiationField/BeamPositionCutoffShape = "Rectangle" 
+d:So/radiationField/BeamPositionCutoffX = 0.5 mm 
+d:So/radiationField/BeamPositionCutoffY = 0.5 mm 
+s:So/radiationField/BeamAngularDistribution = "None" 
+i:So/radiationField/NumberOfHistoriesInRun = 1000 
+
+#######################################################
+i:Ts/ShowHistoryCountAtInterval = 100 
+i:Ts/NumberOfThreads = 0 
+i:Ts/Seed = 1 
+b:Ts/ShowCPUTime = "True"
+b:Gr/Enable = "False"
+s:Gr/View/Type = "OpenGl"
+b:Ts/UseQt = Gr/Enable
+b:Ge/World/Invisible = "True"
+
+#######################################################
+#-------------------------------------------------------#
+# By default world is 10% bigger than the cell phantom  #
+#-------------------------------------------------------#
+d:Ge/World/HLX = 1.01 * Ge/PBC/HLX um  
+d:Ge/World/HLY = 1.01 * Ge/PBC/HLY um  
+d:Ge/World/HLZ = 1.01 * Ge/PBC/HLZ um  
+
+#######################################################
+sv:Ph/Default/Modules = 1 "g4em-standard_opt4"
+d:Ph/Default/CutForElectron = 0.1 um
+#######################################################
+
+# Apply the PBC for user selected particles.
+# Only apply to secondary particles.
+b:Vr/UseVarianceReduction         = "true"
+b:Vr/periodicboundarycondition/Active         = "true"
+s:Vr/periodicboundarycondition/Type = "periodicboundarycondition"
+sv:Vr/periodicboundarycondition/ParticlesNamed  = 1 "e-" 
+sv:Vr/periodicboundarycondition/ApplyBiasingInVolumesNamed = 1 "PBC"
+
+
