@@ -1769,14 +1769,42 @@ void TsVBinnedScorer::AbsorbResultsFromWorkerScorer(TsVScorer* workerScorer)
 	TsVBinnedScorer* workerHistScorer = dynamic_cast<TsVBinnedScorer*>(workerScorer);
 
 	// Absorb counts per bin
+    G4bool mergedMeanByCount = false;
 	if (fAccumulateCount) {
-		std::vector<G4long>::iterator itrMaster = fCountMap.begin();
-		std::vector<G4long>::iterator itrWorker = workerHistScorer->fCountMap.begin();
-		while (itrMaster != fCountMap.end()) {
-			*itrMaster += *itrWorker;
-			itrMaster++;
-			itrWorker++;
-		}
+		std::vector<G4long>::iterator itrMasterCount = fCountMap.begin();
+		std::vector<G4long>::iterator itrWorkerCount = workerHistScorer->fCountMap.begin();
+        
+        if (fReportMean && !fAccumulateSecondMoment) {
+            mergedMeanByCount = true;
+            std::vector<G4double>::iterator itrMasterMean = fFirstMomentMap.begin();
+            std::vector<G4double>::iterator itrWorkerMean = workerHistScorer->fFirstMomentMap.begin();
+            
+            while (itrMasterCount != fCountMap.end()) {
+                G4long masterCount = *itrMasterCount;
+                G4long workerCount = *itrWorkerCount;
+                G4long totalCount = masterCount + workerCount;
+                
+                if (totalCount > 0) {
+                    *itrMasterMean = (masterCount * (*itrMasterMean) + workerCount * (*itrWorkerMean)) / totalCount;
+                } else {
+                    *itrMasterMean = 0.;
+                }
+                
+                *itrMasterCount = totalCount;
+                itrMasterCount++;
+                itrWorkerCount++;
+                itrMasterMean++;
+                itrWorkerMean++;
+            }
+            
+            workerHistScorer->fFirstMomentMap.assign(fNBins, 0.);
+        } else {
+            while (itrMasterCount != fCountMap.end()) {
+                *itrMasterCount += *itrWorkerCount;
+                itrMasterCount++;
+                itrWorkerCount++;
+            }
+        }
 
 		workerHistScorer->fCountMap.assign(fNBins, 0);
 	}
@@ -1811,15 +1839,21 @@ void TsVBinnedScorer::AbsorbResultsFromWorkerScorer(TsVScorer* workerScorer)
 		workerHistScorer->fMaxMap.assign(fNBins, -9.e+99);
 	}
 
-	if (fReportMean || fAccumulateSecondMoment) {
+	if ((fReportMean || fAccumulateSecondMoment) && !mergedMeanByCount) {
 		std::vector<G4double>::iterator itrMaster = fFirstMomentMap.begin();
 		std::vector<G4double>::iterator itrWorker = workerHistScorer->fFirstMomentMap.begin();
-		while (itrMaster != fFirstMomentMap.end()) {
-			*itrMaster = ( *itrMaster * fScoredHistories + *itrWorker * workerHistScorer->fScoredHistories ) /
-				(fScoredHistories + workerHistScorer->fScoredHistories);
-			itrMaster++;
-			itrWorker++;
-		}
+        const G4double masterHistories = static_cast<G4double>(fScoredHistories);
+        const G4double workerHistories = static_cast<G4double>(workerHistScorer->fScoredHistories);
+        const G4double totalHistories = masterHistories + workerHistories;
+        while (itrMaster != fFirstMomentMap.end()) {
+            if (totalHistories > 0.) {
+                *itrMaster = ( *itrMaster * masterHistories + *itrWorker * workerHistories ) / totalHistories;
+            } else {
+                *itrMaster = 0.;
+            }
+            itrMaster++;
+            itrWorker++;
+        }
 
 		workerHistScorer->fFirstMomentMap.assign(fNBins, 0);
 
@@ -1835,7 +1869,7 @@ void TsVBinnedScorer::AbsorbResultsFromWorkerScorer(TsVScorer* workerScorer)
 			workerHistScorer->fSecondMomentMap.assign(fNBins, 0);
 		}
 
-	} else if (fReportSum || fReportCVolHist || fReportDVolHist) {
+	} else if (!mergedMeanByCount && (fReportSum || fReportCVolHist || fReportDVolHist)) {
 		// Only need to absorb sum
 		std::vector<G4double>::iterator itrMaster = fFirstMomentMap.begin();
 		std::vector<G4double>::iterator itrWorker = workerHistScorer->fFirstMomentMap.begin();
