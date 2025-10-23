@@ -571,7 +571,7 @@ G4bool TsSourcePhaseSpace::ReadOneParticle(std::queue<TsPrimaryParticle>* partic
         if (fPrimaryParticle.isNewHistory) {
             if (fPrimaryParticle.weight < 0.) {
                 fPreviousHistoryWasEmpty = true;
-				fPreCheckNumberOfHistories -= fPrimaryParticle.weight;
+                fPreCheckNumberOfHistories -= std::lround(-fPrimaryParticle.weight);
 			} else {
 				fPreCheckNumberOfHistories++;
                 fPreCheckNumberOfNonEmptyHistories++;
