@@ -46,7 +46,7 @@
 TsGraphicsView::TsGraphicsView(TsParameterManager* pM, TsGraphicsManager* grM, TsGeometryManager* gM, G4String viewerName)
 :fPm(pM), fGrm(grM), fGm(gM), fViewerName(viewerName), fRefreshEvery("run"), fColorModel("charge"),
 fIncludeGeometry(true), fIncludeTrajectories(true), fUseSmoothTrajectories(true), fIncludeStepPoints(false), fIncludeAxes(false),
-fIsActive(true), fAlreadyCreated(false), fMagneticFieldArrowDensity(0), fHadParameterChangeSinceLastRun(false)
+fIsActive(true), fAlreadyCreated(false), fElectricFieldArrowDensity(0), fMagneticFieldArrowDensity(0), fHadParameterChangeSinceLastRun(false)
 {
 	fVerbosity = fPm->GetIntegerParameter("Ts/SequenceVerbosity");
 
@@ -88,6 +88,9 @@ void TsGraphicsView::CreateView() {
 	if (fPm->ParameterExists(GetFullParmName("IncludeAxes")) &&
 		fPm->GetBooleanParameter(GetFullParmName("IncludeAxes")))
 		fIncludeAxes = true;
+
+	if (fPm->ParameterExists(GetFullParmName("ElectricFieldArrowDensity")))
+		fElectricFieldArrowDensity = fPm->GetIntegerParameter(GetFullParmName("ElectricFieldArrowDensity"));
 
 	if (fPm->ParameterExists(GetFullParmName("MagneticFieldArrowDensity")))
 		fMagneticFieldArrowDensity = fPm->GetIntegerParameter(GetFullParmName("MagneticFieldArrowDensity"));
@@ -173,6 +176,12 @@ void TsGraphicsView::CreateView() {
 			G4cerr << "Gr/" << fViewerName << "/AxesComponent is set to unknown component: " << axesComponentName << G4endl;
 			fPm->AbortSession(1);
 		}
+	}
+
+	// Control electric field visualization
+	if (fElectricFieldArrowDensity > 0) {
+		G4String electricFieldCommand = "/vis/scene/add/electricField " + G4UIcommand::ConvertToString(fElectricFieldArrowDensity);
+		G4UImanager::GetUIpointer()->ApplyCommand(electricFieldCommand);
 	}
 
 	// Control magnetic field visualization

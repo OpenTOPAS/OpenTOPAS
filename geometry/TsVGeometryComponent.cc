@@ -49,6 +49,7 @@
 #include "TsElectroMagneticFieldMap.hh"
 #include "TsVElectroMagneticField.hh"
 #include "TsElectroMagneticFieldUniform.hh"
+#include "TsElectricFieldMap.hh"
 #include "G4LogicalSkinSurface.hh"
 #include "G4OpticalSurface.hh"
 #include "G4VisAttributes.hh"
@@ -421,10 +422,12 @@ void TsVGeometryComponent::InstantiateFields() {
 					magneticField = new TsMagneticFieldDipole(fPm, fGm, this);
 				} else if (fieldType == "quadrupolemagnet") {
 					magneticField = new TsMagneticFieldQuadrupole(fPm, fGm, this);
-				} else if ( fieldType == "mappedmagnet") {
+				} else if ( fieldType == "mappedmagnet" || fieldType == "magneticfieldmap" ) {
 					magneticField = new TsMagneticFieldMap(fPm, fGm, this);
 				} else if ( fieldType == "uniformelectromagnetic") {
 					electroMagneticField = new TsElectroMagneticFieldUniform(fPm, fGm, this);
+				} else if ( fieldType == "electricfieldmap") {
+					electroMagneticField = new TsElectricFieldMap(fPm, fGm, this);
 				} else if ( fieldType == "electromagneticfieldmap") {
 					electroMagneticField = new TsElectroMagneticFieldMap(fPm, fGm, this);
 				} else if (fieldType != "none") {

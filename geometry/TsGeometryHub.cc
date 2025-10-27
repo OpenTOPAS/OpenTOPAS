@@ -53,6 +53,7 @@
 #include "TsImageCube.hh"
 #include "TsXiOPatient.hh"
 #include "TsDicomPatient.hh"
+#include "TsDicomActivityMap.hh"
 #include "TsBox.hh"
 #include "TsCylinder.hh"
 #include "TsSphere.hh"
@@ -150,6 +151,8 @@ TsVGeometryComponent* TsGeometryHub::InstantiateComponent(TsParameterManager* pM
 		return new TsXiOPatient(pM, eM, mM, gM, pgc, pv, childName);
 	else if (childCompType == "tsdicompatient")
 		return new TsDicomPatient(pM, eM, mM, gM, pgc, pv, childName);
+	else if (childCompType == "tsdicomactivitymap")
+		return new TsDicomActivityMap(pM, eM, mM, gM, pgc, pv, childName);
 	else if (childCompType == "tsbox")
 		return new TsBox(pM, eM, mM, gM, pgc, pv, childName);
 	else if (childCompType == "tscylinder")
