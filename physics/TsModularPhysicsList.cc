@@ -56,6 +56,8 @@
 #include "G4DecayPhysics.hh"
 #include "G4EmDNAChemistry.hh"
 #include "G4EmDNAChemistry_option1.hh"
+#include "G4EmDNAChemistry_option2.hh"
+#include "G4EmDNAChemistry_option3.hh"
 #include "G4EmDNAPhysics.hh"
 #include "G4EmDNAPhysicsActivator.hh"
 #include "G4EmDNAPhysics_option1.hh"
@@ -156,6 +158,8 @@ TsModularPhysicsList::TsModularPhysicsList(TsParameterManager* pM, TsExtensionMa
 	fPhysicsTable.insert(std::make_pair("g4em-dna-stationary_opt4", new Creator<G4EmDNAPhysics_stationary_option4>()));
 	fPhysicsTable.insert(std::make_pair("g4em-dna-stationary_opt6", new Creator<G4EmDNAPhysics_stationary_option6>()));
 	fPhysicsTable.insert(std::make_pair("g4em-dna-chemistry_opt1", new Creator<G4EmDNAChemistry_option1>()));
+    fPhysicsTable.insert(std::make_pair("g4em-dna-chemistry_opt2", new Creator<G4EmDNAChemistry_option2>()));
+    fPhysicsTable.insert(std::make_pair("g4em-dna-chemistry_opt3", new Creator<G4EmDNAChemistry_option3>()));
 	fPhysicsTable.insert(std::make_pair("g4em-dna-activator", new Creator<G4EmDNAPhysicsActivator>()));
 	fPhysicsTable.insert(std::make_pair("g4em-standard_GS", new Creator<G4EmStandardPhysicsGS>()));
 	fPhysicsTable.insert(std::make_pair("g4em-standard_SS", new Creator<G4EmStandardPhysicsSS>()));

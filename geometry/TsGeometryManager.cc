@@ -50,6 +50,7 @@
 #include "TsInelasticSplitOperator.hh"
 #include "TsAutomaticImportanceSamplingOperator.hh"
 #include "TsAutomaticImportanceSamplingParallelOperator.hh"
+#include "TsPeriodicBoundaryConditionOperator.hh"
 
 #include "G4VPhysicalVolume.hh"
 #include "G4UIcommand.hh"
@@ -206,10 +207,15 @@ void TsGeometryManager::ConstructSDandField() {
 			G4int index = -1;
 			if ( fVm->BiasingProcessExists("inelasticsplitting", index) ) {
 				TsInelasticSplitOperator* biasingOperatorIS = new TsInelasticSplitOperator(fPm, "inelasticsplitting");
-				for ( iter=fStore->begin(); iter!=fStore->end(); iter++) {
-					if ( biasingOperatorIS->IsApplicable(iter->second->GetEnvelopePhysicalVolume()->GetLogicalVolume()) )
-						biasingOperatorIS->AttachTo(iter->second->GetEnvelopePhysicalVolume()->GetLogicalVolume());
-				}
+                
+                for ( iter=fStore->begin(); iter!=fStore->end(); iter++) {
+                    if ( biasingOperatorIS->IsApplicable(iter->second->GetEnvelopePhysicalVolume()->GetLogicalVolume()) ) {
+                        biasingOperatorIS->AttachTo(iter->second->GetEnvelopePhysicalVolume()->GetLogicalVolume());
+                        std::vector<G4VPhysicalVolume*> allVolIS = iter->second->GetAllPhysicalVolumes(true);
+                        for ( size_t t = 0; t < allVolIS.size(); t++ )
+                            biasingOperatorIS->AttachTo(allVolIS[t]->GetLogicalVolume());
+                    }
+                }
 			}
 			
 			index = -1;
@@ -237,12 +243,25 @@ void TsGeometryManager::ConstructSDandField() {
 				for ( iter=fStore->begin(); iter!=fStore->end(); iter++) {
 					if ( biasingOperatorAISP->IsApplicable(iter->second->GetEnvelopePhysicalVolume()->GetLogicalVolume()) ) {
 						biasingOperatorAISP->AttachTo(iter->second->GetEnvelopePhysicalVolume()->GetLogicalVolume());
-						std::vector<G4VPhysicalVolume*> allVol = iter->second->GetAllPhysicalVolumes(true);
-						for ( size_t t = 0; t < allVol.size(); t++ )
-							biasingOperatorAISP->AttachTo(allVol[t]->GetLogicalVolume());
+						//std::vector<G4VPhysicalVolume*> allVol = iter->second->GetAllPhysicalVolumes(true);
+						//for ( size_t t = 0; t < allVol.size(); t++ )
+							//biasingOperatorAISP->AttachTo(allVol[t]->GetLogicalVolume());
 					}
 				}
 			}
+            
+            index = -1;
+            if ( fVm->BiasingProcessExists("periodicboundarycondition", index)) {
+                TsPeriodicBoundaryConditionOperator* biasingOperatorPBC =
+                new TsPeriodicBoundaryConditionOperator(fPm, "periodicboundarycondition");
+                for ( iter=fStore->begin(); iter!=fStore->end(); iter++) {
+                    if ( biasingOperatorPBC->IsApplicable(iter->second->GetEnvelopePhysicalVolume()->GetLogicalVolume()) ) {
+                        std::vector<G4VPhysicalVolume*> allVol = iter->second->GetAllPhysicalVolumes(true);
+                        for ( size_t t = 0; t < allVol.size(); t++ )
+                            biasingOperatorPBC->AttachTo(allVol[t]->GetLogicalVolume());
+                    }
+                }
+            }
 		}
 	}
 #endif

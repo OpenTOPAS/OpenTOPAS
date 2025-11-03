@@ -45,6 +45,7 @@
 #include "TsInelasticSplitManager.hh"
 #include "TsAutomaticImportanceSamplingManager.hh"
 #include "TsAutomaticImportanceSamplingParallelManager.hh"
+#include "TsPeriodicBoundaryConditionManager.hh"
 #include "TsVBiasingProcess.hh"
 
 #include "G4UnitsTable.hh"
@@ -135,7 +136,9 @@ void TsVarianceManager::Configure() {
 					fBiasingProcesses.push_back(new TsAutomaticImportanceSamplingManager(aBiasingProcessName, fPm, fGm));
 				} else if ( type == "automaticimportancesamplingparallel") {
 					fBiasingProcesses.push_back(new TsAutomaticImportanceSamplingParallelManager(aBiasingProcessName, fPm, fGm));
-				}
+                } else if ( type == "periodicboundarycondition") {
+                    fBiasingProcesses.push_back(new TsPeriodicBoundaryConditionManager(aBiasingProcessName, fPm, fGm));
+                }
 				else {
 					G4cerr << "Error, biasing technique " << type << " not found" << G4endl;
 					fPm->AbortSession(1);
