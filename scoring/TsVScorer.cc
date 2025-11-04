@@ -520,22 +520,24 @@ void TsVScorer::SetFilter(TsVFilter* aFilter){
 }
 
 
+G4bool TsVScorer::IsIndexInsideRTStructure(G4int idx) {
+    if (!fRTStructureFilter) return true;
+    auto ids = fRTStructureFilter->GetStructureIDs();
+    for (G4int structureID : *ids)
+        if (fComponent->IsInNamedStructure(structureID, idx))
+            return !fRTStructureFilter->IsInverted();
+    return fRTStructureFilter->IsInverted();
+}
+
+
 // See if this index number is in any of the specified structures
 G4bool TsVScorer::ExcludedByRTStructFilter(G4int idx) {
-	if (fRTStructureFilter && fSetBinToMinusOneIfNotInRTStructure) {
-		for (G4int i = 0; i < (int)fRTStructureFilter->GetStructureIDs()->size(); i++) {
-			G4int j = (*(fRTStructureFilter->GetStructureIDs()))[i];
-			if (fComponent->IsInNamedStructure(j, idx)) {
-				if (fRTStructureFilter->IsInverted()) return true;
-				else return false;
-			}
-		}
-
-		if (fRTStructureFilter->IsInverted()) return false;
-		else return true;
-	} else {
-		return false;
-	}
+    if (!fRTStructureFilter || !fSetBinToMinusOneIfNotInRTStructure)
+        return false;
+    
+    // Reuse the IsIndexInsideRTStructure helper so both restore-time
+    // masking and live hits share the same filter.
+    return !IsIndexInsideRTStructure(idx);
 }
 
 

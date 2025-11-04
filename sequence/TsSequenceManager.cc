@@ -303,10 +303,12 @@ void TsSequenceManager::Sequence() {
 		// Only advance runID after scorers are initialized, so that runID of -1 indicates not yet running
 		fRunID++;
 
-		// If restoring results from file, skip all of the actual Geant4 run work
+		// If restoring results from file, skip all of the actual Geant4 run work. But calls instantiate 
+		// filter to allow using the mask of Dicom-RT structures 
 		if (fPm->GetBooleanParameter("Ts/RestoreResultsFromFile")) {
 			fTimer[0].Stop();
 			G4cout << "\nRestoring results from file rather than performing simulation run." << G4endl;
+			fScm->InstantiateFilters();
 			fScm->RestoreResultsFromFile();
 			BeamOn(0); // Empty run to avoid segmentation fault
 		} else {
