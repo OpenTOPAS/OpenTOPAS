@@ -1572,9 +1572,9 @@ void TsVBinnedScorer::RestoreResultsFromFile()
 	}
 
 	if (inputType == "csv") {
-		for (int i = 0; i < fNi; i++) {
+		for (int k = 0; k < fNk; k++) {
 			for (int j = 0; j < fNj; j++) {
-				for (int k = 0; k < fNk; k++) {
+				for (int i = 0; i < fNi; i++) {
 					if (inFile.eof()) {
 						G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
 						G4cerr << "Ts/RestoreResultsFromFile has been set true," << G4endl;
@@ -2681,69 +2681,69 @@ void TsVBinnedScorer::PrintHeader(std::ostream& ofile)
 
 void TsVBinnedScorer::PrintASCII(std::ostream& ofile)
 {
-	ofile << std::setprecision(16); // for double value with 8 bytes
-
-	for (int i = 0; i < fNi; i++) {
-		for (int j = 0; j < fNj; j++) {
-			for (int k = 0; k < fNk; k++) {
-				fNeedComma = false;
-
-				if (fNEorTBins == 0) {
-					// Not binning by energy, just print one value
-					G4int idx = i*fNj*fNk+j*fNk+k;
-					CalculateOneValue(idx);
-					if (!fSparsify || fSum > fSparsifyThreshold) {
-						if (fNDivisions > 1) {
-							if (fSingleIndex)
-								ofile << idx << ", ";
-							else
-								ofile << i << ", " << j << ", " << k << ", ";
-						}
-						PrintOneValueToASCII(ofile);
-						ofile << G4endl;
-					}
-				} else if (fBinByIncidentEnergy) {
-					// Binning by energy, print underflow, energy bins, overflow and no incident particle
-					G4int idx = (fNEorTBins + 3) * (i*fNj*fNk+j*fNk+k);
-					CalculateOneValue(idx);
-					PrintOneValueToASCII(ofile);
-					fNeedComma = true;
-
-					for (int e = 0; e < fNEorTBins; e++) {
-						idx = (fNEorTBins + 3) * (i*fNj*fNk+j*fNk+k) + e + 1;
-						CalculateOneValue(idx);
-						PrintOneValueToASCII(ofile);
-					}
-
-					idx = (fNEorTBins + 3) * (i*fNj*fNk+j*fNk+k) + fNEorTBins + 1;
-					CalculateOneValue(idx);
-					PrintOneValueToASCII(ofile);
-					idx++;
-					CalculateOneValue(idx);
-					PrintOneValueToASCII(ofile);
-					ofile << G4endl;
-				} else {
-					// Binning by other energy or by time, print underflow, energy or time bins and overflow
-					G4int idx = (fNEorTBins + 2) * (i*fNj*fNk+j*fNk+k);
-					CalculateOneValue(idx);
-					PrintOneValueToASCII(ofile);
-					fNeedComma = true;
-
-					for (int e = 0; e < fNEorTBins; e++) {
-						idx = (fNEorTBins + 2) * (i*fNj*fNk+j*fNk+k) + e + 1;
-						CalculateOneValue(idx);
-						PrintOneValueToASCII(ofile);
-					}
-
-					idx = (fNEorTBins + 2) * (i*fNj*fNk+j*fNk+k) + fNEorTBins + 1;
-					CalculateOneValue(idx);
-					PrintOneValueToASCII(ofile);
-					ofile << G4endl;
-				}
-			}
-		}
-	}
-	ofile << std::setprecision(6);
+    ofile << std::setprecision(16); // for double value with 8 bytes
+    
+    for (int k = 0; k < fNk; k++) {
+        for (int j = 0; j < fNj; j++) {
+            for (int i = 0; i < fNi; i++) {
+                fNeedComma = false;
+                
+                if (fNEorTBins == 0) {
+                    // Not binning by energy, just print one value
+                    G4int idx = i*fNj*fNk+j*fNk+k;
+                    CalculateOneValue(idx);
+                    if (!fSparsify || fSum > fSparsifyThreshold) {
+                        if (fNDivisions > 1) {
+                            if (fSingleIndex)
+                                ofile << idx << ", ";
+                            else
+                                ofile << i << ", " << j << ", " << k << ", ";
+                        }
+                        PrintOneValueToASCII(ofile);
+                        ofile << G4endl;
+                    }
+                } else if (fBinByIncidentEnergy) {
+                    // Binning by energy, print underflow, energy bins, overflow and no incident particle
+                    G4int idx = (fNEorTBins + 3) * (i*fNj*fNk+j*fNk+k);
+                    CalculateOneValue(idx);
+                    PrintOneValueToASCII(ofile);
+                    fNeedComma = true;
+                    
+                    for (int e = 0; e < fNEorTBins; e++) {
+                        idx = (fNEorTBins + 3) * (i*fNj*fNk+j*fNk+k) + e + 1;
+                        CalculateOneValue(idx);
+                        PrintOneValueToASCII(ofile);
+                    }
+                    
+                    idx = (fNEorTBins + 3) * (i*fNj*fNk+j*fNk+k) + fNEorTBins + 1;
+                    CalculateOneValue(idx);
+                    PrintOneValueToASCII(ofile);
+                    idx++;
+                    CalculateOneValue(idx);
+                    PrintOneValueToASCII(ofile);
+                    ofile << G4endl;
+                } else {
+                    // Binning by other energy or by time, print underflow, energy or time bins and overflow
+                    G4int idx = (fNEorTBins + 2) * (i*fNj*fNk+j*fNk+k);
+                    CalculateOneValue(idx);
+                    PrintOneValueToASCII(ofile);
+                    fNeedComma = true;
+                    
+                    for (int e = 0; e < fNEorTBins; e++) {
+                        idx = (fNEorTBins + 2) * (i*fNj*fNk+j*fNk+k) + e + 1;
+                        CalculateOneValue(idx);
+                        PrintOneValueToASCII(ofile);
+                    }
+                    
+                    idx = (fNEorTBins + 2) * (i*fNj*fNk+j*fNk+k) + fNEorTBins + 1;
+                    CalculateOneValue(idx);
+                    PrintOneValueToASCII(ofile);
+                    ofile << G4endl;
+                }
+            }
+        }
+    }
+    ofile << std::setprecision(6);
 }
 
 
