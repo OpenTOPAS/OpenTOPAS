@@ -99,7 +99,7 @@ void TsDefaultParameters::SetDefaults(TsParameterFile* file)
 	file->AddTempParameter("s:Ph/Default/Type", "\"Geant4_Modular\"");
 	file->AddTempParameter("sv:Ph/Default/Modules", "6 \"g4em-standard_opt4\" \"g4h-phy_QGSP_BIC_HP\" \"g4decay\" \"g4ion-binarycascade\" \"g4h-elastic_HP\" \"g4stopping\"");
 	file->AddTempParameter("d:Ph/Default/EMRangeMin", "100. eV");
-	file->AddTempParameter("d:Ph/Default/EMRangeMax", "500. MeV");
+	file->AddTempParameter("d:Ph/Default/EMRangeMax", "600. MeV");
 
 	file->AddTempParameter("b:Tf/RandomizeTimeDistribution", "\"False\"");
 	file->AddTempParameter("d:Tf/TimelineStart", "0. s");
