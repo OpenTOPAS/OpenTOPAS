@@ -1035,102 +1035,102 @@ void TsVBinnedScorer::AccumulateHit(G4Step* aStep, G4double value)
 
 void TsVBinnedScorer::AccumulateHit(G4Step* aStep, G4double value, G4int index)
 {
-    if (index >= 0) {
-        if (fBinByIncidentEnergy) {
-            // Number of bins will be fNEorTBins plus 3 more bins for underflow, overflow and case of no incident track
-            // Bin indexing starts from zero.
-            G4int iBin = 0;
-            
-            if (fHaveIncidentParticle) {
-                if (fIncidentParticleEnergy < fBinMin)
-                    iBin = 0;
-                else if (fIncidentParticleEnergy > fBinMax)
-                    iBin = fNEorTBins + 1;
-                else {
-                    if (!fBinLog )
-                        iBin = (int)( (fIncidentParticleEnergy - fBinMin) / fBinWidth ) + 1;
-                    else
-                        for ( iBin = 0; fIncidentParticleEnergy >= fTempEBins[iBin]; iBin++ );
-                }
-            } else {
-                iBin = fNEorTBins + 2;
-            }
-            
-            index = index * (fNEorTBins + 3) + iBin;
-        } else if (fBinByPreStepEnergy || fBinByStepDepositEnergy || fBinByPrimaryEnergy) {
-            // Number of bins will be fNEorTBins plus 2 more bins for underflow and overflow.
-            // Bin indexing starts from zero.
-            G4int iBin = 0;
-            
-            G4double edep;
-            if (fBinByPrimaryEnergy) {
-                TsTrackInformation* parentInformation = (TsTrackInformation*)(aStep->GetTrack()->GetUserInformation());
-                if (parentInformation)
-                    edep = parentInformation->GetParentTrackVertexKineticEnergies().back();
-                else
-                    edep = aStep->GetTrack()->GetVertexKineticEnergy();
-            } else if (fBinByPreStepEnergy)
-                edep = aStep->GetPreStepPoint()->GetKineticEnergy();
-            else
-                edep = aStep->GetTotalEnergyDeposit();
-            
-            if (edep < fBinMin)
-                iBin = 0;
-            else if (edep > fBinMax)
-                iBin = fNEorTBins + 1;
-            else {
-                if (!fBinLog )
-                    iBin = (int)( (edep - fBinMin) / fBinWidth ) + 1;
-                else
-                    for ( iBin = 0; edep >= fTempEBins[iBin]; iBin++ );
-            }
-            
-            index = index * (fNEorTBins + 2) + iBin;
-        } else if (fBinByTime) {
-            // Number of bins will be fNEorTBins plus 2 more bins for underflow and overflow.
-            G4int iBin = 0;
-            G4double time = aStep->GetTrack()->GetGlobalTime()/ns;
-            
-            if (time < fBinMin)
-                iBin = 0;
-            else if (time > fBinMax) {
-                iBin = fNEorTBins + 1;
-                
-                if (fTrackingVerbosity > 0)
-                    G4cout << "Track number " << aStep->GetTrack()->GetTrackID() <<
-                    " has GlobalTime in overflow bin. Type: " << aStep->GetTrack()->GetParticleDefinition()->GetParticleName() <<
-                    ", Time: " << time << " ns = " << time / 3600000000000. << " hours." << G4endl;
-            }
-            else
-                iBin = (int)( (time - fBinMin) / fBinWidth ) + 1;
-            
-            index = index * (fNEorTBins + 2) + iBin;
-        }
-        
-        (*fEvtMap)[index] += value;
-        
-        if (fTrackingVerbosity > 0) {
-            G4cout << "PreStep x,y,z: " << aStep->GetPreStepPoint()->GetPosition().x() << ", "
-            << aStep->GetPreStepPoint()->GetPosition().y() << ", "
-            << aStep->GetPreStepPoint()->GetPosition().z() << G4endl;
-            G4cout << "Step Energy Deposit: " << aStep->GetTotalEnergyDeposit() << G4endl;
-            G4cout << "Step Length: " << aStep->GetStepLength() << G4endl;
-            
-            const G4VTouchable* touchable = aStep->GetPreStepPoint()->GetTouchable();
-            if (touchable->GetHistoryDepth() > 1) G4cout << "PreStep Touchable(2): " << touchable->GetVolume(2)->GetName() << " has replica number: " << touchable->GetReplicaNumber(2) << G4endl;
-            if (touchable->GetHistoryDepth() > 0) G4cout << "PreStep Touchable(1): " << touchable->GetVolume(1)->GetName() << " has replica number: " << touchable->GetReplicaNumber(1) << G4endl;
-            G4cout << "PreStep Touchable(0): " << touchable->GetVolume(0)->GetName() << " has replica number: " << touchable->GetReplicaNumber(0) << G4endl;
-            touchable = aStep->GetPostStepPoint()->GetTouchable();
-            if (touchable->GetHistoryDepth() > 1) G4cout << "PostStep Touchable(2): " << touchable->GetVolume(2)->GetName() << " has replica number: " << touchable->GetReplicaNumber(2) << G4endl;
-            if (touchable->GetHistoryDepth() > 0) G4cout << "PostStep Touchable(1): " << touchable->GetVolume(1)->GetName() << " has replica number: " << touchable->GetReplicaNumber(1) << G4endl;
-            G4cout << "PostStep Touchable(0): " << touchable->GetVolume(0)->GetName() << " has replica number: " << touchable->GetReplicaNumber(0) << G4endl;
-        }
-    } else {
-        fUnscoredSteps++;
-        fUnscoredEnergy += aStep->GetTotalEnergyDeposit();
-    }
-    
-    return;
+	if (index >= 0) {
+		if (fBinByIncidentEnergy) {
+			// Number of bins will be fNEorTBins plus 3 more bins for underflow, overflow and case of no incident track
+			// Bin indexing starts from zero.
+			G4int iBin = 0;
+
+			if (fHaveIncidentParticle) {
+				if (fIncidentParticleEnergy < fBinMin)
+					iBin = 0;
+				else if (fIncidentParticleEnergy > fBinMax)
+					iBin = fNEorTBins + 1;
+				else {
+					if (!fBinLog )
+						iBin = (int)( (fIncidentParticleEnergy - fBinMin) / fBinWidth ) + 1;
+					else
+						for ( iBin = 0; fIncidentParticleEnergy >= fTempEBins[iBin]; iBin++ );
+				}
+			} else {
+				iBin = fNEorTBins + 2;
+			}
+
+			index = index * (fNEorTBins + 3) + iBin;
+		} else if (fBinByPreStepEnergy || fBinByStepDepositEnergy || fBinByPrimaryEnergy) {
+			// Number of bins will be fNEorTBins plus 2 more bins for underflow and overflow.
+			// Bin indexing starts from zero.
+			G4int iBin = 0;
+
+			G4double edep;
+			if (fBinByPrimaryEnergy) {
+				TsTrackInformation* parentInformation = (TsTrackInformation*)(aStep->GetTrack()->GetUserInformation());
+				if (parentInformation)
+					edep = parentInformation->GetParentTrackVertexKineticEnergies().back();
+				else
+					edep = aStep->GetTrack()->GetVertexKineticEnergy();
+			} else if (fBinByPreStepEnergy)
+				edep = aStep->GetPreStepPoint()->GetKineticEnergy();
+			else
+				edep = aStep->GetTotalEnergyDeposit();
+
+			if (edep < fBinMin)
+				iBin = 0;
+			else if (edep > fBinMax)
+				iBin = fNEorTBins + 1;
+			else {
+				if (!fBinLog )
+					iBin = (int)( (edep - fBinMin) / fBinWidth ) + 1;
+				else
+					for ( iBin = 0; edep >= fTempEBins[iBin]; iBin++ );
+			}
+
+			index = index * (fNEorTBins + 2) + iBin;
+		} else if (fBinByTime) {
+			// Number of bins will be fNEorTBins plus 2 more bins for underflow and overflow.
+			G4int iBin = 0;
+			G4double time = aStep->GetTrack()->GetGlobalTime()/ns;
+
+			if (time < fBinMin)
+				iBin = 0;
+			else if (time > fBinMax) {
+				iBin = fNEorTBins + 1;
+
+				if (fTrackingVerbosity > 0)
+					G4cout << "Track number " << aStep->GetTrack()->GetTrackID() <<
+					" has GlobalTime in overflow bin. Type: " << aStep->GetTrack()->GetParticleDefinition()->GetParticleName() <<
+					", Time: " << time << " ns = " << time / 3600000000000. << " hours." << G4endl;
+			}
+			else
+				iBin = (int)( (time - fBinMin) / fBinWidth ) + 1;
+
+			index = index * (fNEorTBins + 2) + iBin;
+		}
+
+		(*fEvtMap)[index] += value;
+
+		if (fTrackingVerbosity > 0) {
+			G4cout << "PreStep x,y,z: " << aStep->GetPreStepPoint()->GetPosition().x() << ", "
+			<< aStep->GetPreStepPoint()->GetPosition().y() << ", "
+			<< aStep->GetPreStepPoint()->GetPosition().z() << G4endl;
+			G4cout << "Step Energy Deposit: " << aStep->GetTotalEnergyDeposit() << G4endl;
+			G4cout << "Step Length: " << aStep->GetStepLength() << G4endl;
+
+			const G4VTouchable* touchable = aStep->GetPreStepPoint()->GetTouchable();
+			if (touchable->GetHistoryDepth() > 1) G4cout << "PreStep Touchable(2): " << touchable->GetVolume(2)->GetName() << " has replica number: " << touchable->GetReplicaNumber(2) << G4endl;
+			if (touchable->GetHistoryDepth() > 0) G4cout << "PreStep Touchable(1): " << touchable->GetVolume(1)->GetName() << " has replica number: " << touchable->GetReplicaNumber(1) << G4endl;
+			G4cout << "PreStep Touchable(0): " << touchable->GetVolume(0)->GetName() << " has replica number: " << touchable->GetReplicaNumber(0) << G4endl;
+			touchable = aStep->GetPostStepPoint()->GetTouchable();
+			if (touchable->GetHistoryDepth() > 1) G4cout << "PostStep Touchable(2): " << touchable->GetVolume(2)->GetName() << " has replica number: " << touchable->GetReplicaNumber(2) << G4endl;
+			if (touchable->GetHistoryDepth() > 0) G4cout << "PostStep Touchable(1): " << touchable->GetVolume(1)->GetName() << " has replica number: " << touchable->GetReplicaNumber(1) << G4endl;
+			G4cout << "PostStep Touchable(0): " << touchable->GetVolume(0)->GetName() << " has replica number: " << touchable->GetReplicaNumber(0) << G4endl;
+		}
+	} else {
+		fUnscoredSteps++;
+		fUnscoredEnergy += aStep->GetTotalEnergyDeposit();
+	}
+
+	return;
 }
 
 
@@ -1261,422 +1261,422 @@ void TsVBinnedScorer::RestoreResultsFromFile()
 #else
     inputType.toLower();
 #endif
-    
-    G4String inputFileSpec;
-    
-    if (inputType == "csv")
-        inputFileSpec = fPm->GetStringParameter(GetFullParmName("InputFile")) + ".csv";
-    else if (inputType == "binary")
-        inputFileSpec = fPm->GetStringParameter(GetFullParmName("InputFile")) + ".binheader";
-    else if (inputType == "dicom") {
-        G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
-        G4cerr << "Called RestoreResultsFromFile for Scorer name: " << GetName() << G4endl;
-        G4cerr << "but inputType is neither to Csv nor Binary" << G4endl;
-        fPm->AbortSession(1);
-    }
-    
-    std::ifstream inFile(inputFileSpec);
-    if (!inFile) {
-        G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
-        G4cerr << "Ts/RestoreResultsFromFile has been set true," << G4endl;
-        G4cerr << "but unable to open input file: " << inputFileSpec << " for Scorer name: " << GetName() << G4endl;
-        fPm->AbortSession(1);
-    }
-    
-    fReadLine = "#";
-    
-    // Get past initial comment lines
-    while (fReadLine.substr(0,9)!="# Scored ") {
-        getline(inFile,fReadLine);
-        if (inFile.eof()) {
-            G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
-            G4cerr << "Ts/RestoreResultsFromFile has been set true," << G4endl;
-            G4cerr << "but got end of file too early in input file: " << inputFileSpec << " for Scorer name: " << GetName() << G4endl;
-            fPm->AbortSession(1);
-        }
-    }
-    
-    if (fNDivisions > 1) {
-        getline(inFile,fReadLine);
-        getline(inFile,fReadLine);
-        getline(inFile,fReadLine);
-    }
-    
-    // Study header to see what columns of data are available
-    getline(inFile,fReadLine);
-    
-    // Check that quantity in header matches expected quantity
-    G4int quantityLength = fQuantity.length();
-    if (fReadLine.substr(2, quantityLength) != fQuantity) {
-        G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
-        G4cerr << "Ts/RestoreResultsFromFile has been set true," << G4endl;
-        G4cerr << "but input file: " << inputFileSpec << " has wrong quantity for Scorer name: " << GetName() << G4endl;
-        G4cerr << "Expected: " << fQuantity << G4endl;
-        fPm->AbortSession(1);
-    }
-    
-    std::string::size_type delcharPos = fReadLine.find( ":" );
-    fReadLine = fReadLine.substr(delcharPos+1);
-    
-    G4Tokenizer next(fReadLine);
-    fReadBackValues = new G4int[9];
-    G4String oneToken;
-    while ((oneToken = next()) != "") {
-        if (oneToken == "Sum") {
-            fReadBackHasSum = true;
-            fReadBackValues[fNReadBackValues] = 0;
-            fNReadBackValues++;
-        } else if (oneToken == "Mean") {
-            fReadBackHasMean = true;
-            fReadBackValues[fNReadBackValues] = 1;
-            fNReadBackValues++;
-        } else if (oneToken == "Histories_with_Scorer_Active") {
-            fReadBackHasHistories = true;
-            fReadBackValues[fNReadBackValues] = 2;
-            fNReadBackValues++;
-        } else if (oneToken == "Count_in_Bin") {
-            fReadBackHasCountInBin = true;
-            fReadBackValues[fNReadBackValues] = 3;
-            fNReadBackValues++;
-        } else if (oneToken == "Second_Moment") {
-            fReadBackHasSecondMoment = true;
-            fReadBackValues[fNReadBackValues] = 4;
-            fNReadBackValues++;
-        } else if (oneToken == "Variance") {
-            fReadBackHasVariance = true;
-            fReadBackValues[fNReadBackValues] = 5;
-            fNReadBackValues++;
-        } else if (oneToken == "Standard_Deviation") {
-            fReadBackHasStandardDeviation = true;
-            fReadBackValues[fNReadBackValues] = 6;
-            fNReadBackValues++;
-        } else if (oneToken == "Min") {
-            fReadBackHasMin = true;
-            fReadBackValues[fNReadBackValues] = 7;
-            fNReadBackValues++;
-        }  else if (oneToken == "Max") {
-            fReadBackHasMax = true;
-            fReadBackValues[fNReadBackValues] = 8;
-            fNReadBackValues++;
-        }
-    }
-    
-    // Evaluate whether we have appropriate data to satisfy report options.
-    // In some cases, we will need to perform new calculations to produce the data to report.
-    if (fReportSum && (!fReadBackHasSum && (!fReadBackHasMean || !fReadBackHasHistories))) {
-        G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
-        G4cerr << "Unable to restore requested report options for Scorer name: " << GetName() << G4endl;
-        G4cerr << "Reporting Sum requires input of Sum or of Mean plus Number of Histories" << G4endl;
-        fPm->AbortSession(1);
-    }
-    
-    if (fReadBackHasSum && fReadBackHasMean && !fReadBackHasHistories) {
-        G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
-        G4cerr << "Unable to restore requested report options for Scorer name: " << GetName() << G4endl;
-        G4cerr << "When reading back both Sum and Mean we also require Number of Histories" << G4endl;
-        fPm->AbortSession(1);
-    }
-    
-    if (fReportMean && (!fReadBackHasMean && (!fReadBackHasSum || !fReadBackHasHistories))) {
-        G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
-        G4cerr << "Unable to restore requested report options for Scorer name: " << GetName() << G4endl;
-        G4cerr << "Reporting Mean requires input of Mean or of Sum plus Number of Histories" << G4endl;
-        fPm->AbortSession(1);
-    }
-    
-    if (fReportHistories && (!fReadBackHasHistories && (!fReadBackHasSum || !fReadBackHasMean))) {
-        G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
-        G4cerr << "Unable to restore requested report options for Scorer name: " << GetName() << G4endl;
-        G4cerr << "Reporting Number of Histories requires input of Number of Histories or of Sum plus Mean" << G4endl;
-        fPm->AbortSession(1);
-    }
-    
-    if (fReportCountInBin && !fReadBackHasCountInBin) {
-        G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
-        G4cerr << "Unable to restore requested report options for Scorer name: " << GetName() << G4endl;
-        G4cerr << "Reporting Count_In_Bin requires input of Count_In_Bin" << G4endl;
-        fPm->AbortSession(1);
-    }
-    
-    if (fReportSecondMoment && !fReadBackHasSecondMoment && !fReadBackHasVariance  && !fReadBackHasStandardDeviation) {
-        G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
-        G4cerr << "Unable to restore requested report options for Scorer name: " << GetName() << G4endl;
-        G4cerr << "Reporting Second_Moment requires input of Second_Moment, Variance or Standard_Deviation" << G4endl;
-        fPm->AbortSession(1);
-    }
-    
-    if (fReportSecondMoment && !fReadBackHasSecondMoment && !fReadBackHasHistories) {
-        G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
-        G4cerr << "Unable to restore requested report options for Scorer name: " << GetName() << G4endl;
-        G4cerr << "Reporting Second_Moment requires input of Second_Moment or Number of Histories" << G4endl;
-        fPm->AbortSession(1);
-    }
-    
-    if (fReportVariance && !fReadBackHasVariance && !fReadBackHasSecondMoment && !fReadBackHasStandardDeviation) {
-        G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
-        G4cerr << "Unable to restore requested report options for Scorer name: " << GetName() << G4endl;
-        G4cerr << "Reporting Variance requires input of Variance, Second_Moment or Standard_Deviation" << G4endl;
-        fPm->AbortSession(1);
-    }
-    
-    if (fReportVariance && !fReadBackHasVariance && !fReadBackHasHistories && !fReadBackHasStandardDeviation) {
-        G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
-        G4cerr << "Unable to restore requested report options for Scorer name: " << GetName() << G4endl;
-        G4cerr << "Reporting Variance requires input of Variance, Standard_Deviation or Number of Histories" << G4endl;
-        fPm->AbortSession(1);
-    }
-    
-    if (fReportStandardDeviation && !fReadBackHasStandardDeviation && !fReadBackHasSecondMoment && !fReadBackHasVariance) {
-        G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
-        G4cerr << "Unable to restore requested report options for Scorer name: " << GetName() << G4endl;
-        G4cerr << "Reporting Standard_Deviation requires input of Standard_Deviation, Second_Moment or Variance" << G4endl;
-        fPm->AbortSession(1);
-    }
-    
-    if (fReportStandardDeviation && !fReadBackHasStandardDeviation && !fReadBackHasHistories && !fReadBackHasVariance) {
-        G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
-        G4cerr << "Unable to restore requested report options for Scorer name: " << GetName() << G4endl;
-        G4cerr << "Reporting Standard_Deviation requires input of Standard_Deviation, Variance or Number of Histories" << G4endl;
-        fPm->AbortSession(1);
-    }
-    
-    if (fReportMin && !fReadBackHasMin) {
-        G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
-        G4cerr << "Unable to restore requested report options for Scorer name: " << GetName() << G4endl;
-        G4cerr << "Reporting Min requires input of Min" << G4endl;
-        fPm->AbortSession(1);
-    }
-    
-    if (fReportMax && !fReadBackHasMax) {
-        G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
-        G4cerr << "Unable to restore requested report options for Scorer name: " << GetName() << G4endl;
-        G4cerr << "Reporting Max requires input of Max" << G4endl;
-        fPm->AbortSession(1);
-    }
-    
-    getline(inFile,fReadLine);
-    
-    if (fReadLine.substr(0,33) == "# Binned by incident track energy") {
-        if (fBinByIncidentEnergy) {
-            G4String expectedLine = "# Binned by incident track energy in " + G4UIcommand::ConvertToString(fNEorTBins)
-            + " bins of " + G4UIcommand::ConvertToString(fBinWidth) + " MeV"
-            + " from " + G4UIcommand::ConvertToString(fBinMin) + " MeV to " + G4UIcommand::ConvertToString(fBinMax) + " MeV";
-            if (fReadLine != expectedLine) {
-                G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
-                G4cerr << "Ts/RestoreResultsFromFile has been set true," << G4endl;
-                G4cerr << "but in input file: " << inputFileSpec << " for Scorer name: " << GetName() << G4endl;
-                G4cerr << "has different energy binning than this scorer." << G4endl;
-                fPm->AbortSession(1);
-            }
-            getline(inFile,fReadLine);
-            getline(inFile,fReadLine);
-        } else {
-            G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
-            G4cerr << "Ts/RestoreResultsFromFile has been set true," << G4endl;
-            G4cerr << "but in input file: " << inputFileSpec << " for Scorer name: " << GetName() << G4endl;
-            G4cerr << "has energy binning while this scorer does not." << G4endl;
-            fPm->AbortSession(1);
-        }
-    }
-    
-    if (fReadLine.substr(0,27) == "# Binned by pre-step energy") {
-        if (fBinByPreStepEnergy) {
-            G4String expectedLine = "# Binned by pre-step energy in " + G4UIcommand::ConvertToString(fNEorTBins)
-            + " bins of " + G4UIcommand::ConvertToString(fBinWidth) + " MeV"
-            + " from " + G4UIcommand::ConvertToString(fBinMin) + " MeV to " + G4UIcommand::ConvertToString(fBinMax) + " MeV";
-            if (fReadLine != expectedLine) {
-                G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
-                G4cerr << "Ts/RestoreResultsFromFile has been set true," << G4endl;
-                G4cerr << "but in input file: " << inputFileSpec << " for Scorer name: " << GetName() << G4endl;
-                G4cerr << "has different energy binning than this scorer." << G4endl;
-                fPm->AbortSession(1);
-            }
-            getline(inFile,fReadLine);
-            getline(inFile,fReadLine);
-        } else {
-            G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
-            G4cerr << "Ts/RestoreResultsFromFile has been set true," << G4endl;
-            G4cerr << "but in input file: " << inputFileSpec << " for Scorer name: " << GetName() << G4endl;
-            G4cerr << "has energy binning while this scorer does not." << G4endl;
-            fPm->AbortSession(1);
-        }
-    }
-    
-    if (fReadLine.substr(0,36) == "# Binned by energy deposited in step") {
-        if (fBinByStepDepositEnergy) {
-            G4String expectedLine = "# Binned by energy deposited in step " + G4UIcommand::ConvertToString(fNEorTBins)
-            + " bins of " + G4UIcommand::ConvertToString(fBinWidth) + " MeV"
-            + " from " + G4UIcommand::ConvertToString(fBinMin) + " MeV to " + G4UIcommand::ConvertToString(fBinMax) + " MeV";
-            if (fReadLine != expectedLine) {
-                G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
-                G4cerr << "Ts/RestoreResultsFromFile has been set true," << G4endl;
-                G4cerr << "but in input file: " << inputFileSpec << " for Scorer name: " << GetName() << G4endl;
-                G4cerr << "has different energy binning than this scorer." << G4endl;
-                fPm->AbortSession(1);
-            }
-            getline(inFile,fReadLine);
-            getline(inFile,fReadLine);
-        } else {
-            G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
-            G4cerr << "Ts/RestoreResultsFromFile has been set true," << G4endl;
-            G4cerr << "but in input file: " << inputFileSpec << " for Scorer name: " << GetName() << G4endl;
-            G4cerr << "has energy binning while this scorer does not." << G4endl;
-            fPm->AbortSession(1);
-        }
-    }
-    
-    if (fReadLine.substr(0,33) == "# Binned by primary track energy") {
-        if (fBinByPrimaryEnergy) {
-            G4String expectedLine = "# Binned by primary track energy in " + G4UIcommand::ConvertToString(fNEorTBins)
-            + " bins of " + G4UIcommand::ConvertToString(fBinWidth) + " MeV"
-            + " from " + G4UIcommand::ConvertToString(fBinMin) + " MeV to " + G4UIcommand::ConvertToString(fBinMax) + " MeV";
-            if (fReadLine != expectedLine) {
-                G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
-                G4cerr << "Ts/RestoreResultsFromFile has been set true," << G4endl;
-                G4cerr << "but in input file: " << inputFileSpec << " for Scorer name: " << GetName() << G4endl;
-                G4cerr << "has different energy binning than this scorer." << G4endl;
-                fPm->AbortSession(1);
-            }
-            getline(inFile,fReadLine);
-            getline(inFile,fReadLine);
-        } else {
-            G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
-            G4cerr << "Ts/RestoreResultsFromFile has been set true," << G4endl;
-            G4cerr << "but in input file: " << inputFileSpec << " for Scorer name: " << GetName() << G4endl;
-            G4cerr << "has energy binning while this scorer does not." << G4endl;
-            fPm->AbortSession(1);
-        }
-    }
-    
-    if (fReadLine.substr(0,16) == "# Binned by time") {
-        if (fBinByTime) {
-            G4String expectedLine = "# Binned by time in " + G4UIcommand::ConvertToString(fNEorTBins)
-            + " bins of " + G4UIcommand::ConvertToString(fBinWidth) + " ns"
-            + " from " + G4UIcommand::ConvertToString(fBinMin) + " ns to " + G4UIcommand::ConvertToString(fBinMax) + " ns";
-            if (fReadLine != expectedLine) {
-                G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
-                G4cerr << "Ts/RestoreResultsFromFile has been set true," << G4endl;
-                G4cerr << "but in input file: " << inputFileSpec << " for Scorer name: " << GetName() << G4endl;
-                G4cerr << "has different time binning that this scorer." << G4endl;
-                fPm->AbortSession(1);
-            }
-            getline(inFile,fReadLine);
-            getline(inFile,fReadLine);
-        } else {
-            G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
-            G4cerr << "Ts/RestoreResultsFromFile has been set true," << G4endl;
-            G4cerr << "but in input file: " << inputFileSpec << " for Scorer name: " << GetName() << G4endl;
-            G4cerr << "has time binning while this scorer does not." << G4endl;
-            fPm->AbortSession(1);
-        }
-    }
-    
-    if (inputType == "csv") {
-        for (int i = 0; i < fNi; i++) {
-            for (int j = 0; j < fNj; j++) {
-                for (int k = 0; k < fNk; k++) {
-                    if (inFile.eof()) {
-                        G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
-                        G4cerr << "Ts/RestoreResultsFromFile has been set true," << G4endl;
-                        G4cerr << "but got end of file too early in input file: " << inputFileSpec << " for Scorer name: " << GetName() << G4endl;
-                        fPm->AbortSession(1);
-                    }
-                    
-                    if (fNDivisions > 1) {
-                        GetOneTokenFromReadLine();
-                        GetOneTokenFromReadLine();
-                        GetOneTokenFromReadLine();
-                    }
-                    
-                    if (fNEorTBins == 0) {
-                        // Not binning by energy, just read one value
-                        G4int idx = i*fNj*fNk+j*fNk+k;
-                        ReadOneValueFromASCII(idx);
-                    } else if (fBinByIncidentEnergy) {
-                        // Binning by incident track energy, read underflow, energy bins, overflow and no incident track
-                        G4int idx = (fNEorTBins + 3) * (i*fNj*fNk+j*fNk+k);
-                        ReadOneValueFromASCII(idx);
-                        
-                        for (int e = 0; e < fNEorTBins; e++) {
-                            idx = (fNEorTBins + 3) * (i*fNj*fNk+j*fNk+k) + e + 1;
-                            ReadOneValueFromASCII(idx);
-                        }
-                        
-                        idx = (fNEorTBins + 3) * (i*fNj*fNk+j*fNk+k) + fNEorTBins + 1;
-                        ReadOneValueFromASCII(idx);
-                        idx++;
-                        ReadOneValueFromASCII(idx);
-                    } else {
-                        // Binning by other energy or by time, read underflow, energy or time bins and overflow
-                        G4int idx = (fNEorTBins + 2) * (i*fNj*fNk+j*fNk+k);
-                        ReadOneValueFromASCII(idx);
-                        
-                        for (int e = 0; e < fNEorTBins; e++) {
-                            idx = (fNEorTBins + 2) * (i*fNj*fNk+j*fNk+k) + e + 1;
-                            ReadOneValueFromASCII(idx);
-                        }
-                        
-                        idx = (fNEorTBins + 2) * (i*fNj*fNk+j*fNk+k) + fNEorTBins + 1;
-                        ReadOneValueFromASCII(idx);
-                    }
-                    
-                    getline(inFile,fReadLine);
-                }
-            }
-        }
-    } else if (inputType == "binary") {
-        G4String dataFileSpec = fPm->GetStringParameter(GetFullParmName("InputFile")) + ".bin";
-        fReadFile.open(dataFileSpec);
-        if (!fReadFile) {
-            G4cout << "Error opening binary data file:" << dataFileSpec << G4endl;
-            fPm->AbortSession(1);
-        }
-        
-        for (int k = 0; k < fNk; k++) {
-            for (int j = 0; j < fNj; j++) {
-                for (int i = 0; i < fNi; i++) {
-                    if (fReadFile.eof()) {
-                        G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
-                        G4cerr << "Ts/RestoreResultsFromFile has been set true," << G4endl;
-                        G4cerr << "but got end of file too early in input file: " << dataFileSpec << " for Scorer name: " << GetName() << G4endl;
-                        fPm->AbortSession(1);
-                    }
-                    
-                    if (fNEorTBins == 0) {
-                        // Not binning by energy, just read one value
-                        G4int idx = i*fNj*fNk+j*fNk+k;
-                        ReadOneValueFromBinary(idx);
-                    } else if (fBinByIncidentEnergy) {
-                        // Binning by incident track energy, read underflow, energy bins, overflow and no incident track
-                        G4int idx = (fNEorTBins + 3) * (i*fNj*fNk+j*fNk+k);
-                        ReadOneValueFromBinary(idx);
-                        
-                        for (int e = 0; e < fNEorTBins; e++) {
-                            idx = (fNEorTBins + 3) * (i*fNj*fNk+j*fNk+k) + e + 1;
-                            ReadOneValueFromBinary(idx);
-                        }
-                        
-                        idx = (fNEorTBins + 3) * (i*fNj*fNk+j*fNk+k) + fNEorTBins + 1;
-                        ReadOneValueFromBinary(idx);
-                        idx++;
-                        ReadOneValueFromBinary(idx);
-                    } else {
-                        // Binning by other energy or by time, read underflow, energy or time bins and overflow
-                        G4int idx = (fNEorTBins + 2) * (i*fNj*fNk+j*fNk+k);
-                        ReadOneValueFromBinary(idx);
-                        
-                        for (int e = 0; e < fNEorTBins; e++) {
-                            idx = (fNEorTBins + 2) * (i*fNj*fNk+j*fNk+k) + e + 1;
-                            ReadOneValueFromBinary(idx);
-                        }
-                        
-                        idx = (fNEorTBins + 2) * (i*fNj*fNk+j*fNk+k) + fNEorTBins + 1;
-                        ReadOneValueFromBinary(idx);
-                    }
-                }
-            }
-        }
-    }
+
+	G4String inputFileSpec;
+
+	if (inputType == "csv")
+		inputFileSpec = fPm->GetStringParameter(GetFullParmName("InputFile")) + ".csv";
+	else if (inputType == "binary")
+		inputFileSpec = fPm->GetStringParameter(GetFullParmName("InputFile")) + ".binheader";
+	else if (inputType == "dicom") {
+		G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+		G4cerr << "Called RestoreResultsFromFile for Scorer name: " << GetName() << G4endl;
+		G4cerr << "but inputType is neither to Csv nor Binary" << G4endl;
+		fPm->AbortSession(1);
+	}
+
+	std::ifstream inFile(inputFileSpec);
+	if (!inFile) {
+		G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+		G4cerr << "Ts/RestoreResultsFromFile has been set true," << G4endl;
+		G4cerr << "but unable to open input file: " << inputFileSpec << " for Scorer name: " << GetName() << G4endl;
+		fPm->AbortSession(1);
+	}
+
+	fReadLine = "#";
+
+	// Get past initial comment lines
+	while (fReadLine.substr(0,9)!="# Scored ") {
+		getline(inFile,fReadLine);
+		if (inFile.eof()) {
+			G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+			G4cerr << "Ts/RestoreResultsFromFile has been set true," << G4endl;
+			G4cerr << "but got end of file too early in input file: " << inputFileSpec << " for Scorer name: " << GetName() << G4endl;
+			fPm->AbortSession(1);
+		}
+	}
+
+	if (fNDivisions > 1) {
+		getline(inFile,fReadLine);
+		getline(inFile,fReadLine);
+		getline(inFile,fReadLine);
+	}
+
+	// Study header to see what columns of data are available
+	getline(inFile,fReadLine);
+
+	// Check that quantity in header matches expected quantity
+	G4int quantityLength = fQuantity.length();
+	if (fReadLine.substr(2, quantityLength) != fQuantity) {
+		G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+		G4cerr << "Ts/RestoreResultsFromFile has been set true," << G4endl;
+		G4cerr << "but input file: " << inputFileSpec << " has wrong quantity for Scorer name: " << GetName() << G4endl;
+		G4cerr << "Expected: " << fQuantity << G4endl;
+		fPm->AbortSession(1);
+	}
+
+	std::string::size_type delcharPos = fReadLine.find( ":" );
+	fReadLine = fReadLine.substr(delcharPos+1);
+
+	G4Tokenizer next(fReadLine);
+	fReadBackValues = new G4int[9];
+	G4String oneToken;
+	while ((oneToken = next()) != "") {
+		if (oneToken == "Sum") {
+			fReadBackHasSum = true;
+			fReadBackValues[fNReadBackValues] = 0;
+			fNReadBackValues++;
+		} else if (oneToken == "Mean") {
+			fReadBackHasMean = true;
+			fReadBackValues[fNReadBackValues] = 1;
+			fNReadBackValues++;
+		} else if (oneToken == "Histories_with_Scorer_Active") {
+			fReadBackHasHistories = true;
+			fReadBackValues[fNReadBackValues] = 2;
+			fNReadBackValues++;
+		} else if (oneToken == "Count_in_Bin") {
+			fReadBackHasCountInBin = true;
+			fReadBackValues[fNReadBackValues] = 3;
+			fNReadBackValues++;
+		} else if (oneToken == "Second_Moment") {
+			fReadBackHasSecondMoment = true;
+			fReadBackValues[fNReadBackValues] = 4;
+			fNReadBackValues++;
+		} else if (oneToken == "Variance") {
+			fReadBackHasVariance = true;
+			fReadBackValues[fNReadBackValues] = 5;
+			fNReadBackValues++;
+		} else if (oneToken == "Standard_Deviation") {
+			fReadBackHasStandardDeviation = true;
+			fReadBackValues[fNReadBackValues] = 6;
+			fNReadBackValues++;
+		} else if (oneToken == "Min") {
+			fReadBackHasMin = true;
+			fReadBackValues[fNReadBackValues] = 7;
+			fNReadBackValues++;
+		}  else if (oneToken == "Max") {
+			fReadBackHasMax = true;
+			fReadBackValues[fNReadBackValues] = 8;
+			fNReadBackValues++;
+		}
+	}
+
+	// Evaluate whether we have appropriate data to satisfy report options.
+	// In some cases, we will need to perform new calculations to produce the data to report.
+	if (fReportSum && (!fReadBackHasSum && (!fReadBackHasMean || !fReadBackHasHistories))) {
+		G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+		G4cerr << "Unable to restore requested report options for Scorer name: " << GetName() << G4endl;
+		G4cerr << "Reporting Sum requires input of Sum or of Mean plus Number of Histories" << G4endl;
+		fPm->AbortSession(1);
+	}
+
+	if (fReadBackHasSum && fReadBackHasMean && !fReadBackHasHistories) {
+		G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+		G4cerr << "Unable to restore requested report options for Scorer name: " << GetName() << G4endl;
+		G4cerr << "When reading back both Sum and Mean we also require Number of Histories" << G4endl;
+		fPm->AbortSession(1);
+	}
+
+	if (fReportMean && (!fReadBackHasMean && (!fReadBackHasSum || !fReadBackHasHistories))) {
+		G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+		G4cerr << "Unable to restore requested report options for Scorer name: " << GetName() << G4endl;
+		G4cerr << "Reporting Mean requires input of Mean or of Sum plus Number of Histories" << G4endl;
+		fPm->AbortSession(1);
+	}
+
+	if (fReportHistories && (!fReadBackHasHistories && (!fReadBackHasSum || !fReadBackHasMean))) {
+		G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+		G4cerr << "Unable to restore requested report options for Scorer name: " << GetName() << G4endl;
+		G4cerr << "Reporting Number of Histories requires input of Number of Histories or of Sum plus Mean" << G4endl;
+		fPm->AbortSession(1);
+	}
+
+	if (fReportCountInBin && !fReadBackHasCountInBin) {
+		G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+		G4cerr << "Unable to restore requested report options for Scorer name: " << GetName() << G4endl;
+		G4cerr << "Reporting Count_In_Bin requires input of Count_In_Bin" << G4endl;
+		fPm->AbortSession(1);
+	}
+
+	if (fReportSecondMoment && !fReadBackHasSecondMoment && !fReadBackHasVariance  && !fReadBackHasStandardDeviation) {
+		G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+		G4cerr << "Unable to restore requested report options for Scorer name: " << GetName() << G4endl;
+		G4cerr << "Reporting Second_Moment requires input of Second_Moment, Variance or Standard_Deviation" << G4endl;
+		fPm->AbortSession(1);
+	}
+
+	if (fReportSecondMoment && !fReadBackHasSecondMoment && !fReadBackHasHistories) {
+		G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+		G4cerr << "Unable to restore requested report options for Scorer name: " << GetName() << G4endl;
+		G4cerr << "Reporting Second_Moment requires input of Second_Moment or Number of Histories" << G4endl;
+		fPm->AbortSession(1);
+	}
+
+	if (fReportVariance && !fReadBackHasVariance && !fReadBackHasSecondMoment && !fReadBackHasStandardDeviation) {
+		G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+		G4cerr << "Unable to restore requested report options for Scorer name: " << GetName() << G4endl;
+		G4cerr << "Reporting Variance requires input of Variance, Second_Moment or Standard_Deviation" << G4endl;
+		fPm->AbortSession(1);
+	}
+
+	if (fReportVariance && !fReadBackHasVariance && !fReadBackHasHistories && !fReadBackHasStandardDeviation) {
+		G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+		G4cerr << "Unable to restore requested report options for Scorer name: " << GetName() << G4endl;
+		G4cerr << "Reporting Variance requires input of Variance, Standard_Deviation or Number of Histories" << G4endl;
+		fPm->AbortSession(1);
+	}
+
+	if (fReportStandardDeviation && !fReadBackHasStandardDeviation && !fReadBackHasSecondMoment && !fReadBackHasVariance) {
+		G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+		G4cerr << "Unable to restore requested report options for Scorer name: " << GetName() << G4endl;
+		G4cerr << "Reporting Standard_Deviation requires input of Standard_Deviation, Second_Moment or Variance" << G4endl;
+		fPm->AbortSession(1);
+	}
+
+	if (fReportStandardDeviation && !fReadBackHasStandardDeviation && !fReadBackHasHistories && !fReadBackHasVariance) {
+		G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+		G4cerr << "Unable to restore requested report options for Scorer name: " << GetName() << G4endl;
+		G4cerr << "Reporting Standard_Deviation requires input of Standard_Deviation, Variance or Number of Histories" << G4endl;
+		fPm->AbortSession(1);
+	}
+
+	if (fReportMin && !fReadBackHasMin) {
+		G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+		G4cerr << "Unable to restore requested report options for Scorer name: " << GetName() << G4endl;
+		G4cerr << "Reporting Min requires input of Min" << G4endl;
+		fPm->AbortSession(1);
+	}
+
+	if (fReportMax && !fReadBackHasMax) {
+		G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+		G4cerr << "Unable to restore requested report options for Scorer name: " << GetName() << G4endl;
+		G4cerr << "Reporting Max requires input of Max" << G4endl;
+		fPm->AbortSession(1);
+	}
+
+	getline(inFile,fReadLine);
+
+	if (fReadLine.substr(0,33) == "# Binned by incident track energy") {
+		if (fBinByIncidentEnergy) {
+			G4String expectedLine = "# Binned by incident track energy in " + G4UIcommand::ConvertToString(fNEorTBins)
+			+ " bins of " + G4UIcommand::ConvertToString(fBinWidth) + " MeV"
+			+ " from " + G4UIcommand::ConvertToString(fBinMin) + " MeV to " + G4UIcommand::ConvertToString(fBinMax) + " MeV";
+			if (fReadLine != expectedLine) {
+				G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+				G4cerr << "Ts/RestoreResultsFromFile has been set true," << G4endl;
+				G4cerr << "but in input file: " << inputFileSpec << " for Scorer name: " << GetName() << G4endl;
+				G4cerr << "has different energy binning than this scorer." << G4endl;
+				fPm->AbortSession(1);
+			}
+			getline(inFile,fReadLine);
+			getline(inFile,fReadLine);
+		} else {
+			G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+			G4cerr << "Ts/RestoreResultsFromFile has been set true," << G4endl;
+			G4cerr << "but in input file: " << inputFileSpec << " for Scorer name: " << GetName() << G4endl;
+			G4cerr << "has energy binning while this scorer does not." << G4endl;
+			fPm->AbortSession(1);
+		}
+	}
+
+	if (fReadLine.substr(0,27) == "# Binned by pre-step energy") {
+		if (fBinByPreStepEnergy) {
+			G4String expectedLine = "# Binned by pre-step energy in " + G4UIcommand::ConvertToString(fNEorTBins)
+			+ " bins of " + G4UIcommand::ConvertToString(fBinWidth) + " MeV"
+			+ " from " + G4UIcommand::ConvertToString(fBinMin) + " MeV to " + G4UIcommand::ConvertToString(fBinMax) + " MeV";
+			if (fReadLine != expectedLine) {
+				G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+				G4cerr << "Ts/RestoreResultsFromFile has been set true," << G4endl;
+				G4cerr << "but in input file: " << inputFileSpec << " for Scorer name: " << GetName() << G4endl;
+				G4cerr << "has different energy binning than this scorer." << G4endl;
+				fPm->AbortSession(1);
+			}
+			getline(inFile,fReadLine);
+			getline(inFile,fReadLine);
+		} else {
+			G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+			G4cerr << "Ts/RestoreResultsFromFile has been set true," << G4endl;
+			G4cerr << "but in input file: " << inputFileSpec << " for Scorer name: " << GetName() << G4endl;
+			G4cerr << "has energy binning while this scorer does not." << G4endl;
+			fPm->AbortSession(1);
+		}
+	}
+
+	if (fReadLine.substr(0,36) == "# Binned by energy deposited in step") {
+		if (fBinByStepDepositEnergy) {
+			G4String expectedLine = "# Binned by energy deposited in step " + G4UIcommand::ConvertToString(fNEorTBins)
+			+ " bins of " + G4UIcommand::ConvertToString(fBinWidth) + " MeV"
+			+ " from " + G4UIcommand::ConvertToString(fBinMin) + " MeV to " + G4UIcommand::ConvertToString(fBinMax) + " MeV";
+			if (fReadLine != expectedLine) {
+				G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+				G4cerr << "Ts/RestoreResultsFromFile has been set true," << G4endl;
+				G4cerr << "but in input file: " << inputFileSpec << " for Scorer name: " << GetName() << G4endl;
+				G4cerr << "has different energy binning than this scorer." << G4endl;
+				fPm->AbortSession(1);
+			}
+			getline(inFile,fReadLine);
+			getline(inFile,fReadLine);
+		} else {
+			G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+			G4cerr << "Ts/RestoreResultsFromFile has been set true," << G4endl;
+			G4cerr << "but in input file: " << inputFileSpec << " for Scorer name: " << GetName() << G4endl;
+			G4cerr << "has energy binning while this scorer does not." << G4endl;
+			fPm->AbortSession(1);
+		}
+	}
+
+	if (fReadLine.substr(0,33) == "# Binned by primary track energy") {
+		if (fBinByPrimaryEnergy) {
+			G4String expectedLine = "# Binned by primary track energy in " + G4UIcommand::ConvertToString(fNEorTBins)
+			+ " bins of " + G4UIcommand::ConvertToString(fBinWidth) + " MeV"
+			+ " from " + G4UIcommand::ConvertToString(fBinMin) + " MeV to " + G4UIcommand::ConvertToString(fBinMax) + " MeV";
+			if (fReadLine != expectedLine) {
+				G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+				G4cerr << "Ts/RestoreResultsFromFile has been set true," << G4endl;
+				G4cerr << "but in input file: " << inputFileSpec << " for Scorer name: " << GetName() << G4endl;
+				G4cerr << "has different energy binning than this scorer." << G4endl;
+				fPm->AbortSession(1);
+			}
+			getline(inFile,fReadLine);
+			getline(inFile,fReadLine);
+		} else {
+			G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+			G4cerr << "Ts/RestoreResultsFromFile has been set true," << G4endl;
+			G4cerr << "but in input file: " << inputFileSpec << " for Scorer name: " << GetName() << G4endl;
+			G4cerr << "has energy binning while this scorer does not." << G4endl;
+			fPm->AbortSession(1);
+		}
+	}
+
+	if (fReadLine.substr(0,16) == "# Binned by time") {
+		if (fBinByTime) {
+			G4String expectedLine = "# Binned by time in " + G4UIcommand::ConvertToString(fNEorTBins)
+			+ " bins of " + G4UIcommand::ConvertToString(fBinWidth) + " ns"
+			+ " from " + G4UIcommand::ConvertToString(fBinMin) + " ns to " + G4UIcommand::ConvertToString(fBinMax) + " ns";
+			if (fReadLine != expectedLine) {
+				G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+				G4cerr << "Ts/RestoreResultsFromFile has been set true," << G4endl;
+				G4cerr << "but in input file: " << inputFileSpec << " for Scorer name: " << GetName() << G4endl;
+				G4cerr << "has different time binning that this scorer." << G4endl;
+				fPm->AbortSession(1);
+			}
+			getline(inFile,fReadLine);
+			getline(inFile,fReadLine);
+		} else {
+			G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+			G4cerr << "Ts/RestoreResultsFromFile has been set true," << G4endl;
+			G4cerr << "but in input file: " << inputFileSpec << " for Scorer name: " << GetName() << G4endl;
+			G4cerr << "has time binning while this scorer does not." << G4endl;
+			fPm->AbortSession(1);
+		}
+	}
+
+	if (inputType == "csv") {
+		for (int i = 0; i < fNi; i++) {
+			for (int j = 0; j < fNj; j++) {
+				for (int k = 0; k < fNk; k++) {
+					if (inFile.eof()) {
+						G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+						G4cerr << "Ts/RestoreResultsFromFile has been set true," << G4endl;
+						G4cerr << "but got end of file too early in input file: " << inputFileSpec << " for Scorer name: " << GetName() << G4endl;
+						fPm->AbortSession(1);
+					}
+
+					if (fNDivisions > 1) {
+						GetOneTokenFromReadLine();
+						GetOneTokenFromReadLine();
+						GetOneTokenFromReadLine();
+					}
+
+					if (fNEorTBins == 0) {
+						// Not binning by energy, just read one value
+						G4int idx = i*fNj*fNk+j*fNk+k;
+						ReadOneValueFromASCII(idx);
+					} else if (fBinByIncidentEnergy) {
+						// Binning by incident track energy, read underflow, energy bins, overflow and no incident track
+						G4int idx = (fNEorTBins + 3) * (i*fNj*fNk+j*fNk+k);
+						ReadOneValueFromASCII(idx);
+
+						for (int e = 0; e < fNEorTBins; e++) {
+							idx = (fNEorTBins + 3) * (i*fNj*fNk+j*fNk+k) + e + 1;
+							ReadOneValueFromASCII(idx);
+						}
+
+						idx = (fNEorTBins + 3) * (i*fNj*fNk+j*fNk+k) + fNEorTBins + 1;
+						ReadOneValueFromASCII(idx);
+						idx++;
+						ReadOneValueFromASCII(idx);
+					} else {
+						// Binning by other energy or by time, read underflow, energy or time bins and overflow
+						G4int idx = (fNEorTBins + 2) * (i*fNj*fNk+j*fNk+k);
+						ReadOneValueFromASCII(idx);
+
+						for (int e = 0; e < fNEorTBins; e++) {
+							idx = (fNEorTBins + 2) * (i*fNj*fNk+j*fNk+k) + e + 1;
+							ReadOneValueFromASCII(idx);
+						}
+
+						idx = (fNEorTBins + 2) * (i*fNj*fNk+j*fNk+k) + fNEorTBins + 1;
+						ReadOneValueFromASCII(idx);
+					}
+
+					getline(inFile,fReadLine);
+				}
+			}
+		}
+	} else if (inputType == "binary") {
+		G4String dataFileSpec = fPm->GetStringParameter(GetFullParmName("InputFile")) + ".bin";
+		fReadFile.open(dataFileSpec);
+		if (!fReadFile) {
+			G4cout << "Error opening binary data file:" << dataFileSpec << G4endl;
+			fPm->AbortSession(1);
+		}
+
+		for (int k = 0; k < fNk; k++) {
+			for (int j = 0; j < fNj; j++) {
+				for (int i = 0; i < fNi; i++) {
+					if (fReadFile.eof()) {
+						G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+						G4cerr << "Ts/RestoreResultsFromFile has been set true," << G4endl;
+						G4cerr << "but got end of file too early in input file: " << dataFileSpec << " for Scorer name: " << GetName() << G4endl;
+						fPm->AbortSession(1);
+					}
+
+					if (fNEorTBins == 0) {
+						// Not binning by energy, just read one value
+						G4int idx = i*fNj*fNk+j*fNk+k;
+						ReadOneValueFromBinary(idx);
+					} else if (fBinByIncidentEnergy) {
+						// Binning by incident track energy, read underflow, energy bins, overflow and no incident track
+						G4int idx = (fNEorTBins + 3) * (i*fNj*fNk+j*fNk+k);
+						ReadOneValueFromBinary(idx);
+
+						for (int e = 0; e < fNEorTBins; e++) {
+							idx = (fNEorTBins + 3) * (i*fNj*fNk+j*fNk+k) + e + 1;
+							ReadOneValueFromBinary(idx);
+						}
+
+						idx = (fNEorTBins + 3) * (i*fNj*fNk+j*fNk+k) + fNEorTBins + 1;
+						ReadOneValueFromBinary(idx);
+						idx++;
+						ReadOneValueFromBinary(idx);
+					} else {
+						// Binning by other energy or by time, read underflow, energy or time bins and overflow
+						G4int idx = (fNEorTBins + 2) * (i*fNj*fNk+j*fNk+k);
+						ReadOneValueFromBinary(idx);
+
+						for (int e = 0; e < fNEorTBins; e++) {
+							idx = (fNEorTBins + 2) * (i*fNj*fNk+j*fNk+k) + e + 1;
+							ReadOneValueFromBinary(idx);
+						}
+
+						idx = (fNEorTBins + 2) * (i*fNj*fNk+j*fNk+k) + fNEorTBins + 1;
+						ReadOneValueFromBinary(idx);
+					}
+				}
+			}
+		}
+	}
 }
 
 
@@ -1766,13 +1766,13 @@ G4String TsVBinnedScorer::GetOneTokenFromReadLine() {
 
 void TsVBinnedScorer::AbsorbResultsFromWorkerScorer(TsVScorer* workerScorer)
 {
-    TsVBinnedScorer* workerHistScorer = dynamic_cast<TsVBinnedScorer*>(workerScorer);
-    
-    // Absorb counts per bin
+	TsVBinnedScorer* workerHistScorer = dynamic_cast<TsVBinnedScorer*>(workerScorer);
+
+	// Absorb counts per bin
     G4bool mergedMeanByCount = false;
-    if (fAccumulateCount) {
-        std::vector<G4long>::iterator itrMasterCount = fCountMap.begin();
-        std::vector<G4long>::iterator itrWorkerCount = workerHistScorer->fCountMap.begin();
+	if (fAccumulateCount) {
+		std::vector<G4long>::iterator itrMasterCount = fCountMap.begin();
+		std::vector<G4long>::iterator itrWorkerCount = workerHistScorer->fCountMap.begin();
         
         if (fReportMean && !fAccumulateSecondMoment) {
             mergedMeanByCount = true;
@@ -1805,43 +1805,43 @@ void TsVBinnedScorer::AbsorbResultsFromWorkerScorer(TsVScorer* workerScorer)
                 itrWorkerCount++;
             }
         }
-        
-        workerHistScorer->fCountMap.assign(fNBins, 0);
-    }
-    
-    // Absorb min
-    if (fReportMin) {
-        std::vector<G4double>::iterator itrMinMaster = fMinMap.begin();
-        std::vector<G4double>::iterator itrMinWorker = workerHistScorer->fMinMap.begin();
-        
-        while (itrMinMaster != fMinMap.end()) {
-            if (*itrMinWorker < *itrMinMaster)
-                *itrMinMaster = *itrMinWorker;
-            itrMinMaster++;
-            itrMinWorker++;
-        }
-        
-        workerHistScorer->fMinMap.assign(fNBins, 9.e+99);
-    }
-    
-    // Absorb max
-    if (fReportMax) {
-        std::vector<G4double>::iterator itrMaxMaster = fMaxMap.begin();
-        std::vector<G4double>::iterator itrMaxWorker = workerHistScorer->fMaxMap.begin();
-        
-        while (itrMaxMaster != fMaxMap.end()) {
-            if (*itrMaxWorker > *itrMaxMaster)
-                *itrMaxMaster = *itrMaxWorker;
-            itrMaxMaster++;
-            itrMaxWorker++;
-        }
-        
-        workerHistScorer->fMaxMap.assign(fNBins, -9.e+99);
-    }
-    
-    if ((fReportMean || fAccumulateSecondMoment) && !mergedMeanByCount) {
-        std::vector<G4double>::iterator itrMaster = fFirstMomentMap.begin();
-        std::vector<G4double>::iterator itrWorker = workerHistScorer->fFirstMomentMap.begin();
+		workerHistScorer->fCountMap.assign(fNBins, 0);
+	}
+
+	// Absorb min
+	if (fReportMin) {
+		std::vector<G4double>::iterator itrMinMaster = fMinMap.begin();
+		std::vector<G4double>::iterator itrMinWorker = workerHistScorer->fMinMap.begin();
+
+		while (itrMinMaster != fMinMap.end()) {
+			if (*itrMinWorker < *itrMinMaster)
+				*itrMinMaster = *itrMinWorker;
+			itrMinMaster++;
+			itrMinWorker++;
+		}
+
+		workerHistScorer->fMinMap.assign(fNBins, 9.e+99);
+	}
+
+	// Absorb max
+	if (fReportMax) {
+		std::vector<G4double>::iterator itrMaxMaster = fMaxMap.begin();
+		std::vector<G4double>::iterator itrMaxWorker = workerHistScorer->fMaxMap.begin();
+
+		while (itrMaxMaster != fMaxMap.end()) {
+			if (*itrMaxWorker > *itrMaxMaster)
+				*itrMaxMaster = *itrMaxWorker;
+			itrMaxMaster++;
+			itrMaxWorker++;
+		}
+
+		workerHistScorer->fMaxMap.assign(fNBins, -9.e+99);
+	}
+
+	if ((fReportMean || fAccumulateSecondMoment) && !mergedMeanByCount) {
+		std::vector<G4double>::iterator itrMaster = fFirstMomentMap.begin();
+		std::vector<G4double>::iterator itrWorker = workerHistScorer->fFirstMomentMap.begin();
+
         const G4double masterHistories = static_cast<G4double>(fScoredHistories);
         const G4double workerHistories = static_cast<G4double>(workerHistScorer->fScoredHistories);
         const G4double totalHistories = masterHistories + workerHistories;
@@ -1854,43 +1854,44 @@ void TsVBinnedScorer::AbsorbResultsFromWorkerScorer(TsVScorer* workerScorer)
             itrMaster++;
             itrWorker++;
         }
-        
-        workerHistScorer->fFirstMomentMap.assign(fNBins, 0.);
-        
-        if (fAccumulateSecondMoment) {
-            std::vector<G4double>::iterator itrSecondMaster = fSecondMomentMap.begin();
-            std::vector<G4double>::iterator itrSecondWorker = workerHistScorer->fSecondMomentMap.begin();
-            while (itrSecondMaster != fSecondMomentMap.end()) {
-                *itrSecondMaster += *itrSecondWorker;
-                itrSecondMaster++;
-                itrSecondWorker++;
-            }
-            
-            workerHistScorer->fSecondMomentMap.assign(fNBins, 0);
-        }
-        
-    } else if (!mergedMeanByCount && (fReportSum || fReportCVolHist || fReportDVolHist)) {
-        // Only need to absorb sum
-        std::vector<G4double>::iterator itrMaster = fFirstMomentMap.begin();
-        std::vector<G4double>::iterator itrWorker = workerHistScorer->fFirstMomentMap.begin();
-        while (itrMaster != fFirstMomentMap.end()) {
-            *itrMaster += *itrWorker;
-            itrMaster++;
-            itrWorker++;
-        }
-        
-        workerHistScorer->fFirstMomentMap.assign(fNBins, 0);
-    }
-    
-    fScoredHistories += workerHistScorer->fScoredHistories;
-    fHitsWithNoIncidentParticle += workerHistScorer->fHitsWithNoIncidentParticle;
-    fUnscoredSteps += workerHistScorer->fUnscoredSteps;
-    fUnscoredEnergy += workerHistScorer->fUnscoredEnergy;
-    
-    workerHistScorer->fScoredHistories = 0;
-    workerHistScorer->fHitsWithNoIncidentParticle = 0;
-    workerHistScorer->fUnscoredSteps = 0;
-    workerHistScorer->fUnscoredEnergy = 0.;
+
+		workerHistScorer->fFirstMomentMap.assign(fNBins, 0);
+
+		if (fAccumulateSecondMoment) {
+			std::vector<G4double>::iterator itrSecondMaster = fSecondMomentMap.begin();
+			std::vector<G4double>::iterator itrSecondWorker = workerHistScorer->fSecondMomentMap.begin();
+			while (itrSecondMaster != fSecondMomentMap.end()) {
+				*itrSecondMaster += *itrSecondWorker;
+				itrSecondMaster++;
+				itrSecondWorker++;
+			}
+
+			workerHistScorer->fSecondMomentMap.assign(fNBins, 0);
+		}
+
+	} else if (!mergedMeanByCount && (fReportSum || fReportCVolHist || fReportDVolHist)) {
+		// Only need to absorb sum
+		std::vector<G4double>::iterator itrMaster = fFirstMomentMap.begin();
+		std::vector<G4double>::iterator itrWorker = workerHistScorer->fFirstMomentMap.begin();
+		while (itrMaster != fFirstMomentMap.end()) {
+			*itrMaster += *itrWorker;
+			itrMaster++;
+			itrWorker++;
+		}
+
+		workerHistScorer->fFirstMomentMap.assign(fNBins, 0);
+	}
+
+	fScoredHistories += workerHistScorer->fScoredHistories;
+	fHitsWithNoIncidentParticle += workerHistScorer->fHitsWithNoIncidentParticle;
+	fUnscoredSteps += workerHistScorer->fUnscoredSteps;
+	fUnscoredEnergy += workerHistScorer->fUnscoredEnergy;
+
+	workerHistScorer->fScoredHistories = 0;
+	workerHistScorer->fHitsWithNoIncidentParticle = 0;
+	workerHistScorer->fUnscoredSteps = 0;
+	workerHistScorer->fUnscoredEnergy = 0.;
+
 }
 
 

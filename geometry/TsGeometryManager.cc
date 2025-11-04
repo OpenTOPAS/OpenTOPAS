@@ -207,10 +207,15 @@ void TsGeometryManager::ConstructSDandField() {
 			G4int index = -1;
 			if ( fVm->BiasingProcessExists("inelasticsplitting", index) ) {
 				TsInelasticSplitOperator* biasingOperatorIS = new TsInelasticSplitOperator(fPm, "inelasticsplitting");
-				for ( iter=fStore->begin(); iter!=fStore->end(); iter++) {
-					if ( biasingOperatorIS->IsApplicable(iter->second->GetEnvelopePhysicalVolume()->GetLogicalVolume()) )
-						biasingOperatorIS->AttachTo(iter->second->GetEnvelopePhysicalVolume()->GetLogicalVolume());
-				}
+                
+                for ( iter=fStore->begin(); iter!=fStore->end(); iter++) {
+                    if ( biasingOperatorIS->IsApplicable(iter->second->GetEnvelopePhysicalVolume()->GetLogicalVolume()) ) {
+                        biasingOperatorIS->AttachTo(iter->second->GetEnvelopePhysicalVolume()->GetLogicalVolume());
+                        std::vector<G4VPhysicalVolume*> allVolIS = iter->second->GetAllPhysicalVolumes(true);
+                        for ( size_t t = 0; t < allVolIS.size(); t++ )
+                            biasingOperatorIS->AttachTo(allVolIS[t]->GetLogicalVolume());
+                    }
+                }
 			}
 			
 			index = -1;

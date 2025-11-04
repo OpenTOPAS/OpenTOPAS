@@ -83,6 +83,8 @@ void TsInelasticSplitOperator::StartRun() {
 		G4cout << ", biasing several times per track ";
 	
 	G4cout << " . " << G4endl;
+    
+    fNInteractions = 0;
 }
 
 

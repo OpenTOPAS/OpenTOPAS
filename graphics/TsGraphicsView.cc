@@ -77,130 +77,133 @@ TsGraphicsView::~TsGraphicsView()
 
 
 void TsGraphicsView::CreateView() {
-    fAlreadyCreated = true;
-    
-    if (fPm->ParameterExists(GetFullParmName("IncludeGeometry")) &&
-        !fPm->GetBooleanParameter(GetFullParmName("IncludeGeometry")))
-        fIncludeGeometry = false;
-    
-    if (fPm->ParameterExists(GetFullParmName("IncludeTrajectories")) &&
-        !fPm->GetBooleanParameter(GetFullParmName("IncludeTrajectories")))
-        fIncludeTrajectories = false;
-    
-    if (fPm->ParameterExists(GetFullParmName("UseSmoothTrajectories")) &&
-        !fPm->GetBooleanParameter(GetFullParmName("UseSmoothTrajectories")))
-        fUseSmoothTrajectories = false;
-    
-    if (fPm->ParameterExists(GetFullParmName("IncludeStepPoints")) &&
-        fPm->GetBooleanParameter(GetFullParmName("IncludeStepPoints")))
-        fIncludeStepPoints = true;
-    
-    if (fPm->ParameterExists(GetFullParmName("IncludeAxes")) &&
-        fPm->GetBooleanParameter(GetFullParmName("IncludeAxes")))
-        fIncludeAxes = true;
-    
-    if (fPm->ParameterExists(GetFullParmName("ElectricFieldArrowDensity")))
-        fElectricFieldArrowDensity = fPm->GetIntegerParameter(GetFullParmName("ElectricFieldArrowDensity"));
-    
-    if (fPm->ParameterExists(GetFullParmName("MagneticFieldArrowDensity")))
-        fMagneticFieldArrowDensity = fPm->GetIntegerParameter(GetFullParmName("MagneticFieldArrowDensity"));
-        
-    // Create the geometry part of the scene
-    G4UImanager::GetUIpointer()->ApplyCommand("/vis/scene/create " + fViewerName);
-    
-    if (fIncludeGeometry) {
-        G4bool mainWorldIsVisible;
-        
-        if (fPm->ParameterExists(GetFullParmName("VisibleWorlds"))) {
-            mainWorldIsVisible = false;
-            
-            G4String* visibleWorldNames = fPm->GetStringVector(GetFullParmName("VisibleWorlds"));
-            G4int length = fPm->GetVectorLength(GetFullParmName("VisibleWorlds"));
-            
-            for (G4int i = 0; i < length; i++) {
-                G4String testName = visibleWorldNames[i];
+	fAlreadyCreated = true;
+
+	if (fPm->ParameterExists(GetFullParmName("IncludeGeometry")) &&
+		!fPm->GetBooleanParameter(GetFullParmName("IncludeGeometry")))
+		fIncludeGeometry = false;
+
+	if (fPm->ParameterExists(GetFullParmName("IncludeTrajectories")) &&
+		!fPm->GetBooleanParameter(GetFullParmName("IncludeTrajectories")))
+		fIncludeTrajectories = false;
+
+	if (fPm->ParameterExists(GetFullParmName("UseSmoothTrajectories")) &&
+		!fPm->GetBooleanParameter(GetFullParmName("UseSmoothTrajectories")))
+		fUseSmoothTrajectories = false;
+
+	if (fPm->ParameterExists(GetFullParmName("IncludeStepPoints")) &&
+		fPm->GetBooleanParameter(GetFullParmName("IncludeStepPoints")))
+		fIncludeStepPoints = true;
+
+	if (fPm->ParameterExists(GetFullParmName("IncludeAxes")) &&
+		fPm->GetBooleanParameter(GetFullParmName("IncludeAxes")))
+		fIncludeAxes = true;
+
+	if (fPm->ParameterExists(GetFullParmName("ElectricFieldArrowDensity")))
+		fElectricFieldArrowDensity = fPm->GetIntegerParameter(GetFullParmName("ElectricFieldArrowDensity"));
+
+	if (fPm->ParameterExists(GetFullParmName("MagneticFieldArrowDensity")))
+		fMagneticFieldArrowDensity = fPm->GetIntegerParameter(GetFullParmName("MagneticFieldArrowDensity"));
+
+	// Create the geometry part of the scene
+	G4UImanager::GetUIpointer()->ApplyCommand("/vis/scene/create " + fViewerName);
+
+	if (fIncludeGeometry) {
+		G4bool mainWorldIsVisible;
+
+		if (fPm->ParameterExists(GetFullParmName("VisibleWorlds"))) {
+			mainWorldIsVisible = false;
+
+			G4String* visibleWorldNames = fPm->GetStringVector(GetFullParmName("VisibleWorlds"));
+			G4int length = fPm->GetVectorLength(GetFullParmName("VisibleWorlds"));
+
+			for (G4int i = 0; i < length; i++) {
+				G4String testName = visibleWorldNames[i];
+
 #if GEANT4_VERSION_MAJOR >= 11
                 G4StrUtil::to_lower(testName);
 #else
                 testName.toLower();
 #endif
-                if (testName == "world")
-                    visibleWorldNames[i] = "World";
-                if (testName == "all")
-                    visibleWorldNames[i] = "worlds";
-                
-                G4UImanager::GetUIpointer()->ApplyCommand("/vis/scene/add/volume " + visibleWorldNames[i]);
-                
-                if (visibleWorldNames[i]=="World" || visibleWorldNames[i]=="worlds")
-                    mainWorldIsVisible = true;
-            }
-        } else {
-            mainWorldIsVisible = true;
-            G4UImanager::GetUIpointer()->ApplyCommand("/vis/scene/add/volume worlds");
-        }
-        
-        if (!mainWorldIsVisible) {
-            G4UImanager::GetUIpointer()->ApplyCommand("/vis/scene/add/volume World 0 0");
-            G4UImanager::GetUIpointer()->ApplyCommand("/vis/geometry/set/visibility World 0 0");
-        }
-    } else {
-        if (!fIncludeTrajectories && !fIncludeStepPoints) {
-            G4cerr << "Topas is exiting due to error in graphics setup." << G4endl;
-            G4cerr << "Graphics has all three of geometry, trajectories and step points turned off." << G4endl;
-            G4cerr << "That doesn't leave anything to draw." << G4endl;
-            fPm->AbortSession(1);
-        }
-        
-        // If you have no run duration models, Vis assumes this is a mistake and adds in the world.
-        // So to really have nothing, add something and then turn it invisible.
-        G4UImanager::GetUIpointer()->ApplyCommand("/vis/scene/add/volume World 0 0");
-        G4UImanager::GetUIpointer()->ApplyCommand("/vis/geometry/set/visibility World 0 0");
-    }
-    
-    // Control axes
-    if (fIncludeAxes) {
-        G4String axesComponentName = "World";
-        if (fPm->ParameterExists(GetFullParmName("AxesComponent")))
-            axesComponentName = fPm->GetStringParameter(GetFullParmName("AxesComponent"));
-        
-        TsVGeometryComponent* axesComponent = fGm->GetComponent(axesComponentName);
-        if (axesComponent) {
-            G4Point3D* axesCenter = axesComponent->GetTransRelToWorld();
-            G4double axesPosX = axesCenter->x();
-            G4double axesPosY = axesCenter->y();
-            G4double axesPosZ = axesCenter->z();
-            
-            G4double axesSize = 3000.;
-            if (fPm->ParameterExists(GetFullParmName("AxesSize")))
-                axesSize = fPm->GetDoubleParameter(GetFullParmName("AxesSize"), "Length");
-            
-            G4String axesCommand = "/vis/scene/add/axes " +
-            G4UIcommand::ConvertToString(axesPosX) + " " + G4UIcommand::ConvertToString(axesPosY) + " " +
-            G4UIcommand::ConvertToString(axesPosZ) + " " + G4UIcommand::ConvertToString(axesSize) + " mm";
-            
-            G4UImanager::GetUIpointer()->ApplyCommand(axesCommand);
-        } else {
-            G4cerr << "Topas is exiting due to error in graphics setup." << G4endl;
-            G4cerr << "Gr/" << fViewerName << "/AxesComponent is set to unknown component: " << axesComponentName << G4endl;
-            fPm->AbortSession(1);
-        }
-    }
-    
-    // Control electric field visualization
-    if (fElectricFieldArrowDensity > 0) {
-        G4String electricFieldCommand = "/vis/scene/add/electricField " + G4UIcommand::ConvertToString(fElectricFieldArrowDensity);
-        G4UImanager::GetUIpointer()->ApplyCommand(electricFieldCommand);
-    }
-    
-    // Control magnetic field visualization
-    if (fMagneticFieldArrowDensity > 0) {
-        G4String magnetiFieldCommand = "/vis/scene/add/magneticField " + G4UIcommand::ConvertToString(fMagneticFieldArrowDensity);
-        G4UImanager::GetUIpointer()->ApplyCommand(magnetiFieldCommand);
-    }
-    
+
+				if (testName == "world")
+					visibleWorldNames[i] = "World";
+				if (testName == "all")
+					visibleWorldNames[i] = "worlds";
+
+				G4UImanager::GetUIpointer()->ApplyCommand("/vis/scene/add/volume " + visibleWorldNames[i]);
+
+				if (visibleWorldNames[i]=="World" || visibleWorldNames[i]=="worlds")
+					mainWorldIsVisible = true;
+			}
+		} else {
+			mainWorldIsVisible = true;
+			G4UImanager::GetUIpointer()->ApplyCommand("/vis/scene/add/volume worlds");
+		}
+
+		if (!mainWorldIsVisible) {
+			G4UImanager::GetUIpointer()->ApplyCommand("/vis/scene/add/volume World 0 0");
+			G4UImanager::GetUIpointer()->ApplyCommand("/vis/geometry/set/visibility World 0 0");
+		}
+	} else {
+		if (!fIncludeTrajectories && !fIncludeStepPoints) {
+			G4cerr << "Topas is exiting due to error in graphics setup." << G4endl;
+			G4cerr << "Graphics has all three of geometry, trajectories and step points turned off." << G4endl;
+			G4cerr << "That doesn't leave anything to draw." << G4endl;
+			fPm->AbortSession(1);
+		}
+
+		// If you have no run duration models, Vis assumes this is a mistake and adds in the world.
+		// So to really have nothing, add something and then turn it invisible.
+		G4UImanager::GetUIpointer()->ApplyCommand("/vis/scene/add/volume World 0 0");
+		G4UImanager::GetUIpointer()->ApplyCommand("/vis/geometry/set/visibility World 0 0");
+	}
+
+	// Control axes
+	if (fIncludeAxes) {
+		G4String axesComponentName = "World";
+		if (fPm->ParameterExists(GetFullParmName("AxesComponent")))
+			axesComponentName = fPm->GetStringParameter(GetFullParmName("AxesComponent"));
+
+		TsVGeometryComponent* axesComponent = fGm->GetComponent(axesComponentName);
+		if (axesComponent) {
+			G4Point3D* axesCenter = axesComponent->GetTransRelToWorld();
+			G4double axesPosX = axesCenter->x();
+			G4double axesPosY = axesCenter->y();
+			G4double axesPosZ = axesCenter->z();
+
+			G4double axesSize = 3000.;
+			if (fPm->ParameterExists(GetFullParmName("AxesSize")))
+				axesSize = fPm->GetDoubleParameter(GetFullParmName("AxesSize"), "Length");
+
+			G4String axesCommand = "/vis/scene/add/axes " +
+			G4UIcommand::ConvertToString(axesPosX) + " " + G4UIcommand::ConvertToString(axesPosY) + " " +
+			G4UIcommand::ConvertToString(axesPosZ) + " " + G4UIcommand::ConvertToString(axesSize) + " mm";
+
+			G4UImanager::GetUIpointer()->ApplyCommand(axesCommand);
+		} else {
+			G4cerr << "Topas is exiting due to error in graphics setup." << G4endl;
+			G4cerr << "Gr/" << fViewerName << "/AxesComponent is set to unknown component: " << axesComponentName << G4endl;
+			fPm->AbortSession(1);
+		}
+	}
+
+	// Control electric field visualization
+	if (fElectricFieldArrowDensity > 0) {
+		G4String electricFieldCommand = "/vis/scene/add/electricField " + G4UIcommand::ConvertToString(fElectricFieldArrowDensity);
+		G4UImanager::GetUIpointer()->ApplyCommand(electricFieldCommand);
+	}
+
+	// Control magnetic field visualization
+	if (fMagneticFieldArrowDensity > 0) {
+		G4String magnetiFieldCommand = "/vis/scene/add/magneticField " + G4UIcommand::ConvertToString(fMagneticFieldArrowDensity);
+		G4UImanager::GetUIpointer()->ApplyCommand(magnetiFieldCommand);
+	}
+
     // Set viewer type
     G4String requestedViewerType = fPm->GetStringParameter(GetFullParmName("Type"));
     G4String viewerTypeLower = requestedViewerType;
+
 #if GEANT4_VERSION_MAJOR >= 11
     G4StrUtil::to_lower(viewerTypeLower);
 #else
