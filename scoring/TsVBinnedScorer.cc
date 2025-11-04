@@ -1572,9 +1572,9 @@ void TsVBinnedScorer::RestoreResultsFromFile()
 	}
 
 	if (inputType == "csv") {
-		for (int i = 0; i < fNi; i++) {
+		for (int k = 0; k < fNk; k++) {
 			for (int j = 0; j < fNj; j++) {
-				for (int k = 0; k < fNk; k++) {
+				for (int i = 0; i < fNi; i++) {
 					if (inFile.eof()) {
 						G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
 						G4cerr << "Ts/RestoreResultsFromFile has been set true," << G4endl;
@@ -2684,9 +2684,9 @@ void TsVBinnedScorer::PrintASCII(std::ostream& ofile)
 {
     ofile << std::setprecision(16); // for double value with 8 bytes
     
-    for (int i = 0; i < fNi; i++) {
+    for (int k = 0; k < fNk; k++) {
         for (int j = 0; j < fNj; j++) {
-            for (int k = 0; k < fNk; k++) {
+            for (int i = 0; i < fNi; i++) {
                 fNeedComma = false;
                 
                 if (fNEorTBins == 0) {
