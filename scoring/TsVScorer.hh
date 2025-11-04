@@ -207,6 +207,7 @@ protected:
 	virtual void Output() = 0;
 	virtual void Clear() = 0;
 
+    G4bool IsIndexInsideRTStructure(G4int idx);
 	G4bool ExcludedByRTStructFilter(G4int idx);
 	void OutOfRange(G4String parameterName, G4String requirement);
 
