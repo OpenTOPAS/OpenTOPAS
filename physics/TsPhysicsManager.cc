@@ -72,13 +72,8 @@ G4VUserPhysicsList* TsPhysicsManager::GetPhysicsList() {
 		G4String listType = fPm->GetStringParameter(GetFullParmName("Type"));
 		G4String lowerListType = listType;
 		G4String upperListType = listType;
-#if GEANT4_VERSION_MAJOR >= 11
 		G4StrUtil::to_lower(lowerListType);
 		G4StrUtil::to_upper(upperListType);
-#else
-		lowerListType.toLower();
-		upperListType.toUpper();
-#endif
 
 		G4PhysListFactory ReferenceList;
 		if (ReferenceList.IsReferencePhysList( upperListType ) || lowerListType=="shielding") {
@@ -187,7 +182,6 @@ void TsPhysicsManager::SetEmParameters() {
 	if (fPm->ParameterExists(GetFullParmName("EMRangeMax")))
 		G4EmParameters::Instance()->SetMaxEnergy(fPm->GetDoubleParameter(GetFullParmName("EMRangeMax"), "Energy"));
 
-#if GEANT4_VERSION_MAJOR >= 11
 	if (fPm->ParameterExists(GetFullParmName("EMBins")) && !fPm->ParameterExists(GetFullParmName("EMBinsPerDecade")))
 		G4EmParameters::Instance()->SetNumberOfBinsPerDecade(fPm->GetIntegerParameter(GetFullParmName("EMBins")));
 
@@ -200,13 +194,6 @@ void TsPhysicsManager::SetEmParameters() {
 		G4cerr << "Remove either of them and re-run Topas." << G4endl;
 		fPm->AbortSession(1);
 	}
-#else
-	if (fPm->ParameterExists(GetFullParmName("EMBins")))
-		G4EmParameters::Instance()->SetNumberOfBins(fPm->GetIntegerParameter(GetFullParmName("EMBins")));
-
-	if (fPm->ParameterExists(GetFullParmName("EMBinsPerDecade")))
-		G4EmParameters::Instance()->SetNumberOfBinsPerDecade(fPm->GetIntegerParameter(GetFullParmName("EMBinsPerDecade")));
-#endif
 
 	if (fPm->ParameterExists(GetFullParmName("dEdXBins"))) {
 		G4cerr << "Topas is exiting due to a serious error in physics setup." << G4endl;
@@ -232,7 +219,6 @@ void TsPhysicsManager::SetEmParameters() {
 	if (fPm->ParameterExists(GetFullParmName("AugerCascade")))
 		G4EmParameters::Instance()->SetAugerCascade(fPm->GetBooleanParameter(GetFullParmName("AugerCascade")));
 
-	// Begin of temporal pameters
 	if (fPm->ParameterExists(GetFullParmName("ICRU90")))
 		G4EmParameters::Instance()->SetUseICRU90Data(fPm->GetBooleanParameter(GetFullParmName("ICRU90")));
 
@@ -259,11 +245,7 @@ void TsPhysicsManager::SetEmParameters() {
 
 	if (fPm->ParameterExists(GetFullParmName("MSCStepLimitType"))) {
 		G4String mscStepLimitType = fPm->GetStringParameter(GetFullParmName("MSCStepLimitType"));
-#if GEANT4_VERSION_MAJOR >= 11
 		G4StrUtil::to_lower(mscStepLimitType);
-#else
-		mscStepLimitType.toLower();
-#endif
 		if (mscStepLimitType == "safety" ) {
 			G4EmParameters::Instance()->SetMscStepLimitType(fUseSafety);
 		} else if (mscStepLimitType == "safetyplus") {
@@ -276,16 +258,11 @@ void TsPhysicsManager::SetEmParameters() {
 			fPm->AbortSession(1);
 		}
 	}
-// end of temporal parameters
 
 	if ( fPm->ParameterExists(GetFullParmName("SolvatedElectronThermalizationModel")) ) {
 		G4String eaqModel = fPm->GetStringParameter(GetFullParmName("SolvatedElectronThermalizationModel"));
 
-#if GEANT4_VERSION_MAJOR >= 11
 		G4StrUtil::to_lower(eaqModel);
-#else
-		eaqModel.toLower();
-#endif
 		if ( eaqModel == "ritchie" ) {
 			G4EmParameters::Instance()->SetDNAeSolvationSubType(fRitchie1994eSolvation);
 		} else if ( eaqModel == "terrisol" ) {

@@ -61,11 +61,8 @@ fPm(pM), fGm(gM), fComponent(component) {
 	if (fPm->ParameterExists(fComponent->GetFullParmName("FieldStepper")))
 		stepper_name = fPm->GetStringParameter(fComponent->GetFullParmName("FieldStepper"));
 
-#if GEANT4_VERSION_MAJOR >= 11
 	G4StrUtil::to_lower(stepper_name);
-#else
-	stepper_name.toLower();
-#endif
+
 	if (stepper_name == "expliciteuler")
 		fStepper = new G4ExplicitEuler(fFieldEquation, 8);
 	else if (stepper_name == "impliciteuler")

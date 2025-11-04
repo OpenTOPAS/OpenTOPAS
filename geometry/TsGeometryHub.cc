@@ -109,11 +109,7 @@ TsVGeometryComponent* TsGeometryHub::InstantiateComponent(TsParameterManager* pM
 														  TsVGeometryComponent* pgc, G4VPhysicalVolume* pv,
 														  G4String childCompType, G4String childName)
 {
-#if GEANT4_VERSION_MAJOR >= 11
 	G4StrUtil::to_lower(childCompType);
-#else
-	childCompType.toLower();
-#endif
 
 	// First see if the user's extensions include this component
 	TsVGeometryComponent* component = eM->InstantiateComponent(pM, mM, gM, pgc, pv, childCompType, childName);

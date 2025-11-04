@@ -255,11 +255,8 @@ G4int TsCylinder::GetBin(G4int index, G4int iBin) {
 TsVGeometryComponent::SurfaceType TsCylinder::GetSurfaceID(G4String surfaceName) {
 	SurfaceType surfaceID;
 	G4String surfaceNameLower = surfaceName;
-#if GEANT4_VERSION_MAJOR >= 11
 	G4StrUtil::to_lower(surfaceNameLower);
-#else
-	surfaceNameLower.toLower();
-#endif
+
 	if (surfaceNameLower=="zplussurface")
 		surfaceID = ZPlusSurface;
 	else if (surfaceNameLower=="zminussurface")

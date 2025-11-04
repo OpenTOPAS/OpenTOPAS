@@ -156,35 +156,7 @@ int setenv(const char* name, const char* value, int overwrite)
 void setDataEnvVars(G4String dataDirectory)
 {
 	std::vector<std::tuple<G4String, G4String>> dataVars;
-#if GEANT4_VERSION_MAJOR == 10 && GEANT4_VERSION_MINOR == 6
-	dataVars.push_back({"G4LEDATA", "G4EMLOW7.9.1"});
-	dataVars.push_back({"G4NEUTRONHPDATA", "G4NDL4.6"});
-	dataVars.push_back({"G4LEVELGAMMADATA", "PhotonEvaporation5.5"});
-	dataVars.push_back({"G4RADIOACTIVEDATA", "RadioactiveDecay5.4"});
-	dataVars.push_back({"G4SAIDXSDATA", "G4SAIDDATA2.0"});
-	dataVars.push_back({"G4PARTICLEXSDATA", "G4PARTICLEXS2.1"});
-	dataVars.push_back({"G4PIIDATA", "G4PII1.3"});
-	dataVars.push_back({"G4REALSURFACEDATA", "RealSurface2.1.1"});
-	dataVars.push_back({"G4ABLADATA", "G4ABLA3.1"});
-	dataVars.push_back({"G4INCLDATA", "G4INCL1.0"});
-	dataVars.push_back({"G4ENSDFSTATEDATA", "G4ENSDFSTATE2.2"});
-	dataVars.push_back({"G4TENDLDATA", "G4TENDL1.3.2"});
-	dataVars.push_back({"G4PROTONHPDATA", "G4TENDL1.3.2/Proton"});
-#elif GEANT4_VERSION_MAJOR == 10 && GEANT4_VERSION_MINOR == 7
-	dataVars.push_back({"G4LEDATA", "G4EMLOW7.13"});
-	dataVars.push_back({"G4NEUTRONHPDATA", "G4NDL4.6"});
-	dataVars.push_back({"G4LEVELGAMMADATA", "PhotonEvaporation5.7"});
-	dataVars.push_back({"G4RADIOACTIVEDATA", "RadioactiveDecay5.6"});
-	dataVars.push_back({"G4SAIDXSDATA", "G4SAIDDATA2.0"});
-	dataVars.push_back({"G4PARTICLEXSDATA", "G4PARTICLEXS3.1.1"});
-	dataVars.push_back({"G4PIIDATA", "G4PII1.3"});
-	dataVars.push_back({"G4REALSURFACEDATA", "RealSurface2.2"});
-	dataVars.push_back({"G4ABLADATA", "G4ABLA3.1"});
-	dataVars.push_back({"G4INCLDATA", "G4INCL1.0"});
-	dataVars.push_back({"G4ENSDFSTATEDATA", "G4ENSDFSTATE2.3"});
-	dataVars.push_back({"G4TENDLDATA", "G4TENDL1.3.2"});
-	dataVars.push_back({"G4PROTONHPDATA", "G4TENDL1.3.2/Proton"});
-#elif GEANT4_VERSION_MAJOR == 11 && GEANT4_VERSION_MINOR == 1
+#if GEANT4_VERSION_MAJOR == 11 && GEANT4_VERSION_MINOR == 1
 	dataVars.push_back({"G4LEDATA", "G4EMLOW8.2"});
 	dataVars.push_back({"G4NEUTRONHPDATA", "G4NDL4.7"});
 	dataVars.push_back({"G4LEVELGAMMADATA", "PhotonEvaporation5.7"});

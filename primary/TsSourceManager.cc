@@ -72,11 +72,7 @@ void TsSourceManager::Initialize(TsSequenceManager* sqM) {
 		G4String sourceName = sourceParmName.substr(3,sourceParmName.length()-8);
 		G4String sourceTypeParm = "So/" + sourceName + "/Type";
 		G4String sourceType = fPm->GetStringParameter(sourceTypeParm);
-#if GEANT4_VERSION_MAJOR >= 11
 		G4StrUtil::to_lower(sourceType);
-#else
-		sourceType.toLower();
-#endif
 
 		// First see if the user's extensions include this particle source
 		TsSource* source = fEm->InstantiateParticleSource(fPm, this, sourceType, sourceName);
@@ -122,11 +118,7 @@ void TsSourceManager::NoteAnyUseOfChangeableParameters(const G4String& name)
 		// is interrogated twice for the same source, the source would update twice for the same change).
 		G4bool matched = false;
 		G4String nameToLower = name;
-#if GEANT4_VERSION_MAJOR >= 11
 		G4StrUtil::to_lower(nameToLower);
-#else
-		nameToLower.toLower();
-#endif
 		std::multimap< G4String, std::pair<TsSource*,G4String> >::const_iterator iter;
 		for (iter = fChangeableParameterMap.begin(); iter != fChangeableParameterMap.end() && !matched; iter++) {
 			G4String gotParm = iter->first;
@@ -150,11 +142,8 @@ void TsSourceManager::NoteAnyUseOfChangeableParameters(const G4String& name)
 			", lastDirectParam: " << fPm->GetLastDirectParameterName() << ", lastDirectAction: " << fPm->GetLastDirectAction() << G4endl;
 
 		G4String directParmLower = directParm;
-#if GEANT4_VERSION_MAJOR >= 11
 		G4StrUtil::to_lower(directParmLower);
-#else
-		directParmLower.toLower();
-#endif
+
 		size_t pos = directParmLower.find_last_of("/");
 
 		if (directParmLower.substr(pos+1) == "phasespacemultipleuse") {
@@ -272,11 +261,8 @@ void TsSourceManager::AddSourceFromGUI(G4String& sourceName, G4String& component
 	G4String transValue;
 
 	G4String typeNameLower = typeName;
-#if GEANT4_VERSION_MAJOR >= 11
 	G4StrUtil::to_lower(typeNameLower);
-#else
-	typeNameLower.toLower();
-#endif
+
 	if (typeNameLower == "beam" || typeNameLower == "isotropic" || typeNameLower == "volumetric" ||
 		typeNameLower == "emittance" || typeNameLower == "phasespace") {
 		parameterName = "s:So/" + sourceName + "/Type";

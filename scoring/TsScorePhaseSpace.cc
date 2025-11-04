@@ -60,11 +60,7 @@ TsScorePhaseSpace::TsScorePhaseSpace(TsParameterManager* pM, TsMaterialManager* 
 	if (fPm->ParameterExists(GetFullParmName("IncludeEmptyHistories"))) {
 		G4String includeEmptyHistories = fPm->GetStringParameter(GetFullParmName("IncludeEmptyHistories"));
 		G4String includeEmptyHistoriesLower = includeEmptyHistories;
-#if GEANT4_VERSION_MAJOR >= 11
 		G4StrUtil::to_lower(includeEmptyHistoriesLower);
-#else
-		includeEmptyHistoriesLower.toLower();
-#endif
 		if (includeEmptyHistoriesLower != "none") {
 			if (includeEmptyHistoriesLower == "insequence") {
 				if (fOutFileType == "limited") {

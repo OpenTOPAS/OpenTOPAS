@@ -41,11 +41,7 @@ TsNiemerkoModel::TsNiemerkoModel(TsParameterManager* pM, G4String parName)
 	fA = fPm->GetUnitlessParameter( GetFullParmName( fModelName, "a" ) );
 	fGamma50 = fPm->GetUnitlessParameter( GetFullParmName( fModelName, "Gamma50" ) );
 	fMode = fPm->GetStringParameter( GetFullParmName( fModelName, "Mode" ) );
-#if GEANT4_VERSION_MAJOR >= 11
 	G4StrUtil::to_lower(fMode);
-#else
-	fMode.toLower();
-#endif
 
 	if ( fMode == "ntcp" ) {
 		G4cout << "Using Niemerko model in " << fMode << " mode" << G4endl;

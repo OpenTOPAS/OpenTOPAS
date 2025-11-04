@@ -58,11 +58,7 @@ TsImportanceSampling::~TsImportanceSampling()
 
 void TsImportanceSampling::ResolveParameters() {
 	fType = fPm->GetStringParameter(GetFullParmName("Type"));
-#if GEANT4_VERSION_MAJOR >= 11
 	G4StrUtil::to_lower(fType);
-#else
-	fType.toLower();
-#endif
 	
 	fParticleName = fPm->GetStringVector(GetFullParmName("ParticleName"));
 	fParticleNameLength = fPm->GetVectorLength(GetFullParmName("ParticleName"));
@@ -111,11 +107,7 @@ void TsImportanceSampling::SetImportanceSampling() {
 	G4GeometryCell world(*(fPhysVol[0]), 0);
 	G4GeometryCell component(*(fPhysVol[1]), 0);
 	
-#if GEANT4_VERSION_MAJOR >= 11
 	G4IStore* aIstore = G4IStore::GetInstance(fPhysVol[0]->GetName());
-#else 
-	G4IStore* aIstore = G4IStore::GetInstance(*fPhysVol[0]->GetName());
-#endif
 	
 	if ( !fCellAlreadyBuilt ) {
 		aIstore->AddImportanceGeometryCell(1, world);

@@ -219,11 +219,7 @@ void TsQt::UpdateParameterEditor() {
 	if (fCurrentSourceName != "")
 		searchName = fCurrentSourceName;
 
-#if GEANT4_VERSION_MAJOR >= 11
     G4StrUtil::to_lower(searchName);
-#else
-    searchName.toLower();
-#endif
 	G4String foundParameterName;
 	G4int colonPos;
 	G4int slashPos;
@@ -233,22 +229,14 @@ void TsQt::UpdateParameterEditor() {
 	for (G4int iParam = 0; iParam < nParameters; iParam++) {
 		G4String parameterName = (*parameterNames)[iParam];
 		G4String parameterNameLower = parameterName;
-#if GEANT4_VERSION_MAJOR >= 11
    		G4StrUtil::to_lower(parameterNameLower);
-#else
-    	parameterNameLower.toLower();
-#endif
 
 		QTableWidgetItem *paramName = new QTableWidgetItem();
 		paramName->setText((QString(parameterName)));
 		paramName->setFlags(paramName->flags() ^ Qt::ItemIsEditable);
 		fParameterTableWidget->setItem(iParam, 0, paramName);
 		G4String parameterValue = (*parameterValues)[iParam];
-#if GEANT4_VERSION_MAJOR >= 11
    		G4StrUtil::to_lower(parameterValue);
-#else
-    	parameterValue.toLower();
-#endif
 		if (parameterValue.length() > 1)
 			parameterValue = parameterValue.substr(1,parameterValue.length()-2);
 
@@ -282,11 +270,7 @@ void TsQt::UpdateParameterEditor() {
 			for (iter=names.begin(); iter!=names.end(); iter++) {
 				combo->addItem(QString(*iter));
 				G4String iterLower = *iter;
-#if GEANT4_VERSION_MAJOR >= 11
    				G4StrUtil::to_lower(iterLower);
-#else
-    			iterLower.toLower();
-#endif
 				if (iterLower == parameterValue)
 					combo->setCurrentIndex(distance(names.begin(),iter));
 			}
@@ -498,11 +482,7 @@ void TsQt::ParameterTableWidgetSetItemChanged(QTableWidgetItem * item) {
 			fPm->AddParameter(paramName, paramValue);
 			fParameterTableWidget->blockSignals(false);
 
-#if GEANT4_VERSION_MAJOR >= 11
    			G4StrUtil::to_lower(paramName);
-#else
-    		paramName.toLower();
-#endif
 			fSqm->UpdateForSpecificParameterChange(paramName.substr(colonPos+1));
 			fSqm->UpdateForNewRunOrQtChange();
 		} else {
@@ -523,11 +503,7 @@ void TsQt::ParameterComboChanged() {
 	fPm->AddParameter(paramName, quotedValue);
 	fParameterTableWidget->blockSignals(false);
 
-#if GEANT4_VERSION_MAJOR >= 11
    	G4StrUtil::to_lower(paramName);
-#else
-    paramName.toLower();
-#endif
 	G4int colonPos = paramName.find( ":" );
 	fSqm->UpdateForSpecificParameterChange(paramName.substr(colonPos+1));
 	fSqm->UpdateForNewRunOrQtChange();

@@ -64,11 +64,8 @@ G4VPhysicalVolume* TsAperture::Construct()
 	}
 
 	G4String fileFormat = fPm->GetStringParameter(GetFullParmName("FileFormat"));
-#if GEANT4_VERSION_MAJOR >= 11
 	G4StrUtil::to_lower(fileFormat);
-#else
-	fileFormat.toLower();
-#endif
+
 	if (fileFormat == "mgh") {
 		// MGH format begins with some unused values. Remove them now.
 		G4String unusedString;

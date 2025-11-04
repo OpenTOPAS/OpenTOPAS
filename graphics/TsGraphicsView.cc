@@ -120,11 +120,7 @@ void TsGraphicsView::CreateView() {
 			for (G4int i = 0; i < length; i++) {
 				G4String testName = visibleWorldNames[i];
 
-#if GEANT4_VERSION_MAJOR >= 11
                 G4StrUtil::to_lower(testName);
-#else
-                testName.toLower();
-#endif
 
 				if (testName == "world")
 					visibleWorldNames[i] = "World";
@@ -203,12 +199,8 @@ void TsGraphicsView::CreateView() {
     // Set viewer type
     G4String requestedViewerType = fPm->GetStringParameter(GetFullParmName("Type"));
     G4String viewerTypeLower = requestedViewerType;
-
-#if GEANT4_VERSION_MAJOR >= 11
     G4StrUtil::to_lower(viewerTypeLower);
-#else
-    viewerTypeLower.toLower();
-#endif
+
     if (viewerTypeLower=="opengl" || viewerTypeLower=="ogl") {
 #if TOPAS_HAVE_OPENGL_QT
         if (fGm->IsTooComplexForOGLS())
@@ -255,11 +247,8 @@ void TsGraphicsView::CreateView() {
     // Set refresh mode
     if (fPm->ParameterExists("Gr/RefreshEvery")) {
         fRefreshEvery = fPm->GetStringParameter("Gr/RefreshEvery");
-#if GEANT4_VERSION_MAJOR >= 11
         G4StrUtil::to_lower(fRefreshEvery);
-#else
-        fRefreshEvery.toLower();
-#endif
+
         if (fRefreshEvery=="session") {
             G4UImanager::GetUIpointer()->ApplyCommand("/vis/scene/endOfEventAction accumulate 10000");
             G4UImanager::GetUIpointer()->ApplyCommand("/vis/scene/endOfRunAction accumulate 10000");
@@ -345,11 +334,7 @@ void TsGraphicsView::CreateView() {
         // Handle trajecory coloring options
         if ((fIncludeTrajectories || fIncludeStepPoints) && fPm->ParameterExists(GetFullParmName("ColorBy"))) {
             fColorModel = fPm->GetStringParameter(GetFullParmName("ColorBy"));
-#if GEANT4_VERSION_MAJOR >= 11
             G4StrUtil::to_lower(fColorModel);
-#else
-            fColorModel.toLower();
-#endif
         }
         
         if (fColorModel=="charge") {
@@ -410,11 +395,8 @@ void TsGraphicsView::CreateView() {
                 
                 for (G4int i = 0; i < length; i++) {
                     // Standardize particle types by passing them through our helper method
-#if GEANT4_VERSION_MAJOR >= 11
                     G4StrUtil::to_lower(typeNames[i]);
-#else
-                    typeNames[i].toLower();
-#endif
+
                     if ( molecules.find(typeNames[i]) != molecules.end() ) {
                         G4UImanager::GetUIpointer()->ApplyCommand("/vis/modeling/trajectories/" + fViewerName + "_" + fColorModel + "/setRGBA " +
                                                                   molecules[typeNames[i]] + " " + GetColorAsRGBA(typeColors[i]));
@@ -670,11 +652,8 @@ void TsGraphicsView::CreateView() {
                 for (G4int i = 0; i < length; i++) {
                     processName = processNames[i];
                     processNameLower = processName;
-#if GEANT4_VERSION_MAJOR >= 11
                     G4StrUtil::to_lower(processNameLower);
-#else
-                    processNameLower.toLower();
-#endif
+
                     if (processNameLower=="primary") processName = "None";
                     G4UImanager::GetUIpointer()->ApplyCommand("/vis/modeling/trajectories/" + fViewerName + "_" + fColorModel + "/addValue " + processName + "_key " + processName);
                     G4UImanager::GetUIpointer()->ApplyCommand("/vis/modeling/trajectories/" + fViewerName + "_" + fColorModel + "/" + processName + "_key/setLineColourRGBA " + GetColorAsRGBA(processColors[i]));
@@ -742,11 +721,8 @@ void TsGraphicsView::CreateView() {
             G4int length = fPm->GetVectorLength("Gr/OnlyIncludeParticlesCharged");
             
             for (G4int i = 0; i < length; i++) {
-#if GEANT4_VERSION_MAJOR >= 11
                 G4StrUtil::to_lower(values[i]);
-#else
-                values[i].toLower();
-#endif
+
                 if (values[i] == "negative")
                     G4UImanager::GetUIpointer()->ApplyCommand("/vis/filtering/trajectories/" + fViewerName + "_chargeFilter/add -1");
                 if (values[i] == "neutral")
@@ -873,11 +849,8 @@ void TsGraphicsView::CreateView() {
             for (G4int i = 0; i < length; i++) {
                 processName = tokens[i];
                 processNameLower = processName;
-#if GEANT4_VERSION_MAJOR >= 11
                 G4StrUtil::to_lower(processNameLower);
-#else
-                processNameLower.toLower();
-#endif
+
                 if (processNameLower=="primary") processName = "None";
                 G4UImanager::GetUIpointer()->ApplyCommand("/vis/filtering/trajectories/" + fViewerName + "_cprFilter/addValue " + processName);
             }
@@ -904,11 +877,7 @@ void TsGraphicsView::UpdateForSpecificParameterChange(G4String parameter) {
     if (fVerbosity>0)
         G4cout << "TsGraphicsView::UpdateForSpecificParameterChange called for parameter: " << parameter << G4endl;
     
-#if GEANT4_VERSION_MAJOR >= 11
     G4StrUtil::to_lower(parameter);
-#else
-    parameter.toLower();
-#endif
     
     if (parameter==GetFullParmNameLower("Active")) {
         fIsActive = fPm->GetBooleanParameter(GetFullParmName("Active"));
@@ -1157,11 +1126,7 @@ void TsGraphicsView::SetView() {
     
     if (fPm->ParameterExists(GetFullParmName("Projection"))) {
         G4String projection = fPm->GetStringParameter(GetFullParmName("Projection"));
-#if GEANT4_VERSION_MAJOR >= 11
         G4StrUtil::to_lower(projection);
-#else
-        projection.toLower();
-#endif
         if (projection == "perspective") {
             G4double perspectiveAngle = 30.;
             if (fPm->ParameterExists(GetFullParmName("PerspectiveAngle")))
@@ -1275,11 +1240,7 @@ void TsGraphicsView::SetView() {
     
     if (fPm->ParameterExists(GetFullParmName("RotationStyle"))) {
         G4String rotationStyle = fPm->GetStringParameter(GetFullParmName("RotationStyle"));
-#if GEANT4_VERSION_MAJOR >= 11
         G4StrUtil::to_lower(rotationStyle);
-#else
-        rotationStyle.toLower();
-#endif
         if (rotationStyle == "constrained")
             G4UImanager::GetUIpointer()->ApplyCommand("/vis/viewer/set/rotationStyle constrainUpDirection");
         else if (rotationStyle == "free")
@@ -1348,11 +1309,7 @@ G4String TsGraphicsView::GetFullParmName(const char* parmName) {
 
 G4String TsGraphicsView::GetFullParmNameLower(const char* parmName) {
     G4String fullName = GetFullParmName(parmName);
-#if GEANT4_VERSION_MAJOR >= 11
     G4StrUtil::to_lower(fullName);
-#else
-    fullName.toLower();
-#endif
     return fullName;
 }
 

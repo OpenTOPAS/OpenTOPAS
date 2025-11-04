@@ -65,11 +65,7 @@ TsSplitProcess::~TsSplitProcess() {
 void TsSplitProcess::ResolveParameters(){
 	if (fPm->UseVarianceReduction()) {
 		G4String type = fPm->GetStringParameter(GetFullParmName("Type"));
-#if GEANT4_VERSION_MAJOR >= 11
 		G4StrUtil::to_lower(type);
-#else
-		type.toLower();
-#endif
 		
 		if ( type == "geometricalparticlesplit")  {
 			G4String componentName = fPm->GetStringParameter(GetFullParmName("Component"));
@@ -83,11 +79,7 @@ void TsSplitProcess::ResolveParameters(){
 			
 			G4String axis = fPm->GetStringParameter(GetFullParmName("SplitAxis"));
 			
-#if GEANT4_VERSION_MAJOR >= 11
 			G4StrUtil::to_lower(axis);
-#else
-			axis.toLower();
-#endif
 			if ( axis == "zaxis" )
 				fAxisVector = G4ThreeVector(0, 0, 1);
 			else if ( axis == "yaxis" )

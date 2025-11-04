@@ -72,11 +72,7 @@ void TsSplitConfigurator::Configure(G4VSamplerConfigurator*)
 		for ( int i = 0; i < numberOfBiasingProcesses; i++ ) {
 			G4String aBiasingProcessName = (*biasingProcessNames)[i];
 			G4String type = fPm->GetStringParameter(aBiasingProcessName);
-#if GEANT4_VERSION_MAJOR >= 11
 			G4StrUtil::to_lower(type);
-#else
-			type.toLower();
-#endif
 			if ( type == "geometricalparticlesplit") {
 				aBiasingProcessName = aBiasingProcessName.substr(0, aBiasingProcessName.length()-suffix.length()-1);
 				aBiasingProcessName = aBiasingProcessName.substr(prefix.length()+1);

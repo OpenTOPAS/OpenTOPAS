@@ -53,11 +53,7 @@ fProtonStoppingPowerRatio(0), fElectronStoppingPowerRatio(0), fOtherStoppingPowe
 	}
 
 	G4String quantityNameLower = quantity;
-#if GEANT4_VERSION_MAJOR >= 11
 	G4StrUtil::to_lower(quantityNameLower);
-#else
-	quantityNameLower.toLower();
-#endif
 	if (quantityNameLower == "dosetowater") {
 		fReferenceMaterial = GetMaterial("G4_WATER");
 	} else {
@@ -124,11 +120,7 @@ TsScoreDoseToMaterial::~TsScoreDoseToMaterial() {;}
 void TsScoreDoseToMaterial::UpdateForSpecificParameterChange(G4String parameter)
 {
 	G4String parameterLower = parameter;
-#if GEANT4_VERSION_MAJOR >= 11
 	G4StrUtil::to_lower(parameterLower);
-#else
-	parameterLower.toLower();
-#endif
 
 	if (parameterLower == GetFullParmNameLower("Material")) {
 		if (fVerbosity>0)

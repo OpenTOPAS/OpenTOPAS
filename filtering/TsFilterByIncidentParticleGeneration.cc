@@ -46,11 +46,9 @@ void TsFilterByIncidentParticleGeneration::ResolveParameters() {
 	fAcceptSecondary = false;
 
 	G4String acceptGeneration = fPm->GetStringParameter(GetFullParmName(GetName()));
-#if GEANT4_VERSION_MAJOR >= 11
+
 	G4StrUtil::to_lower(acceptGeneration);
-#else
-	acceptGeneration.toLower();
-#endif
+
 	if (acceptGeneration=="primary") fAcceptPrimary = true;
 	if (acceptGeneration=="secondary") fAcceptSecondary = true;
 

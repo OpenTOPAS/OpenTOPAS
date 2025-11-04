@@ -38,12 +38,8 @@
 #include "TsNtupleBinary.hh"
 #include "TsNtupleRoot.hh"
 
-#if GEANT4_VERSION_MAJOR >= 11
 #include "g4hntools_defs.hh"
 #include "G4ToolsAnalysisManager.hh"
-#else
-#include "g4analysis_defs.hh"
-#endif
 
 TsFileHub::TsFileHub(TsScoringManager* scM)
 : fScm(scM)
@@ -58,11 +54,7 @@ TsVFile* TsFileHub::InstantiateFile(TsParameterManager* pM, TsExtensionManager*,
 									  G4String fileName, G4String fileMode, G4String fileType,
 									  TsVFile *masterFile)
 {
-#if GEANT4_VERSION_MAJOR >= 11
 	G4StrUtil::to_lower(fileType);
-#else
-	fileType.toLower();
-#endif
 
 	if (fileType == "ascii") {
 		return new TsNtupleAscii(pM, fileName, fileMode, masterFile);

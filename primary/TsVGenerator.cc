@@ -109,11 +109,7 @@ void TsVGenerator::ResolveParameters() {
 	G4bool isSpectrum = false;
 	if (fPm->ParameterExists(GetFullParmName("BeamEnergySpectrumType"))) {
 		G4String spectrumType = fPm->GetStringParameter(GetFullParmName("BeamEnergySpectrumType"));
-#if GEANT4_VERSION_MAJOR >= 11
 		G4StrUtil::to_lower(spectrumType);
-#else
-		spectrumType.toLower();
-#endif
 		if (spectrumType != "none") isSpectrum = true;
 	}
 
@@ -122,11 +118,7 @@ void TsVGenerator::ResolveParameters() {
 		fEnergySpread  = 0.;
 
 		G4String spectrumType = fPm->GetStringParameter(GetFullParmName("BeamEnergySpectrumType"));
-#if GEANT4_VERSION_MAJOR >= 11
 		G4StrUtil::to_lower(spectrumType);
-#else
-		spectrumType.toLower();
-#endif
 
 		if (spectrumType=="discrete" || spectrumType=="continuous") {
 			fUseSpectrum = true;

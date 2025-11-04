@@ -164,11 +164,8 @@ G4Material* TsMaterialManager::GetMaterial(G4String fullMaterialName)
 			G4State state = kStateUndefined;
 			if (fPm->ParameterExists(GetFullMaterialParmName(name, "State"))) {
 				G4String stateString = fPm->GetStringParameter(GetFullMaterialParmName(name, "State"));
-#if GEANT4_VERSION_MAJOR >= 11
 				G4StrUtil::to_lower(stateString);
-#else
-				stateString.toLower();
-#endif
+
 				if (stateString == "solid") state = kStateSolid;
 				else if (stateString == "liquid") state = kStateLiquid;
 				else if (stateString == "gas") state = kStateGas;
@@ -312,11 +309,7 @@ void TsMaterialManager::SetConstantProperty(G4MaterialPropertiesTable* propertie
             property = fPm->GetDoubleParameter(parameterName, fPm->GetUnitCategoryOfParameter(parameterName));
         }
         
-#if GEANT4_VERSION_MAJOR >= 11
         G4StrUtil::to_upper(propertyName);
-#else
-        propertyName.toUpper();
-#endif
         propertiesTable->AddConstProperty(propertyName, property, true);
 
 		if (fVerbosity > 0)
@@ -347,13 +340,8 @@ void TsMaterialManager::SetVectorProperty(G4MaterialPropertiesTable* propertiesT
 
 		G4double* photonEnergies = fPm->GetDoubleVector(energiesParameterName, "Energy");
 		
-#if GEANT4_VERSION_MAJOR >= 11
         G4StrUtil::to_upper(propertyName);
 		propertiesTable->AddProperty(propertyName, photonEnergies, property, nValues, true, applySpline);
-#else
-        propertyName.toUpper();
-		propertiesTable->AddProperty(propertyName, photonEnergies, property, nValues)->SetSpline(applySpline);
-#endif
 
 		if (fVerbosity > 0)
 			G4cout << "Added vector for optical property from parameter: " << valuesParameterName << G4endl;

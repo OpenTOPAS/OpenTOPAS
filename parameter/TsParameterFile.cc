@@ -262,11 +262,8 @@ TsTempParameter* TsParameterFile::AddTempParameter(const G4String& typeAndName, 
 	if (typeAndName!="") {
 		// If name is parentFile, this is not a real parameter, but rather is the name of a parent parameter file.
 		G4String typeAndNameInLower = typeAndName;
-#if GEANT4_VERSION_MAJOR >= 11
 		G4StrUtil::to_lower(typeAndNameInLower);
-#else
-		typeAndNameInLower.toLower();
-#endif
+
 		if (typeAndNameInLower=="includefile") {
 			if (value != "TOPAS_Built_In_Defaults")
 				fIncludeFileSpecs += " " + value;
@@ -308,11 +305,7 @@ TsTempParameter* TsParameterFile::AddTempParameter(const G4String& typeAndName, 
 
 			// To ignore case of names, we use the lower case version of the name as the map index
 			G4String nameInLower(name);
-#if GEANT4_VERSION_MAJOR >= 11
 			G4StrUtil::to_lower(nameInLower);
-#else
-			nameInLower.toLower();
-#endif
 
 			// Some parameters are not allowed to be changeable.
 			// This is not an exhaustive list, but are the ones we've seen commonly misused.
@@ -552,13 +545,8 @@ void TsParameterFile::ProcessTempParameters(G4bool test) {
 					Quit(tempParameter->GetName(), "Double vector parameter has another double where the unit was expected to be.\nCheck that correct number of values was provided.");
 
 				G4String lower_unit_name = unit_name;
-#if GEANT4_VERSION_MAJOR >= 11
 				G4StrUtil::to_lower(function_name);
 				G4StrUtil::to_lower(lower_unit_name);
-#else
-				function_name.toLower();
-				lower_unit_name.toLower();
-#endif
 
 				if (function_name!="step" && unit_name!="" && lower_unit_name=="boolean")
 					Quit(tempParameter->GetName(), "Only time feature function that supports Boolean values is Step.");
@@ -1584,11 +1572,8 @@ void TsParameterFile::ProtectAgainstControlByDifferentArms(G4String paramName, T
 G4bool TsParameterFile::ParameterExists(const G4String& s)
 {
 	G4String sLower = s;
-#if GEANT4_VERSION_MAJOR >= 11
 	G4StrUtil::to_lower(sLower);
-#else
-	sLower.toLower();
-#endif
+
 	std::map<G4String, TsVParameter*>::const_iterator iter = fRealParameters->find(sLower);
 	if (iter == fRealParameters->end()) {
 
@@ -1604,11 +1589,8 @@ G4bool TsParameterFile::ParameterExists(const G4String& s)
 TsVParameter* TsParameterFile::GetParameter(const G4String& s)
 {
 	G4String sLower = s;
-#if GEANT4_VERSION_MAJOR >= 11
 	G4StrUtil::to_lower(sLower);
-#else
-	sLower.toLower();
-#endif
+
 	std::map<G4String, TsVParameter*>::const_iterator iter = fRealParameters->find(sLower);
 	if (iter == fRealParameters->end()) {
 
@@ -1624,11 +1606,8 @@ TsVParameter* TsParameterFile::GetParameter(const G4String& s)
 TsVParameter* TsParameterFile::GetParameterBeforeLinearized(const G4String& s)
 {
 	G4String sLower = s;
-#if GEANT4_VERSION_MAJOR >= 11
 	G4StrUtil::to_lower(sLower);
-#else
-	sLower.toLower();
-#endif
+
 	std::map<G4String, TsVParameter*>::const_iterator iter = fRealParameters->find(sLower);
 	if (iter == fRealParameters->end()) {
 		std::vector<TsParameterFile*>::iterator iter2;
@@ -1645,11 +1624,7 @@ TsVParameter* TsParameterFile::GetParameterBeforeLinearized(const G4String& s)
 G4int TsParameterFile::GetVectorLength(const G4String& s)
 {
 	G4String sLower = s;
-#if GEANT4_VERSION_MAJOR >= 11
 	G4StrUtil::to_lower(sLower);
-#else
-	sLower.toLower();
-#endif
 	G4int nValues = 0;
 
 	std::map<G4String, TsVParameter*>::const_iterator iter = fRealParameters->find(sLower);
@@ -1668,11 +1643,7 @@ G4int TsParameterFile::GetVectorLength(const G4String& s)
 G4double TsParameterFile::GetDoubleParameter(const G4String& s)
 {
 	G4String sLower = s;
-#if GEANT4_VERSION_MAJOR >= 11
 	G4StrUtil::to_lower(sLower);
-#else
-	sLower.toLower();
-#endif
 	G4double value = -99999999.;
 
 	std::map<G4String, TsVParameter*>::const_iterator iter = fRealParameters->find(sLower);
@@ -1691,11 +1662,7 @@ G4double TsParameterFile::GetDoubleParameter(const G4String& s)
 G4double TsParameterFile::GetUnitlessParameter(const G4String& s)
 {
 	G4String sLower = s;
-#if GEANT4_VERSION_MAJOR >= 11
 	G4StrUtil::to_lower(sLower);
-#else
-	sLower.toLower();
-#endif
 	G4double value = 99999999.;
 
 	std::map<G4String, TsVParameter*>::const_iterator iter = fRealParameters->find(sLower);
@@ -1714,11 +1681,7 @@ G4double TsParameterFile::GetUnitlessParameter(const G4String& s)
 G4int TsParameterFile::GetIntegerParameter(const G4String& s)
 {
 	G4String sLower = s;
-#if GEANT4_VERSION_MAJOR >= 11
 	G4StrUtil::to_lower(sLower);
-#else
-	sLower.toLower();
-#endif
 	G4int value = 99999999;
 
 	std::map<G4String, TsVParameter*>::const_iterator iter = fRealParameters->find(sLower);
@@ -1737,11 +1700,7 @@ G4int TsParameterFile::GetIntegerParameter(const G4String& s)
 G4bool TsParameterFile::GetBooleanParameter(const G4String& s)
 {
 	G4String sLower = s;
-#if GEANT4_VERSION_MAJOR >= 11
 	G4StrUtil::to_lower(sLower);
-#else
-	sLower.toLower();
-#endif
 	G4bool value = false;
 
 	std::map<G4String, TsVParameter*>::const_iterator iter = fRealParameters->find(sLower);
@@ -1760,11 +1719,7 @@ G4bool TsParameterFile::GetBooleanParameter(const G4String& s)
 G4String TsParameterFile::GetStringParameter(const G4String& s)
 {
 	G4String sLower = s;
-#if GEANT4_VERSION_MAJOR >= 11
 	G4StrUtil::to_lower(sLower);
-#else
-	sLower.toLower();
-#endif
 	G4String value = "invalid";
 
 	std::map<G4String, TsVParameter*>::const_iterator iter = fRealParameters->find(sLower);
@@ -1783,11 +1738,7 @@ G4String TsParameterFile::GetStringParameter(const G4String& s)
 G4double* TsParameterFile::GetDoubleVector(const G4String& s)
 {
 	G4String sLower = s;
-#if GEANT4_VERSION_MAJOR >= 11
 	G4StrUtil::to_lower(sLower);
-#else
-	sLower.toLower();
-#endif
 	G4double* value = new G4double[1];
 	value[0] = -9999999.;
 
@@ -1807,11 +1758,7 @@ G4double* TsParameterFile::GetDoubleVector(const G4String& s)
 G4double* TsParameterFile::GetUnitlessVector(const G4String& s)
 {
 	G4String sLower = s;
-#if GEANT4_VERSION_MAJOR >= 11
 	G4StrUtil::to_lower(sLower);
-#else
-	sLower.toLower();
-#endif
 	G4double* value = new G4double[1];
 	value[0] = -9999999.;
 
@@ -1831,11 +1778,7 @@ G4double* TsParameterFile::GetUnitlessVector(const G4String& s)
 G4int* TsParameterFile::GetIntegerVector(const G4String& s)
 {
 	G4String sLower = s;
-#if GEANT4_VERSION_MAJOR >= 11
 	G4StrUtil::to_lower(sLower);
-#else
-	sLower.toLower();
-#endif
 	G4int* value = new G4int[1];
 	value[0] = -9999999;
 
@@ -1855,11 +1798,7 @@ G4int* TsParameterFile::GetIntegerVector(const G4String& s)
 G4bool* TsParameterFile::GetBooleanVector(const G4String& s)
 {
 	G4String sLower = s;
-#if GEANT4_VERSION_MAJOR >= 11
 	G4StrUtil::to_lower(sLower);
-#else
-	sLower.toLower();
-#endif
 	G4bool* value = new G4bool[1];
 	value[0] = false;
 
@@ -1879,11 +1818,7 @@ G4bool* TsParameterFile::GetBooleanVector(const G4String& s)
 G4String* TsParameterFile::GetStringVector(const G4String& s)
 {
 	G4String sLower = s;
-#if GEANT4_VERSION_MAJOR >= 11
 	G4StrUtil::to_lower(sLower);
-#else
-	sLower.toLower();
-#endif
 	G4String* value = new G4String[1];
 	value[0] = "";
 
@@ -1903,11 +1838,7 @@ G4String* TsParameterFile::GetStringVector(const G4String& s)
 G4String TsParameterFile::GetHTMLValueOfParameter(const G4String& s)
 {
 	G4String sLower = s;
-#if GEANT4_VERSION_MAJOR >= 11
 	G4StrUtil::to_lower(sLower);
-#else
-	sLower.toLower();
-#endif
 	G4String output = "";
 	std::map<G4String, TsVParameter*>::const_iterator iter = fRealParameters->find(sLower);
 	if (iter != fRealParameters->end()) {
@@ -1922,11 +1853,7 @@ G4String TsParameterFile::GetHTMLValueOfParameter(const G4String& s)
 G4String TsParameterFile::GetTypeOfParameter(const G4String& s)
 {
 	G4String sLower = s;
-#if GEANT4_VERSION_MAJOR >= 11
 	G4StrUtil::to_lower(sLower);
-#else
-	sLower.toLower();
-#endif
 	G4String type = "";
 	std::map<G4String, TsVParameter*>::const_iterator iter = fRealParameters->find(sLower);
 	if (iter != fRealParameters->end())
@@ -1941,11 +1868,7 @@ G4String TsParameterFile::GetTypeOfParameter(const G4String& s)
 G4String TsParameterFile::GetTempTypeOfParameter(const G4String& s)
 {
 	G4String sLower = s;
-#if GEANT4_VERSION_MAJOR >= 11
 	G4StrUtil::to_lower(sLower);
-#else
-	sLower.toLower();
-#endif
 	G4String type = "";
 	std::map<G4String, TsTempParameter*>::const_iterator iter = fTempParameters->find(sLower);
 	if (iter != fTempParameters->end())
@@ -1960,11 +1883,7 @@ G4String TsParameterFile::GetTempTypeOfParameter(const G4String& s)
 G4String TsParameterFile::GetUnitOfParameter(const G4String& s)
 {
 	G4String sLower = s;
-#if GEANT4_VERSION_MAJOR >= 11
 	G4StrUtil::to_lower(sLower);
-#else
-	sLower.toLower();
-#endif
 	G4String unit = "";
 	std::map<G4String, TsVParameter*>::const_iterator iter = fRealParameters->find(sLower);
 
@@ -1984,11 +1903,7 @@ G4String TsParameterFile::GetUnitOfParameter(const G4String& s)
 G4bool TsParameterFile::IsChangeable(const G4String& s)
 {
 	G4String sLower = s;
-#if GEANT4_VERSION_MAJOR >= 11
 	G4StrUtil::to_lower(sLower);
-#else
-	sLower.toLower();
-#endif
 	std::map<G4String, TsVParameter*>::const_iterator iter = fRealParameters->find(sLower);
 	if (iter == fRealParameters->end()) {
 		if (fParentFile)
@@ -2032,11 +1947,7 @@ void TsParameterFile::GetAllParametersBeforeLinearized(std::map<G4String, TsVPar
 void TsParameterFile::GetParameterNamesStartingWith(const G4String& nameToMatchMixed, std::vector<G4String>* parameterNames)
 {
 	G4String nameToMatch = nameToMatchMixed;
-#if GEANT4_VERSION_MAJOR >= 11
 	G4StrUtil::to_lower(nameToMatch);
-#else
-	nameToMatch.toLower();
-#endif
 	G4String name;
 	G4bool found;
 	size_t length;
@@ -2054,11 +1965,7 @@ void TsParameterFile::GetParameterNamesStartingWith(const G4String& nameToMatchM
 			for (iToken=0; !found && iToken<length; iToken++)
 				for (iToken=0; !found && iToken<length; iToken++) {
 					G4String parameterLower = (*parameterNames)[iToken];
-#if GEANT4_VERSION_MAJOR >= 11
 					G4StrUtil::to_lower(parameterLower);
-#else
-					parameterLower.toLower();
-#endif
 					if (parameterLower==name)
 						found = true;
 				}
@@ -2100,11 +2007,7 @@ void TsParameterFile::GetParametersOperatingOn(const G4String& nameToMatch, std:
 			length = parameters->size();
 			for (iToken=0; !found && iToken<length; iToken++) {
 				G4String parameterLower = (*parameters)[iToken]->GetName();
-#if GEANT4_VERSION_MAJOR >= 11
 				G4StrUtil::to_lower(parameterLower);
-#else
-				parameterLower.toLower();
-#endif
 				if (parameterLower==name)
 					found = true;
 			}
@@ -2124,13 +2027,8 @@ void TsParameterFile::GetParameterNamesBracketedBy(const G4String& prefix, const
 {
 	G4String prefixLower = prefix;
 	G4String suffixLower = suffix;
-#if GEANT4_VERSION_MAJOR >= 11
 	G4StrUtil::to_lower(prefixLower);
 	G4StrUtil::to_lower(suffixLower);
-#else
-	prefixLower.toLower();
-	suffixLower.toLower();
-#endif
 	G4bool found;
 	size_t length;
 	size_t iToken;
@@ -2145,11 +2043,7 @@ void TsParameterFile::GetParameterNamesBracketedBy(const G4String& prefix, const
 			length = parameterNames->size();
 			for (iToken=0; !found && iToken<length; iToken++) {
 				G4String parameterLower = (*parameterNames)[iToken];
-#if GEANT4_VERSION_MAJOR >= 11
 				G4StrUtil::to_lower(parameterLower);
-#else
-				parameterLower.toLower();
-#endif
 				if (parameterLower==name)
 					found = true;
 			}
@@ -2168,11 +2062,7 @@ void TsParameterFile::GetParameterNamesBracketedBy(const G4String& prefix, const
 void TsParameterFile::CheckFilterParameterNamesStartingWith(const G4String& prefix, std::vector<G4String>* filterNames)
 {
 	G4String prefixLower = prefix.substr(0,2);
-#if GEANT4_VERSION_MAJOR >= 11
 	G4StrUtil::to_lower(prefixLower);
-#else
-	prefixLower.toLower();
-#endif
 	G4String suffix;
 	G4String token;
 	G4bool found;
@@ -2200,11 +2090,7 @@ void TsParameterFile::CheckFilterParameterNamesStartingWith(const G4String& pref
 				found = false;
 				for (iToken=0; !found && iToken<length; iToken++) {
 					G4String filterNameLower = (*filterNames)[iToken];
-#if GEANT4_VERSION_MAJOR >= 11
 					G4StrUtil::to_lower(filterNameLower);
-#else
-					filterNameLower.toLower();
-#endif
 					if (filterNameLower==suffix)
 						found = true;
 				}

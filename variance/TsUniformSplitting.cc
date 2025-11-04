@@ -61,19 +61,11 @@ void TsUniformSplitting::ResolveParameters() {
 	if ( numberOfRegions > 0 ) {
 		for ( int i = 0; i < numberOfRegions; i++ ) {
 			G4String aRegionName = (*regionNames)[i];
-#if GEANT4_VERSION_MAJOR >= 11
 			G4StrUtil::to_lower(aRegionName);
-#else
-			aRegionName.toLower();
-#endif
 			found = false;
 			for ( int j = i + 1; j < numberOfRegions; j++ ) {
 				G4String tempRegName = (*regionNames)[j];
-#if GEANT4_VERSION_MAJOR >= 11
 				G4StrUtil::to_lower(tempRegName);
-#else
-				tempRegName.toLower();
-#endif
 				if ( aRegionName == tempRegName )
 					found = true;
 			}

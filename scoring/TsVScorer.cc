@@ -108,11 +108,7 @@ fOnlyIncludeParticlesGoingOut(false), fSetBinToMinusOneIfNotInRTStructure(false)
 	fOutFileType = "csv";
 	if (fPm->ParameterExists(GetFullParmName("OutputType")))
 		fOutFileType = fPm->GetStringParameter(GetFullParmName("OutputType"));
-#if GEANT4_VERSION_MAJOR >= 11
 	G4StrUtil::to_lower(fOutFileType);
-#else
-	fOutFileType.toLower();
-#endif
 
 	fOutFileMode = "";
 	if (fPm->ParameterExists(GetFullParmName("IfOutputFileAlreadyExists")))
@@ -166,11 +162,7 @@ void TsVScorer::PostConstructor()
 
 		if (fPm->ParameterExists(GetFullParmName("OnlyIncludeParticlesGoing"))) {
 			G4String going = fPm->GetStringParameter(GetFullParmName("OnlyIncludeParticlesGoing"));
-#if GEANT4_VERSION_MAJOR >= 11
 			G4StrUtil::to_lower(going);
-#else
-			going.toLower();
-#endif
 			if (going == "in")
 				fOnlyIncludeParticlesGoingIn = true;
 			else if (going == "out")
@@ -226,11 +218,7 @@ void TsVScorer::PostConstructor()
 void TsVScorer::GetAppropriatelyBinnedCopyOfComponent(G4String componentName)
 {
 	G4String componentNameLower = componentName;
-#if GEANT4_VERSION_MAJOR >= 11
 	G4StrUtil::to_lower(componentNameLower);
-#else
-	componentNameLower.toLower();
-#endif
 	if (componentNameLower == "world") {
 		G4cerr << "Topas is exiting due to a serious error in scoring setup." << G4endl;
 		G4cerr << GetName() << " is attempting to score in the World component." << G4endl;
@@ -240,11 +228,7 @@ void TsVScorer::GetAppropriatelyBinnedCopyOfComponent(G4String componentName)
 
 	G4String componentTypeString = "Ge/"+componentName+"/Type";
 	G4String componentType = fPm->GetStringParameterWithoutMonitoring(componentTypeString);
-#if GEANT4_VERSION_MAJOR >= 11
 	G4StrUtil::to_lower(componentType);
-#else
-	componentType.toLower();
-#endif
 	if (componentType == "group") {
 		if (fIsSurfaceScorer) {
 			G4cerr << "Topas is exiting due to a serious error in scoring setup." << G4endl;
@@ -549,11 +533,7 @@ G4String TsVScorer::GetFullParmName(const char* parmName) {
 
 G4String TsVScorer::GetFullParmNameLower(const char* parmName) {
 	G4String fullName = GetFullParmName(parmName);
-#if GEANT4_VERSION_MAJOR >= 11
 	G4StrUtil::to_lower(fullName);
-#else
-	fullName.toLower();
-#endif
 	return fullName;
 }
 

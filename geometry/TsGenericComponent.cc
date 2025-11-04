@@ -75,11 +75,7 @@ G4VPhysicalVolume* TsGenericComponent::Construct()
 	// Get the component type
 	G4String compTypeMixed = fPm->GetStringParameterWithoutMonitoring(GetFullParmName("Type"));
 	G4String compType = compTypeMixed;
-#if GEANT4_VERSION_MAJOR >= 11
 	G4StrUtil::to_lower(compType);
-#else
-	compType.toLower();
-#endif
 
 	// Set flag to indicate if this is a Group component
 	fIsGroup = compType=="group";

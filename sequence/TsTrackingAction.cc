@@ -43,11 +43,7 @@ fPm(pM), fInitialMomentum(0), fRequireSplitTrackID(false)
     if (fPm->ParameterExists("Vr/UseVarianceReduction") && fPm->GetBooleanParameter("Vr/UseVarianceReduction") &&
         fPm->ParameterExists("Vr/ParticleSplit/Active") && fPm->GetBooleanParameter("Vr/ParticleSplit/Active")) {
         G4String vrtType = fPm->GetStringParameter("Vr/ParticleSplit/Type");
-#if GEANT4_VERSION_MAJOR >= 11
         G4StrUtil::to_lower(vrtType);
-#else
-	vrtType.toLower();
-#endif
         if ( vrtType == "flaggeduniformsplit" ) {
             fRequireSplitTrackID = true;
         }

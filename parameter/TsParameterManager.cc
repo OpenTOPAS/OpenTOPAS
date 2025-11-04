@@ -70,11 +70,7 @@ fHandledFirstEvent(false), fIsInQt(false), fIsFindingSeed(false), fUseVarianceRe
 	// Flag to tell if we are testing a new parameter file syntax
 	if ( getenv( "TOPAS_Test_Mode" ) ) {
 		G4String testNewSyntax = getenv( "TOPAS_Test_Mode" );
-#if GEANT4_VERSION_MAJOR >= 11
 		G4StrUtil::to_lower(testNewSyntax);
-#else
-		testNewSyntax.toLower();
-#endif
 		fTestMode = (testNewSyntax=="t" || testNewSyntax=="true" || testNewSyntax=="1");
 		if (fTestMode) {
 			G4cout << "######### TOPAS detected environment variable TOPAS_Test_Mode set to True. #########" << G4endl;
@@ -134,11 +130,7 @@ fHandledFirstEvent(false), fIsInQt(false), fIsFindingSeed(false), fUseVarianceRe
 	for (size_t iToken=0; iToken<length; iToken++) {
 		G4String colorParmName = (*values)[iToken];
 		G4String colorName = colorParmName.substr(9);
-#if GEANT4_VERSION_MAJOR >= 11
 		G4StrUtil::to_lower(colorName);
-#else
-		colorName.toLower();
-#endif
 
 		G4int* colorValues = GetIntegerVector(colorParmName);
 		G4double alpha;
@@ -640,11 +632,7 @@ void TsParameterManager::CloneParameter(const G4String& oldName, const G4String&
 G4String TsParameterManager::GetPartAfterLastSlash(const G4String& name) {
 	const auto lastSlashPos = name.find_last_of( "/" );
 	G4String lastPart = name.substr(lastSlashPos+1);
-#if GEANT4_VERSION_MAJOR >= 11
 	G4StrUtil::to_lower(lastPart);
-#else
-	lastPart.toLower();
-#endif
 	return lastPart;
 }
 
@@ -857,11 +845,7 @@ TsParameterFile* TsParameterManager::GetParameterFile(G4String fileName) {
 
 G4VisAttributes* TsParameterManager::GetColor(G4String name)
 {
-#if GEANT4_VERSION_MAJOR >= 11
 	G4StrUtil::to_lower(name);
-#else
-	name.toLower();
-#endif
 	std::map<G4String, G4VisAttributes*>::const_iterator iter = fColorMap->find(name);
 	if (iter == fColorMap->end()) {
 		G4cout << "Color not found: " << name << G4endl;
@@ -964,11 +948,7 @@ TsParticleDefinition TsParameterManager::GetParticleDefinition(G4String name) {
 		}
 	} else {
 		G4String nameLower = name;
-#if GEANT4_VERSION_MAJOR >= 11
 		G4StrUtil::to_lower(nameLower);
-#else
-		nameLower.toLower();
-#endif
 		if (nameLower == "he3") {
 			p.particleDefinition = G4ParticleTable::GetParticleTable()->FindParticle("He3");
 			return p;
@@ -1854,11 +1834,7 @@ void TsParameterManager::ReadFile(G4String fileSpec, std::ifstream& infile,
 				// Protect against reserved characters in name
 				if (name.find_first_of(forbiddeninName) < name.size()) {
 					char badChar = name[name.find_first_of(forbiddeninName)];
-#if GEANT4_VERSION_MAJOR >= 11
 					G4String badString(1,badChar);
-#else
-					G4String badString = badChar;
-#endif
 					if (badChar=='\"') badString = "Double Quotes";
 					else if (badChar==' ') badString = "Space";
 					else if (badChar=='\t') badString = "Tab";
@@ -1872,11 +1848,7 @@ void TsParameterManager::ReadFile(G4String fileSpec, std::ifstream& infile,
 				// Protect against reserved characters in value
  				if (value.find_first_of(forbiddeninValue) < value.size()) {
 					char badChar = value[value.find_first_of(forbiddeninValue)];
-#if GEANT4_VERSION_MAJOR >= 11
 					G4String badString(1,badChar);
-#else
-					G4String badString = badChar;
-#endif
 					if (badChar=='\r') badString = "Carriage Return";
 					G4cerr << "Topas quitting, parameter name: " << name << " in parameter file:" << fileSpec <<
 					" uses the following reserved character in its value: \"" << badString << "\"" << G4endl;
@@ -2125,11 +2097,7 @@ G4int TsParameterManager::IsInteger(const char* buf, short maxDigits)
 G4int TsParameterManager::IsBoolean(const char* buf)
 {
 	G4String testString = buf;
-#if GEANT4_VERSION_MAJOR >= 11
 	G4StrUtil::to_lower(testString);
-#else
-	testString.toLower();
-#endif
 	if (testString=="t" || testString=="true" || testString=="1" || testString=="f" || testString=="false" || testString=="0")
 		return 1;
 	else

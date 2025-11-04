@@ -126,11 +126,8 @@ G4VPhysicalVolume* TsVPatient::Construct() {
 		// This is not a parallel scoring copy
 		G4String converterName = fPm->GetStringParameter(GetFullParmName("ImagingToMaterialConverter"));
 		G4String converterNameLower = converterName;
-#if GEANT4_VERSION_MAJOR >= 11
 		G4StrUtil::to_lower(converterNameLower);
-#else
-		converterNameLower.toLower();
-#endif
+
 		fImagingToMaterial = fEm->InstantiateImagingToMaterial(fPm, this, fMaterialList, converterNameLower);
 
 		if (!fImagingToMaterial) {

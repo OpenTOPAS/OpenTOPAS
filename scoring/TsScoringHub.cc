@@ -87,11 +87,7 @@ TsVScorer* TsScoringHub::InstantiateScorer(TsParameterManager* pM, TsExtensionMa
 										   G4String outFileName, G4bool isSubScorer)
 {
 	G4String quantityNameLower = quantityName;
-#if GEANT4_VERSION_MAJOR >= 11
 	G4StrUtil::to_lower(quantityNameLower);
-#else
-	quantityNameLower.toLower();
-#endif
 
 	// First see if the user's extensions include this scorer
 	TsVScorer* scorer = eM->InstantiateScorer(pM, mM, gM, scM, scorerName, quantityName, quantityNameLower, outFileName, isSubScorer);

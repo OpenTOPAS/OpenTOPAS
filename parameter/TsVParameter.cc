@@ -302,11 +302,7 @@ G4String TsVParameter::ParseNameOfOtherParameter(const G4String& nameOfOtherPara
 		output = "";
 	} else {
 		G4String testName = nameOfOtherParameter;
-#if GEANT4_VERSION_MAJOR >= 11
 		G4StrUtil::to_lower(testName);
-#else
-		testName.toLower();
-#endif
 
 		if (testName == "inheritedvalue") {
 			output = "";
@@ -450,11 +446,7 @@ G4String TsVParameter::EvaluateAsHTML(const G4String& nameOfOtherParameter) {
 		output = "<a href='#" + fName + "'>" + fName + "</a>";
 	else {
 		G4String testName = nameOfOtherParameter;
-#if GEANT4_VERSION_MAJOR >= 11
 		G4StrUtil::to_lower(testName);
-#else
-		testName.toLower();
-#endif
 		if (testName.substr(0,7)=="parent/")
 			output = "nameOfOtherParameter";
 		else
