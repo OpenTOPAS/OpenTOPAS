@@ -41,19 +41,28 @@ jobs:
           else
             TAG="latest"
           fi
+          if [[ "$TAG" == "latest" ]]; then
+            TOPAS_SRC_TAG="v4.1.0"
+          else
+            TOPAS_SRC_TAG="$TAG"
+          fi
           echo "tag=$TAG" >> $GITHUB_OUTPUT
+          echo "topas_tag=$TOPAS_SRC_TAG" >> $GITHUB_OUTPUT
           echo "version tag resolved to: $TAG"
+          echo "OpenTOPAS source tag: $TOPAS_SRC_TAG"
 
       - name: Build and push OpenTOPAS image
         uses: docker/build-push-action@v5
         with:
           context: .
-          file: ./docker/Dockerfile.topas
+          file: ./Dockerfile.topas
           platforms: linux/amd64,linux/arm64
           push: true
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/opentopas:${{ steps.vars.outputs.tag }}
             ${{ secrets.DOCKERHUB_USERNAME }}/opentopas:latest
+          build-args: |
+            TOPAS_VERSION=${{ steps.vars.outputs.topas_tag }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
