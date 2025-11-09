@@ -1,0 +1,281 @@
+#!/bin/bash
+# ---------------------------------------------------------------------------
+# OpenTOPAS Docker Launcher
+# ---------------------------------------------------------------------------
+# Supports:
+#   • Automatic X11 (Qt/OpenGL) forwarding
+#   • Persistent /simulations mount
+#   • Persistent /extensions mount (for caching builds)
+#   • Optional rebuild flag (--build-extensions)
+#   • Inline options: -image=, -data=, -extensions=, -g4data=
+# ---------------------------------------------------------------------------
+
+set -euo pipefail
+
+# Default image if not provided
+IMAGE=${IMAGE:-opentopas/opentopas:v4.1.0}
+ENABLE_X11=false
+DISPLAY_OVERRIDE=""
+ENV_FLAGS=""
+X11_FLAGS=""
+BUILD_EXTENSIONS=false
+EXT_DIR=""
+EXT_CACHE_DIR=""
+EXT_SRC_DIR=""
+BUILD_EXT_DIR=""
+INSTALL_EXT_DIR=""
+DATA_DIR=""
+G4DATA_DIR=""
+
+# ---------------------------------------------------------------------------
+# Parse command-line arguments
+# ---------------------------------------------------------------------------
+POSITIONAL_ARGS=()
+while [ $# -gt 0 ]; do
+    case $1 in
+        -data=*|--data=*)
+            DATA_DIR="${1#*=}"
+            shift
+            ;;
+        -image=*|--image=*)
+            IMAGE="${1#*=}"
+            shift
+            ;;
+        -extensions=*|--extensions=*)
+            EXT_DIR="${1#*=}"
+            shift
+            ;;
+        -g4data=*|--g4data=*)
+            G4DATA_DIR="${1#*=}"
+            shift
+            ;;
+        -display=*|--display=*)
+            DISPLAY_OVERRIDE="${1#*=}"
+            shift
+            ;;
+        --build-extensions|--build-extension)
+            BUILD_EXTENSIONS=true
+            shift
+            ;;
+        --x11|--gui)
+            ENABLE_X11=true
+            shift
+            ;;
+        -h|--help)
+            echo
+            echo "Usage: topas-docker [-data=/path/to/simulations] [-image=<image:tag>] [-extensions=/path/to/extensions] [-g4data=/path/to/G4Data] [--display=host:0] [--x11] [--build-extensions] [TOPAS input file]"
+            echo
+            echo "Runs OpenTOPAS inside a Docker container with automatic X11 (Qt/OpenGL) support."
+            echo
+            echo "Options:"
+            echo "  -data=/path/to/simulations   Optional path to mount as /simulations (default: current dir)"
+            echo "  -image=<image:tag>           Select a specific Docker image (default: opentopas:v4.1.0)"
+            echo "  -extensions=/path/to/dir     Path to TOPAS extensions source directory"
+            echo "  -g4data=/path/to/G4Data      Path to Geant4 data libraries (REQUIRED if not in /Applications/G4Data)"
+            echo "  --display=host:0             Override DISPLAY value passed into the container"
+            echo "  --x11                        Force native X11/Qt visualization (macOS uses XQuartz)"
+            echo "  --build-extensions           Force rebuild of extensions (otherwise cached build is reused)"
+            echo
+            echo "Examples:"
+            echo "  topas-docker -g4data=\$HOME/G4Data QtShapeTest.txt"
+            echo "  topas-docker -data=\$HOME/projects/mycase -extensions=\$HOME/topas-extensions -g4data=/G4Data --build-extensions QtShapeTest.txt"
+            echo "  topas-docker --x11 --display=host.docker.internal:0 -g4data=\$HOME/G4Data QtDemo.txt"
+            echo
+            echo "To enable GUI visualization:"
+            echo "  xhost +local:docker"
+            echo "  topas-docker -g4data=\$HOME/G4Data QtShapeTest.txt"
+            echo "  xhost -local:docker"
+            echo
+            exit 0
+            ;;
+        --)
+            shift
+            while [ $# -gt 0 ]; do
+                POSITIONAL_ARGS+=("$1")
+                shift
+            done
+            ;;
+        -*)
+            echo "Unknown option: $1"
+            exit 1
+            ;;
+        *)
+            POSITIONAL_ARGS+=("$1")
+            shift
+            ;;
+    esac
+done
+
+set -- "${POSITIONAL_ARGS[@]}"
+
+# ---------------------------------------------------------------------------
+# Geant4 data directory handling
+# ---------------------------------------------------------------------------
+G4DATA_HOST_DEFAULT="/Applications/G4Data"
+G4DATA_HOST="${G4DATA_DIR:-$G4DATA_HOST_DEFAULT}"
+
+if [ ! -d "$G4DATA_HOST" ]; then
+    echo "❌ ERROR: Geant4 data directory not found."
+    echo
+    echo "Please specify it using:"
+    echo "   -g4data=/path/to/G4Data"
+    echo
+    echo "Expected structure:"
+    echo "   G4LEDATA/"
+    echo "   G4RADIOACTIVEDATA/"
+    echo "   G4ENSDFSTATE/"
+    echo "   G4LEVELGAMMADATA/"
+    echo "   G4REALSURFACEDATA/"
+    echo
+    exit 1
+fi
+
+# ---------------------------------------------------------------------------
+# Paths and mounts
+# ---------------------------------------------------------------------------
+MOUNT_DIR=${DATA_DIR:-$(pwd -P)}
+MOUNT_FLAGS="-v $MOUNT_DIR:/simulations -v $G4DATA_HOST:/Applications/G4Data:ro"
+
+# Add extensions mounts if provided
+if [ -n "$EXT_DIR" ]; then
+    EXT_SRC_DIR="$EXT_DIR"
+    CACHE_ROOT=${TOPAS_DOCKER_CACHE:-$HOME/.cache/topas-docker}
+    if [ ! -d "$CACHE_ROOT" ]; then
+        mkdir -p "$CACHE_ROOT"
+    fi
+    if command -v shasum >/dev/null 2>&1; then
+        EXT_CACHE_KEY=$(printf "%s" "$EXT_SRC_DIR" | shasum | awk '{print $1}')
+    else
+        EXT_CACHE_KEY=$(
+            EXT_PATH="$EXT_SRC_DIR" python3 - <<'PY'
+import hashlib, os
+print(hashlib.sha1(os.environ["EXT_PATH"].encode()).hexdigest())
+PY
+        )
+    fi
+    EXT_CACHE_DIR="$CACHE_ROOT/$(basename "$EXT_SRC_DIR")-$EXT_CACHE_KEY"
+    BUILD_EXT_DIR="$EXT_CACHE_DIR/build"
+    INSTALL_EXT_DIR="$EXT_CACHE_DIR/install"
+    mkdir -p "$BUILD_EXT_DIR" "$INSTALL_EXT_DIR"
+    MOUNT_FLAGS="$MOUNT_FLAGS -v $EXT_SRC_DIR:/extensions/src -v $INSTALL_EXT_DIR:/extensions/install"
+fi
+
+# ---------------------------------------------------------------------------
+# X11 setup for Qt visualization
+# ---------------------------------------------------------------------------
+#XSOCK="/tmp/.X11-unix"
+#XAUTH="/tmp/.docker.xauth"
+#touch $XAUTH
+##xauth nlist "$DISPLAY" | sed -e 's/^..../ffff/' | xauth -f $XAUTH nmerge -
+#touch $XAUTH
+#X11_FLAGS="-e DISPLAY=$DISPLAY -v $XSOCK:$XSOCK"
+# macOS / Docker Desktop (XQuartz via TCP)
+#X11_FLAGS="-e DISPLAY=host.docker.internal:0"
+
+# ---------------------------------------------------------------------------
+# UID/GID handling for file ownership consistency
+# ---------------------------------------------------------------------------
+HOST_UID=$(id -u)
+HOST_GID=$(id -g)
+
+# ---------------- Platform detection ----------------
+OS_TYPE=$(uname)
+HEADLESS_MODE=false
+
+if [[ "$OS_TYPE" == "Darwin" ]]; then
+    if [ "$ENABLE_X11" = true ]; then
+        DISPLAY_VALUE=${DISPLAY_OVERRIDE:-"host.docker.internal:0"}
+        echo "🖥 macOS detected — forwarding X11 via $DISPLAY_VALUE (requires XQuartz + xhost)"
+        X11_FLAGS="-e DISPLAY=$DISPLAY_VALUE"
+        ENV_FLAGS="-e LIBGL_ALWAYS_INDIRECT=1"
+    else
+        echo "🖥 macOS detected — using headless mode (xvfb-run inside container). Pass --x11 to enable GUI."
+        X11_FLAGS=""
+        HEADLESS_MODE=true
+    fi
+else
+    echo "🖥 Linux detected — enabling native X11 forwarding"
+    XSOCK="/tmp/.X11-unix"
+    XAUTH="/tmp/.docker.xauth"
+    touch $XAUTH
+    DISPLAY_VALUE=${DISPLAY_OVERRIDE:-${DISPLAY:-}}
+    if [ -z "$DISPLAY_VALUE" ]; then
+        echo "⚠️  DISPLAY not set; falling back to headless mode."
+        HEADLESS_MODE=true
+    else
+        X11_FLAGS="-e DISPLAY=$DISPLAY_VALUE -v $XSOCK:$XSOCK -v $XAUTH:$XAUTH"
+    fi
+fi
+
+if [ "$HEADLESS_MODE" = false ]; then
+    ENV_FLAGS="$ENV_FLAGS -e TOPAS_USE_HOST_DISPLAY=1"
+fi
+
+# ---------------------------------------------------------------------------
+# Extensions build logic
+# ---------------------------------------------------------------------------
+if [ -n "$EXT_DIR" ]; then
+    if [ "$BUILD_EXTENSIONS" = true ]; then
+        echo "♻️  Forcing rebuild of cached extensions for $EXT_DIR"
+        rm -rf "$BUILD_EXT_DIR" "$INSTALL_EXT_DIR"
+        mkdir -p "$BUILD_EXT_DIR" "$INSTALL_EXT_DIR"
+    fi
+
+    if [ ! -x "$INSTALL_EXT_DIR/bin/topas" ]; then
+        echo "🔧 Building TOPAS extensions from $EXT_DIR ..."
+        if ! docker run --rm -it \
+            --entrypoint /bin/bash \
+            --user $HOST_UID:$HOST_GID \
+            $X11_FLAGS \
+            -v $EXT_SRC_DIR:/extensions/src \
+            -v $BUILD_EXT_DIR:/extensions/build \
+            -v $INSTALL_EXT_DIR:/extensions/install \
+            -v $G4DATA_HOST:/Applications/G4Data:ro \
+            $IMAGE -lc "\
+                mkdir -p /extensions/build && cd /extensions/build && \
+                cmake /Applications/TOPAS/OpenTOPAS \
+                    -DCMAKE_INSTALL_PREFIX=/extensions/install \
+                    -DTOPAS_EXTENSIONS_DIR=/extensions/src && \
+                make -j\$(nproc) install"; then
+            echo "❌ Failed to build extensions. Check the output above for details."
+            exit 1
+        fi
+
+        if [ ! -x "$INSTALL_EXT_DIR/bin/topas" ]; then
+            echo "❌ Expected a TOPAS install under $INSTALL_EXT_DIR, but none was produced."
+            echo "   Try removing $BUILD_EXT_DIR manually and rerun with --build-extensions."
+            exit 1
+        fi
+        echo "✅ Extensions built and cached in $INSTALL_EXT_DIR"
+    else
+        echo "✅ Using cached extensions from $INSTALL_EXT_DIR"
+    fi
+
+    echo "📦 Enabling extensions via /extensions/install"
+    DEFAULT_CONTAINER_PATH="/Applications/TOPAS/OpenTOPAS-install/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+    DEFAULT_CONTAINER_LIB="/Applications/TOPAS/OpenTOPAS-install/lib:/Applications/GEANT4/geant4-install/lib:/Applications/GDCM/gdcm-install/lib"
+    ENV_FLAGS="$ENV_FLAGS -e PATH=/extensions/install/bin:$DEFAULT_CONTAINER_PATH"
+    ENV_FLAGS="$ENV_FLAGS -e LD_LIBRARY_PATH=/extensions/install/lib:$DEFAULT_CONTAINER_LIB"
+fi
+
+# ---------------------------------------------------------------------------
+# Run TOPAS simulation
+# ---------------------------------------------------------------------------
+echo "🚀 Running TOPAS from image: $IMAGE"
+
+if [ "$HEADLESS_MODE" = true ]; then
+    echo "🧠 Headless mode: running TOPAS inside virtual X server (xvfb-run)"
+    docker run --rm -it \
+        --user $HOST_UID:$HOST_GID \
+        $ENV_FLAGS \
+        $MOUNT_FLAGS \
+        $IMAGE "$@"
+else
+    echo "🖥 Native X11 mode"
+    docker run --rm -it \
+        --user $HOST_UID:$HOST_GID \
+        $X11_FLAGS \
+        $ENV_FLAGS \
+        $MOUNT_FLAGS \
+        $IMAGE "$@"
+fi
