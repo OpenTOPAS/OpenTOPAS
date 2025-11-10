@@ -85,7 +85,7 @@ docker run --rm -it \
   opentopas/opentopas:v4.1.1 MySimulation.txt
 ```
 
-## Directory Expectations Inside the Image
+## Directory Organization Inside the Image
 ```
 /
  ├─ /Applications/G4Data         # mount point for host Geant4 datasets
