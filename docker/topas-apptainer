@@ -1,0 +1,225 @@
+#!/usr/bin/env bash
+# ---------------------------------------------------------------------------
+# OpenTOPAS Apptainer Launcher (Apptainer/Singularity equivalent of topas-docker)
+# ---------------------------------------------------------------------------
+# Features:
+#   • Mirrors docker/topas-docker options: -data, -image, -extensions, -g4data
+#   • Keeps /simulations, /extensions, and Geant4 data mounted from the host
+#   • Supports cached extension builds with --build-extensions
+#   • Always headless (no X11 flags) for HPC-friendly execution
+# ---------------------------------------------------------------------------
+
+set -euo pipefail
+
+IMAGE=${IMAGE:-docker://opentopas/opentopas:v4.1.0}
+BUILD_EXTENSIONS=false
+EXT_DIR=""
+DATA_DIR=""
+G4DATA_DIR=""
+
+POSITIONAL_ARGS=()
+while [ $# -gt 0 ]; do
+    case $1 in
+        -data=*|--data=*)
+            DATA_DIR="${1#*=}"
+            shift
+            ;;
+        -image=*|--image=*)
+            IMAGE="${1#*=}"
+            shift
+            ;;
+        -extensions=*|--extensions=*)
+            EXT_DIR="${1#*=}"
+            shift
+            ;;
+        -g4data=*|--g4data=*)
+            G4DATA_DIR="${1#*=}"
+            shift
+            ;;
+        --build-extensions|--build-extension)
+            BUILD_EXTENSIONS=true
+            shift
+            ;;
+        -h|--help)
+            cat <<'EOF'
+
+Usage: topas-apptainer [-data=/path/to/simulations] [-image=<uri>] \
+                       [-extensions=/path/to/extensions] [-g4data=/path/to/G4Data] \
+                       [--build-extensions] [TOPAS input file]
+
+Runs OpenTOPAS inside Apptainer/Singularity while mirroring the docker/topas-docker UX.
+
+Options:
+  -data=/path/to/simulations   Directory to bind as /simulations (default: current dir)
+  -image=<uri>                 Apptainer image URI/File (default: docker://opentopas/opentopas:v4.1.0)
+  -extensions=/path/to/dir     Host directory containing TOPAS extensions
+  -g4data=/path/to/G4Data      Geant4 data directory (required if not /Applications/G4Data)
+  --build-extensions           Force rebuild of cached extensions
+
+Examples:
+  ./topas-apptainer -g4data=$HOME/G4Data QtShapeTest.txt
+  ./topas-apptainer -data=$HOME/projects/mycase -extensions=$HOME/topas-ext \
+      -g4data=/G4Data --build-extensions QtShapeTest.txt
+
+EOF
+            exit 0
+            ;;
+        --)
+            shift
+            while [ $# -gt 0 ]; do
+                POSITIONAL_ARGS+=("$1")
+                shift
+            done
+            ;;
+        -*)
+            echo "Unknown option: $1"
+            exit 1
+            ;;
+        *)
+            POSITIONAL_ARGS+=("$1")
+            shift
+            ;;
+    esac
+done
+
+if [ ${#POSITIONAL_ARGS[@]} -gt 0 ]; then
+    set -- "${POSITIONAL_ARGS[@]}"
+else
+    set --
+fi
+
+if [ -n "${APPTAINER_BIN:-}" ]; then
+    APPTAINER_CLI="$APPTAINER_BIN"
+elif command -v apptainer >/dev/null 2>&1; then
+    APPTAINER_CLI=$(command -v apptainer)
+elif command -v singularity >/dev/null 2>&1; then
+    APPTAINER_CLI=$(command -v singularity)
+else
+    echo "❌ ERROR: Neither apptainer nor singularity was found in PATH."
+    echo "Install Apptainer (preferred) or define APPTAINER_BIN=/path/to/apptainer."
+    exit 1
+fi
+
+G4DATA_HOST_DEFAULT="/Applications/G4Data"
+G4DATA_HOST="${G4DATA_DIR:-$G4DATA_HOST_DEFAULT}"
+if [ ! -d "$G4DATA_HOST" ]; then
+    cat <<'EOF'
+❌ ERROR: Geant4 data directory not found.
+
+Please specify it using:
+   -g4data=/path/to/G4Data
+
+Expected structure:
+   G4LEDATA/
+   G4RADIOACTIVEDATA/
+   G4ENSDFSTATE/
+   G4LEVELGAMMADATA/
+   G4REALSURFACEDATA/
+EOF
+    exit 1
+fi
+
+if [ -n "$DATA_DIR" ]; then
+    if [ ! -d "$DATA_DIR" ]; then
+        echo "❌ ERROR: Data directory $DATA_DIR does not exist."
+        exit 1
+    fi
+    MOUNT_DIR=$(cd "$DATA_DIR" && pwd -P)
+else
+    MOUNT_DIR=$(pwd -P)
+fi
+
+BIND_ARGS=(--bind "$MOUNT_DIR:/simulations" --bind "$G4DATA_HOST:/Applications/G4Data:ro")
+
+abs_path() {
+    (cd "$1" >/dev/null 2>&1 && pwd -P)
+}
+
+EXT_SRC_DIR=""
+EXT_CACHE_DIR=""
+BUILD_EXT_DIR=""
+INSTALL_EXT_DIR=""
+
+if [ -n "$EXT_DIR" ]; then
+    if [ ! -d "$EXT_DIR" ]; then
+        echo "❌ ERROR: Extensions directory $EXT_DIR does not exist."
+        exit 1
+    fi
+    EXT_SRC_DIR=$(abs_path "$EXT_DIR")
+    CACHE_ROOT=${TOPAS_DOCKER_CACHE:-$HOME/.cache/topas-docker}
+    mkdir -p "$CACHE_ROOT"
+    if command -v shasum >/dev/null 2>&1; then
+        EXT_CACHE_KEY=$(printf "%s" "$EXT_SRC_DIR" | shasum | awk '{print $1}')
+    else
+        EXT_CACHE_KEY=$(
+            EXT_PATH="$EXT_SRC_DIR" python3 - <<'PY'
+import hashlib, os
+print(hashlib.sha1(os.environ["EXT_PATH"].encode()).hexdigest())
+PY
+        )
+    fi
+    EXT_CACHE_DIR="$CACHE_ROOT/$(basename "$EXT_SRC_DIR")-$EXT_CACHE_KEY"
+    BUILD_EXT_DIR="$EXT_CACHE_DIR/build"
+    INSTALL_EXT_DIR="$EXT_CACHE_DIR/install"
+    mkdir -p "$BUILD_EXT_DIR" "$INSTALL_EXT_DIR"
+    BIND_ARGS+=(
+        --bind "$EXT_SRC_DIR:/extensions/src"
+        --bind "$INSTALL_EXT_DIR:/extensions/install"
+    )
+fi
+
+ENV_ARGS=()
+
+if [ -n "$EXT_SRC_DIR" ]; then
+    if [ "$BUILD_EXTENSIONS" = true ]; then
+        echo "♻️  Forcing rebuild of cached extensions for $EXT_SRC_DIR"
+        rm -rf "$BUILD_EXT_DIR" "$INSTALL_EXT_DIR"
+        mkdir -p "$BUILD_EXT_DIR" "$INSTALL_EXT_DIR"
+    fi
+
+    if [ ! -x "$INSTALL_EXT_DIR/bin/topas" ]; then
+        echo "🔧 Building TOPAS extensions from $EXT_SRC_DIR ..."
+        BUILD_BINDS=(
+            --bind "$EXT_SRC_DIR:/extensions/src"
+            --bind "$BUILD_EXT_DIR:/extensions/build"
+            --bind "$INSTALL_EXT_DIR:/extensions/install"
+            --bind "$G4DATA_HOST:/Applications/G4Data:ro"
+        )
+        BUILD_SCRIPT=$(cat <<'EOS'
+set -euo pipefail
+mkdir -p /extensions/build
+cd /extensions/build
+cmake /Applications/TOPAS/OpenTOPAS \
+    -DCMAKE_INSTALL_PREFIX=/extensions/install \
+    -DTOPAS_EXTENSIONS_DIR=/extensions/src
+make -j$(nproc) install
+EOS
+)
+        if ! "$APPTAINER_CLI" exec "${BUILD_BINDS[@]}" "$IMAGE" bash -lc "$BUILD_SCRIPT"; then
+            echo "❌ Failed to build extensions. Check the output above for details."
+            exit 1
+        fi
+
+        if [ ! -x "$INSTALL_EXT_DIR/bin/topas" ]; then
+            echo "❌ Expected a TOPAS install under $INSTALL_EXT_DIR, but none was produced."
+            echo "   Try removing $BUILD_EXT_DIR manually and rerun with --build-extensions."
+            exit 1
+        fi
+        echo "✅ Extensions built and cached in $INSTALL_EXT_DIR"
+    else
+        echo "✅ Using cached extensions from $INSTALL_EXT_DIR"
+    fi
+
+    echo "📦 Enabling extensions via /extensions/install"
+    DEFAULT_CONTAINER_PATH="/Applications/TOPAS/OpenTOPAS-install/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+    DEFAULT_CONTAINER_LIB="/Applications/TOPAS/OpenTOPAS-install/lib:/Applications/GEANT4/geant4-install/lib:/Applications/GDCM/gdcm-install/lib"
+    ENV_ARGS+=(--env "PATH=/extensions/install/bin:$DEFAULT_CONTAINER_PATH")
+    ENV_ARGS+=(--env "LD_LIBRARY_PATH=/extensions/install/lib:$DEFAULT_CONTAINER_LIB")
+fi
+
+echo "🚀 Running TOPAS from image: $IMAGE"
+
+RUN_ARGS=("${BIND_ARGS[@]}" "${ENV_ARGS[@]}")
+echo "🧠 Headless mode: relying on image-provided Xvfb entrypoint."
+
+exec "$APPTAINER_CLI" run "${RUN_ARGS[@]}" "$IMAGE" "$@"
