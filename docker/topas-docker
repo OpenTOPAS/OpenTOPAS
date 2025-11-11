@@ -161,18 +161,6 @@ PY
 fi
 
 # ---------------------------------------------------------------------------
-# X11 setup for Qt visualization
-# ---------------------------------------------------------------------------
-#XSOCK="/tmp/.X11-unix"
-#XAUTH="/tmp/.docker.xauth"
-#touch $XAUTH
-##xauth nlist "$DISPLAY" | sed -e 's/^..../ffff/' | xauth -f $XAUTH nmerge -
-#touch $XAUTH
-#X11_FLAGS="-e DISPLAY=$DISPLAY -v $XSOCK:$XSOCK"
-# macOS / Docker Desktop (XQuartz via TCP)
-#X11_FLAGS="-e DISPLAY=host.docker.internal:0"
-
-# ---------------------------------------------------------------------------
 # UID/GID handling for file ownership consistency
 # ---------------------------------------------------------------------------
 HOST_UID=$(id -u)
