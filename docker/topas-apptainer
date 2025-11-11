@@ -11,7 +11,7 @@
 
 set -euo pipefail
 
-IMAGE=${IMAGE:-docker://opentopas/opentopas:v4.1.0}
+IMAGE=${IMAGE:-docker://opentopas/opentopas:latest}
 BUILD_EXTENSIONS=false
 EXT_DIR=""
 DATA_DIR=""
@@ -51,7 +51,7 @@ Runs OpenTOPAS inside Apptainer/Singularity while mirroring the docker/topas-doc
 
 Options:
   -data=/path/to/simulations   Directory to bind as /simulations (default: current dir)
-  -image=<uri>                 Apptainer image URI/File (default: docker://opentopas/opentopas:v4.1.0)
+  -image=<uri>                 Apptainer image URI/File (default: docker://opentopas/opentopas:latest)
   -extensions=/path/to/dir     Host directory containing TOPAS extensions
   -g4data=/path/to/G4Data      Geant4 data directory (required if not /Applications/G4Data)
   --build-extensions           Force rebuild of cached extensions

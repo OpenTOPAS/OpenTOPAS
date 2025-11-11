@@ -4,7 +4,7 @@
 FROM debian:11
 
 LABEL maintainer="Jose Ramos-Mendez <Jose.RamosMendez@ucsf.edu>" \
-      description="Docker image for TOPAS v4.1.0 (Geant4 11.1.3, GDCM 2.6.8)"
+      description="Docker image for TOPAS v4.1.1 (Geant4 11.1.3, GDCM 2.6.8)"
 
 # -----------------------------
 # Base dependencies
@@ -22,7 +22,7 @@ RUN apt-get update && \
 # -----------------------------
 # Environment paths
 # -----------------------------
-ARG TOPAS_VERSION=v4.1.0
+ARG TOPAS_VERSION=v4.1.1
 ENV TOPAS_VERSION=${TOPAS_VERSION} \
     APP_HOME=/Applications
 RUN mkdir -p $APP_HOME

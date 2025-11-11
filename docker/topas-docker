@@ -13,7 +13,7 @@
 set -euo pipefail
 
 # Default image if not provided
-IMAGE=${IMAGE:-opentopas/opentopas:v4.1.0}
+IMAGE=${IMAGE:-opentopas/opentopas:latest}
 ENABLE_X11=false
 DISPLAY_OVERRIDE=""
 ENV_FLAGS=""
@@ -69,7 +69,7 @@ while [ $# -gt 0 ]; do
             echo
             echo "Options:"
             echo "  -data=/path/to/simulations   Optional path to mount as /simulations (default: current dir)"
-            echo "  -image=<image:tag>           Select a specific Docker image (default: opentopas:v4.1.0)"
+            echo "  -image=<image:tag>           Select a specific Docker image (default: opentopas:latest)"
             echo "  -extensions=/path/to/dir     Path to TOPAS extensions source directory"
             echo "  -g4data=/path/to/G4Data      Path to Geant4 data libraries (REQUIRED if not in /Applications/G4Data)"
             echo "  --display=host:0             Override DISPLAY value passed into the container"
