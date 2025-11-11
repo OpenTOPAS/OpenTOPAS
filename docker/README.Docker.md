@@ -16,7 +16,7 @@ For clusters that do not allow Docker, use the following headless script:
 ```bash
 ./topas-apptainer -g4data=$HOME/G4Data OneBox.txt
 ```
-- It wraps `apptainer run` (or `singularity run`) against the same container image via `docker://opentopas/opentopas:v4.1.1`.
+- It wraps `apptainer run` (or `singularity run`) against the same container image via `docker://opentopas/opentopas:latest`.
 - It uses the identical `-data`, `-extensions`, `-g4data`, and `--build-extensions` flags, including cached builds under `~/.cache/topas-docker`.
 - It runs without X11 forwarding (relies on the image’s internal Xvfb), making it good for HPC runs. 
 
@@ -82,7 +82,7 @@ docker run --rm -it \
   -v /tmp/.X11-unix:/tmp/.X11-unix:rw \
   -v $HOME/Applications/G4Data:/Applications/G4Data:ro \
   -v $PWD:/simulations \
-  opentopas/opentopas:v4.1.1 MySimulation.txt
+  opentopas/opentopas:latest MySimulation.txt
 ```
 
 ## Directory Organization Inside the Image
