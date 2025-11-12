@@ -71,6 +71,7 @@ public:
 	void AccumulateHit(G4Step* aStep, G4double value, G4int index);
 	void AccumulateEvent();
 	virtual void AbsorbResultsFromWorkerScorer(TsVScorer* workerScorer);
+    void ApplyRTStructureFilterToRestoredData();
 	void RestoreResultsFromFile();
 
 	std::vector <G4double> fFirstMomentMap;
