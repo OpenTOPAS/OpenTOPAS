@@ -36,9 +36,13 @@
 
 TsGeneratorEmittance::TsGeneratorEmittance(TsParameterManager* pM, TsGeometryManager* gM, TsGeneratorManager* psM, G4String sourceName) :
 TsVGenerator(pM,gM,psM,sourceName), fTwissX(fSourceName), fTwissY(fSourceName)
-{
-	ResolveParameters();
-}
+	{
+		SetParticleParameterName("EmittanceParticle");
+		SetEnergyParameterNames("EmittanceEnergy", "EmittanceEnergySpread");
+		SetEnergySpectrumParameterNames("EmittanceEnergySpectrumType", "EmittanceEnergySpectrumValues",
+			"EmittanceEnergySpectrumWeights");
+		ResolveParameters();
+	}
 
 TsGeneratorEmittance::~TsGeneratorEmittance(){;}
 

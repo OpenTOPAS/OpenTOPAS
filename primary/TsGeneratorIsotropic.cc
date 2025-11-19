@@ -37,9 +37,13 @@
 
 TsGeneratorIsotropic::TsGeneratorIsotropic(TsParameterManager* pM, TsGeometryManager* gM, TsGeneratorManager* pgM, G4String sourceName) :
 TsVGenerator(pM, gM, pgM, sourceName)
-{
-	ResolveParameters();
-}
+	{
+		SetParticleParameterName("IsotropicParticle");
+		SetEnergyParameterNames("IsotropicEnergy", "IsotropicEnergySpread");
+		SetEnergySpectrumParameterNames("IsotropicEnergySpectrumType", "IsotropicEnergySpectrumValues",
+			"IsotropicEnergySpectrumWeights");
+		ResolveParameters();
+	}
 
 
 TsGeneratorIsotropic::~TsGeneratorIsotropic()

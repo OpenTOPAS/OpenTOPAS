@@ -37,9 +37,13 @@
 
 TsGeneratorDistributed::TsGeneratorDistributed(TsParameterManager* pM, TsGeometryManager* gM, TsGeneratorManager* pgM, G4String sourceName) :
 TsVGenerator(pM, gM, pgM, sourceName)
-{
-	ResolveParameters();
-}
+	{
+		SetParticleParameterName("VolumetricParticle");
+		SetEnergyParameterNames("VolumetricEnergy", "VolumetricEnergySpread");
+		SetEnergySpectrumParameterNames("VolumetricEnergySpectrumType", "VolumetricEnergySpectrumValues",
+			"VolumetricEnergySpectrumWeights");
+		ResolveParameters();
+	}
 
 
 TsGeneratorDistributed::~TsGeneratorDistributed()

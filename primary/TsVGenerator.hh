@@ -34,6 +34,7 @@
 #include "TsPrimaryParticle.hh"
 
 #include <vector>
+#include <set>
 
 class TsParameterManager;
 class TsGeometryManager;
@@ -55,7 +56,8 @@ public:
 	~TsVGenerator();
 
 	// Gives full parameter name given just last part
-	G4String GetFullParmName(const char* parmName);
+	G4String GetFullParmName(const char* parmName) const;
+	G4String GetFullParmName(const G4String& parmName) const;
 
 	// Handle time-dependent parameter changes
 	void UpdateForSpecificParameterChange(G4String parameter);
@@ -92,6 +94,9 @@ protected:
 	// It is up to you whether you actually use these in your TsPrimaryParticle.
 	// SetEnergy() allows the user to set kEnergy according to the same scheme as a "Beam" source.
 	void SetEnergy(TsPrimaryParticle &p) const;
+	void SetEnergyParameterNames(const G4String& energyParameterName, const G4String& energySpreadParameterName);
+	void SetEnergySpectrumParameterNames(const G4String& spectrumTypeParameterName,
+		const G4String& spectrumValuesParameterName, const G4String& spectrumWeightsParameterName);
 	G4double fEnergy;
 	G4double fEnergySpread;
 	G4bool fBeamEnergyParameterExists;
@@ -109,6 +114,7 @@ protected:
 	// SetParticleType() allows the user to set {particleDefinition, isOpticalPhoton, isGenericIon, ionCharge}
 	// according to the same scheme as a "Beam" source.
 	void SetParticleType(TsPrimaryParticle &p) const;
+	void SetParticleParameterName(const G4String& particleParameterName);
 	G4ParticleDefinition* fParticleDefinition;
 	G4bool fIsGenericIon;
 	G4int fIonCharge;
@@ -150,6 +156,21 @@ private:
 	G4bool fIsExecutingSequence;
 	G4bool fHadParameterChangeSinceLastRun;
 
+	G4String ResolveGeneratorParameterName(const G4String& preferred, const G4String& legacy);
+
+	G4String fParticleParameterName;
+	G4String fEnergyParameterName;
+	G4String fEnergySpreadParameterName;
+	G4String fEnergySpectrumTypeParameterName;
+	G4String fEnergySpectrumValuesParameterName;
+	G4String fEnergySpectrumWeightsParameterName;
+
+	G4String fResolvedEnergyParameterName;
+	G4String fResolvedEnergySpreadParameterName;
+	G4String fResolvedEnergySpectrumTypeParameterName;
+	G4String fResolvedEnergySpectrumValuesParameterName;
+	G4String fResolvedEnergySpectrumWeightsParameterName;
+
 	TsVFilter* fFilter;
 	G4double fProbabilityOfUsingAGivenRandomTime;
 	G4long fNumberOfHistoriesInRandomJob;
@@ -157,6 +178,7 @@ private:
 	G4long fParticlesGeneratedInRun;
 	G4long fParticlesSkippedInRun;
 	std::vector<G4PrimaryVertex*> fPrimaries;
+	std::set<G4String> fDeprecatedParameterWarningsEmitted;
 };
 
 #endif
