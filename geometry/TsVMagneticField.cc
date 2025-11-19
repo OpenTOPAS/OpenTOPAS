@@ -65,7 +65,7 @@ fPm(pM), fGm(gM), fComponent(component) {
 	if (fPm->ParameterExists(fComponent->GetFullParmName("FieldStepper")))
 		stepper_name = fPm->GetStringParameter(fComponent->GetFullParmName("FieldStepper"));
 
-	stepper_name.toLower();
+	G4StrUtil::to_lower(stepper_name);
 	if (stepper_name == "expliciteuler")
 		fStepper = new G4ExplicitEuler(fMagFieldEquation);
 	else if (stepper_name == "impliciteuler")
