@@ -246,7 +246,7 @@ void TsDicomActivityMap::ReadImage()
 		fFullWidths[1] = fVoxelCountY * fVoxelSizeY;
 
 		// Read the pixels
-		gdcm::PixelFormat pixelFormat = image->GetPixelFormat();
+		//gdcm::PixelFormat pixelFormat = image->GetPixelFormat();
 
 		G4double slope = image->GetSlope();
 		G4double intercept = image->GetIntercept();

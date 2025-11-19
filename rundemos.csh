@@ -66,7 +66,9 @@ endif
 set timefeature_intro = ( \
 	BoxWithinBox.txt \
 	CameraRotateAndZoom.txt \
-	CylinderGrowingInPhi.txt )
+	CylinderGrowingInPhi.txt \
+        Darkening.txt \
+        Logo.txt )
 
 set ucsf_cases = ( \
 	User_SOBP24_Viewer.txt \
@@ -84,10 +86,6 @@ set nozzle_cases = ( \
 
 set fhbptc_cases = ( \
 	FullSetupWithScattering_ZoomAndPan.txt )
-
-set timefeature_outro = ( \
-	Darkening.txt \
-	Logo.txt )
 
 set green = `tput setaf 2`
 set red = `tput setaf 1`
@@ -302,7 +300,7 @@ foreach case ( DoseTo4DCT.txt )
 	else
 		printf "   %s%s [ Fail ]%s %s\n" "$red" "$cross" "$reset" "$case"
 	endif
-	rm -f $exec_log run.txt *.csv *.phsp *.header *.root *.bin *.xyz *.sdd
+	rm -f $exec_log run.txt *.csv *.phsp *.header *.root *.bin *.xyz *.sdd *.dcm
 	popd > /dev/null
 end
 rm -rf synthetic_lung
@@ -312,7 +310,7 @@ if (-f DICOM_Box.zip) then
 		rm -rf DICOM_Box
 	endif
 	echo "📦 Extracting DICOM_Box.zip"
-	unzip -q -o DICOM_Box.zip -d DICOM_Box
+	unzip -q -o DICOM_Box.zip 
 	if ($status != 0) then
 		echo "Failed to extract DICOM_Box.zip"
 		exit 1
@@ -341,39 +339,12 @@ foreach case ( Implant.txt )
 	else
 		printf "   %s%s [ Fail ]%s %s\n" "$red" "$cross" "$reset" "$case"
 	endif
-	rm -f $exec_log run.txt *.csv *.phsp *.header *.root *.bin *.xyz *.sdd
+	rm -f $exec_log run.txt *.csv *.phsp *.header *.root *.bin *.xyz *.sdd *.dcm
 	popd > /dev/null
 end
-rm -rf DICOM_Box
+rm -rf DICOM_Box __MACOSX
 
-cd "$repo_root/examples/TimeFeature"
-echo ""
-echo "======================================"
-echo "** Time Feature demos (set 2) **"
-echo "======================================"
-foreach case ($timefeature_outro)
-	set case_dir = $case:h
-	set case_file = $case:t
-	if ("$case_dir" == "" || "$case_dir" == "$case") then
-		set case_dir = "."
-	endif
-	pushd "$case_dir" > /dev/null
-	echo "includeFile = $case_file" > run.txt
-	echo 'b:Ts/UseQt = "False"' >> run.txt
-	echo 'b:Ts/PauseBeforeQuit = "False"' >> run.txt
-	echo 'b:Gr/Enable = "False"' >> run.txt
-	echo "🚀 Running $case"
-	"$topas_cmd" run.txt >&! $exec_log
-	set matches = `awk '/Execution/ {count++} END {print count+0}' $exec_log`
-	if ("$matches" == "1") then
-		printf "   %s%s [ Success ]%s %s\n" "$green" "$check" "$reset" "$case"
-	else
-		printf "   %s%s [ Fail ]%s %s\n" "$red" "$cross" "$reset" "$case"
-	endif
-	rm -f $exec_log run.txt *.csv *.phsp *.header *.root *.bin *.xyz *.sdd
-	popd > /dev/null
-end
-rm -f *.csv *.phsp *.header *.root *.bin *.xyz *.sdd $exec_log
+rm -f *.csv *.phsp *.header *.root *.bin *.xyz *.sdd *.dcm $exec_log
 
 rm -f "$repo_root"/examples/*/NbParticlesInTime.txt
 

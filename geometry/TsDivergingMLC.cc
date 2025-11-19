@@ -147,7 +147,6 @@ G4VPhysicalVolume* TsDivergingMLC::Construct()
 	fMagnification       = fSAD/fSUSD;
 	fLeafThickness  = fPm->GetDoubleParameter(GetFullParmName("Thickness"), "Length") * fMagnification;    //z
 	G4String Travelangle = fPm->GetStringParameter(GetFullParmName("LeafTravelAxis"));
-	G4double DistanceSourceToMLCcenter = fSUSD + (fLeafThickness * 0.5/fMagnification);
 
 	if (Travelangle == "Yb")
 		fIsXMLC = false;
@@ -235,7 +234,7 @@ G4VPhysicalVolume* TsDivergingMLC::Construct()
 }
 
 
-std::pair<G4GenericTrap*,G4GenericTrap*> TsDivergingMLC::ConstructLeafPair(G4int leafID, G4double thick, G4double posOpen, G4double negOpen, G4double leafWidth, G4double currentWidth, G4bool isX) {
+std::pair<G4GenericTrap*,G4GenericTrap*> TsDivergingMLC::ConstructLeafPair(G4int /*leafID*/, G4double thick, G4double posOpen, G4double negOpen, G4double leafWidth, G4double currentWidth, G4bool isX) {
 	// X Deformation: Between the leaf openings
 	G4double positiveXDeformation = 0;
 	G4double negativeXDeformation = 0;
