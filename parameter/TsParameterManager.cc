@@ -748,7 +748,18 @@ G4String TsParameterManager::GetUnitCategory(const G4String& unitString) {
     else if (unitString == "um3") category = "Volume";
     else if (unitString == "nm3") category = "Volume";
 	else if (!G4UnitDefinition::IsUnitDefined(unitString)) category = "None";
-	else category = G4UIcommand::CategoryOf(unitString);
+	else {
+		category = G4UIcommand::CategoryOf(unitString);
+
+		// Geant4 11.3 adds category names such as Velocity or Angular velocity.
+		// TOPAS historically refers to the same dimensionalities using the
+		// explicit "<base>/Time" naming scheme, so translate the new names back
+		// to the strings expected by the rest of the code.
+		if (category == "Velocity")
+			category = "Length/Time";
+		else if (category == "Angular velocity")
+			category = "Angle/Time";
+	}
 
 	return category;
 }
