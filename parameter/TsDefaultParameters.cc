@@ -45,6 +45,7 @@ void TsDefaultParameters::SetDefaults(TsParameterFile* file)
 	file->AddTempParameter("s:Ts/Geant4VersionString", "\"" + ss.str() + "\"");
 
 	file->AddTempParameter("i:Ts/Seed", "1");
+	file->AddTempParameter("b:Ts/ShowCPUTime", "\"True\"");
 	file->AddTempParameter("i:Ts/MaxStepNumber", "1000000");
 	file->AddTempParameter("b:Ts/DumpParameters", "\"False\"");
 	file->AddTempParameter("b:Ts/DumpNonDefaultParameters", "\"False\"");

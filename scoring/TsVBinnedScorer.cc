@@ -1243,6 +1243,22 @@ void TsVBinnedScorer::ApplyRTStructureFilterToRestoredData() {
 }
 
 
+void TsVBinnedScorer::ApplyRTStructureFilterToRestoredData() {
+    for (G4int idx = 0; idx < fNBins; ++idx) {
+        if (!IsIndexInsideRTStructure(idx)) {
+            if (fReportCountInBin) fCountMap[idx] = 0;
+            if (fReportMin)        fMinMap[idx]  =  9.e+99;
+            if (fReportMax)        fMaxMap[idx]  = -9.e+99;
+            if (fReportSum || fReportMean || fAccumulateSecondMoment || fReportCVolHist || fReportDVolHist)
+                fFirstMomentMap[idx] = 0.;
+            
+            if (fAccumulateSecondMoment)
+                fSecondMomentMap[idx] = 0.;
+        }
+    }
+}
+
+
 void TsVBinnedScorer::RestoreResultsFromFile()
 {
     fRestoreResultsFromFile = true;
