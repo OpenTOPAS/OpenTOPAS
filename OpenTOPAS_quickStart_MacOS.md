@@ -99,6 +99,8 @@ Build Geant4. Take note of the following warnings before running the commands sh
 
         cmake --version
 
+> Using the most recent versions of CMake might trigger undesireable warnings or errors. If this occurs we **recommend downgrading to 3.24.3 or 3.28.1**, which have been confirmed to work.
+
 > [!WARNING]
 > Verify that `qt@6` is not linked or installed in your system. The following command should yield no output if `qt@6` is indeed **NOT** installed on your system. See the warning at the top of the document about `qt@6` compatibility.
 
