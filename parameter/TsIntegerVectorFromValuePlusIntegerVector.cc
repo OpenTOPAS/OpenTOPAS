@@ -47,8 +47,8 @@ TsIntegerVectorFromValuePlusIntegerVector::TsIntegerVectorFromValuePlusIntegerVe
 
 TsIntegerVectorFromValuePlusIntegerVector::~TsIntegerVectorFromValuePlusIntegerVector()
 {
-	delete fValues;
-	delete fValuesIfParameterNames;
+	delete [] fValues;
+	delete [] fValuesIfParameterNames;
 }
 
 

@@ -47,8 +47,8 @@ TsUnitlessVectorFromValueTimesIntegerVector::TsUnitlessVectorFromValueTimesInteg
 
 TsUnitlessVectorFromValueTimesIntegerVector::~TsUnitlessVectorFromValueTimesIntegerVector()
 {
-	delete fValues;
-	delete fValuesIfParameterNames;
+	delete [] fValues;
+	delete [] fValuesIfParameterNames;
 }
 
 

@@ -43,8 +43,8 @@ TsStringVectorFromValue::TsStringVectorFromValue(TsParameterManager* pM, TsParam
 
 TsStringVectorFromValue::~TsStringVectorFromValue()
 {
-	delete fValues;
-	delete fValuesIfParameterNames;
+	delete [] fValues;
+	delete [] fValuesIfParameterNames;
 }
 
 

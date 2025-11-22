@@ -49,8 +49,8 @@ TsDoubleVectorFromValueTimesUnitlessVector::TsDoubleVectorFromValueTimesUnitless
 
 TsDoubleVectorFromValueTimesUnitlessVector::~TsDoubleVectorFromValueTimesUnitlessVector()
 {
-	delete fValues;
-	delete fValuesIfParameterNames;
+	delete [] fValues;
+	delete [] fValuesIfParameterNames;
 }
 
 

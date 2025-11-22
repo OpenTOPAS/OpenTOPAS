@@ -47,8 +47,8 @@ TsIntegerVectorFromValueTimesIntegerVector::TsIntegerVectorFromValueTimesInteger
 
 TsIntegerVectorFromValueTimesIntegerVector::~TsIntegerVectorFromValueTimesIntegerVector()
 {
-	delete fValues;
-	delete fValuesIfParameterNames;
+	delete [] fValues;
+	delete [] fValuesIfParameterNames;
 }
 
 

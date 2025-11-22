@@ -43,8 +43,8 @@ TsUnitlessVectorFromValue::TsUnitlessVectorFromValue(TsParameterManager* pM, TsP
 
 TsUnitlessVectorFromValue::~TsUnitlessVectorFromValue()
 {
-	delete fValues;
-	delete fValuesIfParameterNames;
+	delete [] fValues;
+	delete [] fValuesIfParameterNames;
 }
 
 

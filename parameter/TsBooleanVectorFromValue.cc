@@ -43,8 +43,8 @@ TsBooleanVectorFromValue::TsBooleanVectorFromValue(TsParameterManager* pM, TsPar
 
 TsBooleanVectorFromValue::~TsBooleanVectorFromValue()
 {
-	delete fValues;
-	delete fValuesIfParameterNames;
+	delete [] fValues;
+	delete [] fValuesIfParameterNames;
 }
 
 

@@ -47,8 +47,8 @@ TsUnitlessVectorFromValueMinusIntegerVector::TsUnitlessVectorFromValueMinusInteg
 
 TsUnitlessVectorFromValueMinusIntegerVector::~TsUnitlessVectorFromValueMinusIntegerVector()
 {
-	delete fValues;
-	delete fValuesIfParameterNames;
+	delete [] fValues;
+	delete [] fValuesIfParameterNames;
 }
 
 

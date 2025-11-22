@@ -47,8 +47,8 @@ TsUnitlessVectorFromValuePlusUnitless::TsUnitlessVectorFromValuePlusUnitless(TsP
 
 TsUnitlessVectorFromValuePlusUnitless::~TsUnitlessVectorFromValuePlusUnitless()
 {
-	delete fValues;
-	delete fValuesIfParameterNames;
+	delete [] fValues;
+	delete [] fValuesIfParameterNames;
 }
 
 

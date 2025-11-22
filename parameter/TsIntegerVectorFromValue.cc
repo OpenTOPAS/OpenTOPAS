@@ -43,8 +43,8 @@ TsIntegerVectorFromValue::TsIntegerVectorFromValue(TsParameterManager* pM, TsPar
 
 TsIntegerVectorFromValue::~TsIntegerVectorFromValue()
 {
-	delete fValues;
-	delete fValuesIfParameterNames;
+	delete [] fValues;
+	delete [] fValuesIfParameterNames;
 }
 
 

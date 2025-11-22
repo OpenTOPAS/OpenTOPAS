@@ -47,8 +47,8 @@ TsStringVectorFromValuePlusStringVector::TsStringVectorFromValuePlusStringVector
 
 TsStringVectorFromValuePlusStringVector::~TsStringVectorFromValuePlusStringVector()
 {
-	delete fValues;
-	delete fValuesIfParameterNames;
+	delete [] fValues;
+	delete [] fValuesIfParameterNames;
 }
 
 

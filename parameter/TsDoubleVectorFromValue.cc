@@ -45,8 +45,8 @@ TsDoubleVectorFromValue::TsDoubleVectorFromValue(TsParameterManager* pM, TsParam
 
 TsDoubleVectorFromValue::~TsDoubleVectorFromValue()
 {
-	delete fValues;
-	delete fValuesIfParameterNames;
+	delete [] fValues;
+	delete [] fValuesIfParameterNames;
 }
 
 

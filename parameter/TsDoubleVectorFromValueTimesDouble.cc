@@ -49,8 +49,8 @@ TsDoubleVectorFromValueTimesDouble::TsDoubleVectorFromValueTimesDouble(TsParamet
 
 TsDoubleVectorFromValueTimesDouble::~TsDoubleVectorFromValueTimesDouble()
 {
-	delete fValues;
-	delete fValuesIfParameterNames;
+	delete [] fValues;
+	delete [] fValuesIfParameterNames;
 }
 
 
