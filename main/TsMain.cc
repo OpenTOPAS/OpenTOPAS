@@ -198,6 +198,6 @@ void setDataEnvVars(G4String dataDirectory)
 	for (auto const& pair : dataVars)
 	{
 		varval = dataDirectory + "/" + std::get<1>(pair);
-		setenv(std::get<0>(pair), varval, 0);
+		setenv(std::get<0>(pair), varval, 1);
 	}
 }
