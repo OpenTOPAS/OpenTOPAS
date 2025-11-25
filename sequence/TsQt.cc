@@ -128,8 +128,12 @@ fShowReadOnlyNoteMessage(true)
 		// Remove many of the detault Geant4 Qt menu bar actions
 		QList<QToolBar *> allToolBars = fUIQt->GetMainWindow()->findChildren<QToolBar *>();
 		G4int actionCounter = 0;
-		foreach (QAction *action, allToolBars[0]->actions()) {
-			if (actionCounter < 3 || actionCounter > 7)
+		QList<QAction*> actions = allToolBars[0]->actions();
+		G4int lastIndex = actions.size() - 1;
+		foreach (QAction *action, actions) {
+			// Keep first action (index 0), actions 3-7, and the last action
+			bool keep = (actionCounter >= 3 && actionCounter <= 7) || (actionCounter == lastIndex);
+			if (!keep)
 				allToolBars[0]->removeAction(action);
 			actionCounter++;
 		}
