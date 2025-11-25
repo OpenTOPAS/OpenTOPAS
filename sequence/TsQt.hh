@@ -132,6 +132,8 @@ private:
 	QComboBox* fAddSourceComponentNameWidget;
 	G4String fCurrentSourceName;
 	G4int fAddedSourceCounter;
+
+	G4bool fShowReadOnlyNoteMessage = true;
 };
 
 #endif

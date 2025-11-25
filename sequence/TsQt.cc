@@ -68,7 +68,11 @@
 #include <qapplication.h>
 #include <qlist.h>
 #include <qpushbutton.h>
+#include <qfont.h>
+#include <qmessagebox.h>
 #include <map>
+#include <set>
+#include <qpixmap.h>
 
 TsQt::TsQt(TsParameterManager* pM, TsExtensionManager* eM, TsMaterialManager* mM, TsGeometryManager* gM, TsScoringManager* scM, TsSequenceManager* sqM,
 		   TsGraphicsManager* grM, TsSourceManager* soM) :
@@ -76,7 +80,8 @@ fPm(pM), fEm(eM), fMm(mM), fGm(gM), fScm(scM), fSqm(sqM), fGrm(grM), fSom(soM), 
 fParameterTableWidget(0),
 fAddComponentDialog(0), fCurrentComponentName(""), fAddedComponentCounter(0),
 fAddScorerDialog(0), fCurrentScorerName(""), fAddedScorerCounter(0),
-fAddSourceDialog(0), fCurrentSourceName(""), fAddedSourceCounter(0)
+fAddSourceDialog(0), fCurrentSourceName(""), fAddedSourceCounter(0),
+fShowReadOnlyNoteMessage(true)
 {
 	fParameterEditorWidget = new QWidget();
 	QVBoxLayout* layoutWidget = new QVBoxLayout();
@@ -88,8 +93,20 @@ fAddSourceDialog(0), fCurrentSourceName(""), fAddedSourceCounter(0)
 	fUIQt = static_cast<G4UIQt*> (G4UImanager::GetUIpointer()->GetG4UIWindow());
 	fUIQt->GetUserInterfaceWidget()->setWindowTitle("");
 
+	// Set window and tab icon
+	QPixmap logoPixmap("/Applications/TOPAS/OpenTOPAS/graphics/TOPASLogo.png");
+	if (!logoPixmap.isNull()) {
+		QSize targetSize(286,192);
+		QIcon logoIcon(logoPixmap.scaled(targetSize, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+		fUIQt->GetMainWindow()->setWindowIcon(logoIcon);
+		int tabIndex = fUIQt->GetUITabWidget()->addTab(fParameterEditorWidget,"Parameter Control");
+		fUIQt->GetUITabWidget()->setCurrentIndex(tabIndex);
+	} else {
+		fUIQt->GetUITabWidget()->addTab(fParameterEditorWidget,"Parameter Control");
+	}
+
 	// Add our own control widget
-	fUIQt->GetUITabWidget()->addTab(fParameterEditorWidget,"Parameter Control");
+	// Already added above
 
 	if (fPm->GetBooleanParameter("Ts/IncludeDefaultGeant4QtWidgets")) {
 		fUIQt->GetUITabWidget()->setCurrentIndex(3);
@@ -143,7 +160,14 @@ fAddSourceDialog(0), fCurrentSourceName(""), fAddedSourceCounter(0)
 	
 	QSignalMapper* runSignalMapper = new QSignalMapper(this);
 	toolbar->addSeparator();
-	QAction* runAction = toolbar->addAction(QString("Run"), runSignalMapper, SLOT(map()));
+	QIcon runIcon;
+	QPixmap runPixmap("/Applications/TOPAS/OpenTOPAS/graphics/TOPASLogo.png");
+	if (!runPixmap.isNull()) {
+		runIcon = QIcon(runPixmap.scaled(QSize(32,32), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+		toolbar->setIconSize(QSize(32,32));
+	}
+	QAction* runAction = runIcon.isNull() ? toolbar->addAction(QString("Run"), runSignalMapper, SLOT(map()))
+										   : toolbar->addAction(runIcon, QString(""), runSignalMapper, SLOT(map()));
 	connect(runSignalMapper, SIGNAL(mapped(int)),this, SLOT(RunCallback()));
 	int runIntVP = 0;
 	runSignalMapper->setMapping(runAction, runIntVP);
@@ -239,6 +263,7 @@ void TsQt::UpdateParameterEditor() {
 
 	std::map<G4String, QTreeWidgetItem*> categoryItems;
 	std::map<G4String, QTreeWidgetItem*> componentItems;
+	std::set<G4String> componentsWithParentRow;
 
 	auto getCategoryItem = [&](const G4String& categoryName) {
 		std::map<G4String, QTreeWidgetItem*>::iterator iter = categoryItems.find(categoryName);
@@ -285,6 +310,7 @@ void TsQt::UpdateParameterEditor() {
 		G4String categoryName = "Other";
 		G4String groupName = "General";
 		G4String displayName = fPm->GetPartAfterLastSlash(parameterName);
+		G4String fullPathLower = parameterNameLower;
 		if (colonPos != G4int(std::string::npos)) {
 			G4String afterColon = parameterName.substr(colonPos + 1);
 			size_t firstSlash = afterColon.find("/");
@@ -299,6 +325,8 @@ void TsQt::UpdateParameterEditor() {
 				size_t secondSlash = afterColon.find("/", firstSlash + 1);
 				if (secondSlash != std::string::npos) {
 					groupName = afterColon.substr(firstSlash + 1, secondSlash - firstSlash - 1);
+					if (categoryName == "Geometries" && fPm->GetPartAfterLastSlash(parameterNameLower) == "parent")
+						componentsWithParentRow.insert(groupName);
 				}
 			}
 		}
@@ -335,6 +363,7 @@ void TsQt::UpdateParameterEditor() {
 			}
 			connect(combo, SIGNAL(currentIndexChanged(int)),this, SLOT(ParameterComboChanged()));
 			fParameterTableWidget->setItemWidget(paramItem, 1, combo);
+			paramItem->setFlags(paramItem->flags() ^ Qt::ItemIsEditable);
 		} else if (fPm->GetPartAfterLastSlash(parameterName) == "material" ||
 				   fPm->GetPartAfterLastSlash(parameterName) == "activematerial") {
 			QComboBox* combo = new QComboBox();
@@ -350,6 +379,7 @@ void TsQt::UpdateParameterEditor() {
 			}
 			connect(combo, SIGNAL(currentIndexChanged(int)),this, SLOT(ParameterComboChanged()));
 			fParameterTableWidget->setItemWidget(paramItem, 1, combo);
+			paramItem->setFlags(paramItem->flags() ^ Qt::ItemIsEditable);
 		} else if (fPm->GetPartAfterLastSlash(parameterName) == "component") {
 			QComboBox* combo = new QComboBox();
 			combo->setProperty("name", QString(parameterName));
@@ -362,6 +392,7 @@ void TsQt::UpdateParameterEditor() {
 			}
 			connect(combo, SIGNAL(currentIndexChanged(int)),this, SLOT(ParameterComboChanged()));
 			fParameterTableWidget->setItemWidget(paramItem, 1, combo);
+			paramItem->setFlags(paramItem->flags() ^ Qt::ItemIsEditable);
 		} else if (fPm->GetPartAfterLastSlash(parameterName) == "drawingstyle") {
 			QComboBox* combo = new QComboBox();
 			combo->setProperty("name", QString(parameterName));
@@ -379,6 +410,7 @@ void TsQt::UpdateParameterEditor() {
 				combo->setCurrentIndex(2);
 			connect(combo, SIGNAL(currentIndexChanged(int)),this, SLOT(ParameterComboChanged()));
 			fParameterTableWidget->setItemWidget(paramItem, 1, combo);
+			paramItem->setFlags(paramItem->flags() ^ Qt::ItemIsEditable);
 		} else if (fPm->GetPartAfterLastSlash(parameterName) == "beamangulardistribution") {
 			QComboBox* combo = new QComboBox();
 			combo->setProperty("name", QString(parameterName));
@@ -390,6 +422,7 @@ void TsQt::UpdateParameterEditor() {
 				combo->setCurrentIndex(1);
 			connect(combo, SIGNAL(currentIndexChanged(int)),this, SLOT(ParameterComboChanged()));
 			fParameterTableWidget->setItemWidget(paramItem, 1, combo);
+			paramItem->setFlags(paramItem->flags() ^ Qt::ItemIsEditable);
 		} else if (fPm->GetPartAfterLastSlash(parameterName) == "beampositiondistribution") {
 			QComboBox* combo = new QComboBox();
 			combo->setProperty("name", QString(parameterName));
@@ -401,6 +434,7 @@ void TsQt::UpdateParameterEditor() {
 				combo->setCurrentIndex(1);
 			connect(combo, SIGNAL(currentIndexChanged(int)),this, SLOT(ParameterComboChanged()));
 			fParameterTableWidget->setItemWidget(paramItem, 1, combo);
+			paramItem->setFlags(paramItem->flags() ^ Qt::ItemIsEditable);
 		} else if (fPm->GetPartAfterLastSlash(parameterName) == "beampositioncutoffshape") {
 			QComboBox* combo = new QComboBox();
 			combo->setProperty("name", QString(parameterName));
@@ -412,6 +446,7 @@ void TsQt::UpdateParameterEditor() {
 				combo->setCurrentIndex(1);
 			connect(combo, SIGNAL(currentIndexChanged(int)),this, SLOT(ParameterComboChanged()));
 			fParameterTableWidget->setItemWidget(paramItem, 1, combo);
+			paramItem->setFlags(paramItem->flags() ^ Qt::ItemIsEditable);
 		} else if (fPm->GetPartAfterLastSlash(parameterName) == "beamparticle") {
 			QComboBox* combo = new QComboBox();
 			combo->setProperty("name", QString(parameterName));
@@ -435,6 +470,7 @@ void TsQt::UpdateParameterEditor() {
 				combo->setCurrentIndex(5);
 			connect(combo, SIGNAL(currentIndexChanged(int)),this, SLOT(ParameterComboChanged()));
 			fParameterTableWidget->setItemWidget(paramItem, 1, combo);
+			paramItem->setFlags(paramItem->flags() ^ Qt::ItemIsEditable);
 		} else if (fPm->GetPartAfterLastSlash(parameterName) == "projection") {
 			QComboBox* combo = new QComboBox();
 			combo->setProperty("name", QString(parameterName));
@@ -446,6 +482,7 @@ void TsQt::UpdateParameterEditor() {
 				combo->setCurrentIndex(1);
 			connect(combo, SIGNAL(currentIndexChanged(int)),this, SLOT(ParameterComboChanged()));
 			fParameterTableWidget->setItemWidget(paramItem, 1, combo);
+			paramItem->setFlags(paramItem->flags() ^ Qt::ItemIsEditable);
 		} else if (fPm->GetPartAfterLastSlash(parameterName) == "geometrymethod") {
 			QComboBox* combo = new QComboBox();
 			combo->setProperty("name", QString(parameterName));
@@ -460,15 +497,38 @@ void TsQt::UpdateParameterEditor() {
 				combo->setCurrentIndex(2);
 			connect(combo, SIGNAL(currentIndexChanged(int)),this, SLOT(ParameterComboChanged()));
 			fParameterTableWidget->setItemWidget(paramItem, 1, combo);
+			paramItem->setFlags(paramItem->flags() ^ Qt::ItemIsEditable);
 		} else {
 			paramItem->setText(1, QString((*parameterValues)[iParam]));
 			paramItem->setFlags(paramItem->flags() | Qt::ItemIsEditable);
-			if (parameterName.substr(0,6)=="sc:Ge/" && fPm->GetPartAfterLastSlash(parameterName)=="type")
+			bool locked = false;
+			if ((parameterName.substr(0,4)=="s:Ge/" || parameterName.substr(0,6)=="sc:Ge/") && fPm->GetPartAfterLastSlash(parameterName)=="type") {
 				paramItem->setFlags(paramItem->flags() ^ Qt::ItemIsEditable);
-			if (parameterName.substr(0,6)=="sc:Ge/" && fPm->GetPartAfterLastSlash(parameterName)=="parent")
+				locked = true;
+			}
+			if ((parameterName.substr(0,4)=="s:Ge/" || parameterName.substr(0,6)=="sc:Ge/") && fPm->GetPartAfterLastSlash(parameterName)=="parent") {
 				paramItem->setFlags(paramItem->flags() ^ Qt::ItemIsEditable);
-			if (parameterName.substr(0,6)=="sc:So/" && fPm->GetPartAfterLastSlash(parameterName)=="type")
+				locked = true;
+			}
+			if (parameterName.substr(0,6)=="sc:So/" && fPm->GetPartAfterLastSlash(parameterName)=="type") {
 				paramItem->setFlags(paramItem->flags() ^ Qt::ItemIsEditable);
+				locked = true;
+			}
+			if (locked) {
+				QFont boldFont = paramItem->font(0);
+				boldFont.setBold(true);
+				paramItem->setFont(0, boldFont);
+				paramItem->setFont(1, boldFont);
+			}
+		}
+
+		// Bold all non-editable items (including combos above) except user-checkable rows
+		if (!(paramItem->flags() & Qt::ItemIsEditable) &&
+			!(paramItem->flags() & Qt::ItemIsUserCheckable)) {
+			QFont boldFont = paramItem->font(0);
+			boldFont.setBold(true);
+			paramItem->setFont(0, boldFont);
+			paramItem->setFont(1, boldFont);
 		}
 
 		if (findLineToSelect && searchName!="") {
@@ -485,6 +545,92 @@ void TsQt::UpdateParameterEditor() {
 					}
 					findLineToSelect = false;
 				}
+			}
+		}
+	}
+
+	// Ensure geometry parent is displayed even if not changeable/editable
+	for (std::map<G4String, QTreeWidgetItem*>::const_iterator iter = componentItems.begin(); iter != componentItems.end(); ++iter) {
+		G4String key = iter->first;
+		G4String prefix = "Geometries/";
+		if (key.substr(0, prefix.length()) != prefix)
+			continue;
+		G4String compName = key.substr(prefix.length());
+		if (componentsWithParentRow.find(compName) != componentsWithParentRow.end())
+			continue;
+		G4String parentParam = "Ge/" + compName + "/Parent";
+		if (fPm->ParameterExists(parentParam)) {
+			G4String parentValue = fPm->GetStringParameter(parentParam);
+			QTreeWidgetItem* parentItem = new QTreeWidgetItem(iter->second);
+			parentItem->setText(0, QString("parent"));
+			parentItem->setText(1, QString("\"") + QString(parentValue) + QString("\""));
+			parentItem->setData(0, Qt::UserRole, QString("s:Ge/") + QString(compName) + QString("/Parent"));
+			parentItem->setFlags((parentItem->flags() | Qt::ItemIsEnabled | Qt::ItemIsSelectable) ^ Qt::ItemIsEditable);
+			QFont boldFont = parentItem->font(0);
+			boldFont.setBold(true);
+			parentItem->setFont(0, boldFont);
+			parentItem->setFont(1, boldFont);
+		}
+	}
+
+	// Add read-only Quantity and Component for Scorers if missing; add read-only Type for Sources if missing
+	for (std::map<G4String, QTreeWidgetItem*>::const_iterator iter = componentItems.begin(); iter != componentItems.end(); ++iter) {
+		G4String key = iter->first;
+		G4String prefixSc = "Scorers/";
+		G4String prefixSo = "Sources/";
+
+		if (key.substr(0, prefixSc.length()) == prefixSc) {
+			G4String scName = key.substr(prefixSc.length());
+
+			G4String qtyParam = "Sc/" + scName + "/Quantity";
+			if (fPm->ParameterExists(qtyParam)) {
+				QTreeWidgetItem* qtyItem = new QTreeWidgetItem(iter->second);
+				qtyItem->setText(0, QString("quantity"));
+				qtyItem->setText(1, QString("\"") + QString(fPm->GetStringParameter(qtyParam)) + QString("\""));
+				qtyItem->setData(0, Qt::UserRole, QString("s:") + QString(qtyParam));
+				qtyItem->setFlags((qtyItem->flags() | Qt::ItemIsEnabled | Qt::ItemIsSelectable) ^ Qt::ItemIsEditable);
+				QFont boldFont = qtyItem->font(0);
+				boldFont.setBold(true);
+				qtyItem->setFont(0, boldFont);
+				qtyItem->setFont(1, boldFont);
+			}
+
+			G4String compParam = "Sc/" + scName + "/Component";
+			G4String surfParam = "Sc/" + scName + "/Surface";
+			if (fPm->ParameterExists(compParam)) {
+				QTreeWidgetItem* compItem = new QTreeWidgetItem(iter->second);
+				compItem->setText(0, QString("component"));
+				compItem->setText(1, QString("\"") + QString(fPm->GetStringParameter(compParam)) + QString("\""));
+				compItem->setData(0, Qt::UserRole, QString("s:") + QString(compParam));
+				compItem->setFlags((compItem->flags() | Qt::ItemIsEnabled | Qt::ItemIsSelectable) ^ Qt::ItemIsEditable);
+				QFont boldFont = compItem->font(0);
+				boldFont.setBold(true);
+				compItem->setFont(0, boldFont);
+				compItem->setFont(1, boldFont);
+			} else if (fPm->ParameterExists(surfParam)) {
+				QTreeWidgetItem* compItem = new QTreeWidgetItem(iter->second);
+				compItem->setText(0, QString("surface"));
+				compItem->setText(1, QString("\"") + QString(fPm->GetStringParameter(surfParam)) + QString("\""));
+				compItem->setData(0, Qt::UserRole, QString("s:") + QString(surfParam));
+				compItem->setFlags((compItem->flags() | Qt::ItemIsEnabled | Qt::ItemIsSelectable) ^ Qt::ItemIsEditable);
+				QFont boldFont = compItem->font(0);
+				boldFont.setBold(true);
+				compItem->setFont(0, boldFont);
+				compItem->setFont(1, boldFont);
+			}
+		} else if (key.substr(0, prefixSo.length()) == prefixSo) {
+			G4String soName = key.substr(prefixSo.length());
+			G4String typeParam = "So/" + soName + "/Type";
+			if (fPm->ParameterExists(typeParam)) {
+				QTreeWidgetItem* typeItem = new QTreeWidgetItem(iter->second);
+				typeItem->setText(0, QString("type"));
+				typeItem->setText(1, QString("\"") + QString(fPm->GetStringParameter(typeParam)) + QString("\""));
+				typeItem->setData(0, Qt::UserRole, QString("s:") + QString(typeParam));
+				typeItem->setFlags((typeItem->flags() | Qt::ItemIsEnabled | Qt::ItemIsSelectable) ^ Qt::ItemIsEditable);
+				QFont boldFont = typeItem->font(0);
+				boldFont.setBold(true);
+				typeItem->setFont(0, boldFont);
+				typeItem->setFont(1, boldFont);
 			}
 		}
 	}
@@ -738,6 +884,18 @@ void TsQt::AddComponentWidgetSetItemChanged() {
 	fAddComponentDialog->hide();
 	fAddComponentWidget->hide();
 
+	if (fShowReadOnlyNoteMessage) {
+		QMessageBox msgBox;
+		msgBox.setWindowTitle(QString("Read-Only Parameters"));
+		msgBox.setText(QString("Note: Parameters in bold cannot be changed!"));
+		msgBox.addButton(QString("OK"), QMessageBox::AcceptRole);
+		QPushButton* dontShowButton = msgBox.addButton(QString("Don't show again"), QMessageBox::RejectRole);
+		msgBox.exec();
+		if (msgBox.clickedButton() == dontShowButton)
+			fShowReadOnlyNoteMessage = false;
+		// Proceed regardless of which was clicked.
+	}
+
 	fCurrentComponentName = fAddComponentNameWidget->text().toStdString();
 	fAddedComponentCounter++;
 	G4String parentName = fAddComponentParentWidget->currentText().toStdString();
@@ -844,6 +1002,17 @@ void TsQt::AddScorerWidgetSetItemChanged() {
 	fAddScorerWidget->blockSignals(true);
 	fAddScorerDialog->hide();
 	fAddScorerWidget->hide();
+
+	if (fShowReadOnlyNoteMessage) {
+		QMessageBox msgBox;
+		msgBox.setWindowTitle(QString("Read-Only Parameters"));
+		msgBox.setText(QString("Note: Parameters in bold cannot be changed!"));
+		msgBox.addButton(QString("OK"), QMessageBox::AcceptRole);
+		QPushButton* dontShowButton = msgBox.addButton(QString("Don't show again"), QMessageBox::RejectRole);
+		msgBox.exec();
+		if (msgBox.clickedButton() == dontShowButton)
+			fShowReadOnlyNoteMessage = false;
+	}
 
 	fCurrentScorerName = fAddScorerNameWidget->text().toStdString();
 	fAddedScorerCounter++;
@@ -955,6 +1124,17 @@ void TsQt::AddSourceWidgetSetItemChanged() {
 	fAddSourceWidget->blockSignals(true);
 	fAddSourceDialog->hide();
 	fAddSourceWidget->hide();
+
+	if (fShowReadOnlyNoteMessage) {
+		QMessageBox msgBox;
+		msgBox.setWindowTitle(QString("Read-Only Parameters"));
+		msgBox.setText(QString("Note: Parameters in bold cannot be changed!"));
+		msgBox.addButton(QString("OK"), QMessageBox::AcceptRole);
+		QPushButton* dontShowButton = msgBox.addButton(QString("Don't show again"), QMessageBox::RejectRole);
+		msgBox.exec();
+		if (msgBox.clickedButton() == dontShowButton)
+			fShowReadOnlyNoteMessage = false;
+	}
 
 	fCurrentSourceName = fAddSourceNameWidget->text().toStdString();
 	fAddedSourceCounter++;

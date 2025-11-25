@@ -357,6 +357,14 @@ void TsSourceManager::AddSourceFromGUI(G4String& sourceName, G4String& component
 			parameterName = "ic:So/" + sourceName + "/NumberOfHistoriesInRandomJob";
 			transValue = "10";
 			fPm->AddParameter(parameterName, transValue);
+
+			parameterName = "sc:So/" + sourceName + "/ActiveMaterial";
+			transValue = "\"G4_AIR\"";
+			fPm->AddParameter(parameterName, transValue);
+
+			parameterName = "bc:So/" + sourceName + "/RecursivelyIncludeChildren";
+			transValue = "\"False\"";
+			fPm->AddParameter(parameterName, transValue);
 		} else if (typeNameLower == "emittance") {
 			parameterName = "sc:So/" + sourceName + "/EmittanceParticle";
 			transValue = "\"proton\"";
@@ -444,6 +452,10 @@ void TsSourceManager::AddSourceFromGUI(G4String& sourceName, G4String& component
 
 			parameterName = "ic:So/" + sourceName + "/NumberOfHistoriesInRandomJob";
 			transValue = "10";
+			fPm->AddParameter(parameterName, transValue);
+
+			parameterName = "bc:So/" + sourceName + "/RecursivelyIncludeChildren";
+			transValue = "\"False\"";
 			fPm->AddParameter(parameterName, transValue);
 		} else {
 			parameterName = "sc:So/" + sourceName + "/PhaseSpaceFileName";
