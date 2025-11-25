@@ -765,7 +765,12 @@ void TsQt::ParameterComboChanged() {
 
 void TsQt::SaveCallback() {
 	G4VViewer* viewer = fGrm->GetCurrentViewer();
-	G4String parameterStart = "Gr/" + viewer->GetName() + "/";
+	G4String viewName = fGrm->GetCurrentViewName();
+	if (viewName == "")
+		viewName = fGrm->GetAnyViewName();
+	if (viewName == "" && viewer)
+		viewName = viewer->GetName();
+	G4String parameterStart = "Gr/" + viewName + "/";
 	fPm->AddParameter("u:" + parameterStart + "Zoom", G4UIcommand::ConvertToString(viewer->GetViewParameters().GetZoomFactor()), false, true);
 	fPm->AddParameter("d:" + parameterStart + "Theta", G4UIcommand::ConvertToString(viewer->GetViewParameters().GetViewpointDirection().getTheta() / deg) + " deg", false, true);
 	fPm->AddParameter("d:" + parameterStart + "Phi", G4UIcommand::ConvertToString(viewer->GetViewParameters().GetViewpointDirection().getPhi() / deg) + " deg", false, true);

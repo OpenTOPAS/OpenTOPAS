@@ -1646,9 +1646,72 @@ void TsParameterManager::DumpAddedParameters() {
 
 	outFile << "includeFile = " << fTopParameterFileSpec << "\n" << G4endl;
 
-	std::map<G4String, G4String>::const_iterator iter;
-	for (iter = fAddedParameters->begin(); iter != fAddedParameters->end(); ++iter)
-		outFile << iter->first << " = " << iter->second << G4endl;
+	// Collect and sort parameters for readable grouping
+	std::vector<std::pair<G4String,G4String> > sortedParams;
+	sortedParams.reserve(fAddedParameters->size());
+	for (std::map<G4String, G4String>::const_iterator iter = fAddedParameters->begin(); iter != fAddedParameters->end(); ++iter)
+		sortedParams.push_back(std::make_pair(iter->first, iter->second));
+	std::sort(sortedParams.begin(), sortedParams.end(),
+		[](const std::pair<G4String,G4String>& a, const std::pair<G4String,G4String>& b) {
+			return a.first < b.first;
+		});
+
+	// map category -> map component -> list of params
+	std::map<G4String, std::map<G4String, std::vector<std::pair<G4String,G4String> > > > grouped;
+
+	for (size_t i = 0; i < sortedParams.size(); ++i) {
+		const G4String& nameWithType = sortedParams[i].first;
+		const G4String& value = sortedParams[i].second;
+
+		G4String category = "Other";
+		G4String component = "General";
+		size_t colonPos = nameWithType.find(":");
+		if (colonPos != std::string::npos) {
+			size_t firstSlash = nameWithType.find("/", colonPos+1);
+			if (firstSlash != std::string::npos) {
+				G4String prefix = nameWithType.substr(colonPos+1, firstSlash-colonPos-1);
+				if (prefix == "Ge")
+					category = "Geometries";
+				else if (prefix == "Sc")
+					category = "Scorers";
+				else if (prefix == "So")
+					category = "Sources";
+				else if (prefix == "Gr")
+					category = "Graphics";
+				size_t secondSlash = nameWithType.find("/", firstSlash+1);
+				if (secondSlash != std::string::npos)
+					component = nameWithType.substr(firstSlash+1, secondSlash-firstSlash-1);
+			}
+		}
+		grouped[category][component].push_back(sortedParams[i]);
+	}
+
+	// Define category order
+	std::vector<G4String> catOrder;
+	catOrder.push_back("Geometries");
+	catOrder.push_back("Scorers");
+	catOrder.push_back("Sources");
+	catOrder.push_back("Graphics");
+	catOrder.push_back("Other");
+
+	for (size_t i = 0; i < sortedParams.size(); ++i) {
+		// just to ensure sortedParams used; actual output below
+		(void)i;
+	}
+
+	for (size_t iCat=0; iCat<catOrder.size(); ++iCat) {
+		G4String cat = catOrder[iCat];
+		if (grouped.find(cat) == grouped.end())
+			continue;
+		outFile << "\n# " << cat << G4endl;
+		std::map<G4String, std::vector<std::pair<G4String,G4String> > >& comps = grouped[cat];
+		for (std::map<G4String, std::vector<std::pair<G4String,G4String> > >::iterator cIt = comps.begin(); cIt != comps.end(); ++cIt) {
+			outFile << "\n#   " << cIt->first << G4endl;
+			for (size_t iParam=0; iParam<cIt->second.size(); ++iParam) {
+				outFile << cIt->second[iParam].first << " = " << cIt->second[iParam].second << G4endl;
+			}
+		}
+	}
 
 	outFile.close();
 

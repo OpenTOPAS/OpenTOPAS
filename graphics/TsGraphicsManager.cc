@@ -277,3 +277,16 @@ G4bool TsGraphicsManager::UsingRayTracer() {
 G4VViewer* TsGraphicsManager::GetCurrentViewer() {
 	return fVisManager->GetCurrentViewer();
 }
+
+G4String TsGraphicsManager::GetCurrentViewName() {
+	if (fCurrentView)
+		return fCurrentView->GetName();
+	return "";
+}
+
+G4String TsGraphicsManager::GetAnyViewName() {
+	if (fViews && !fViews->empty()) {
+		return fViews->begin()->first;
+	}
+	return "";
+}
