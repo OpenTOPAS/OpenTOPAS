@@ -43,6 +43,7 @@
 
 #include "TsGeometryHub.hh"
 #include "TsScoringHub.hh"
+#include "TsVGeometryComponent.hh"
 
 #include "G4UImanager.hh"
 #include "G4VViewer.hh"
@@ -79,6 +80,10 @@
 #include <qscrollbar.h>
 #include <qmenu.h>
 #include <qinputdialog.h>
+#include <qicon.h>
+#include <qfile.h>
+#include <qdir.h>
+#include <qdialog.h>
 #include <map>
 #include <set>
 #include <qpixmap.h>
@@ -144,65 +149,119 @@ fShowReadOnlyNoteMessage(true)
 
 	QToolBar* toolbar = new QToolBar();
 
+	auto loadIcon = [](const QString& fileName) {
+		std::vector<QString> candidates = {
+			"/Applications/TOPAS/OpenTOPAS/graphics/" + fileName,
+			QDir::homePath() + "/Applications/TOPAS/OpenTOPAS/graphics/" + fileName,
+			"graphics/" + fileName
+		};
+		for (size_t i=0; i<candidates.size(); ++i) {
+			const QString& path = candidates[i];
+			if (!QFile::exists(path))
+				continue;
+			QIcon icon(path);
+			if (!icon.isNull())
+				return icon;
+		}
+		return QIcon();
+	};
+
 	QSignalMapper* saveSignalMapper = new QSignalMapper(this);
-	QAction* saveAction = toolbar->addAction(QString("Save"), saveSignalMapper, SLOT(map()));
+	QIcon saveIcon = loadIcon("save_as.svg");
+	QAction* saveAction = saveIcon.isNull()
+		? toolbar->addAction(QString("Save"), saveSignalMapper, SLOT(map()))
+		: toolbar->addAction(saveIcon, QString(""), saveSignalMapper, SLOT(map()));
+	saveAction->setToolTip("Save");
 	connect(saveSignalMapper, SIGNAL(mapped(int)),this, SLOT(SaveCallback()));
 	int saveIntVP = 0;
 	saveSignalMapper->setMapping(saveAction, saveIntVP);
 
 	QSignalMapper* componentSignalMapper = new QSignalMapper(this);
 	toolbar->addSeparator();
-	QAction* componentAction = toolbar->addAction(QString("+Geom"), componentSignalMapper, SLOT(map()));
+	QIcon componentIcon = loadIcon("add_box.svg");
+	QAction* componentAction = componentIcon.isNull()
+		? toolbar->addAction(QString("+Geom"), componentSignalMapper, SLOT(map()))
+		: toolbar->addAction(componentIcon, QString(""), componentSignalMapper, SLOT(map()));
+	componentAction->setToolTip("+Geom");
 	connect(componentSignalMapper, SIGNAL(mapped(int)),this, SLOT(AddComponentCallback()));
 	int componentIntVP = 0;
 	componentSignalMapper->setMapping(componentAction, componentIntVP);
 	
 	QSignalMapper* scorerSignalMapper = new QSignalMapper(this);
 	toolbar->addSeparator();
-	QAction* scorerAction = toolbar->addAction(QString("+Scorer"), scorerSignalMapper, SLOT(map()));
+	QIcon scorerIcon = loadIcon("add_chart.svg");
+	QAction* scorerAction = scorerIcon.isNull()
+		? toolbar->addAction(QString("+Scorer"), scorerSignalMapper, SLOT(map()))
+		: toolbar->addAction(scorerIcon, QString(""), scorerSignalMapper, SLOT(map()));
+	scorerAction->setToolTip("+Scorer");
 	connect(scorerSignalMapper, SIGNAL(mapped(int)),this, SLOT(AddScorerCallback()));
 	int scorerIntVP = 0;
 	scorerSignalMapper->setMapping(scorerAction, scorerIntVP);
 
 	QSignalMapper* sourceSignalMapper = new QSignalMapper(this);
 	toolbar->addSeparator();
-	QAction* sourceAction = toolbar->addAction(QString("+Source"), sourceSignalMapper, SLOT(map()));
+	QIcon sourceIcon = loadIcon("add_flash.svg");
+	QAction* sourceAction = sourceIcon.isNull()
+		? toolbar->addAction(QString("+Source"), sourceSignalMapper, SLOT(map()))
+		: toolbar->addAction(sourceIcon, QString(""), sourceSignalMapper, SLOT(map()));
+	sourceAction->setToolTip("+Source");
 	connect(sourceSignalMapper, SIGNAL(mapped(int)),this, SLOT(AddSourceCallback()));
 	int sourceIntVP = 0;
 	sourceSignalMapper->setMapping(sourceAction, sourceIntVP);
 
 	QSignalMapper* runSignalMapper = new QSignalMapper(this);
 	toolbar->addSeparator();
-	QIcon runIcon;
-	QPixmap runPixmap("/Applications/TOPAS/OpenTOPAS/graphics/TOPASLogo.png");
-	if (!runPixmap.isNull()) {
-		runIcon = QIcon(runPixmap.scaled(QSize(32,32), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+	QIcon runIcon = loadIcon("play.svg");
+	if (!runIcon.isNull())
 		toolbar->setIconSize(QSize(32,32));
-	}
 	QAction* runAction = runIcon.isNull() ? toolbar->addAction(QString("Run"), runSignalMapper, SLOT(map()))
 										   : toolbar->addAction(runIcon, QString(""), runSignalMapper, SLOT(map()));
+	runAction->setToolTip("Run");
 	connect(runSignalMapper, SIGNAL(mapped(int)),this, SLOT(RunCallback()));
 	int runIntVP = 0;
 	runSignalMapper->setMapping(runAction, runIntVP);
 
 	QSignalMapper* printSignalMapper = new QSignalMapper(this);
 	toolbar->addSeparator();
-	QAction* printAction = toolbar->addAction(QString("PDF"), printSignalMapper, SLOT(map()));
+	QIcon pdfIcon = loadIcon("photo.svg");
+	QAction* printAction = pdfIcon.isNull()
+		? toolbar->addAction(QString("PDF"), printSignalMapper, SLOT(map()))
+		: toolbar->addAction(pdfIcon, QString(""), printSignalMapper, SLOT(map()));
+	printAction->setToolTip("PDF");
 	connect(printSignalMapper, SIGNAL(mapped(int)),this, SLOT(PrintCallback()));
 	int printIntVP = 0;
 	printSignalMapper->setMapping(printAction, printIntVP);
 
 	toolbar->addSeparator();
 	QToolButton* expandCollapseButton = new QToolButton();
-	expandCollapseButton->setText("Collapse All");
+	QIcon collapseIcon = loadIcon("collapse_all.svg");
+	QIcon expandIcon = loadIcon("expand_all.svg");
+	bool haveIcons = !collapseIcon.isNull() && !expandIcon.isNull();
+	if (haveIcons) {
+		expandCollapseButton->setIcon(collapseIcon);
+		expandCollapseButton->setToolTip("Collapse All");
+	} else {
+		expandCollapseButton->setText("Collapse All");
+		expandCollapseButton->setToolTip("Collapse All");
+	}
 	expandCollapseButton->setCheckable(true);
 	connect(expandCollapseButton, &QToolButton::clicked, this, [=](bool checked){
 		if (checked) {
-			expandCollapseButton->setText("Expand All");
+			if (haveIcons) {
+				expandCollapseButton->setIcon(expandIcon);
+			} else {
+				expandCollapseButton->setText("Expand All");
+			}
+			expandCollapseButton->setToolTip("Expand All");
 			for (int i = 0; i < fParameterTableWidget->topLevelItemCount(); ++i)
 				fParameterTableWidget->collapseItem(fParameterTableWidget->topLevelItem(i));
 		} else {
-			expandCollapseButton->setText("Collapse All");
+			if (haveIcons) {
+				expandCollapseButton->setIcon(collapseIcon);
+			} else {
+				expandCollapseButton->setText("Collapse All");
+			}
+			expandCollapseButton->setToolTip("Collapse All");
 			for (int i = 0; i < fParameterTableWidget->topLevelItemCount(); ++i)
 				fParameterTableWidget->expandItem(fParameterTableWidget->topLevelItem(i));
 		}
@@ -317,6 +376,8 @@ void TsQt::UpdateParameterEditor() {
 
 	std::map<G4String, QTreeWidgetItem*> categoryItems;
 	std::map<G4String, QTreeWidgetItem*> componentItems;
+	std::map<G4String, QTreeWidgetItem*> geometryItems;
+	std::map<G4String, G4String> geometryParents;
 	std::set<G4String> componentsWithParentRow;
 
 	auto getCategoryItem = [&](const G4String& categoryName) {
@@ -345,6 +406,7 @@ void TsQt::UpdateParameterEditor() {
 		QTreeWidgetItem* categoryItem = getCategoryItem(categoryName);
 		QTreeWidgetItem* groupItem = new QTreeWidgetItem(categoryItem);
 		groupItem->setText(0, QString(groupName));
+		groupItem->setData(0, Qt::UserRole, QString("component:") + QString(groupName));
 		groupItem->setFlags(groupItem->flags() ^ Qt::ItemIsEditable);
 		bool expanded = false;
 		std::map<G4String, bool>::const_iterator expandIter = previousComponentExpansion.find(key);
@@ -353,6 +415,48 @@ void TsQt::UpdateParameterEditor() {
 			groupItem->setExpanded(expanded);
 		componentItems[key] = groupItem;
 		return groupItem;
+	};
+
+	// Build parent map for geometries to show hierarchy
+	std::vector<G4String> geoNames = fGm->GetComponentNames();
+	for (size_t i=0; i<geoNames.size(); ++i) {
+		G4String name = geoNames[i];
+		G4String parent = "";
+		if (fPm->ParameterExists("Ge/" + name + "/Parent"))
+			parent = fPm->GetStringParameter("Ge/" + name + "/Parent");
+		geometryParents[name] = parent;
+	}
+
+	std::function<QTreeWidgetItem*(const G4String&)> getGeometryItem = [&](const G4String& compName) -> QTreeWidgetItem* {
+		std::map<G4String, QTreeWidgetItem*>::iterator iter = geometryItems.find(compName);
+		if (iter != geometryItems.end())
+			return iter->second;
+
+		G4String parent = "";
+		std::map<G4String,G4String>::const_iterator pIt = geometryParents.find(compName);
+		if (pIt != geometryParents.end())
+			parent = pIt->second;
+
+		QTreeWidgetItem* parentItem = 0;
+		if (parent != "" && geometryParents.find(parent) != geometryParents.end())
+			parentItem = getGeometryItem(parent);
+
+		QTreeWidgetItem* catItem = getCategoryItem("Geometries");
+		QTreeWidgetItem* compItem = new QTreeWidgetItem(parentItem ? parentItem : catItem);
+		compItem->setText(0, QString(compName));
+		compItem->setData(0, Qt::UserRole, QString("component:") + QString(compName));
+		compItem->setFlags(compItem->flags() ^ Qt::ItemIsEditable);
+		G4String compKey = G4String("Geometries/") + compName;
+		bool expanded = false;
+		std::map<G4String, bool>::const_iterator expandIter = previousComponentExpansion.find(compKey);
+		if (expandIter != previousComponentExpansion.end())
+			expanded = expandIter->second;
+		compItem->setExpanded(expanded);
+		if (!parentItem)
+			catItem->addChild(compItem);
+		geometryItems[compName] = compItem;
+		componentItems[compKey] = compItem;
+		return compItem;
 	};
 
 	for (G4int iParam = 0; iParam < nParameters; iParam++) {
@@ -392,7 +496,11 @@ void TsQt::UpdateParameterEditor() {
 			}
 		}
 
-		QTreeWidgetItem* groupItem = getGroupItem(categoryName, groupName);
+		QTreeWidgetItem* groupItem = 0;
+		if (categoryName == "Geometries")
+			groupItem = getGeometryItem(groupName);
+		else
+			groupItem = getGroupItem(categoryName, groupName);
 
 		QTreeWidgetItem* paramItem = new QTreeWidgetItem(groupItem);
 		paramItem->setText(0, QString(displayName));
@@ -623,8 +731,6 @@ void TsQt::UpdateParameterEditor() {
 		if (key.substr(0, prefix.length()) != prefix)
 			continue;
 		G4String compName = key.substr(prefix.length());
-		if (componentsWithParentRow.find(compName) != componentsWithParentRow.end())
-			continue;
 		G4String parentParam = "Ge/" + compName + "/Parent";
 		if (fPm->ParameterExists(parentParam)) {
 			G4String parentValue = fPm->GetStringParameter(parentParam);
@@ -738,16 +844,22 @@ void TsQt::ShowParameterContextMenu(const QPoint& pos) {
 	if (!item)
 		return;
 
-	QTreeWidgetItem* compItem = item;
-	QTreeWidgetItem* catItem = item->parent();
-	if (!catItem)
-		return;
-	if (compItem->parent()) {
-		compItem = compItem->parent();
-		catItem = compItem->parent();
+	QTreeWidgetItem* current = item;
+	QTreeWidgetItem* compItem = 0;
+	while (current) {
+		QString role = current->data(0, Qt::UserRole).toString();
+		if (role.startsWith("component:")) {
+			compItem = current;
+			break;
+		}
+		current = current->parent();
 	}
-	if (!catItem)
+	if (!compItem)
 		return;
+
+	QTreeWidgetItem* catItem = compItem;
+	while (catItem->parent())
+		catItem = catItem->parent();
 
 	G4String category = catItem->text(0).toStdString();
 	G4String compName = compItem->text(0).toStdString();
@@ -755,8 +867,7 @@ void TsQt::ShowParameterContextMenu(const QPoint& pos) {
 	QMenu menu(fParameterEditorWidget);
 	if (category == "Geometries") {
 		menu.addAction("Duplicate Geometry", [=]() { DoDuplicateGeometry(compName); });
-	} else if (category == "Scorers") {
-		menu.addAction("Duplicate Scorer", [=]() { DoDuplicateScorer(compName); });
+		menu.addAction("Duplicate Geometry Tree", [=]() { DoDuplicateGeometryTree(compName); });
 	} else if (category == "Sources") {
 		menu.addAction("Duplicate Source", [=]() { DoDuplicateSource(compName); });
 	}
@@ -764,7 +875,7 @@ void TsQt::ShowParameterContextMenu(const QPoint& pos) {
 		menu.exec(fParameterTableWidget->viewport()->mapToGlobal(pos));
 }
 
-void TsQt::DuplicateParameters(const G4String& categoryCode, const G4String& oldName, const G4String& newName) {
+void TsQt::DuplicateParameters(const G4String& categoryCode, const G4String& oldName, const G4String& newName, std::vector<G4String>* newParameterNames) {
 	std::vector<G4String>* parameterNames = new std::vector<G4String>;
 	std::vector<G4String>* parameterValues = new std::vector<G4String>;
 	fPm->GetChangeableParameters(parameterNames, parameterValues);
@@ -793,6 +904,10 @@ void TsQt::DuplicateParameters(const G4String& categoryCode, const G4String& old
 				newVal = "\"True\"";
 		}
 		fPm->AddParameter(newPname, newVal);
+		if (newParameterNames) {
+			if (colonPos != std::string::npos && colonPos+1 < newPname.size())
+				newParameterNames->push_back(newPname.substr(colonPos+1));
+		}
 	}
 	delete parameterNames;
 	delete parameterValues;
@@ -821,12 +936,79 @@ void TsQt::DuplicateGeometryCallback() {
 	DoDuplicateGeometry(selected.toStdString());
 }
 
+void TsQt::DuplicateGeometryTreeCallback() {
+	std::vector<G4String> componentNames = fGm->GetComponentNames();
+	if (componentNames.empty())
+		return;
+
+	bool ok = false;
+	QStringList nameList;
+	for (size_t i=0;i<componentNames.size();++i) nameList << QString(componentNames[i]);
+	QString selected = QInputDialog::getItem(fParameterEditorWidget, "Duplicate Geometry Tree", "Select root geometry to duplicate:", nameList, 0, false, &ok);
+	if (!ok || selected.isEmpty())
+		return;
+	DoDuplicateGeometryTree(selected.toStdString());
+}
+
 
 void TsQt::DoDuplicateGeometry(const G4String& oldName) {
 	std::vector<G4String> componentNames = fGm->GetComponentNames();
-	bool ok = false;
-	QString newName = QInputDialog::getText(fParameterEditorWidget, "New Geometry Name", "Enter name for duplicate:", QLineEdit::Normal, QString(oldName.c_str()) + "_copy", &ok);
-	if (!ok || newName.isEmpty())
+	// Build dialog with name + transform presets
+	QDialog dialog(fParameterEditorWidget);
+	dialog.setWindowTitle("Duplicate Geometry");
+	QVBoxLayout layout(&dialog);
+
+	QLabel nameLabel("New Geometry Name");
+	QLineEdit nameEdit(QString(oldName.c_str()) + "_copy");
+	layout.addWidget(&nameLabel);
+	layout.addWidget(&nameEdit);
+
+	// Prefill transforms from source
+	const char* tfNames[6] = {"TransX","TransY","TransZ","RotX","RotY","RotZ"};
+	QString tfDefaults[6];
+	QString tfTypes[6];
+	for (int i=0;i<6;++i) {
+		tfTypes[i] = "dc"; // ensure changeable with units
+		G4String full = "Ge/" + oldName + "/" + tfNames[i];
+		if (fPm->ParameterExists(full)) {
+			G4String t = fPm->GetTypeOfParameter(full);
+			tfDefaults[i] = QString(fPm->GetParameterValueAsString(t, full));
+		} else {
+			tfDefaults[i] = (i<3) ? "0 mm" : "0 deg";
+		}
+	}
+
+	QGroupBox tfBox("Translation / Rotation");
+	QGridLayout* tfGrid = new QGridLayout();
+	QString labels[6] = {"Trans X","Trans Y","Trans Z","Rot X","Rot Y","Rot Z"};
+	QLineEdit tfEdits[6];
+	for (int i=0;i<6;++i) {
+		QLabel* l = new QLabel(labels[i]);
+		tfEdits[i].setText(tfDefaults[i]);
+		int row = (i<3) ? i : i-3;
+		int col = (i<3) ? 0 : 2;
+		tfGrid->addWidget(l, row, col);
+		tfGrid->addWidget(&tfEdits[i], row, col+1);
+	}
+	tfBox.setLayout(tfGrid);
+	layout.addWidget(&tfBox);
+
+	QHBoxLayout buttons;
+	QPushButton okBtn("OK");
+	QPushButton cancelBtn("Cancel");
+	buttons.addStretch();
+	buttons.addWidget(&okBtn);
+	buttons.addWidget(&cancelBtn);
+	layout.addLayout(&buttons);
+	bool accepted = false;
+	QObject::connect(&okBtn, &QPushButton::clicked, [&](){ accepted=true; dialog.accept(); });
+	QObject::connect(&cancelBtn, &QPushButton::clicked, [&](){ dialog.reject(); });
+
+	if (dialog.exec() != QDialog::Accepted || !accepted)
+		return;
+
+	QString newName = nameEdit.text().trimmed();
+	if (newName.isEmpty())
 		return;
 	if (NameExistsInList(componentNames, newName.toStdString())) {
 		QMessageBox::warning(fParameterEditorWidget, "Duplicate Geometry", "A geometry with that name already exists.");
@@ -838,49 +1020,131 @@ void TsQt::DoDuplicateGeometry(const G4String& oldName) {
 	G4String parentName = fPm->GetStringParameter("Ge/" + oldName + "/Parent");
 	G4String noField("no field");
 	fGm->GetGeometryHub()->AddComponentFromGUI(fPm, fGm, newNameStr, parentName, typeName, noField);
-	DuplicateParameters("Ge", oldName, newNameStr);
+	std::vector<G4String> newParams;
+	DuplicateParameters("Ge", oldName, newNameStr, &newParams);
+
+	// Apply overrides from dialog
+	for (int i=0;i<6;++i) {
+		QString val = tfEdits[i].text().trimmed();
+		if (val.isEmpty())
+			continue;
+		G4String pname = tfTypes[i].toStdString() + ":Ge/" + newNameStr + "/" + tfNames[i];
+		fPm->AddParameter(pname, val.toStdString(), false, true);
+		newParams.push_back("Ge/" + newNameStr + "/" + tfNames[i]);
+	}
+
+	// First update run to build the new component and register changeable params
+	fSqm->UpdateForNewRunOrQtChange();
+	// Force the new component to rebuild with the cloned parameters
+	TsVGeometryComponent* newComponent = fGm->GetComponent(newNameStr);
+	if (newComponent)
+		newComponent->ForceRebuild();
+	// Now flag the cloned parameters for rebuild with their copied values
+	for (size_t i = 0; i < newParams.size(); ++i)
+		fSqm->UpdateForSpecificParameterChange(newParams[i]);
+	// Re-run to apply the changes
+	fSqm->UpdateForNewRunOrQtChange();
+	fCurrentComponentName = newNameStr;
+	UpdateParameterEditor();
+}
+
+void TsQt::CollectGeometryDescendants(const G4String& rootName, const std::map<G4String,G4String>& parentMap, std::vector<G4String>& ordered) {
+	ordered.push_back(rootName);
+	for (std::map<G4String,G4String>::const_iterator it = parentMap.begin(); it != parentMap.end(); ++it) {
+		if (it->second == rootName)
+			CollectGeometryDescendants(it->first, parentMap, ordered);
+	}
+}
+
+void TsQt::DoDuplicateGeometryTree(const G4String& rootName) {
+	std::vector<G4String> componentNames = fGm->GetComponentNames();
+	if (componentNames.empty())
+		return;
+
+	// Prompt for prefix
+	bool ok = false;
+	QString prefixQ = QInputDialog::getText(fParameterEditorWidget, "Duplicate Geometry Tree", "Enter prefix for duplicated components:", QLineEdit::Normal, QString(rootName.c_str()) + "_copy_", &ok);
+	if (!ok || prefixQ.isEmpty())
+		return;
+	G4String prefix = prefixQ.toStdString();
+
+	// Build parent map
+	std::map<G4String,G4String> parentMap;
+	for (size_t i=0;i<componentNames.size();++i) {
+		G4String comp = componentNames[i];
+		if (fPm->ParameterExists("Ge/" + comp + "/Parent"))
+			parentMap[comp] = fPm->GetStringParameter("Ge/" + comp + "/Parent");
+	}
+
+	// Collect descendants including root, top-down
+	std::vector<G4String> ordered;
+	CollectGeometryDescendants(rootName, parentMap, ordered);
+
+	// Ensure no name collisions
+	for (size_t i=0;i<ordered.size();++i) {
+		G4String newName = prefix + ordered[i];
+		if (NameExistsInList(componentNames, newName)) {
+			QMessageBox::warning(fParameterEditorWidget, "Duplicate Geometry Tree", ("A geometry named " + newName + " already exists.").c_str());
+			return;
+		}
+	}
+
+	std::vector<G4String> allNewParams;
+	std::vector<G4String> newComponents;
+
+	// Create new components and copy parameters
+	for (size_t i=0;i<ordered.size();++i) {
+		G4String oldComp = ordered[i];
+		G4String newComp = prefix + oldComp;
+
+		G4String parentName = "";
+		if (parentMap.find(oldComp) != parentMap.end())
+			parentName = parentMap[oldComp];
+
+		// If parent is in the subtree, map it to the prefixed name
+		if (parentMap.find(oldComp) != parentMap.end()) {
+			G4String parentOld = parentMap[oldComp];
+			if (std::find(ordered.begin(), ordered.end(), parentOld) != ordered.end())
+				parentName = prefix + parentOld;
+		}
+
+		G4String typeName = fPm->GetStringParameter("Ge/" + oldComp + "/Type");
+		G4String noField("no field");
+		fGm->GetGeometryHub()->AddComponentFromGUI(fPm, fGm, newComp, parentName, typeName, noField);
+		newComponents.push_back(newComp);
+
+		std::vector<G4String> newParams;
+		DuplicateParameters("Ge", oldComp, newComp, &newParams);
+
+		// Override parent parameter to point to the mapped parent
+		if (!parentName.empty()) {
+			G4String parentType = fPm->GetTypeOfParameter("Ge/" + oldComp + "/Parent");
+			G4String pname = parentType + ":Ge/" + newComp + "/Parent";
+			// Parent is non-changeable; use permissive flag to replace the default set during creation.
+			fPm->AddParameter(pname, "\"" + parentName + "\"", false, true);
+			newParams.push_back("Ge/" + newComp + "/Parent");
+		}
+
+		allNewParams.insert(allNewParams.end(), newParams.begin(), newParams.end());
+	}
+
+	// Build and register components, then apply parameter updates
+	fSqm->UpdateForNewRunOrQtChange();
+	for (size_t i=0;i<newComponents.size();++i) {
+		TsVGeometryComponent* comp = fGm->GetComponent(newComponents[i]);
+		if (comp)
+			comp->ForceRebuild();
+	}
+	for (size_t i=0;i<allNewParams.size();++i)
+		fSqm->UpdateForSpecificParameterChange(allNewParams[i]);
+	fSqm->UpdateForNewRunOrQtChange();
+	fCurrentComponentName = prefix + rootName;
 	UpdateParameterEditor();
 }
 
 
 void TsQt::DuplicateScorerCallback() {
-	if (fSqm->GetRunID() != -1) {
-		QMessageBox::warning(fParameterEditorWidget, "Duplicate Scorer", "Scorers may only be duplicated before the first run.");
-		return;
-	}
-
-	std::vector<G4String> scorerNames = fScm->GetScoringHub()->GetScorerNames();
-	if (scorerNames.empty())
-		return;
-
-	bool ok = false;
-	QStringList nameList;
-	for (size_t i=0;i<scorerNames.size();++i) nameList << QString(scorerNames[i]);
-	QString selected = QInputDialog::getItem(fParameterEditorWidget, "Duplicate Scorer", "Select scorer to duplicate:", nameList, 0, false, &ok);
-	if (!ok || selected.isEmpty())
-		return;
-	DoDuplicateScorer(selected.toStdString());
-}
-
-void TsQt::DoDuplicateScorer(const G4String& oldName) {
-	std::vector<G4String> scorerNames = fScm->GetScoringHub()->GetScorerNames();
-	bool ok = false;
-	QString newName = QInputDialog::getText(fParameterEditorWidget, "New Scorer Name", "Enter name for duplicate:", QLineEdit::Normal, QString(oldName.c_str()) + "_copy", &ok);
-	if (!ok || newName.isEmpty())
-		return;
-	if (NameExistsInList(scorerNames, newName.toStdString())) {
-		QMessageBox::warning(fParameterEditorWidget, "Duplicate Scorer", "A scorer with that name already exists.");
-		return;
-	}
-
-	G4String newNameStr = newName.toStdString();
-	G4String qty = fPm->GetStringParameter("Sc/" + oldName + "/Quantity");
-	G4String comp = fPm->GetStringParameter("Sc/" + oldName + "/Component");
-	if (comp == "")
-		comp = fPm->GetStringParameter("Sc/" + oldName + "/Surface");
-	fScm->GetScoringHub()->AddScorerFromGUI(newNameStr, comp, qty);
-	DuplicateParameters("Sc", oldName, newNameStr);
-	UpdateParameterEditor();
+	QMessageBox::information(fParameterEditorWidget, "Duplicate Scorer", "Scorer duplication is not available because key scorer parameters are read-only.");
 }
 
 void TsQt::DuplicateSourceCallback() {
@@ -917,7 +1181,12 @@ void TsQt::DoDuplicateSource(const G4String& oldName) {
 	G4String type = fPm->GetStringParameter("So/" + oldName + "/Type");
 	G4String comp = fPm->GetStringParameter("So/" + oldName + "/Component");
 	fSom->AddSourceFromGUI(newNameStr, comp, type);
-	DuplicateParameters("So", oldName, newNameStr);
+	std::vector<G4String> newParams;
+	DuplicateParameters("So", oldName, newNameStr, &newParams);
+	for (size_t i = 0; i < newParams.size(); ++i)
+		fSqm->UpdateForSpecificParameterChange(newParams[i]);
+	fSqm->UpdateForNewRunOrQtChange();
+	fCurrentSourceName = newNameStr;
 	UpdateParameterEditor();
 }
 
@@ -1031,6 +1300,23 @@ void TsQt::ParameterComboChanged() {
 
 
 void TsQt::SaveCallback() {
+	G4String suggestedFileName = "ChangedParameters_1.txt";
+	if (fPm->ParameterExists("Ts/ChangedParametersFile"))
+		suggestedFileName = fPm->GetStringParameter("Ts/ChangedParametersFile");
+
+	bool ok = false;
+	QString fileName = QInputDialog::getText(fParameterEditorWidget,
+											 "Save Parameters",
+											 "Enter file name for changed parameters:",
+											 QLineEdit::Normal,
+											 QString(suggestedFileName.c_str()),
+											 &ok).trimmed();
+
+	if (!ok || fileName.isEmpty())
+		return;
+
+	G4String filespec = fileName.toStdString();
+
 	G4VViewer* viewer = fGrm->GetCurrentViewer();
 	G4String viewName = fGrm->GetCurrentViewName();
 	if (viewName == "")
@@ -1044,7 +1330,7 @@ void TsQt::SaveCallback() {
 	fPm->AddParameter("d:" + parameterStart + "TargetPointX", G4UIcommand::ConvertToString(viewer->GetViewParameters().GetCurrentTargetPoint().x() / mm) + " mm", false, true);
 	fPm->AddParameter("d:" + parameterStart + "TargetPointY", G4UIcommand::ConvertToString(viewer->GetViewParameters().GetCurrentTargetPoint().y() / mm) + " mm", false, true);
 	fPm->AddParameter("d:" + parameterStart + "TargetPointZ", G4UIcommand::ConvertToString(viewer->GetViewParameters().GetCurrentTargetPoint().z() / mm) + " mm", false, true);
-	fPm->DumpAddedParameters();
+	fPm->DumpAddedParameters(filespec);
 }
 
 
@@ -1067,6 +1353,7 @@ void TsQt::CreateAddComponentDialog() {
 	fAddComponentWidget = new QWidget();
 	QVBoxLayout* layoutWidget = new QVBoxLayout();
 	fAddComponentWidget->setLayout(layoutWidget);
+	for (int i=0;i<6;++i) fAddComponentTransformEdits[i]=nullptr;
 
 	// Component Name
 	QGroupBox* groupBox1 = new QGroupBox();
@@ -1136,6 +1423,23 @@ void TsQt::CreateAddComponentDialog() {
 	groupBox->setLayout(vbox);
 	fAddComponentWidget->layout()->addWidget(groupBox);
 
+	// Transform inputs (defaults shown; units included)
+	QGroupBox* groupBoxT = new QGroupBox();
+	groupBoxT->setTitle(QString("Optional Translation/Rotation"));
+	QGridLayout* grid = new QGridLayout();
+	QString labels[6] = {"Trans X", "Trans Y", "Trans Z", "Rot X", "Rot Y", "Rot Z"};
+	QString defaults[6] = {"0 mm","0 mm","0 mm","0 deg","0 deg","0 deg"};
+	for (int i=0;i<6;++i) {
+		QLabel* lbl = new QLabel(labels[i]);
+		fAddComponentTransformEdits[i] = new QLineEdit(defaults[i]);
+		int row = (i<3) ? i : i-3;
+		int col = (i<3) ? 0 : 2;
+		grid->addWidget(lbl, row, col);
+		grid->addWidget(fAddComponentTransformEdits[i], row, col+1);
+	}
+	groupBoxT->setLayout(grid);
+	fAddComponentWidget->layout()->addWidget(groupBoxT);
+
 	// Action
 	QPushButton* createButton = new QPushButton(QString("Create"));
 	connect(createButton, SIGNAL(clicked()), this, SLOT(AddComponentWidgetSetItemChanged()));
@@ -1175,6 +1479,20 @@ void TsQt::AddComponentWidgetSetItemChanged() {
 	G4String fieldName = fAddComponentFieldWidget->currentText().toStdString();
 
 	fGm->GetGeometryHub()->AddComponentFromGUI(fPm, fGm, fCurrentComponentName, parentName, typeName, fieldName);
+
+	// Apply optional transform overrides
+	const char* names[6] = {"TransX","TransY","TransZ","RotX","RotY","RotZ"};
+	const char* types[6] = {"dc","dc","dc","dc","dc","dc"};
+	for (int i=0;i<6;++i) {
+		if (!fAddComponentTransformEdits[i])
+			continue;
+		QString text = fAddComponentTransformEdits[i]->text().trimmed();
+		if (text.isEmpty())
+			continue;
+		G4String pname = G4String(types[i]) + ":Ge/" + fCurrentComponentName + "/" + names[i];
+		// Ensure units supplied; enforce categories via unit-specified strings (mm, deg)
+		fPm->AddParameter(pname, text.toStdString(), false, true);
+	}
 
 	fAddComponentWidget->blockSignals(false);
 	fSqm->UpdateForNewRunOrQtChange();

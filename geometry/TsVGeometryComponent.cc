@@ -1360,6 +1360,13 @@ void TsVGeometryComponent::MarkAsNeedToUpdatePlacement() {
 			(*ChildIter)->MarkAsNeedToUpdatePlacement();
 }
 
+void TsVGeometryComponent::ForceRebuild() {
+	fNeedToRebuild = true;
+	std::vector<TsVGeometryComponent*>::iterator ChildIter;
+	for (ChildIter=fChildren.begin(); ChildIter!=fChildren.end(); ChildIter++)
+		(*ChildIter)->ForceRebuild();
+}
+
 
 G4bool TsVGeometryComponent::HasParallelWorldDescendents() {
 	return fHasParallelWorldDescendents;

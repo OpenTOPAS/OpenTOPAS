@@ -215,7 +215,7 @@ public:
 	void DumpParameters(G4double currentTime, G4bool includeDefaults);
 	void DumpParametersToSimpleFile(G4double currentTime);
 	void DumpParametersToSemicolonSeparatedFile(G4double currentTime);
-	void DumpAddedParameters();
+	void DumpAddedParameters(const G4String& filespec = "");
 	void ListUnusedParameters();
 	G4bool NowDoingParameterDump();
 	void UnableToCalculateForDump();

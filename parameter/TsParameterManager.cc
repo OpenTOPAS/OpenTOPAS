@@ -1632,11 +1632,18 @@ void TsParameterManager::DumpParametersToSemicolonSeparatedFile(G4double current
 }
 
 
-void TsParameterManager::DumpAddedParameters() {
-	G4String filespec = "ChangedParameters_"
-						+ G4UIcommand::ConvertToString(fAddedParameterFileCounter++) + ".txt";
-	if (ParameterExists("Ts/ChangedParametersFile"))
-		filespec = GetStringParameter("Ts/ChangedParametersFile");
+void TsParameterManager::DumpAddedParameters(const G4String& filespecOverride) {
+	G4String filespec;
+
+	if (filespecOverride.empty()) {
+		filespec = "ChangedParameters_"
+				   + G4UIcommand::ConvertToString(fAddedParameterFileCounter++) + ".txt";
+		if (ParameterExists("Ts/ChangedParametersFile"))
+			filespec = GetStringParameter("Ts/ChangedParametersFile");
+	} else {
+		filespec = filespecOverride;
+		fAddedParameterFileCounter++;
+	}
 	std::ofstream outFile(filespec);
 	if (!outFile) {
 		G4cerr << "ERROR: Failed to open file " << filespec << G4endl;
@@ -1676,7 +1683,7 @@ void TsParameterManager::DumpAddedParameters() {
 
 	for (size_t i = 0; i < sortedParams.size(); ++i) {
 		const G4String& nameWithType = sortedParams[i].first;
-		const G4String& value = sortedParams[i].second;
+		//const G4String& value = sortedParams[i].second;
 
 		// Apply optional prefix filter
 		if (!filterPrefixes.empty()) {

@@ -46,6 +46,7 @@ class TsScoringManager;
 class TsSequenceManager;
 class TsGraphicsManager;
 class TsSourceManager;
+class TsVGeometryComponent;
 
 class G4UIQt;
 class QDialog;
@@ -90,15 +91,17 @@ public:
 	void PrintCallback();
 
 	void DuplicateGeometryCallback();
+	void DuplicateGeometryTreeCallback();
 	void DuplicateScorerCallback();
 	void DuplicateSourceCallback();
 	void ShowParameterContextMenu(const QPoint& pos);
 
 private:
-	void DuplicateParameters(const G4String& categoryCode, const G4String& oldName, const G4String& newName);
+	void DuplicateParameters(const G4String& categoryCode, const G4String& oldName, const G4String& newName, std::vector<G4String>* newParameterNames = nullptr);
 	G4bool NameExistsInList(const std::vector<G4String>& list, const G4String& name);
 	void DoDuplicateGeometry(const G4String& oldName);
-	void DoDuplicateScorer(const G4String& oldName);
+	void DoDuplicateGeometryTree(const G4String& rootName);
+	void CollectGeometryDescendants(const G4String& rootName, const std::map<G4String,G4String>& parentMap, std::vector<G4String>& ordered);
 	void DoDuplicateSource(const G4String& oldName);
 
 	TsParameterManager* fPm;
@@ -127,6 +130,7 @@ private:
 	QComboBox* fAddComponentParentWidget;
 	QComboBox* fAddComponentFieldWidget;
 	QComboBox* fAddComponentTableWidget;
+	QLineEdit* fAddComponentTransformEdits[6];
 	G4String fCurrentComponentName;
 	G4int fAddedComponentCounter;
 

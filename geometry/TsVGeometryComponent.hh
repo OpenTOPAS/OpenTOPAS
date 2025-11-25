@@ -286,6 +286,8 @@ public:
 	void MarkAsNeedToUpdatePlacement();
 	G4bool RebuildIfNeeded();
 	virtual void UpdateForNewRun(G4bool force);
+	// Force a rebuild of this component (and descendents) on next update.
+	void ForceRebuild();
 	void MarkAllVolumesForReoptimize();
 
 	TsVGeometryComponent* InstantiateChild(G4String childName);
