@@ -51,8 +51,8 @@ class G4UIQt;
 class QDialog;
 class QWidget;
 class QLineEdit;
-class QTableWidget;
-class QTableWidgetItem;
+class QTreeWidget;
+class QTreeWidgetItem;
 class QComboBox;
 class QGroupBox;
 class QVBoxLayout;
@@ -71,7 +71,7 @@ public:
 
 	public slots:
 	void UpdateParameterEditor();
-	void ParameterTableWidgetSetItemChanged(QTableWidgetItem * pItem);
+	void ParameterTableWidgetSetItemChanged(QTreeWidgetItem* item, int column);
 	void ParameterComboChanged();
 
 	void SaveCallback();
@@ -106,7 +106,7 @@ private:
 	QWidget* fParameterEditorWidget;
 	QGroupBox* fParameterTableGroupBox;
 	QVBoxLayout *fParameterTablevbox;
-	QTableWidget* fParameterTableWidget;
+	QTreeWidget* fParameterTableWidget;
 
 	QDialog* fAddComponentDialog;
 	QWidget* fAddComponentWidget;

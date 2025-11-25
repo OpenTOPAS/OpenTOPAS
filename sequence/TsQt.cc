@@ -49,6 +49,7 @@
 #include "G4SystemOfUnits.hh"
 
 #include <string.h>
+#include <string>
 #include <vector>
 
 #include "G4UIQt.hh"
@@ -62,10 +63,12 @@
 #include <qlineedit.h>
 #include <qcombobox.h>
 #include <qgroupbox.h>
-#include <qtablewidget.h>
+#include <qtreewidget.h>
 #include <qheaderview.h>
 #include <qapplication.h>
 #include <qlist.h>
+#include <qpushbutton.h>
+#include <map>
 
 TsQt::TsQt(TsParameterManager* pM, TsExtensionManager* eM, TsMaterialManager* mM, TsGeometryManager* gM, TsScoringManager* scM, TsSequenceManager* sqM,
 		   TsGraphicsManager* grM, TsSourceManager* soM) :
@@ -189,10 +192,23 @@ void TsQt::PrintCallback() {
 
 
 void TsQt::UpdateParameterEditor() {
-	if (fParameterTableWidget)
+	std::map<G4String, bool> previousCategoryExpansion;
+	std::map<G4String, bool> previousComponentExpansion;
+	if (fParameterTableWidget) {
+		for (int i = 0; i < fParameterTableWidget->topLevelItemCount(); ++i) {
+			QTreeWidgetItem* categoryItem = fParameterTableWidget->topLevelItem(i);
+			G4String catName = categoryItem->text(0).toStdString().c_str();
+			previousCategoryExpansion[catName] = categoryItem->isExpanded();
+			for (int j = 0; j < categoryItem->childCount(); ++j) {
+				QTreeWidgetItem* compItem = categoryItem->child(j);
+				G4String compKey = catName + "/" + compItem->text(0).toStdString().c_str();
+				previousComponentExpansion[compKey] = compItem->isExpanded();
+			}
+		}
 		delete fParameterTableWidget;
+	}
 	
-	fParameterTableWidget = new QTableWidget();
+	fParameterTableWidget = new QTreeWidget();
 	QSizePolicy vPolicy = fParameterTableWidget->sizePolicy();
 	vPolicy.setVerticalStretch(4);
 	
@@ -201,15 +217,14 @@ void TsQt::UpdateParameterEditor() {
 	fPm->GetChangeableParameters(parameterNames, parameterValues);
 
 	G4int nParameters = parameterNames->size();
-	
+
 	fParameterTableWidget->setColumnCount(2);
 	fParameterTableWidget->setColumnWidth(0,260);
 	fParameterTableWidget->setColumnWidth(1,110);
 	fParameterTableWidget->setMinimumWidth(380);
-	fParameterTableWidget->setRowCount(nParameters);
-	fParameterTableWidget->setHorizontalHeaderLabels(QStringList() << tr("Parameter") << tr("Value"));
-	fParameterTableWidget->verticalHeader()->setVisible(false);
-	fParameterTableWidget->setAlternatingRowColors (true);
+	fParameterTableWidget->setHeaderLabels(QStringList() << tr("Parameter") << tr("Value"));
+	fParameterTableWidget->setRootIsDecorated(true);
+	fParameterTableWidget->setAlternatingRowColors(true);
 
 	G4String searchName = "";
 	if (fCurrentComponentName != "")
@@ -220,35 +235,94 @@ void TsQt::UpdateParameterEditor() {
 		searchName = fCurrentSourceName;
 
     G4StrUtil::to_lower(searchName);
-	G4String foundParameterName;
-	G4int colonPos;
-	G4int slashPos;
-	G4String foundName;
 	G4bool findLineToSelect = true;
+
+	std::map<G4String, QTreeWidgetItem*> categoryItems;
+	std::map<G4String, QTreeWidgetItem*> componentItems;
+
+	auto getCategoryItem = [&](const G4String& categoryName) {
+		std::map<G4String, QTreeWidgetItem*>::iterator iter = categoryItems.find(categoryName);
+		if (iter != categoryItems.end())
+			return iter->second;
+
+		QTreeWidgetItem* catItem = new QTreeWidgetItem();
+		catItem->setText(0, QString(categoryName));
+		catItem->setFlags(catItem->flags() ^ Qt::ItemIsEditable);
+		bool expanded = false;
+		std::map<G4String, bool>::const_iterator expandIter = previousCategoryExpansion.find(categoryName);
+		if (expandIter != previousCategoryExpansion.end())
+			expanded = expandIter->second;
+		catItem->setExpanded(expanded);
+		categoryItems[categoryName] = catItem;
+		return catItem;
+	};
+
+	auto getGroupItem = [&](const G4String& categoryName, const G4String& groupName) {
+		G4String key = categoryName + "/" + groupName;
+		std::map<G4String, QTreeWidgetItem*>::iterator iter = componentItems.find(key);
+		if (iter != componentItems.end())
+			return iter->second;
+
+		QTreeWidgetItem* categoryItem = getCategoryItem(categoryName);
+		QTreeWidgetItem* groupItem = new QTreeWidgetItem(categoryItem);
+		groupItem->setText(0, QString(groupName));
+		groupItem->setFlags(groupItem->flags() ^ Qt::ItemIsEditable);
+		bool expanded = false;
+		std::map<G4String, bool>::const_iterator expandIter = previousComponentExpansion.find(key);
+		if (expandIter != previousComponentExpansion.end())
+			expanded = expandIter->second;
+			groupItem->setExpanded(expanded);
+		componentItems[key] = groupItem;
+		return groupItem;
+	};
 
 	for (G4int iParam = 0; iParam < nParameters; iParam++) {
 		G4String parameterName = (*parameterNames)[iParam];
 		G4String parameterNameLower = parameterName;
    		G4StrUtil::to_lower(parameterNameLower);
 
-		QTableWidgetItem *paramName = new QTableWidgetItem();
-		paramName->setText((QString(parameterName)));
-		paramName->setFlags(paramName->flags() ^ Qt::ItemIsEditable);
-		fParameterTableWidget->setItem(iParam, 0, paramName);
+		G4int colonPos = parameterName.find(":");
+		G4String categoryName = "Other";
+		G4String groupName = "General";
+		G4String displayName = fPm->GetPartAfterLastSlash(parameterName);
+		if (colonPos != G4int(std::string::npos)) {
+			G4String afterColon = parameterName.substr(colonPos + 1);
+			size_t firstSlash = afterColon.find("/");
+			if (firstSlash != std::string::npos) {
+				G4String prefix = afterColon.substr(0, firstSlash+1);
+				if (prefix == "Ge/")
+					categoryName = "Geometries";
+				else if (prefix == "Sc/")
+					categoryName = "Scorers";
+				else if (prefix == "So/")
+					categoryName = "Sources";
+				size_t secondSlash = afterColon.find("/", firstSlash + 1);
+				if (secondSlash != std::string::npos) {
+					groupName = afterColon.substr(firstSlash + 1, secondSlash - firstSlash - 1);
+				}
+			}
+		}
+
+		QTreeWidgetItem* groupItem = getGroupItem(categoryName, groupName);
+
+		QTreeWidgetItem* paramItem = new QTreeWidgetItem(groupItem);
+		paramItem->setText(0, QString(displayName));
+		paramItem->setToolTip(0, QString(parameterName));
+		paramItem->setData(0, Qt::UserRole, QString(parameterName));
+		paramItem->setFlags(paramItem->flags() | Qt::ItemIsEnabled | Qt::ItemIsSelectable);
+
 		G4String parameterValue = (*parameterValues)[iParam];
    		G4StrUtil::to_lower(parameterValue);
 		if (parameterValue.length() > 1)
 			parameterValue = parameterValue.substr(1,parameterValue.length()-2);
 
 		if (parameterName.substr(0,1) == "b") {
-			QTableWidgetItem *paramValue = new QTableWidgetItem();
-			paramValue->setText(QString(""));
-			paramValue->setFlags(paramValue->flags() | Qt::ItemIsUserCheckable);
+			paramItem->setFlags(paramItem->flags() | Qt::ItemIsUserCheckable);
 			if ((*parameterValues)[iParam] == "0")
-				paramValue->setCheckState(Qt::Unchecked);
+				paramItem->setCheckState(1, Qt::Unchecked);
 			else
-				paramValue->setCheckState(Qt::Checked);
-			fParameterTableWidget->setItem(iParam, 1, paramValue);
+				paramItem->setCheckState(1, Qt::Checked);
+			paramItem->setText(1, QString(""));
 		} else if (fPm->GetPartAfterLastSlash(parameterName) == "color") {
 			QComboBox* combo = new QComboBox();
 			combo->setProperty("name", QString(parameterName));
@@ -260,7 +334,7 @@ void TsQt::UpdateParameterEditor() {
 					combo->setCurrentIndex(distance(names.begin(),iter));
 			}
 			connect(combo, SIGNAL(currentIndexChanged(int)),this, SLOT(ParameterComboChanged()));
-			fParameterTableWidget->setCellWidget(iParam, 1, combo);
+			fParameterTableWidget->setItemWidget(paramItem, 1, combo);
 		} else if (fPm->GetPartAfterLastSlash(parameterName) == "material" ||
 				   fPm->GetPartAfterLastSlash(parameterName) == "activematerial") {
 			QComboBox* combo = new QComboBox();
@@ -275,7 +349,7 @@ void TsQt::UpdateParameterEditor() {
 					combo->setCurrentIndex(distance(names.begin(),iter));
 			}
 			connect(combo, SIGNAL(currentIndexChanged(int)),this, SLOT(ParameterComboChanged()));
-			fParameterTableWidget->setCellWidget(iParam, 1, combo);
+			fParameterTableWidget->setItemWidget(paramItem, 1, combo);
 		} else if (fPm->GetPartAfterLastSlash(parameterName) == "component") {
 			QComboBox* combo = new QComboBox();
 			combo->setProperty("name", QString(parameterName));
@@ -287,7 +361,7 @@ void TsQt::UpdateParameterEditor() {
 					combo->setCurrentIndex(distance(names.begin(),iter));
 			}
 			connect(combo, SIGNAL(currentIndexChanged(int)),this, SLOT(ParameterComboChanged()));
-			fParameterTableWidget->setCellWidget(iParam, 1, combo);
+			fParameterTableWidget->setItemWidget(paramItem, 1, combo);
 		} else if (fPm->GetPartAfterLastSlash(parameterName) == "drawingstyle") {
 			QComboBox* combo = new QComboBox();
 			combo->setProperty("name", QString(parameterName));
@@ -304,7 +378,7 @@ void TsQt::UpdateParameterEditor() {
 			else
 				combo->setCurrentIndex(2);
 			connect(combo, SIGNAL(currentIndexChanged(int)),this, SLOT(ParameterComboChanged()));
-			fParameterTableWidget->setCellWidget(iParam, 1, combo);
+			fParameterTableWidget->setItemWidget(paramItem, 1, combo);
 		} else if (fPm->GetPartAfterLastSlash(parameterName) == "beamangulardistribution") {
 			QComboBox* combo = new QComboBox();
 			combo->setProperty("name", QString(parameterName));
@@ -315,7 +389,7 @@ void TsQt::UpdateParameterEditor() {
 			else
 				combo->setCurrentIndex(1);
 			connect(combo, SIGNAL(currentIndexChanged(int)),this, SLOT(ParameterComboChanged()));
-			fParameterTableWidget->setCellWidget(iParam, 1, combo);
+			fParameterTableWidget->setItemWidget(paramItem, 1, combo);
 		} else if (fPm->GetPartAfterLastSlash(parameterName) == "beampositiondistribution") {
 			QComboBox* combo = new QComboBox();
 			combo->setProperty("name", QString(parameterName));
@@ -326,7 +400,7 @@ void TsQt::UpdateParameterEditor() {
 			else
 				combo->setCurrentIndex(1);
 			connect(combo, SIGNAL(currentIndexChanged(int)),this, SLOT(ParameterComboChanged()));
-			fParameterTableWidget->setCellWidget(iParam, 1, combo);
+			fParameterTableWidget->setItemWidget(paramItem, 1, combo);
 		} else if (fPm->GetPartAfterLastSlash(parameterName) == "beampositioncutoffshape") {
 			QComboBox* combo = new QComboBox();
 			combo->setProperty("name", QString(parameterName));
@@ -337,7 +411,7 @@ void TsQt::UpdateParameterEditor() {
 			else
 				combo->setCurrentIndex(1);
 			connect(combo, SIGNAL(currentIndexChanged(int)),this, SLOT(ParameterComboChanged()));
-			fParameterTableWidget->setCellWidget(iParam, 1, combo);
+			fParameterTableWidget->setItemWidget(paramItem, 1, combo);
 		} else if (fPm->GetPartAfterLastSlash(parameterName) == "beamparticle") {
 			QComboBox* combo = new QComboBox();
 			combo->setProperty("name", QString(parameterName));
@@ -360,7 +434,7 @@ void TsQt::UpdateParameterEditor() {
 			else if (parameterValue == "GenericIon(6,12)")
 				combo->setCurrentIndex(5);
 			connect(combo, SIGNAL(currentIndexChanged(int)),this, SLOT(ParameterComboChanged()));
-			fParameterTableWidget->setCellWidget(iParam, 1, combo);
+			fParameterTableWidget->setItemWidget(paramItem, 1, combo);
 		} else if (fPm->GetPartAfterLastSlash(parameterName) == "projection") {
 			QComboBox* combo = new QComboBox();
 			combo->setProperty("name", QString(parameterName));
@@ -371,7 +445,7 @@ void TsQt::UpdateParameterEditor() {
 			else
 				combo->setCurrentIndex(1);
 			connect(combo, SIGNAL(currentIndexChanged(int)),this, SLOT(ParameterComboChanged()));
-			fParameterTableWidget->setCellWidget(iParam, 1, combo);
+			fParameterTableWidget->setItemWidget(paramItem, 1, combo);
 		} else if (fPm->GetPartAfterLastSlash(parameterName) == "geometrymethod") {
 			QComboBox* combo = new QComboBox();
 			combo->setProperty("name", QString(parameterName));
@@ -385,26 +459,32 @@ void TsQt::UpdateParameterEditor() {
 			else
 				combo->setCurrentIndex(2);
 			connect(combo, SIGNAL(currentIndexChanged(int)),this, SLOT(ParameterComboChanged()));
-			fParameterTableWidget->setCellWidget(iParam, 1, combo);
+			fParameterTableWidget->setItemWidget(paramItem, 1, combo);
 		} else {
-			QTableWidgetItem *paramValue = new QTableWidgetItem();
-			paramValue->setText((QString((*parameterValues)[iParam])));
-			fParameterTableWidget->setItem(iParam, 1, paramValue);
+			paramItem->setText(1, QString((*parameterValues)[iParam]));
+			paramItem->setFlags(paramItem->flags() | Qt::ItemIsEditable);
 			if (parameterName.substr(0,6)=="sc:Ge/" && fPm->GetPartAfterLastSlash(parameterName)=="type")
-				paramValue->setFlags(paramValue->flags() ^ Qt::ItemIsEditable);
+				paramItem->setFlags(paramItem->flags() ^ Qt::ItemIsEditable);
 			if (parameterName.substr(0,6)=="sc:Ge/" && fPm->GetPartAfterLastSlash(parameterName)=="parent")
-				paramValue->setFlags(paramValue->flags() ^ Qt::ItemIsEditable);
+				paramItem->setFlags(paramItem->flags() ^ Qt::ItemIsEditable);
 			if (parameterName.substr(0,6)=="sc:So/" && fPm->GetPartAfterLastSlash(parameterName)=="type")
-				paramValue->setFlags(paramValue->flags() ^ Qt::ItemIsEditable);
+				paramItem->setFlags(paramItem->flags() ^ Qt::ItemIsEditable);
 		}
 
 		if (findLineToSelect && searchName!="") {
-			colonPos = foundParameterName.find( ":" );
-			slashPos = foundParameterName.find_last_of("/");
-			foundName = parameterNameLower.substr(colonPos+4,slashPos-colonPos-4);
-			if (foundName == searchName) {
-				fParameterTableWidget->setCurrentItem(paramName);
-				findLineToSelect = false;
+			size_t firstSlash = parameterNameLower.find("/", colonPos+1);
+			size_t secondSlash = parameterNameLower.find("/", firstSlash+1);
+			if (firstSlash != std::string::npos && secondSlash != std::string::npos) {
+				G4String foundName = parameterNameLower.substr(firstSlash+1, secondSlash-firstSlash-1);
+				if (foundName == searchName) {
+					fParameterTableWidget->setCurrentItem(paramItem);
+					if (groupItem) {
+						groupItem->setExpanded(true);
+						if (groupItem->parent())
+							groupItem->parent()->setExpanded(true);
+					}
+					findLineToSelect = false;
+				}
 			}
 		}
 	}
@@ -413,7 +493,23 @@ void TsQt::UpdateParameterEditor() {
 	fParameterTableGroupBox->setLayout(fParameterTablevbox);
 	
 	fParameterEditorWidget->layout()->addWidget(fParameterTableGroupBox);
-	connect(fParameterTableWidget, SIGNAL(itemChanged(QTableWidgetItem*)),this, SLOT(ParameterTableWidgetSetItemChanged(QTableWidgetItem *)));
+	connect(fParameterTableWidget, SIGNAL(itemChanged(QTreeWidgetItem*,int)),this, SLOT(ParameterTableWidgetSetItemChanged(QTreeWidgetItem*,int)));
+
+	// Enforce category ordering Geometries -> Scorers -> Sources -> Other
+	QStringList catOrder;
+	catOrder << "Geometries" << "Scorers" << "Sources" << "Other";
+	for (int i = 0; i < catOrder.size(); ++i) {
+		QTreeWidgetItem* catItem = categoryItems[catOrder[i].toStdString().c_str()];
+		if (catItem) {
+			fParameterTableWidget->addTopLevelItem(catItem);
+		}
+	}
+	// Add any remaining categories not in the fixed order
+	for (std::map<G4String, QTreeWidgetItem*>::const_iterator iter = categoryItems.begin(); iter != categoryItems.end(); ++iter) {
+		QString catName = QString(iter->first);
+		if (!catOrder.contains(catName))
+			fParameterTableWidget->addTopLevelItem(iter->second);
+	}
 
 	fCurrentComponentName = "";
 	fCurrentScorerName = "";
@@ -421,73 +517,84 @@ void TsQt::UpdateParameterEditor() {
 }
 
 
-void TsQt::ParameterTableWidgetSetItemChanged(QTableWidgetItem * item) {
-	QTableWidgetItem* previous = fParameterTableWidget->item(fParameterTableWidget->row(item),0);
-	if (previous) {
-		G4String paramName = (previous->text().toStdString()).c_str();
-		G4String paramValue = (item->text().toStdString()).c_str();
-		G4int colonPos = paramName.find( ":" );
+void TsQt::ParameterTableWidgetSetItemChanged(QTreeWidgetItem* item, int column) {
+	if (!item || column != 1)
+		return;
 
-		if (paramName.substr(0,1) == "b") {
-			if (item->checkState())
-				paramValue = "\"True\"";
-			else
-				paramValue = "\"False\"";
-        } else {
-			G4String lastPart = fPm->GetPartAfterLastSlash(paramName);
-			if (lastPart == "numberofhistoriesinrun") {
-				if (fPm->IsInteger(paramValue, 32)) {
-					if (G4UIcommand::ConvertToInt(paramValue) < 0) {
-						G4cerr << "Value must be a positive integer" << G4endl;
-						G4String restoreValue = fPm->GetParameterValueAsString(paramName.substr(0,colonPos-1), paramName.substr(colonPos+1));
-						fParameterTableWidget->item(fParameterTableWidget->row(item),1)->setText(QString(restoreValue));
-						return;
-					}
-				} else {
+	QVariant paramData = item->data(0, Qt::UserRole);
+	if (!paramData.isValid())
+		return;
+
+	G4String paramName = (paramData.toString().toStdString()).c_str();
+	G4String paramValue = (item->text(1).toStdString()).c_str();
+	G4int colonPos = paramName.find( ":" );
+
+	if (paramName.substr(0,1) == "b") {
+		if (item->checkState(1) == Qt::Checked)
+			paramValue = "\"True\"";
+		else
+			paramValue = "\"False\"";
+    } else {
+		G4String lastPart = fPm->GetPartAfterLastSlash(paramName);
+		if (lastPart == "numberofhistoriesinrun") {
+			if (fPm->IsInteger(paramValue, 32)) {
+				if (G4UIcommand::ConvertToInt(paramValue) < 0) {
 					G4cerr << "Value must be a positive integer" << G4endl;
 					G4String restoreValue = fPm->GetParameterValueAsString(paramName.substr(0,colonPos-1), paramName.substr(colonPos+1));
-					fParameterTableWidget->item(fParameterTableWidget->row(item),1)->setText(QString(restoreValue));
+					item->setText(1, QString(restoreValue));
 					return;
 				}
-			}
-
-			if (lastPart == "xbins" ||
-				lastPart == "ybins" ||
-				lastPart == "zbins" ||
-				lastPart == "rbins" ||
-				lastPart == "phibins" ||
-				lastPart == "thetabins") {
-				if (fPm->IsInteger(paramValue, 32)) {
-					if (G4UIcommand::ConvertToInt(paramValue) < 1) {
-						G4cerr << "Value must be an integer larger than 0" << G4endl;
-						G4String restoreValue = fPm->GetParameterValueAsString(paramName.substr(0,colonPos-1), paramName.substr(colonPos+1));
-						fParameterTableWidget->item(fParameterTableWidget->row(item),1)->setText(QString(restoreValue));
-						return;
-					}
-				} else {
-					G4cerr << "Value must be an integer larger than 0" << G4endl;
-					G4String restoreValue = fPm->GetParameterValueAsString(paramName.substr(0,colonPos-1), paramName.substr(colonPos+1));
-					fParameterTableWidget->item(fParameterTableWidget->row(item),1)->setText(QString(restoreValue));
-					return;
-				}
+			} else {
+				G4cerr << "Value must be a positive integer" << G4endl;
+				G4String restoreValue = fPm->GetParameterValueAsString(paramName.substr(0,colonPos-1), paramName.substr(colonPos+1));
+				item->setText(1, QString(restoreValue));
+				return;
 			}
 		}
 
-		// First call to AddParameter has the Test flag set true, so tests but
-		// does not actually add a parameter
-		fTestSucceeded = true;
-		fPm->AddParameter(paramName, paramValue, true);
-		if (fTestSucceeded) {
-			fParameterTableWidget->blockSignals(true);
-			fPm->AddParameter(paramName, paramValue);
-			fParameterTableWidget->blockSignals(false);
+		if (lastPart == "xbins" ||
+			lastPart == "ybins" ||
+			lastPart == "zbins" ||
+			lastPart == "rbins" ||
+			lastPart == "phibins" ||
+			lastPart == "thetabins") {
+			if (fPm->IsInteger(paramValue, 32)) {
+				if (G4UIcommand::ConvertToInt(paramValue) < 1) {
+					G4cerr << "Value must be an integer larger than 0" << G4endl;
+					G4String restoreValue = fPm->GetParameterValueAsString(paramName.substr(0,colonPos-1), paramName.substr(colonPos+1));
+					item->setText(1, QString(restoreValue));
+					return;
+				}
+			} else {
+				G4cerr << "Value must be an integer larger than 0" << G4endl;
+				G4String restoreValue = fPm->GetParameterValueAsString(paramName.substr(0,colonPos-1), paramName.substr(colonPos+1));
+				item->setText(1, QString(restoreValue));
+				return;
+			}
+		}
+	}
 
-   			G4StrUtil::to_lower(paramName);
-			fSqm->UpdateForSpecificParameterChange(paramName.substr(colonPos+1));
-			fSqm->UpdateForNewRunOrQtChange();
+	// First call to AddParameter has the Test flag set true, so tests but
+	// does not actually add a parameter
+	fTestSucceeded = true;
+	fPm->AddParameter(paramName, paramValue, true);
+	if (fTestSucceeded) {
+		fParameterTableWidget->blockSignals(true);
+		fPm->AddParameter(paramName, paramValue);
+		fParameterTableWidget->blockSignals(false);
+
+   		G4StrUtil::to_lower(paramName);
+		fSqm->UpdateForSpecificParameterChange(paramName.substr(colonPos+1));
+		fSqm->UpdateForNewRunOrQtChange();
+	} else {
+		G4String restoreValue = fPm->GetParameterValueAsString(paramName.substr(0,colonPos-1), paramName.substr(colonPos+1));
+		if (paramName.substr(0,1) == "b") {
+			if (restoreValue == "\"True\"")
+				item->setCheckState(1, Qt::Checked);
+			else
+				item->setCheckState(1, Qt::Unchecked);
 		} else {
-			G4String restoreValue = fPm->GetParameterValueAsString(paramName.substr(0,colonPos-1), paramName.substr(colonPos+1));
-			fParameterTableWidget->item(fParameterTableWidget->row(item),1)->setText(QString(restoreValue));
+			item->setText(1, QString(restoreValue));
 		}
 	}
 }
@@ -612,7 +719,9 @@ void TsQt::CreateAddComponentDialog() {
 	fAddComponentWidget->layout()->addWidget(groupBox);
 
 	// Action
-	connect(fAddComponentTableWidget, SIGNAL(activated(int)),this, SLOT(AddComponentWidgetSetItemChanged()));
+	QPushButton* createButton = new QPushButton(QString("Create"));
+	connect(createButton, SIGNAL(clicked()), this, SLOT(AddComponentWidgetSetItemChanged()));
+	vbox->addWidget(createButton);
 
 	// Layout details
 	QDialog* dial = static_cast<QDialog*> (fAddComponentWidget->parent());
@@ -717,7 +826,9 @@ void TsQt::CreateAddScorerDialog() {
 	fAddScorerWidget->layout()->addWidget(groupBox);
 
 	// Action
-	connect(fAddScorerQuantityWidget, SIGNAL(activated(int)),this, SLOT(AddScorerWidgetSetItemChanged()));
+	QPushButton* createButton = new QPushButton(QString("Create"));
+	connect(createButton, SIGNAL(clicked()), this, SLOT(AddScorerWidgetSetItemChanged()));
+	vbox->addWidget(createButton);
 
 	// Layout details
 	QDialog* dial = static_cast<QDialog*> (fAddScorerWidget->parent());
@@ -815,7 +926,9 @@ void TsQt::CreateAddSourceDialog() {
 
 	fAddSourceTypeWidget->addItem(QString("Beam"));
 	fAddSourceTypeWidget->addItem(QString("Isotropic"));
+	fAddSourceTypeWidget->addItem(QString("Volumetric"));
 	fAddSourceTypeWidget->addItem(QString("Emittance"));
+	fAddSourceTypeWidget->addItem(QString("Environment"));
 	fAddSourceTypeWidget->addItem(QString("PhaseSpace"));
 	fAddSourceTypeWidget->setCurrentIndex(0);
 
@@ -824,7 +937,9 @@ void TsQt::CreateAddSourceDialog() {
 	fAddSourceWidget->layout()->addWidget(groupBox);
 
 	// Action
-	connect(fAddSourceTypeWidget, SIGNAL(activated(int)),this, SLOT(AddSourceWidgetSetItemChanged()));
+	QPushButton* createButton = new QPushButton(QString("Create"));
+	connect(createButton, SIGNAL(clicked()), this, SLOT(AddSourceWidgetSetItemChanged()));
+	vbox->addWidget(createButton);
 
 	// Layout details
 	QDialog* dial = static_cast<QDialog*> (fAddSourceWidget->parent());
