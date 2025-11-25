@@ -49,6 +49,7 @@
 #include "G4SystemOfUnits.hh"
 
 #include <string.h>
+#include <string>
 #include <vector>
 
 #include "G4UIQt.hh"
@@ -62,10 +63,25 @@
 #include <qlineedit.h>
 #include <qcombobox.h>
 #include <qgroupbox.h>
-#include <qtablewidget.h>
+#include <qtreewidget.h>
 #include <qheaderview.h>
 #include <qapplication.h>
 #include <qlist.h>
+#include <qpushbutton.h>
+#include <qfont.h>
+#include <qmessagebox.h>
+#include <qlineedit.h>
+#include <qtoolbutton.h>
+#include <qscrollbar.h>
+#include <qcolor.h>
+#include <qbrush.h>
+#include <qtoolbutton.h>
+#include <qscrollbar.h>
+#include <qmenu.h>
+#include <qinputdialog.h>
+#include <map>
+#include <set>
+#include <qpixmap.h>
 
 TsQt::TsQt(TsParameterManager* pM, TsExtensionManager* eM, TsMaterialManager* mM, TsGeometryManager* gM, TsScoringManager* scM, TsSequenceManager* sqM,
 		   TsGraphicsManager* grM, TsSourceManager* soM) :
@@ -73,7 +89,8 @@ fPm(pM), fEm(eM), fMm(mM), fGm(gM), fScm(scM), fSqm(sqM), fGrm(grM), fSom(soM), 
 fParameterTableWidget(0),
 fAddComponentDialog(0), fCurrentComponentName(""), fAddedComponentCounter(0),
 fAddScorerDialog(0), fCurrentScorerName(""), fAddedScorerCounter(0),
-fAddSourceDialog(0), fCurrentSourceName(""), fAddedSourceCounter(0)
+fAddSourceDialog(0), fCurrentSourceName(""), fAddedSourceCounter(0),
+fShowReadOnlyNoteMessage(true)
 {
 	fParameterEditorWidget = new QWidget();
 	QVBoxLayout* layoutWidget = new QVBoxLayout();
@@ -85,8 +102,20 @@ fAddSourceDialog(0), fCurrentSourceName(""), fAddedSourceCounter(0)
 	fUIQt = static_cast<G4UIQt*> (G4UImanager::GetUIpointer()->GetG4UIWindow());
 	fUIQt->GetUserInterfaceWidget()->setWindowTitle("");
 
+	// Set window and tab icon
+	QPixmap logoPixmap("/Applications/TOPAS/OpenTOPAS/graphics/TOPASLogo.png");
+	if (!logoPixmap.isNull()) {
+		QSize targetSize(286,192);
+		QIcon logoIcon(logoPixmap.scaled(targetSize, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+		fUIQt->GetMainWindow()->setWindowIcon(logoIcon);
+		int tabIndex = fUIQt->GetUITabWidget()->addTab(fParameterEditorWidget,"Parameter Control");
+		fUIQt->GetUITabWidget()->setCurrentIndex(tabIndex);
+	} else {
+		fUIQt->GetUITabWidget()->addTab(fParameterEditorWidget,"Parameter Control");
+	}
+
 	// Add our own control widget
-	fUIQt->GetUITabWidget()->addTab(fParameterEditorWidget,"Parameter Control");
+	// Already added above
 
 	if (fPm->GetBooleanParameter("Ts/IncludeDefaultGeant4QtWidgets")) {
 		fUIQt->GetUITabWidget()->setCurrentIndex(3);
@@ -99,8 +128,12 @@ fAddSourceDialog(0), fCurrentSourceName(""), fAddedSourceCounter(0)
 		// Remove many of the detault Geant4 Qt menu bar actions
 		QList<QToolBar *> allToolBars = fUIQt->GetMainWindow()->findChildren<QToolBar *>();
 		G4int actionCounter = 0;
-		foreach (QAction *action, allToolBars[0]->actions()) {
-			if (actionCounter < 3 || actionCounter > 7)
+		QList<QAction*> actions = allToolBars[0]->actions();
+		G4int lastIndex = actions.size() - 1;
+		foreach (QAction *action, actions) {
+			// Keep first action (index 0), actions 3-7, and the last action
+			bool keep = (actionCounter >= 3 && actionCounter <= 7) || (actionCounter == lastIndex);
+			if (!keep)
 				allToolBars[0]->removeAction(action);
 			actionCounter++;
 		}
@@ -137,10 +170,17 @@ fAddSourceDialog(0), fCurrentSourceName(""), fAddedSourceCounter(0)
 	connect(sourceSignalMapper, SIGNAL(mapped(int)),this, SLOT(AddSourceCallback()));
 	int sourceIntVP = 0;
 	sourceSignalMapper->setMapping(sourceAction, sourceIntVP);
-	
+
 	QSignalMapper* runSignalMapper = new QSignalMapper(this);
 	toolbar->addSeparator();
-	QAction* runAction = toolbar->addAction(QString("Run"), runSignalMapper, SLOT(map()));
+	QIcon runIcon;
+	QPixmap runPixmap("/Applications/TOPAS/OpenTOPAS/graphics/TOPASLogo.png");
+	if (!runPixmap.isNull()) {
+		runIcon = QIcon(runPixmap.scaled(QSize(32,32), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+		toolbar->setIconSize(QSize(32,32));
+	}
+	QAction* runAction = runIcon.isNull() ? toolbar->addAction(QString("Run"), runSignalMapper, SLOT(map()))
+										   : toolbar->addAction(runIcon, QString(""), runSignalMapper, SLOT(map()));
 	connect(runSignalMapper, SIGNAL(mapped(int)),this, SLOT(RunCallback()));
 	int runIntVP = 0;
 	runSignalMapper->setMapping(runAction, runIntVP);
@@ -152,7 +192,38 @@ fAddSourceDialog(0), fCurrentSourceName(""), fAddedSourceCounter(0)
 	int printIntVP = 0;
 	printSignalMapper->setMapping(printAction, printIntVP);
 
+	toolbar->addSeparator();
+	QToolButton* expandCollapseButton = new QToolButton();
+	expandCollapseButton->setText("Collapse All");
+	expandCollapseButton->setCheckable(true);
+	connect(expandCollapseButton, &QToolButton::clicked, this, [=](bool checked){
+		if (checked) {
+			expandCollapseButton->setText("Expand All");
+			for (int i = 0; i < fParameterTableWidget->topLevelItemCount(); ++i)
+				fParameterTableWidget->collapseItem(fParameterTableWidget->topLevelItem(i));
+		} else {
+			expandCollapseButton->setText("Collapse All");
+			for (int i = 0; i < fParameterTableWidget->topLevelItemCount(); ++i)
+				fParameterTableWidget->expandItem(fParameterTableWidget->topLevelItem(i));
+		}
+	});
+	toolbar->addWidget(expandCollapseButton);
+
 	fParameterTablevbox->addWidget(toolbar);
+	// Filter bar
+	QHBoxLayout* filterLayout = new QHBoxLayout();
+	QLabel* filterLabel = new QLabel(QString("Filter:"));
+	fFilterLineEdit = new QLineEdit();
+	fFilterLineEdit->setPlaceholderText(QString("Type to filter parameters by name or value"));
+	QPushButton* clearFilterButton = new QPushButton(QString("Clear"));
+	filterLayout->addWidget(filterLabel);
+	filterLayout->addWidget(fFilterLineEdit);
+	filterLayout->addWidget(clearFilterButton);
+	QWidget* filterWidget = new QWidget();
+	filterWidget->setLayout(filterLayout);
+	fParameterTablevbox->addWidget(filterWidget);
+	connect(fFilterLineEdit, SIGNAL(textChanged(QString)), this, SLOT(UpdateParameterEditor()));
+	connect(clearFilterButton, SIGNAL(clicked()), fFilterLineEdit, SLOT(clear()));
 
 	fPm->SetInQtSession();
 
@@ -189,10 +260,27 @@ void TsQt::PrintCallback() {
 
 
 void TsQt::UpdateParameterEditor() {
-	if (fParameterTableWidget)
+	if (fParameterTableWidget) {
+		fSavedScrollPosition = fParameterTableWidget->verticalScrollBar()->value();
+	}
+
+	std::map<G4String, bool> previousCategoryExpansion;
+	std::map<G4String, bool> previousComponentExpansion;
+	if (fParameterTableWidget) {
+		for (int i = 0; i < fParameterTableWidget->topLevelItemCount(); ++i) {
+			QTreeWidgetItem* categoryItem = fParameterTableWidget->topLevelItem(i);
+			G4String catName = categoryItem->text(0).toStdString().c_str();
+			previousCategoryExpansion[catName] = categoryItem->isExpanded();
+			for (int j = 0; j < categoryItem->childCount(); ++j) {
+				QTreeWidgetItem* compItem = categoryItem->child(j);
+				G4String compKey = catName + "/" + compItem->text(0).toStdString().c_str();
+				previousComponentExpansion[compKey] = compItem->isExpanded();
+			}
+		}
 		delete fParameterTableWidget;
+	}
 	
-	fParameterTableWidget = new QTableWidget();
+	fParameterTableWidget = new QTreeWidget();
 	QSizePolicy vPolicy = fParameterTableWidget->sizePolicy();
 	vPolicy.setVerticalStretch(4);
 	
@@ -200,16 +288,21 @@ void TsQt::UpdateParameterEditor() {
 	std::vector<G4String>* parameterValues = new std::vector<G4String>;
 	fPm->GetChangeableParameters(parameterNames, parameterValues);
 
+	QString filterText = "";
+	if (fFilterLineEdit)
+		filterText = fFilterLineEdit->text().trimmed().toLower();
+
 	G4int nParameters = parameterNames->size();
-	
+
 	fParameterTableWidget->setColumnCount(2);
 	fParameterTableWidget->setColumnWidth(0,260);
 	fParameterTableWidget->setColumnWidth(1,110);
 	fParameterTableWidget->setMinimumWidth(380);
-	fParameterTableWidget->setRowCount(nParameters);
-	fParameterTableWidget->setHorizontalHeaderLabels(QStringList() << tr("Parameter") << tr("Value"));
-	fParameterTableWidget->verticalHeader()->setVisible(false);
-	fParameterTableWidget->setAlternatingRowColors (true);
+	fParameterTableWidget->setHeaderLabels(QStringList() << tr("Parameter") << tr("Value"));
+	fParameterTableWidget->setRootIsDecorated(true);
+	fParameterTableWidget->setAlternatingRowColors(true);
+	fParameterTableWidget->setContextMenuPolicy(Qt::CustomContextMenu);
+	connect(fParameterTableWidget, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(ShowParameterContextMenu(const QPoint&)));
 
 	G4String searchName = "";
 	if (fCurrentComponentName != "")
@@ -220,35 +313,105 @@ void TsQt::UpdateParameterEditor() {
 		searchName = fCurrentSourceName;
 
     G4StrUtil::to_lower(searchName);
-	G4String foundParameterName;
-	G4int colonPos;
-	G4int slashPos;
-	G4String foundName;
 	G4bool findLineToSelect = true;
+
+	std::map<G4String, QTreeWidgetItem*> categoryItems;
+	std::map<G4String, QTreeWidgetItem*> componentItems;
+	std::set<G4String> componentsWithParentRow;
+
+	auto getCategoryItem = [&](const G4String& categoryName) {
+		std::map<G4String, QTreeWidgetItem*>::iterator iter = categoryItems.find(categoryName);
+		if (iter != categoryItems.end())
+			return iter->second;
+
+		QTreeWidgetItem* catItem = new QTreeWidgetItem();
+		catItem->setText(0, QString(categoryName));
+		catItem->setFlags(catItem->flags() ^ Qt::ItemIsEditable);
+		bool expanded = false;
+		std::map<G4String, bool>::const_iterator expandIter = previousCategoryExpansion.find(categoryName);
+		if (expandIter != previousCategoryExpansion.end())
+			expanded = expandIter->second;
+		catItem->setExpanded(expanded);
+		categoryItems[categoryName] = catItem;
+		return catItem;
+	};
+
+	auto getGroupItem = [&](const G4String& categoryName, const G4String& groupName) {
+		G4String key = categoryName + "/" + groupName;
+		std::map<G4String, QTreeWidgetItem*>::iterator iter = componentItems.find(key);
+		if (iter != componentItems.end())
+			return iter->second;
+
+		QTreeWidgetItem* categoryItem = getCategoryItem(categoryName);
+		QTreeWidgetItem* groupItem = new QTreeWidgetItem(categoryItem);
+		groupItem->setText(0, QString(groupName));
+		groupItem->setFlags(groupItem->flags() ^ Qt::ItemIsEditable);
+		bool expanded = false;
+		std::map<G4String, bool>::const_iterator expandIter = previousComponentExpansion.find(key);
+		if (expandIter != previousComponentExpansion.end())
+			expanded = expandIter->second;
+			groupItem->setExpanded(expanded);
+		componentItems[key] = groupItem;
+		return groupItem;
+	};
 
 	for (G4int iParam = 0; iParam < nParameters; iParam++) {
 		G4String parameterName = (*parameterNames)[iParam];
 		G4String parameterNameLower = parameterName;
    		G4StrUtil::to_lower(parameterNameLower);
 
-		QTableWidgetItem *paramName = new QTableWidgetItem();
-		paramName->setText((QString(parameterName)));
-		paramName->setFlags(paramName->flags() ^ Qt::ItemIsEditable);
-		fParameterTableWidget->setItem(iParam, 0, paramName);
+		QString qNameLower = QString(parameterNameLower);
+		QString qValueLower = QString((*parameterValues)[iParam]).toLower();
+		if (!filterText.isEmpty()) {
+			if (!qNameLower.contains(filterText) && !qValueLower.contains(filterText))
+				continue;
+		}
+
+		G4int colonPos = parameterName.find(":");
+		G4String categoryName = "Other";
+		G4String groupName = "General";
+		G4String displayName = fPm->GetPartAfterLastSlash(parameterName);
+		G4String fullPathLower = parameterNameLower;
+		if (colonPos != G4int(std::string::npos)) {
+			G4String afterColon = parameterName.substr(colonPos + 1);
+			size_t firstSlash = afterColon.find("/");
+			if (firstSlash != std::string::npos) {
+				G4String prefix = afterColon.substr(0, firstSlash+1);
+				if (prefix == "Ge/")
+					categoryName = "Geometries";
+				else if (prefix == "Sc/")
+					categoryName = "Scorers";
+				else if (prefix == "So/")
+					categoryName = "Sources";
+				size_t secondSlash = afterColon.find("/", firstSlash + 1);
+				if (secondSlash != std::string::npos) {
+					groupName = afterColon.substr(firstSlash + 1, secondSlash - firstSlash - 1);
+					if (categoryName == "Geometries" && fPm->GetPartAfterLastSlash(parameterNameLower) == "parent")
+						componentsWithParentRow.insert(groupName);
+				}
+			}
+		}
+
+		QTreeWidgetItem* groupItem = getGroupItem(categoryName, groupName);
+
+		QTreeWidgetItem* paramItem = new QTreeWidgetItem(groupItem);
+		paramItem->setText(0, QString(displayName));
+		paramItem->setToolTip(0, QString(parameterName));
+		paramItem->setData(0, Qt::UserRole, QString(parameterName));
+		paramItem->setFlags(paramItem->flags() | Qt::ItemIsEnabled | Qt::ItemIsSelectable);
+
 		G4String parameterValue = (*parameterValues)[iParam];
    		G4StrUtil::to_lower(parameterValue);
 		if (parameterValue.length() > 1)
 			parameterValue = parameterValue.substr(1,parameterValue.length()-2);
 
 		if (parameterName.substr(0,1) == "b") {
-			QTableWidgetItem *paramValue = new QTableWidgetItem();
-			paramValue->setText(QString(""));
-			paramValue->setFlags(paramValue->flags() | Qt::ItemIsUserCheckable);
+			paramItem->setFlags(paramItem->flags() | Qt::ItemIsUserCheckable);
 			if ((*parameterValues)[iParam] == "0")
-				paramValue->setCheckState(Qt::Unchecked);
+				paramItem->setCheckState(1, Qt::Unchecked);
 			else
-				paramValue->setCheckState(Qt::Checked);
-			fParameterTableWidget->setItem(iParam, 1, paramValue);
+				paramItem->setCheckState(1, Qt::Checked);
+			paramItem->setText(1, QString(""));
 		} else if (fPm->GetPartAfterLastSlash(parameterName) == "color") {
 			QComboBox* combo = new QComboBox();
 			combo->setProperty("name", QString(parameterName));
@@ -260,7 +423,8 @@ void TsQt::UpdateParameterEditor() {
 					combo->setCurrentIndex(distance(names.begin(),iter));
 			}
 			connect(combo, SIGNAL(currentIndexChanged(int)),this, SLOT(ParameterComboChanged()));
-			fParameterTableWidget->setCellWidget(iParam, 1, combo);
+			fParameterTableWidget->setItemWidget(paramItem, 1, combo);
+			paramItem->setFlags(paramItem->flags() ^ Qt::ItemIsEditable);
 		} else if (fPm->GetPartAfterLastSlash(parameterName) == "material" ||
 				   fPm->GetPartAfterLastSlash(parameterName) == "activematerial") {
 			QComboBox* combo = new QComboBox();
@@ -275,7 +439,8 @@ void TsQt::UpdateParameterEditor() {
 					combo->setCurrentIndex(distance(names.begin(),iter));
 			}
 			connect(combo, SIGNAL(currentIndexChanged(int)),this, SLOT(ParameterComboChanged()));
-			fParameterTableWidget->setCellWidget(iParam, 1, combo);
+			fParameterTableWidget->setItemWidget(paramItem, 1, combo);
+			paramItem->setFlags(paramItem->flags() ^ Qt::ItemIsEditable);
 		} else if (fPm->GetPartAfterLastSlash(parameterName) == "component") {
 			QComboBox* combo = new QComboBox();
 			combo->setProperty("name", QString(parameterName));
@@ -287,7 +452,8 @@ void TsQt::UpdateParameterEditor() {
 					combo->setCurrentIndex(distance(names.begin(),iter));
 			}
 			connect(combo, SIGNAL(currentIndexChanged(int)),this, SLOT(ParameterComboChanged()));
-			fParameterTableWidget->setCellWidget(iParam, 1, combo);
+			fParameterTableWidget->setItemWidget(paramItem, 1, combo);
+			paramItem->setFlags(paramItem->flags() ^ Qt::ItemIsEditable);
 		} else if (fPm->GetPartAfterLastSlash(parameterName) == "drawingstyle") {
 			QComboBox* combo = new QComboBox();
 			combo->setProperty("name", QString(parameterName));
@@ -304,7 +470,8 @@ void TsQt::UpdateParameterEditor() {
 			else
 				combo->setCurrentIndex(2);
 			connect(combo, SIGNAL(currentIndexChanged(int)),this, SLOT(ParameterComboChanged()));
-			fParameterTableWidget->setCellWidget(iParam, 1, combo);
+			fParameterTableWidget->setItemWidget(paramItem, 1, combo);
+			paramItem->setFlags(paramItem->flags() ^ Qt::ItemIsEditable);
 		} else if (fPm->GetPartAfterLastSlash(parameterName) == "beamangulardistribution") {
 			QComboBox* combo = new QComboBox();
 			combo->setProperty("name", QString(parameterName));
@@ -315,7 +482,8 @@ void TsQt::UpdateParameterEditor() {
 			else
 				combo->setCurrentIndex(1);
 			connect(combo, SIGNAL(currentIndexChanged(int)),this, SLOT(ParameterComboChanged()));
-			fParameterTableWidget->setCellWidget(iParam, 1, combo);
+			fParameterTableWidget->setItemWidget(paramItem, 1, combo);
+			paramItem->setFlags(paramItem->flags() ^ Qt::ItemIsEditable);
 		} else if (fPm->GetPartAfterLastSlash(parameterName) == "beampositiondistribution") {
 			QComboBox* combo = new QComboBox();
 			combo->setProperty("name", QString(parameterName));
@@ -326,7 +494,8 @@ void TsQt::UpdateParameterEditor() {
 			else
 				combo->setCurrentIndex(1);
 			connect(combo, SIGNAL(currentIndexChanged(int)),this, SLOT(ParameterComboChanged()));
-			fParameterTableWidget->setCellWidget(iParam, 1, combo);
+			fParameterTableWidget->setItemWidget(paramItem, 1, combo);
+			paramItem->setFlags(paramItem->flags() ^ Qt::ItemIsEditable);
 		} else if (fPm->GetPartAfterLastSlash(parameterName) == "beampositioncutoffshape") {
 			QComboBox* combo = new QComboBox();
 			combo->setProperty("name", QString(parameterName));
@@ -337,7 +506,8 @@ void TsQt::UpdateParameterEditor() {
 			else
 				combo->setCurrentIndex(1);
 			connect(combo, SIGNAL(currentIndexChanged(int)),this, SLOT(ParameterComboChanged()));
-			fParameterTableWidget->setCellWidget(iParam, 1, combo);
+			fParameterTableWidget->setItemWidget(paramItem, 1, combo);
+			paramItem->setFlags(paramItem->flags() ^ Qt::ItemIsEditable);
 		} else if (fPm->GetPartAfterLastSlash(parameterName) == "beamparticle") {
 			QComboBox* combo = new QComboBox();
 			combo->setProperty("name", QString(parameterName));
@@ -360,7 +530,8 @@ void TsQt::UpdateParameterEditor() {
 			else if (parameterValue == "GenericIon(6,12)")
 				combo->setCurrentIndex(5);
 			connect(combo, SIGNAL(currentIndexChanged(int)),this, SLOT(ParameterComboChanged()));
-			fParameterTableWidget->setCellWidget(iParam, 1, combo);
+			fParameterTableWidget->setItemWidget(paramItem, 1, combo);
+			paramItem->setFlags(paramItem->flags() ^ Qt::ItemIsEditable);
 		} else if (fPm->GetPartAfterLastSlash(parameterName) == "projection") {
 			QComboBox* combo = new QComboBox();
 			combo->setProperty("name", QString(parameterName));
@@ -371,7 +542,8 @@ void TsQt::UpdateParameterEditor() {
 			else
 				combo->setCurrentIndex(1);
 			connect(combo, SIGNAL(currentIndexChanged(int)),this, SLOT(ParameterComboChanged()));
-			fParameterTableWidget->setCellWidget(iParam, 1, combo);
+			fParameterTableWidget->setItemWidget(paramItem, 1, combo);
+			paramItem->setFlags(paramItem->flags() ^ Qt::ItemIsEditable);
 		} else if (fPm->GetPartAfterLastSlash(parameterName) == "geometrymethod") {
 			QComboBox* combo = new QComboBox();
 			combo->setProperty("name", QString(parameterName));
@@ -385,26 +557,147 @@ void TsQt::UpdateParameterEditor() {
 			else
 				combo->setCurrentIndex(2);
 			connect(combo, SIGNAL(currentIndexChanged(int)),this, SLOT(ParameterComboChanged()));
-			fParameterTableWidget->setCellWidget(iParam, 1, combo);
+			fParameterTableWidget->setItemWidget(paramItem, 1, combo);
+			paramItem->setFlags(paramItem->flags() ^ Qt::ItemIsEditable);
 		} else {
-			QTableWidgetItem *paramValue = new QTableWidgetItem();
-			paramValue->setText((QString((*parameterValues)[iParam])));
-			fParameterTableWidget->setItem(iParam, 1, paramValue);
-			if (parameterName.substr(0,6)=="sc:Ge/" && fPm->GetPartAfterLastSlash(parameterName)=="type")
-				paramValue->setFlags(paramValue->flags() ^ Qt::ItemIsEditable);
-			if (parameterName.substr(0,6)=="sc:Ge/" && fPm->GetPartAfterLastSlash(parameterName)=="parent")
-				paramValue->setFlags(paramValue->flags() ^ Qt::ItemIsEditable);
-			if (parameterName.substr(0,6)=="sc:So/" && fPm->GetPartAfterLastSlash(parameterName)=="type")
-				paramValue->setFlags(paramValue->flags() ^ Qt::ItemIsEditable);
+			paramItem->setText(1, QString((*parameterValues)[iParam]));
+			paramItem->setFlags(paramItem->flags() | Qt::ItemIsEditable);
+			bool locked = false;
+			if ((parameterName.substr(0,4)=="s:Ge/" || parameterName.substr(0,6)=="sc:Ge/") && fPm->GetPartAfterLastSlash(parameterName)=="type") {
+				paramItem->setFlags(paramItem->flags() ^ Qt::ItemIsEditable);
+				locked = true;
+			}
+			if ((parameterName.substr(0,4)=="s:Ge/" || parameterName.substr(0,6)=="sc:Ge/") && fPm->GetPartAfterLastSlash(parameterName)=="parent") {
+				paramItem->setFlags(paramItem->flags() ^ Qt::ItemIsEditable);
+				locked = true;
+			}
+			if (parameterName.substr(0,6)=="sc:So/" && fPm->GetPartAfterLastSlash(parameterName)=="type") {
+				paramItem->setFlags(paramItem->flags() ^ Qt::ItemIsEditable);
+				locked = true;
+			}
+			G4String lastPartLower = fPm->GetPartAfterLastSlash(parameterNameLower);
+			if (lastPartLower == "numberofhistoriesinrun")
+				paramItem->setToolTip(1, QString("Must be a positive integer"));
+			else if (lastPartLower=="xbins" || lastPartLower=="ybins" || lastPartLower=="zbins" ||
+					 lastPartLower=="rbins" || lastPartLower=="phibins" || lastPartLower=="thetabins")
+				paramItem->setToolTip(1, QString("Must be an integer > 0"));
+			if (locked) {
+				QFont boldFont = paramItem->font(0);
+				boldFont.setBold(true);
+				paramItem->setFont(0, boldFont);
+				paramItem->setFont(1, boldFont);
+			}
+		}
+
+		// Bold all non-editable items (including combos above) except user-checkable rows
+		if (!(paramItem->flags() & Qt::ItemIsEditable) &&
+			!(paramItem->flags() & Qt::ItemIsUserCheckable)) {
+			QFont boldFont = paramItem->font(0);
+			boldFont.setBold(true);
+			paramItem->setFont(0, boldFont);
+			paramItem->setFont(1, boldFont);
 		}
 
 		if (findLineToSelect && searchName!="") {
-			colonPos = foundParameterName.find( ":" );
-			slashPos = foundParameterName.find_last_of("/");
-			foundName = parameterNameLower.substr(colonPos+4,slashPos-colonPos-4);
-			if (foundName == searchName) {
-				fParameterTableWidget->setCurrentItem(paramName);
-				findLineToSelect = false;
+			size_t firstSlash = parameterNameLower.find("/", colonPos+1);
+			size_t secondSlash = parameterNameLower.find("/", firstSlash+1);
+			if (firstSlash != std::string::npos && secondSlash != std::string::npos) {
+				G4String foundName = parameterNameLower.substr(firstSlash+1, secondSlash-firstSlash-1);
+				if (foundName == searchName) {
+					fParameterTableWidget->setCurrentItem(paramItem);
+					if (groupItem) {
+						groupItem->setExpanded(true);
+						if (groupItem->parent())
+							groupItem->parent()->setExpanded(true);
+					}
+					findLineToSelect = false;
+				}
+			}
+		}
+	}
+
+	// Ensure geometry parent is displayed even if not changeable/editable
+	for (std::map<G4String, QTreeWidgetItem*>::const_iterator iter = componentItems.begin(); iter != componentItems.end(); ++iter) {
+		G4String key = iter->first;
+		G4String prefix = "Geometries/";
+		if (key.substr(0, prefix.length()) != prefix)
+			continue;
+		G4String compName = key.substr(prefix.length());
+		if (componentsWithParentRow.find(compName) != componentsWithParentRow.end())
+			continue;
+		G4String parentParam = "Ge/" + compName + "/Parent";
+		if (fPm->ParameterExists(parentParam)) {
+			G4String parentValue = fPm->GetStringParameter(parentParam);
+			QTreeWidgetItem* parentItem = new QTreeWidgetItem(iter->second);
+			parentItem->setText(0, QString("parent"));
+			parentItem->setText(1, QString("\"") + QString(parentValue) + QString("\""));
+			parentItem->setData(0, Qt::UserRole, QString("s:Ge/") + QString(compName) + QString("/Parent"));
+			parentItem->setFlags((parentItem->flags() | Qt::ItemIsEnabled | Qt::ItemIsSelectable) ^ Qt::ItemIsEditable);
+			QFont boldFont = parentItem->font(0);
+			boldFont.setBold(true);
+			parentItem->setFont(0, boldFont);
+			parentItem->setFont(1, boldFont);
+		}
+	}
+
+	// Add read-only Quantity and Component for Scorers if missing; add read-only Type for Sources if missing
+	for (std::map<G4String, QTreeWidgetItem*>::const_iterator iter = componentItems.begin(); iter != componentItems.end(); ++iter) {
+		G4String key = iter->first;
+		G4String prefixSc = "Scorers/";
+		G4String prefixSo = "Sources/";
+
+		if (key.substr(0, prefixSc.length()) == prefixSc) {
+			G4String scName = key.substr(prefixSc.length());
+
+			G4String qtyParam = "Sc/" + scName + "/Quantity";
+			if (fPm->ParameterExists(qtyParam)) {
+				QTreeWidgetItem* qtyItem = new QTreeWidgetItem(iter->second);
+				qtyItem->setText(0, QString("quantity"));
+				qtyItem->setText(1, QString("\"") + QString(fPm->GetStringParameter(qtyParam)) + QString("\""));
+				qtyItem->setData(0, Qt::UserRole, QString("s:") + QString(qtyParam));
+				qtyItem->setFlags((qtyItem->flags() | Qt::ItemIsEnabled | Qt::ItemIsSelectable) ^ Qt::ItemIsEditable);
+				QFont boldFont = qtyItem->font(0);
+				boldFont.setBold(true);
+				qtyItem->setFont(0, boldFont);
+				qtyItem->setFont(1, boldFont);
+			}
+
+			G4String compParam = "Sc/" + scName + "/Component";
+			G4String surfParam = "Sc/" + scName + "/Surface";
+			if (fPm->ParameterExists(compParam)) {
+				QTreeWidgetItem* compItem = new QTreeWidgetItem(iter->second);
+				compItem->setText(0, QString("component"));
+				compItem->setText(1, QString("\"") + QString(fPm->GetStringParameter(compParam)) + QString("\""));
+				compItem->setData(0, Qt::UserRole, QString("s:") + QString(compParam));
+				compItem->setFlags((compItem->flags() | Qt::ItemIsEnabled | Qt::ItemIsSelectable) ^ Qt::ItemIsEditable);
+				QFont boldFont = compItem->font(0);
+				boldFont.setBold(true);
+				compItem->setFont(0, boldFont);
+				compItem->setFont(1, boldFont);
+			} else if (fPm->ParameterExists(surfParam)) {
+				QTreeWidgetItem* compItem = new QTreeWidgetItem(iter->second);
+				compItem->setText(0, QString("surface"));
+				compItem->setText(1, QString("\"") + QString(fPm->GetStringParameter(surfParam)) + QString("\""));
+				compItem->setData(0, Qt::UserRole, QString("s:") + QString(surfParam));
+				compItem->setFlags((compItem->flags() | Qt::ItemIsEnabled | Qt::ItemIsSelectable) ^ Qt::ItemIsEditable);
+				QFont boldFont = compItem->font(0);
+				boldFont.setBold(true);
+				compItem->setFont(0, boldFont);
+				compItem->setFont(1, boldFont);
+			}
+		} else if (key.substr(0, prefixSo.length()) == prefixSo) {
+			G4String soName = key.substr(prefixSo.length());
+			G4String typeParam = "So/" + soName + "/Type";
+			if (fPm->ParameterExists(typeParam)) {
+				QTreeWidgetItem* typeItem = new QTreeWidgetItem(iter->second);
+				typeItem->setText(0, QString("type"));
+				typeItem->setText(1, QString("\"") + QString(fPm->GetStringParameter(typeParam)) + QString("\""));
+				typeItem->setData(0, Qt::UserRole, QString("s:") + QString(typeParam));
+				typeItem->setFlags((typeItem->flags() | Qt::ItemIsEnabled | Qt::ItemIsSelectable) ^ Qt::ItemIsEditable);
+				QFont boldFont = typeItem->font(0);
+				boldFont.setBold(true);
+				typeItem->setFont(0, boldFont);
+				typeItem->setFont(1, boldFont);
 			}
 		}
 	}
@@ -413,81 +706,308 @@ void TsQt::UpdateParameterEditor() {
 	fParameterTableGroupBox->setLayout(fParameterTablevbox);
 	
 	fParameterEditorWidget->layout()->addWidget(fParameterTableGroupBox);
-	connect(fParameterTableWidget, SIGNAL(itemChanged(QTableWidgetItem*)),this, SLOT(ParameterTableWidgetSetItemChanged(QTableWidgetItem *)));
+	connect(fParameterTableWidget, SIGNAL(itemChanged(QTreeWidgetItem*,int)),this, SLOT(ParameterTableWidgetSetItemChanged(QTreeWidgetItem*,int)));
 
-	fCurrentComponentName = "";
-	fCurrentScorerName = "";
-	fCurrentSourceName = "";
+	// Enforce category ordering Geometries -> Scorers -> Sources -> Other
+	QStringList catOrder;
+	catOrder << "Geometries" << "Scorers" << "Sources" << "Other";
+	for (int i = 0; i < catOrder.size(); ++i) {
+		QTreeWidgetItem* catItem = categoryItems[catOrder[i].toStdString().c_str()];
+		if (catItem) {
+			fParameterTableWidget->addTopLevelItem(catItem);
+		}
+	}
+	// Add any remaining categories not in the fixed order
+	for (std::map<G4String, QTreeWidgetItem*>::const_iterator iter = categoryItems.begin(); iter != categoryItems.end(); ++iter) {
+		QString catName = QString(iter->first);
+		if (!catOrder.contains(catName))
+			fParameterTableWidget->addTopLevelItem(iter->second);
+	}
+
+fCurrentComponentName = "";
+fCurrentScorerName = "";
+fCurrentSourceName = "";
+
+	if (fParameterTableWidget)
+		fParameterTableWidget->verticalScrollBar()->setValue(fSavedScrollPosition);
 }
 
 
-void TsQt::ParameterTableWidgetSetItemChanged(QTableWidgetItem * item) {
-	QTableWidgetItem* previous = fParameterTableWidget->item(fParameterTableWidget->row(item),0);
-	if (previous) {
-		G4String paramName = (previous->text().toStdString()).c_str();
-		G4String paramValue = (item->text().toStdString()).c_str();
-		G4int colonPos = paramName.find( ":" );
+void TsQt::ShowParameterContextMenu(const QPoint& pos) {
+	QTreeWidgetItem* item = fParameterTableWidget->itemAt(pos);
+	if (!item)
+		return;
 
-		if (paramName.substr(0,1) == "b") {
-			if (item->checkState())
-				paramValue = "\"True\"";
-			else
-				paramValue = "\"False\"";
-        } else {
-			G4String lastPart = fPm->GetPartAfterLastSlash(paramName);
+	QTreeWidgetItem* compItem = item;
+	QTreeWidgetItem* catItem = item->parent();
+	if (!catItem)
+		return;
+	if (compItem->parent()) {
+		compItem = compItem->parent();
+		catItem = compItem->parent();
+	}
+	if (!catItem)
+		return;
+
+	G4String category = catItem->text(0).toStdString();
+	G4String compName = compItem->text(0).toStdString();
+
+	QMenu menu(fParameterEditorWidget);
+	if (category == "Geometries") {
+		menu.addAction("Duplicate Geometry", [=]() { DoDuplicateGeometry(compName); });
+	} else if (category == "Scorers") {
+		menu.addAction("Duplicate Scorer", [=]() { DoDuplicateScorer(compName); });
+	} else if (category == "Sources") {
+		menu.addAction("Duplicate Source", [=]() { DoDuplicateSource(compName); });
+	}
+	if (!menu.isEmpty())
+		menu.exec(fParameterTableWidget->viewport()->mapToGlobal(pos));
+}
+
+void TsQt::DuplicateParameters(const G4String& categoryCode, const G4String& oldName, const G4String& newName) {
+	std::vector<G4String>* parameterNames = new std::vector<G4String>;
+	std::vector<G4String>* parameterValues = new std::vector<G4String>;
+	fPm->GetChangeableParameters(parameterNames, parameterValues);
+
+	G4String needle = "/" + oldName + "/";
+	for (size_t i = 0; i < parameterNames->size(); ++i) {
+		G4String pname = (*parameterNames)[i];
+		size_t colonPos = pname.find(":");
+		size_t firstSlash = pname.find("/", colonPos+1);
+		if (firstSlash == std::string::npos)
+			continue;
+		G4String prefix = pname.substr(colonPos+1, firstSlash-colonPos-1);
+		if (prefix != categoryCode)
+			continue;
+		size_t pos = pname.find(needle);
+		if (pos == std::string::npos)
+			continue;
+		G4String newPname = pname;
+		newPname.replace(pos+1, oldName.length(), newName);
+		G4String newVal = (*parameterValues)[i];
+		// Normalize any boolean (type starts with 'b') to "True"/"False"
+		if (!newPname.empty() && newPname[0] == 'b') {
+			if (newVal == "0")
+				newVal = "\"False\"";
+			else if (newVal == "1")
+				newVal = "\"True\"";
+		}
+		fPm->AddParameter(newPname, newVal);
+	}
+	delete parameterNames;
+	delete parameterValues;
+}
+
+
+G4bool TsQt::NameExistsInList(const std::vector<G4String>& list, const G4String& name) {
+	for (size_t i=0; i<list.size(); ++i)
+		if (list[i] == name)
+			return true;
+	return false;
+}
+
+
+void TsQt::DuplicateGeometryCallback() {
+	std::vector<G4String> componentNames = fGm->GetComponentNames();
+	if (componentNames.empty())
+		return;
+
+	bool ok = false;
+	QStringList nameList;
+	for (size_t i=0;i<componentNames.size();++i) nameList << QString(componentNames[i]);
+	QString selected = QInputDialog::getItem(fParameterEditorWidget, "Duplicate Geometry", "Select geometry to duplicate:", nameList, 0, false, &ok);
+	if (!ok || selected.isEmpty())
+		return;
+	DoDuplicateGeometry(selected.toStdString());
+}
+
+
+void TsQt::DoDuplicateGeometry(const G4String& oldName) {
+	std::vector<G4String> componentNames = fGm->GetComponentNames();
+	bool ok = false;
+	QString newName = QInputDialog::getText(fParameterEditorWidget, "New Geometry Name", "Enter name for duplicate:", QLineEdit::Normal, QString(oldName.c_str()) + "_copy", &ok);
+	if (!ok || newName.isEmpty())
+		return;
+	if (NameExistsInList(componentNames, newName.toStdString())) {
+		QMessageBox::warning(fParameterEditorWidget, "Duplicate Geometry", "A geometry with that name already exists.");
+		return;
+	}
+
+	G4String newNameStr = newName.toStdString();
+	G4String typeName = fPm->GetStringParameter("Ge/" + oldName + "/Type");
+	G4String parentName = fPm->GetStringParameter("Ge/" + oldName + "/Parent");
+	G4String noField("no field");
+	fGm->GetGeometryHub()->AddComponentFromGUI(fPm, fGm, newNameStr, parentName, typeName, noField);
+	DuplicateParameters("Ge", oldName, newNameStr);
+	UpdateParameterEditor();
+}
+
+
+void TsQt::DuplicateScorerCallback() {
+	if (fSqm->GetRunID() != -1) {
+		QMessageBox::warning(fParameterEditorWidget, "Duplicate Scorer", "Scorers may only be duplicated before the first run.");
+		return;
+	}
+
+	std::vector<G4String> scorerNames = fScm->GetScoringHub()->GetScorerNames();
+	if (scorerNames.empty())
+		return;
+
+	bool ok = false;
+	QStringList nameList;
+	for (size_t i=0;i<scorerNames.size();++i) nameList << QString(scorerNames[i]);
+	QString selected = QInputDialog::getItem(fParameterEditorWidget, "Duplicate Scorer", "Select scorer to duplicate:", nameList, 0, false, &ok);
+	if (!ok || selected.isEmpty())
+		return;
+	DoDuplicateScorer(selected.toStdString());
+}
+
+void TsQt::DoDuplicateScorer(const G4String& oldName) {
+	std::vector<G4String> scorerNames = fScm->GetScoringHub()->GetScorerNames();
+	bool ok = false;
+	QString newName = QInputDialog::getText(fParameterEditorWidget, "New Scorer Name", "Enter name for duplicate:", QLineEdit::Normal, QString(oldName.c_str()) + "_copy", &ok);
+	if (!ok || newName.isEmpty())
+		return;
+	if (NameExistsInList(scorerNames, newName.toStdString())) {
+		QMessageBox::warning(fParameterEditorWidget, "Duplicate Scorer", "A scorer with that name already exists.");
+		return;
+	}
+
+	G4String newNameStr = newName.toStdString();
+	G4String qty = fPm->GetStringParameter("Sc/" + oldName + "/Quantity");
+	G4String comp = fPm->GetStringParameter("Sc/" + oldName + "/Component");
+	if (comp == "")
+		comp = fPm->GetStringParameter("Sc/" + oldName + "/Surface");
+	fScm->GetScoringHub()->AddScorerFromGUI(newNameStr, comp, qty);
+	DuplicateParameters("Sc", oldName, newNameStr);
+	UpdateParameterEditor();
+}
+
+void TsQt::DuplicateSourceCallback() {
+	if (fSqm->GetRunID() != -1) {
+		QMessageBox::warning(fParameterEditorWidget, "Duplicate Source", "Sources may only be duplicated before the first run.");
+		return;
+	}
+
+	std::vector<G4String> sourceNames = fSom->GetSourceNames();
+	if (sourceNames.empty())
+		return;
+
+	bool ok = false;
+	QStringList nameList;
+	for (size_t i=0;i<sourceNames.size();++i) nameList << QString(sourceNames[i]);
+	QString selected = QInputDialog::getItem(fParameterEditorWidget, "Duplicate Source", "Select source to duplicate:", nameList, 0, false, &ok);
+	if (!ok || selected.isEmpty())
+		return;
+	DoDuplicateSource(selected.toStdString());
+}
+
+void TsQt::DoDuplicateSource(const G4String& oldName) {
+	std::vector<G4String> sourceNames = fSom->GetSourceNames();
+	bool ok = false;
+	QString newName = QInputDialog::getText(fParameterEditorWidget, "New Source Name", "Enter name for duplicate:", QLineEdit::Normal, QString(oldName.c_str()) + "_copy", &ok);
+	if (!ok || newName.isEmpty())
+		return;
+	if (NameExistsInList(sourceNames, newName.toStdString())) {
+		QMessageBox::warning(fParameterEditorWidget, "Duplicate Source", "A source with that name already exists.");
+		return;
+	}
+
+	G4String newNameStr = newName.toStdString();
+	G4String type = fPm->GetStringParameter("So/" + oldName + "/Type");
+	G4String comp = fPm->GetStringParameter("So/" + oldName + "/Component");
+	fSom->AddSourceFromGUI(newNameStr, comp, type);
+	DuplicateParameters("So", oldName, newNameStr);
+	UpdateParameterEditor();
+}
+
+
+void TsQt::ParameterTableWidgetSetItemChanged(QTreeWidgetItem* item, int column) {
+	if (!item || column != 1)
+		return;
+
+	QVariant paramData = item->data(0, Qt::UserRole);
+	if (!paramData.isValid())
+		return;
+
+	G4String paramName = (paramData.toString().toStdString()).c_str();
+	G4String paramValue = (item->text(1).toStdString()).c_str();
+	G4int colonPos = paramName.find( ":" );
+
+	// Clear any previous inline error
+	item->setBackground(1, QBrush());
+	item->setToolTip(1, "");
+
+	if (paramName.substr(0,1) == "b") {
+		if (item->checkState(1) == Qt::Checked)
+			paramValue = "\"True\"";
+		else
+			paramValue = "\"False\"";
+    } else {
+		G4String lastPart = fPm->GetPartAfterLastSlash(paramName);
 			if (lastPart == "numberofhistoriesinrun") {
 				if (fPm->IsInteger(paramValue, 32)) {
 					if (G4UIcommand::ConvertToInt(paramValue) < 0) {
-						G4cerr << "Value must be a positive integer" << G4endl;
+						item->setBackground(1, QBrush(QColor(255,230,230)));
+						item->setToolTip(1, QString("Value must be a positive integer"));
 						G4String restoreValue = fPm->GetParameterValueAsString(paramName.substr(0,colonPos-1), paramName.substr(colonPos+1));
-						fParameterTableWidget->item(fParameterTableWidget->row(item),1)->setText(QString(restoreValue));
+						item->setText(1, QString(restoreValue));
 						return;
 					}
 				} else {
-					G4cerr << "Value must be a positive integer" << G4endl;
+					item->setBackground(1, QBrush(QColor(255,230,230)));
+					item->setToolTip(1, QString("Value must be a positive integer"));
 					G4String restoreValue = fPm->GetParameterValueAsString(paramName.substr(0,colonPos-1), paramName.substr(colonPos+1));
-					fParameterTableWidget->item(fParameterTableWidget->row(item),1)->setText(QString(restoreValue));
+					item->setText(1, QString(restoreValue));
 					return;
 				}
 			}
 
-			if (lastPart == "xbins" ||
-				lastPart == "ybins" ||
-				lastPart == "zbins" ||
-				lastPart == "rbins" ||
+		if (lastPart == "xbins" ||
+			lastPart == "ybins" ||
+			lastPart == "zbins" ||
+			lastPart == "rbins" ||
 				lastPart == "phibins" ||
 				lastPart == "thetabins") {
 				if (fPm->IsInteger(paramValue, 32)) {
 					if (G4UIcommand::ConvertToInt(paramValue) < 1) {
-						G4cerr << "Value must be an integer larger than 0" << G4endl;
+						item->setBackground(1, QBrush(QColor(255,230,230)));
+						item->setToolTip(1, QString("Value must be an integer larger than 0"));
 						G4String restoreValue = fPm->GetParameterValueAsString(paramName.substr(0,colonPos-1), paramName.substr(colonPos+1));
-						fParameterTableWidget->item(fParameterTableWidget->row(item),1)->setText(QString(restoreValue));
+						item->setText(1, QString(restoreValue));
 						return;
 					}
 				} else {
-					G4cerr << "Value must be an integer larger than 0" << G4endl;
+					item->setBackground(1, QBrush(QColor(255,230,230)));
+					item->setToolTip(1, QString("Value must be an integer larger than 0"));
 					G4String restoreValue = fPm->GetParameterValueAsString(paramName.substr(0,colonPos-1), paramName.substr(colonPos+1));
-					fParameterTableWidget->item(fParameterTableWidget->row(item),1)->setText(QString(restoreValue));
+					item->setText(1, QString(restoreValue));
 					return;
 				}
 			}
-		}
+	}
 
-		// First call to AddParameter has the Test flag set true, so tests but
-		// does not actually add a parameter
-		fTestSucceeded = true;
-		fPm->AddParameter(paramName, paramValue, true);
-		if (fTestSucceeded) {
-			fParameterTableWidget->blockSignals(true);
-			fPm->AddParameter(paramName, paramValue);
-			fParameterTableWidget->blockSignals(false);
+	// First call to AddParameter has the Test flag set true, so tests but
+	// does not actually add a parameter
+	fTestSucceeded = true;
+	fPm->AddParameter(paramName, paramValue, true);
+	if (fTestSucceeded) {
+		fParameterTableWidget->blockSignals(true);
+		fPm->AddParameter(paramName, paramValue);
+		fParameterTableWidget->blockSignals(false);
 
-   			G4StrUtil::to_lower(paramName);
-			fSqm->UpdateForSpecificParameterChange(paramName.substr(colonPos+1));
-			fSqm->UpdateForNewRunOrQtChange();
+   		G4StrUtil::to_lower(paramName);
+		fSqm->UpdateForSpecificParameterChange(paramName.substr(colonPos+1));
+		fSqm->UpdateForNewRunOrQtChange();
+	} else {
+		G4String restoreValue = fPm->GetParameterValueAsString(paramName.substr(0,colonPos-1), paramName.substr(colonPos+1));
+		if (paramName.substr(0,1) == "b") {
+			if (restoreValue == "\"True\"")
+				item->setCheckState(1, Qt::Checked);
+			else
+				item->setCheckState(1, Qt::Unchecked);
 		} else {
-			G4String restoreValue = fPm->GetParameterValueAsString(paramName.substr(0,colonPos-1), paramName.substr(colonPos+1));
-			fParameterTableWidget->item(fParameterTableWidget->row(item),1)->setText(QString(restoreValue));
+			item->setText(1, QString(restoreValue));
 		}
 	}
 }
@@ -512,7 +1032,12 @@ void TsQt::ParameterComboChanged() {
 
 void TsQt::SaveCallback() {
 	G4VViewer* viewer = fGrm->GetCurrentViewer();
-	G4String parameterStart = "Gr/" + viewer->GetName() + "/";
+	G4String viewName = fGrm->GetCurrentViewName();
+	if (viewName == "")
+		viewName = fGrm->GetAnyViewName();
+	if (viewName == "" && viewer)
+		viewName = viewer->GetName();
+	G4String parameterStart = "Gr/" + viewName + "/";
 	fPm->AddParameter("u:" + parameterStart + "Zoom", G4UIcommand::ConvertToString(viewer->GetViewParameters().GetZoomFactor()), false, true);
 	fPm->AddParameter("d:" + parameterStart + "Theta", G4UIcommand::ConvertToString(viewer->GetViewParameters().GetViewpointDirection().getTheta() / deg) + " deg", false, true);
 	fPm->AddParameter("d:" + parameterStart + "Phi", G4UIcommand::ConvertToString(viewer->GetViewParameters().GetViewpointDirection().getPhi() / deg) + " deg", false, true);
@@ -612,7 +1137,9 @@ void TsQt::CreateAddComponentDialog() {
 	fAddComponentWidget->layout()->addWidget(groupBox);
 
 	// Action
-	connect(fAddComponentTableWidget, SIGNAL(activated(int)),this, SLOT(AddComponentWidgetSetItemChanged()));
+	QPushButton* createButton = new QPushButton(QString("Create"));
+	connect(createButton, SIGNAL(clicked()), this, SLOT(AddComponentWidgetSetItemChanged()));
+	vbox->addWidget(createButton);
 
 	// Layout details
 	QDialog* dial = static_cast<QDialog*> (fAddComponentWidget->parent());
@@ -628,6 +1155,18 @@ void TsQt::AddComponentWidgetSetItemChanged() {
 	fAddComponentWidget->blockSignals(true);
 	fAddComponentDialog->hide();
 	fAddComponentWidget->hide();
+
+	if (fShowReadOnlyNoteMessage) {
+		QMessageBox msgBox;
+		msgBox.setWindowTitle(QString("Read-Only Parameters"));
+		msgBox.setText(QString("Note: Parameters in bold cannot be changed!"));
+		msgBox.addButton(QString("OK"), QMessageBox::AcceptRole);
+		QPushButton* dontShowButton = msgBox.addButton(QString("Don't show again"), QMessageBox::RejectRole);
+		msgBox.exec();
+		if (msgBox.clickedButton() == dontShowButton)
+			fShowReadOnlyNoteMessage = false;
+		// Proceed regardless of which was clicked.
+	}
 
 	fCurrentComponentName = fAddComponentNameWidget->text().toStdString();
 	fAddedComponentCounter++;
@@ -717,7 +1256,9 @@ void TsQt::CreateAddScorerDialog() {
 	fAddScorerWidget->layout()->addWidget(groupBox);
 
 	// Action
-	connect(fAddScorerQuantityWidget, SIGNAL(activated(int)),this, SLOT(AddScorerWidgetSetItemChanged()));
+	QPushButton* createButton = new QPushButton(QString("Create"));
+	connect(createButton, SIGNAL(clicked()), this, SLOT(AddScorerWidgetSetItemChanged()));
+	vbox->addWidget(createButton);
 
 	// Layout details
 	QDialog* dial = static_cast<QDialog*> (fAddScorerWidget->parent());
@@ -733,6 +1274,17 @@ void TsQt::AddScorerWidgetSetItemChanged() {
 	fAddScorerWidget->blockSignals(true);
 	fAddScorerDialog->hide();
 	fAddScorerWidget->hide();
+
+	if (fShowReadOnlyNoteMessage) {
+		QMessageBox msgBox;
+		msgBox.setWindowTitle(QString("Read-Only Parameters"));
+		msgBox.setText(QString("Note: Parameters in bold cannot be changed!"));
+		msgBox.addButton(QString("OK"), QMessageBox::AcceptRole);
+		QPushButton* dontShowButton = msgBox.addButton(QString("Don't show again"), QMessageBox::RejectRole);
+		msgBox.exec();
+		if (msgBox.clickedButton() == dontShowButton)
+			fShowReadOnlyNoteMessage = false;
+	}
 
 	fCurrentScorerName = fAddScorerNameWidget->text().toStdString();
 	fAddedScorerCounter++;
@@ -815,7 +1367,9 @@ void TsQt::CreateAddSourceDialog() {
 
 	fAddSourceTypeWidget->addItem(QString("Beam"));
 	fAddSourceTypeWidget->addItem(QString("Isotropic"));
+	fAddSourceTypeWidget->addItem(QString("Volumetric"));
 	fAddSourceTypeWidget->addItem(QString("Emittance"));
+	fAddSourceTypeWidget->addItem(QString("Environment"));
 	fAddSourceTypeWidget->addItem(QString("PhaseSpace"));
 	fAddSourceTypeWidget->setCurrentIndex(0);
 
@@ -824,7 +1378,9 @@ void TsQt::CreateAddSourceDialog() {
 	fAddSourceWidget->layout()->addWidget(groupBox);
 
 	// Action
-	connect(fAddSourceTypeWidget, SIGNAL(activated(int)),this, SLOT(AddSourceWidgetSetItemChanged()));
+	QPushButton* createButton = new QPushButton(QString("Create"));
+	connect(createButton, SIGNAL(clicked()), this, SLOT(AddSourceWidgetSetItemChanged()));
+	vbox->addWidget(createButton);
 
 	// Layout details
 	QDialog* dial = static_cast<QDialog*> (fAddSourceWidget->parent());
@@ -840,6 +1396,17 @@ void TsQt::AddSourceWidgetSetItemChanged() {
 	fAddSourceWidget->blockSignals(true);
 	fAddSourceDialog->hide();
 	fAddSourceWidget->hide();
+
+	if (fShowReadOnlyNoteMessage) {
+		QMessageBox msgBox;
+		msgBox.setWindowTitle(QString("Read-Only Parameters"));
+		msgBox.setText(QString("Note: Parameters in bold cannot be changed!"));
+		msgBox.addButton(QString("OK"), QMessageBox::AcceptRole);
+		QPushButton* dontShowButton = msgBox.addButton(QString("Don't show again"), QMessageBox::RejectRole);
+		msgBox.exec();
+		if (msgBox.clickedButton() == dontShowButton)
+			fShowReadOnlyNoteMessage = false;
+	}
 
 	fCurrentSourceName = fAddSourceNameWidget->text().toStdString();
 	fAddedSourceCounter++;

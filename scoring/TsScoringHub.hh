@@ -52,6 +52,7 @@ public:
 								 G4String outFileName, G4bool isSubScorer);
 
 	void AddScorerFromGUI(G4String& scorerName, G4String& componentName, G4String& quantityName);
+	std::vector<G4String> GetScorerNames();
 
 private:
 	TsParameterManager* fPm;

@@ -215,6 +215,17 @@ void TsSourceManager::Finalize()
 }
 
 
+std::vector<G4String> TsSourceManager::GetSourceNames() {
+	std::vector<G4String> names;
+	if (fSources) {
+		std::map<G4String, TsSource*>::const_iterator iter;
+		for (iter=fSources->begin(); iter!=fSources->end(); ++iter)
+			names.push_back(iter->first);
+	}
+	return names;
+}
+
+
 TsSource* TsSourceManager::GetSource(G4String sourceName) {
 	std::map<G4String, TsSource*>::const_iterator iter = fSources->find(sourceName);
 	if (iter != fSources->end())
@@ -264,7 +275,7 @@ void TsSourceManager::AddSourceFromGUI(G4String& sourceName, G4String& component
 	G4StrUtil::to_lower(typeNameLower);
 
 	if (typeNameLower == "beam" || typeNameLower == "isotropic" || typeNameLower == "volumetric" ||
-		typeNameLower == "emittance" || typeNameLower == "phasespace") {
+		typeNameLower == "emittance" || typeNameLower == "phasespace" || typeNameLower == "environment") {
 		parameterName = "s:So/" + sourceName + "/Type";
 		transValue = "\"" + typeName + "\"";
 		fPm->AddParameter(parameterName, transValue);
@@ -273,8 +284,7 @@ void TsSourceManager::AddSourceFromGUI(G4String& sourceName, G4String& component
 		transValue = "\"" + componentName + "\"";
 		fPm->AddParameter(parameterName, transValue);
 
-		if (typeNameLower == "beam" || typeNameLower == "isotropic" || typeNameLower == "volumetric" ||
-			typeNameLower == "emittance") {
+		if (typeNameLower == "beam") {
 			parameterName = "sc:So/" + sourceName + "/BeamParticle";
 			transValue = "\"proton\"";
 			fPm->AddParameter(parameterName, transValue);
@@ -295,79 +305,169 @@ void TsSourceManager::AddSourceFromGUI(G4String& sourceName, G4String& component
 			transValue = "10";
 			fPm->AddParameter(parameterName, transValue);
 
-			if (typeNameLower == "beam") {
-				parameterName = "sc:So/" + sourceName + "/BeamPositionDistribution";
-				transValue = "\"Gaussian\"";
-				fPm->AddParameter(parameterName, transValue);
+			parameterName = "sc:So/" + sourceName + "/BeamPositionDistribution";
+			transValue = "\"Gaussian\"";
+			fPm->AddParameter(parameterName, transValue);
 
-				parameterName = "sc:So/" + sourceName + "/BeamPositionCutoffShape";
-				transValue = "\"Ellipse\"";
-				fPm->AddParameter(parameterName, transValue);
+			parameterName = "sc:So/" + sourceName + "/BeamPositionCutoffShape";
+			transValue = "\"Ellipse\"";
+			fPm->AddParameter(parameterName, transValue);
 
-				parameterName = "dc:So/" + sourceName + "/BeamPositionCutoffX";
-				transValue = "10. cm";
-				fPm->AddParameter(parameterName, transValue);
+			parameterName = "dc:So/" + sourceName + "/BeamPositionCutoffX";
+			transValue = "10. cm";
+			fPm->AddParameter(parameterName, transValue);
 
-				parameterName = "dc:So/" + sourceName + "/BeamPositionCutoffY";
-				transValue = "10. cm";
-				fPm->AddParameter(parameterName, transValue);
+			parameterName = "dc:So/" + sourceName + "/BeamPositionCutoffY";
+			transValue = "10. cm";
+			fPm->AddParameter(parameterName, transValue);
 
-				parameterName = "dc:So/" + sourceName + "/BeamPositionSpreadX";
-				transValue = "0.65 cm";
-				fPm->AddParameter(parameterName, transValue);
+			parameterName = "dc:So/" + sourceName + "/BeamPositionSpreadX";
+			transValue = "0.65 cm";
+			fPm->AddParameter(parameterName, transValue);
 
-				parameterName = "dc:So/" + sourceName + "/BeamPositionSpreadY";
-				transValue = "0.65 cm";
-				fPm->AddParameter(parameterName, transValue);
+			parameterName = "dc:So/" + sourceName + "/BeamPositionSpreadY";
+			transValue = "0.65 cm";
+			fPm->AddParameter(parameterName, transValue);
 
-				parameterName = "sc:So/" + sourceName + "/BeamAngularDistribution";
-				transValue = "\"Gaussian\"";
-				fPm->AddParameter(parameterName, transValue);
+			parameterName = "sc:So/" + sourceName + "/BeamAngularDistribution";
+			transValue = "\"Gaussian\"";
+			fPm->AddParameter(parameterName, transValue);
 
-				parameterName = "dc:So/" + sourceName + "/BeamAngularCutoffX";
-				transValue = "90. deg";
-				fPm->AddParameter(parameterName, transValue);
+			parameterName = "dc:So/" + sourceName + "/BeamAngularCutoffX";
+			transValue = "90. deg";
+			fPm->AddParameter(parameterName, transValue);
 
-				parameterName = "dc:So/" + sourceName + "/BeamAngularCutoffY";
-				transValue = "90. deg";
-				fPm->AddParameter(parameterName, transValue);
+			parameterName = "dc:So/" + sourceName + "/BeamAngularCutoffY";
+			transValue = "90. deg";
+			fPm->AddParameter(parameterName, transValue);
 
-				parameterName = "dc:So/" + sourceName + "/BeamAngularSpreadX";
-				transValue = "0.0032 rad";
-				fPm->AddParameter(parameterName, transValue);
+			parameterName = "dc:So/" + sourceName + "/BeamAngularSpreadX";
+			transValue = "0.0032 rad";
+			fPm->AddParameter(parameterName, transValue);
 
-				parameterName = "dc:So/" + sourceName + "/BeamAngularSpreadY";
-				transValue = "0.0032 rad";
-				fPm->AddParameter(parameterName, transValue);
-			} else if (typeNameLower == "emittance") {
-				parameterName = "sc:So/" + sourceName + "/Distribution";
-				transValue = "\"BiGaussian\"";
-				fPm->AddParameter(parameterName, transValue);
+			parameterName = "dc:So/" + sourceName + "/BeamAngularSpreadY";
+			transValue = "0.0032 rad";
+			fPm->AddParameter(parameterName, transValue);
+		} else if (typeNameLower == "volumetric") {
+			parameterName = "sc:So/" + sourceName + "/VolumetricParticle";
+			transValue = "\"proton\"";
+			fPm->AddParameter(parameterName, transValue);
 
-				parameterName = "dc:So/" + sourceName + "/SigmaX";
-				transValue = "0.2 mm";
-				fPm->AddParameter(parameterName, transValue);
+			parameterName = "dc:So/" + sourceName + "/VolumetricEnergy";
+			transValue = "169.23 MeV";
+			fPm->AddParameter(parameterName, transValue);
 
-				parameterName = "uc:So/" + sourceName + "/SigmaXprime";
-				transValue = "0.032";
-				fPm->AddParameter(parameterName, transValue);
+			parameterName = "uc:So/" + sourceName + "/VolumetricEnergySpread";
+			transValue = "0.757504";
+			fPm->AddParameter(parameterName, transValue);
 
-				parameterName = "uc:So/" + sourceName + "/CorrelationX";
-				transValue = "-0.9411";
-				fPm->AddParameter(parameterName, transValue);
+			parameterName = "ic:So/" + sourceName + "/NumberOfHistoriesInRun";
+			transValue = "10";
+			fPm->AddParameter(parameterName, transValue);
 
-				parameterName = "dc:So/" + sourceName + "/SigmaY";
-				transValue = "0.2 mm";
-				fPm->AddParameter(parameterName, transValue);
+			parameterName = "ic:So/" + sourceName + "/NumberOfHistoriesInRandomJob";
+			transValue = "10";
+			fPm->AddParameter(parameterName, transValue);
 
-				parameterName = "uc:So/" + sourceName + "/SigmaYprime";
-				transValue = "0.032";
-				fPm->AddParameter(parameterName, transValue);
+			parameterName = "sc:So/" + sourceName + "/ActiveMaterial";
+			transValue = "\"G4_AIR\"";
+			fPm->AddParameter(parameterName, transValue);
 
-				parameterName = "uc:So/" + sourceName + "/CorrelationY";
-				transValue = "0.9411";
-				fPm->AddParameter(parameterName, transValue);
-			}
+			parameterName = "bc:So/" + sourceName + "/RecursivelyIncludeChildren";
+			transValue = "\"False\"";
+			fPm->AddParameter(parameterName, transValue);
+		} else if (typeNameLower == "emittance") {
+			parameterName = "sc:So/" + sourceName + "/EmittanceParticle";
+			transValue = "\"proton\"";
+			fPm->AddParameter(parameterName, transValue);
+
+			parameterName = "dc:So/" + sourceName + "/EmittanceEnergy";
+			transValue = "169.23 MeV";
+			fPm->AddParameter(parameterName, transValue);
+
+			parameterName = "uc:So/" + sourceName + "/EmittanceEnergySpread";
+			transValue = "0.757504";
+			fPm->AddParameter(parameterName, transValue);
+
+			parameterName = "ic:So/" + sourceName + "/NumberOfHistoriesInRun";
+			transValue = "10";
+			fPm->AddParameter(parameterName, transValue);
+
+			parameterName = "ic:So/" + sourceName + "/NumberOfHistoriesInRandomJob";
+			transValue = "10";
+			fPm->AddParameter(parameterName, transValue);
+
+			parameterName = "sc:So/" + sourceName + "/Distribution";
+			transValue = "\"BiGaussian\"";
+			fPm->AddParameter(parameterName, transValue);
+
+			parameterName = "dc:So/" + sourceName + "/SigmaX";
+			transValue = "0.2 mm";
+			fPm->AddParameter(parameterName, transValue);
+
+			parameterName = "uc:So/" + sourceName + "/SigmaXprime";
+			transValue = "0.032";
+			fPm->AddParameter(parameterName, transValue);
+
+			parameterName = "uc:So/" + sourceName + "/CorrelationX";
+			transValue = "-0.9411";
+			fPm->AddParameter(parameterName, transValue);
+
+			parameterName = "dc:So/" + sourceName + "/SigmaY";
+			transValue = "0.2 mm";
+			fPm->AddParameter(parameterName, transValue);
+
+			parameterName = "uc:So/" + sourceName + "/SigmaYprime";
+			transValue = "0.032";
+			fPm->AddParameter(parameterName, transValue);
+
+			parameterName = "uc:So/" + sourceName + "/CorrelationY";
+			transValue = "0.9411";
+			fPm->AddParameter(parameterName, transValue);
+		} else if (typeNameLower == "isotropic") {
+			parameterName = "sc:So/" + sourceName + "/IsotropicParticle";
+			transValue = "\"proton\"";
+			fPm->AddParameter(parameterName, transValue);
+
+			parameterName = "dc:So/" + sourceName + "/IsotropicEnergy";
+			transValue = "169.23 MeV";
+			fPm->AddParameter(parameterName, transValue);
+
+			parameterName = "uc:So/" + sourceName + "/IsotropicEnergySpread";
+			transValue = "0.757504";
+			fPm->AddParameter(parameterName, transValue);
+
+			parameterName = "ic:So/" + sourceName + "/NumberOfHistoriesInRun";
+			transValue = "10";
+			fPm->AddParameter(parameterName, transValue);
+
+			parameterName = "ic:So/" + sourceName + "/NumberOfHistoriesInRandomJob";
+			transValue = "10";
+			fPm->AddParameter(parameterName, transValue);
+		} else if (typeNameLower == "environment") {
+			parameterName = "sc:So/" + sourceName + "/EnvironmentParticle";
+			transValue = "\"proton\"";
+			fPm->AddParameter(parameterName, transValue);
+
+			parameterName = "dc:So/" + sourceName + "/EnvironmentEnergy";
+			transValue = "169.23 MeV";
+			fPm->AddParameter(parameterName, transValue);
+
+			parameterName = "uc:So/" + sourceName + "/EnvironmentEnergySpread";
+			transValue = "0.757504";
+			fPm->AddParameter(parameterName, transValue);
+
+			parameterName = "ic:So/" + sourceName + "/NumberOfHistoriesInRun";
+			transValue = "10";
+			fPm->AddParameter(parameterName, transValue);
+
+			parameterName = "ic:So/" + sourceName + "/NumberOfHistoriesInRandomJob";
+			transValue = "10";
+			fPm->AddParameter(parameterName, transValue);
+
+			parameterName = "bc:So/" + sourceName + "/RecursivelyIncludeChildren";
+			transValue = "\"False\"";
+			fPm->AddParameter(parameterName, transValue);
 		} else {
 			parameterName = "sc:So/" + sourceName + "/PhaseSpaceFileName";
 			transValue = "\"ASCIIOutput\"";

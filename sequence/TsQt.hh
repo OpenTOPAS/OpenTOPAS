@@ -51,8 +51,8 @@ class G4UIQt;
 class QDialog;
 class QWidget;
 class QLineEdit;
-class QTableWidget;
-class QTableWidgetItem;
+class QTreeWidget;
+class QTreeWidgetItem;
 class QComboBox;
 class QGroupBox;
 class QVBoxLayout;
@@ -71,7 +71,7 @@ public:
 
 	public slots:
 	void UpdateParameterEditor();
-	void ParameterTableWidgetSetItemChanged(QTableWidgetItem * pItem);
+	void ParameterTableWidgetSetItemChanged(QTreeWidgetItem* item, int column);
 	void ParameterComboChanged();
 
 	void SaveCallback();
@@ -89,7 +89,18 @@ public:
 
 	void PrintCallback();
 
+	void DuplicateGeometryCallback();
+	void DuplicateScorerCallback();
+	void DuplicateSourceCallback();
+	void ShowParameterContextMenu(const QPoint& pos);
+
 private:
+	void DuplicateParameters(const G4String& categoryCode, const G4String& oldName, const G4String& newName);
+	G4bool NameExistsInList(const std::vector<G4String>& list, const G4String& name);
+	void DoDuplicateGeometry(const G4String& oldName);
+	void DoDuplicateScorer(const G4String& oldName);
+	void DoDuplicateSource(const G4String& oldName);
+
 	TsParameterManager* fPm;
 	TsExtensionManager* fEm;
 	TsMaterialManager*  fMm;
@@ -106,7 +117,9 @@ private:
 	QWidget* fParameterEditorWidget;
 	QGroupBox* fParameterTableGroupBox;
 	QVBoxLayout *fParameterTablevbox;
-	QTableWidget* fParameterTableWidget;
+	QTreeWidget* fParameterTableWidget;
+	QLineEdit* fFilterLineEdit;
+	int fSavedScrollPosition = 0;
 
 	QDialog* fAddComponentDialog;
 	QWidget* fAddComponentWidget;
@@ -132,6 +145,8 @@ private:
 	QComboBox* fAddSourceComponentNameWidget;
 	G4String fCurrentSourceName;
 	G4int fAddedSourceCounter;
+
+	G4bool fShowReadOnlyNoteMessage = true;
 };
 
 #endif
