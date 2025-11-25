@@ -89,7 +89,18 @@ public:
 
 	void PrintCallback();
 
+	void DuplicateGeometryCallback();
+	void DuplicateScorerCallback();
+	void DuplicateSourceCallback();
+	void ShowParameterContextMenu(const QPoint& pos);
+
 private:
+	void DuplicateParameters(const G4String& categoryCode, const G4String& oldName, const G4String& newName);
+	G4bool NameExistsInList(const std::vector<G4String>& list, const G4String& name);
+	void DoDuplicateGeometry(const G4String& oldName);
+	void DoDuplicateScorer(const G4String& oldName);
+	void DoDuplicateSource(const G4String& oldName);
+
 	TsParameterManager* fPm;
 	TsExtensionManager* fEm;
 	TsMaterialManager*  fMm;
@@ -107,6 +118,8 @@ private:
 	QGroupBox* fParameterTableGroupBox;
 	QVBoxLayout *fParameterTablevbox;
 	QTreeWidget* fParameterTableWidget;
+	QLineEdit* fFilterLineEdit;
+	int fSavedScrollPosition = 0;
 
 	QDialog* fAddComponentDialog;
 	QWidget* fAddComponentWidget;

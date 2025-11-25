@@ -70,6 +70,15 @@
 #include <qpushbutton.h>
 #include <qfont.h>
 #include <qmessagebox.h>
+#include <qlineedit.h>
+#include <qtoolbutton.h>
+#include <qscrollbar.h>
+#include <qcolor.h>
+#include <qbrush.h>
+#include <qtoolbutton.h>
+#include <qscrollbar.h>
+#include <qmenu.h>
+#include <qinputdialog.h>
 #include <map>
 #include <set>
 #include <qpixmap.h>
@@ -157,7 +166,7 @@ fShowReadOnlyNoteMessage(true)
 	connect(sourceSignalMapper, SIGNAL(mapped(int)),this, SLOT(AddSourceCallback()));
 	int sourceIntVP = 0;
 	sourceSignalMapper->setMapping(sourceAction, sourceIntVP);
-	
+
 	QSignalMapper* runSignalMapper = new QSignalMapper(this);
 	toolbar->addSeparator();
 	QIcon runIcon;
@@ -179,7 +188,38 @@ fShowReadOnlyNoteMessage(true)
 	int printIntVP = 0;
 	printSignalMapper->setMapping(printAction, printIntVP);
 
+	toolbar->addSeparator();
+	QToolButton* expandCollapseButton = new QToolButton();
+	expandCollapseButton->setText("Collapse All");
+	expandCollapseButton->setCheckable(true);
+	connect(expandCollapseButton, &QToolButton::clicked, this, [=](bool checked){
+		if (checked) {
+			expandCollapseButton->setText("Expand All");
+			for (int i = 0; i < fParameterTableWidget->topLevelItemCount(); ++i)
+				fParameterTableWidget->collapseItem(fParameterTableWidget->topLevelItem(i));
+		} else {
+			expandCollapseButton->setText("Collapse All");
+			for (int i = 0; i < fParameterTableWidget->topLevelItemCount(); ++i)
+				fParameterTableWidget->expandItem(fParameterTableWidget->topLevelItem(i));
+		}
+	});
+	toolbar->addWidget(expandCollapseButton);
+
 	fParameterTablevbox->addWidget(toolbar);
+	// Filter bar
+	QHBoxLayout* filterLayout = new QHBoxLayout();
+	QLabel* filterLabel = new QLabel(QString("Filter:"));
+	fFilterLineEdit = new QLineEdit();
+	fFilterLineEdit->setPlaceholderText(QString("Type to filter parameters by name or value"));
+	QPushButton* clearFilterButton = new QPushButton(QString("Clear"));
+	filterLayout->addWidget(filterLabel);
+	filterLayout->addWidget(fFilterLineEdit);
+	filterLayout->addWidget(clearFilterButton);
+	QWidget* filterWidget = new QWidget();
+	filterWidget->setLayout(filterLayout);
+	fParameterTablevbox->addWidget(filterWidget);
+	connect(fFilterLineEdit, SIGNAL(textChanged(QString)), this, SLOT(UpdateParameterEditor()));
+	connect(clearFilterButton, SIGNAL(clicked()), fFilterLineEdit, SLOT(clear()));
 
 	fPm->SetInQtSession();
 
@@ -216,6 +256,10 @@ void TsQt::PrintCallback() {
 
 
 void TsQt::UpdateParameterEditor() {
+	if (fParameterTableWidget) {
+		fSavedScrollPosition = fParameterTableWidget->verticalScrollBar()->value();
+	}
+
 	std::map<G4String, bool> previousCategoryExpansion;
 	std::map<G4String, bool> previousComponentExpansion;
 	if (fParameterTableWidget) {
@@ -240,6 +284,10 @@ void TsQt::UpdateParameterEditor() {
 	std::vector<G4String>* parameterValues = new std::vector<G4String>;
 	fPm->GetChangeableParameters(parameterNames, parameterValues);
 
+	QString filterText = "";
+	if (fFilterLineEdit)
+		filterText = fFilterLineEdit->text().trimmed().toLower();
+
 	G4int nParameters = parameterNames->size();
 
 	fParameterTableWidget->setColumnCount(2);
@@ -249,6 +297,8 @@ void TsQt::UpdateParameterEditor() {
 	fParameterTableWidget->setHeaderLabels(QStringList() << tr("Parameter") << tr("Value"));
 	fParameterTableWidget->setRootIsDecorated(true);
 	fParameterTableWidget->setAlternatingRowColors(true);
+	fParameterTableWidget->setContextMenuPolicy(Qt::CustomContextMenu);
+	connect(fParameterTableWidget, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(ShowParameterContextMenu(const QPoint&)));
 
 	G4String searchName = "";
 	if (fCurrentComponentName != "")
@@ -305,6 +355,13 @@ void TsQt::UpdateParameterEditor() {
 		G4String parameterName = (*parameterNames)[iParam];
 		G4String parameterNameLower = parameterName;
    		G4StrUtil::to_lower(parameterNameLower);
+
+		QString qNameLower = QString(parameterNameLower);
+		QString qValueLower = QString((*parameterValues)[iParam]).toLower();
+		if (!filterText.isEmpty()) {
+			if (!qNameLower.contains(filterText) && !qValueLower.contains(filterText))
+				continue;
+		}
 
 		G4int colonPos = parameterName.find(":");
 		G4String categoryName = "Other";
@@ -514,6 +571,12 @@ void TsQt::UpdateParameterEditor() {
 				paramItem->setFlags(paramItem->flags() ^ Qt::ItemIsEditable);
 				locked = true;
 			}
+			G4String lastPartLower = fPm->GetPartAfterLastSlash(parameterNameLower);
+			if (lastPartLower == "numberofhistoriesinrun")
+				paramItem->setToolTip(1, QString("Must be a positive integer"));
+			else if (lastPartLower=="xbins" || lastPartLower=="ybins" || lastPartLower=="zbins" ||
+					 lastPartLower=="rbins" || lastPartLower=="phibins" || lastPartLower=="thetabins")
+				paramItem->setToolTip(1, QString("Must be an integer > 0"));
 			if (locked) {
 				QFont boldFont = paramItem->font(0);
 				boldFont.setBold(true);
@@ -657,9 +720,201 @@ void TsQt::UpdateParameterEditor() {
 			fParameterTableWidget->addTopLevelItem(iter->second);
 	}
 
-	fCurrentComponentName = "";
-	fCurrentScorerName = "";
-	fCurrentSourceName = "";
+fCurrentComponentName = "";
+fCurrentScorerName = "";
+fCurrentSourceName = "";
+
+	if (fParameterTableWidget)
+		fParameterTableWidget->verticalScrollBar()->setValue(fSavedScrollPosition);
+}
+
+
+void TsQt::ShowParameterContextMenu(const QPoint& pos) {
+	QTreeWidgetItem* item = fParameterTableWidget->itemAt(pos);
+	if (!item)
+		return;
+
+	QTreeWidgetItem* compItem = item;
+	QTreeWidgetItem* catItem = item->parent();
+	if (!catItem)
+		return;
+	if (compItem->parent()) {
+		compItem = compItem->parent();
+		catItem = compItem->parent();
+	}
+	if (!catItem)
+		return;
+
+	G4String category = catItem->text(0).toStdString();
+	G4String compName = compItem->text(0).toStdString();
+
+	QMenu menu(fParameterEditorWidget);
+	if (category == "Geometries") {
+		menu.addAction("Duplicate Geometry", [=]() { DoDuplicateGeometry(compName); });
+	} else if (category == "Scorers") {
+		menu.addAction("Duplicate Scorer", [=]() { DoDuplicateScorer(compName); });
+	} else if (category == "Sources") {
+		menu.addAction("Duplicate Source", [=]() { DoDuplicateSource(compName); });
+	}
+	if (!menu.isEmpty())
+		menu.exec(fParameterTableWidget->viewport()->mapToGlobal(pos));
+}
+
+void TsQt::DuplicateParameters(const G4String& categoryCode, const G4String& oldName, const G4String& newName) {
+	std::vector<G4String>* parameterNames = new std::vector<G4String>;
+	std::vector<G4String>* parameterValues = new std::vector<G4String>;
+	fPm->GetChangeableParameters(parameterNames, parameterValues);
+
+	G4String needle = "/" + oldName + "/";
+	for (size_t i = 0; i < parameterNames->size(); ++i) {
+		G4String pname = (*parameterNames)[i];
+		size_t colonPos = pname.find(":");
+		size_t firstSlash = pname.find("/", colonPos+1);
+		if (firstSlash == std::string::npos)
+			continue;
+		G4String prefix = pname.substr(colonPos+1, firstSlash-colonPos-1);
+		if (prefix != categoryCode)
+			continue;
+		size_t pos = pname.find(needle);
+		if (pos == std::string::npos)
+			continue;
+		G4String newPname = pname;
+		newPname.replace(pos+1, oldName.length(), newName);
+		G4String newVal = (*parameterValues)[i];
+		// Normalize any boolean (type starts with 'b') to "True"/"False"
+		if (!newPname.empty() && newPname[0] == 'b') {
+			if (newVal == "0")
+				newVal = "\"False\"";
+			else if (newVal == "1")
+				newVal = "\"True\"";
+		}
+		fPm->AddParameter(newPname, newVal);
+	}
+	delete parameterNames;
+	delete parameterValues;
+}
+
+
+G4bool TsQt::NameExistsInList(const std::vector<G4String>& list, const G4String& name) {
+	for (size_t i=0; i<list.size(); ++i)
+		if (list[i] == name)
+			return true;
+	return false;
+}
+
+
+void TsQt::DuplicateGeometryCallback() {
+	std::vector<G4String> componentNames = fGm->GetComponentNames();
+	if (componentNames.empty())
+		return;
+
+	bool ok = false;
+	QStringList nameList;
+	for (size_t i=0;i<componentNames.size();++i) nameList << QString(componentNames[i]);
+	QString selected = QInputDialog::getItem(fParameterEditorWidget, "Duplicate Geometry", "Select geometry to duplicate:", nameList, 0, false, &ok);
+	if (!ok || selected.isEmpty())
+		return;
+	DoDuplicateGeometry(selected.toStdString());
+}
+
+
+void TsQt::DoDuplicateGeometry(const G4String& oldName) {
+	std::vector<G4String> componentNames = fGm->GetComponentNames();
+	bool ok = false;
+	QString newName = QInputDialog::getText(fParameterEditorWidget, "New Geometry Name", "Enter name for duplicate:", QLineEdit::Normal, QString(oldName.c_str()) + "_copy", &ok);
+	if (!ok || newName.isEmpty())
+		return;
+	if (NameExistsInList(componentNames, newName.toStdString())) {
+		QMessageBox::warning(fParameterEditorWidget, "Duplicate Geometry", "A geometry with that name already exists.");
+		return;
+	}
+
+	G4String newNameStr = newName.toStdString();
+	G4String typeName = fPm->GetStringParameter("Ge/" + oldName + "/Type");
+	G4String parentName = fPm->GetStringParameter("Ge/" + oldName + "/Parent");
+	G4String noField("no field");
+	fGm->GetGeometryHub()->AddComponentFromGUI(fPm, fGm, newNameStr, parentName, typeName, noField);
+	DuplicateParameters("Ge", oldName, newNameStr);
+	UpdateParameterEditor();
+}
+
+
+void TsQt::DuplicateScorerCallback() {
+	if (fSqm->GetRunID() != -1) {
+		QMessageBox::warning(fParameterEditorWidget, "Duplicate Scorer", "Scorers may only be duplicated before the first run.");
+		return;
+	}
+
+	std::vector<G4String> scorerNames = fScm->GetScoringHub()->GetScorerNames();
+	if (scorerNames.empty())
+		return;
+
+	bool ok = false;
+	QStringList nameList;
+	for (size_t i=0;i<scorerNames.size();++i) nameList << QString(scorerNames[i]);
+	QString selected = QInputDialog::getItem(fParameterEditorWidget, "Duplicate Scorer", "Select scorer to duplicate:", nameList, 0, false, &ok);
+	if (!ok || selected.isEmpty())
+		return;
+	DoDuplicateScorer(selected.toStdString());
+}
+
+void TsQt::DoDuplicateScorer(const G4String& oldName) {
+	std::vector<G4String> scorerNames = fScm->GetScoringHub()->GetScorerNames();
+	bool ok = false;
+	QString newName = QInputDialog::getText(fParameterEditorWidget, "New Scorer Name", "Enter name for duplicate:", QLineEdit::Normal, QString(oldName.c_str()) + "_copy", &ok);
+	if (!ok || newName.isEmpty())
+		return;
+	if (NameExistsInList(scorerNames, newName.toStdString())) {
+		QMessageBox::warning(fParameterEditorWidget, "Duplicate Scorer", "A scorer with that name already exists.");
+		return;
+	}
+
+	G4String newNameStr = newName.toStdString();
+	G4String qty = fPm->GetStringParameter("Sc/" + oldName + "/Quantity");
+	G4String comp = fPm->GetStringParameter("Sc/" + oldName + "/Component");
+	if (comp == "")
+		comp = fPm->GetStringParameter("Sc/" + oldName + "/Surface");
+	fScm->GetScoringHub()->AddScorerFromGUI(newNameStr, comp, qty);
+	DuplicateParameters("Sc", oldName, newNameStr);
+	UpdateParameterEditor();
+}
+
+void TsQt::DuplicateSourceCallback() {
+	if (fSqm->GetRunID() != -1) {
+		QMessageBox::warning(fParameterEditorWidget, "Duplicate Source", "Sources may only be duplicated before the first run.");
+		return;
+	}
+
+	std::vector<G4String> sourceNames = fSom->GetSourceNames();
+	if (sourceNames.empty())
+		return;
+
+	bool ok = false;
+	QStringList nameList;
+	for (size_t i=0;i<sourceNames.size();++i) nameList << QString(sourceNames[i]);
+	QString selected = QInputDialog::getItem(fParameterEditorWidget, "Duplicate Source", "Select source to duplicate:", nameList, 0, false, &ok);
+	if (!ok || selected.isEmpty())
+		return;
+	DoDuplicateSource(selected.toStdString());
+}
+
+void TsQt::DoDuplicateSource(const G4String& oldName) {
+	std::vector<G4String> sourceNames = fSom->GetSourceNames();
+	bool ok = false;
+	QString newName = QInputDialog::getText(fParameterEditorWidget, "New Source Name", "Enter name for duplicate:", QLineEdit::Normal, QString(oldName.c_str()) + "_copy", &ok);
+	if (!ok || newName.isEmpty())
+		return;
+	if (NameExistsInList(sourceNames, newName.toStdString())) {
+		QMessageBox::warning(fParameterEditorWidget, "Duplicate Source", "A source with that name already exists.");
+		return;
+	}
+
+	G4String newNameStr = newName.toStdString();
+	G4String type = fPm->GetStringParameter("So/" + oldName + "/Type");
+	G4String comp = fPm->GetStringParameter("So/" + oldName + "/Component");
+	fSom->AddSourceFromGUI(newNameStr, comp, type);
+	DuplicateParameters("So", oldName, newNameStr);
+	UpdateParameterEditor();
 }
 
 
@@ -675,6 +930,10 @@ void TsQt::ParameterTableWidgetSetItemChanged(QTreeWidgetItem* item, int column)
 	G4String paramValue = (item->text(1).toStdString()).c_str();
 	G4int colonPos = paramName.find( ":" );
 
+	// Clear any previous inline error
+	item->setBackground(1, QBrush());
+	item->setToolTip(1, "");
+
 	if (paramName.substr(0,1) == "b") {
 		if (item->checkState(1) == Qt::Checked)
 			paramValue = "\"True\"";
@@ -682,42 +941,46 @@ void TsQt::ParameterTableWidgetSetItemChanged(QTreeWidgetItem* item, int column)
 			paramValue = "\"False\"";
     } else {
 		G4String lastPart = fPm->GetPartAfterLastSlash(paramName);
-		if (lastPart == "numberofhistoriesinrun") {
-			if (fPm->IsInteger(paramValue, 32)) {
-				if (G4UIcommand::ConvertToInt(paramValue) < 0) {
-					G4cerr << "Value must be a positive integer" << G4endl;
+			if (lastPart == "numberofhistoriesinrun") {
+				if (fPm->IsInteger(paramValue, 32)) {
+					if (G4UIcommand::ConvertToInt(paramValue) < 0) {
+						item->setBackground(1, QBrush(QColor(255,230,230)));
+						item->setToolTip(1, QString("Value must be a positive integer"));
+						G4String restoreValue = fPm->GetParameterValueAsString(paramName.substr(0,colonPos-1), paramName.substr(colonPos+1));
+						item->setText(1, QString(restoreValue));
+						return;
+					}
+				} else {
+					item->setBackground(1, QBrush(QColor(255,230,230)));
+					item->setToolTip(1, QString("Value must be a positive integer"));
 					G4String restoreValue = fPm->GetParameterValueAsString(paramName.substr(0,colonPos-1), paramName.substr(colonPos+1));
 					item->setText(1, QString(restoreValue));
 					return;
 				}
-			} else {
-				G4cerr << "Value must be a positive integer" << G4endl;
-				G4String restoreValue = fPm->GetParameterValueAsString(paramName.substr(0,colonPos-1), paramName.substr(colonPos+1));
-				item->setText(1, QString(restoreValue));
-				return;
 			}
-		}
 
 		if (lastPart == "xbins" ||
 			lastPart == "ybins" ||
 			lastPart == "zbins" ||
 			lastPart == "rbins" ||
-			lastPart == "phibins" ||
-			lastPart == "thetabins") {
-			if (fPm->IsInteger(paramValue, 32)) {
-				if (G4UIcommand::ConvertToInt(paramValue) < 1) {
-					G4cerr << "Value must be an integer larger than 0" << G4endl;
+				lastPart == "phibins" ||
+				lastPart == "thetabins") {
+				if (fPm->IsInteger(paramValue, 32)) {
+					if (G4UIcommand::ConvertToInt(paramValue) < 1) {
+						item->setBackground(1, QBrush(QColor(255,230,230)));
+						item->setToolTip(1, QString("Value must be an integer larger than 0"));
+						G4String restoreValue = fPm->GetParameterValueAsString(paramName.substr(0,colonPos-1), paramName.substr(colonPos+1));
+						item->setText(1, QString(restoreValue));
+						return;
+					}
+				} else {
+					item->setBackground(1, QBrush(QColor(255,230,230)));
+					item->setToolTip(1, QString("Value must be an integer larger than 0"));
 					G4String restoreValue = fPm->GetParameterValueAsString(paramName.substr(0,colonPos-1), paramName.substr(colonPos+1));
 					item->setText(1, QString(restoreValue));
 					return;
 				}
-			} else {
-				G4cerr << "Value must be an integer larger than 0" << G4endl;
-				G4String restoreValue = fPm->GetParameterValueAsString(paramName.substr(0,colonPos-1), paramName.substr(colonPos+1));
-				item->setText(1, QString(restoreValue));
-				return;
 			}
-		}
 	}
 
 	// First call to AddParameter has the Test flag set true, so tests but

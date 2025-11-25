@@ -1635,6 +1635,8 @@ void TsParameterManager::DumpParametersToSemicolonSeparatedFile(G4double current
 void TsParameterManager::DumpAddedParameters() {
 	G4String filespec = "ChangedParameters_"
 						+ G4UIcommand::ConvertToString(fAddedParameterFileCounter++) + ".txt";
+	if (ParameterExists("Ts/ChangedParametersFile"))
+		filespec = GetStringParameter("Ts/ChangedParametersFile");
 	std::ofstream outFile(filespec);
 	if (!outFile) {
 		G4cerr << "ERROR: Failed to open file " << filespec << G4endl;
@@ -1649,6 +1651,19 @@ void TsParameterManager::DumpAddedParameters() {
 	// Collect and sort parameters for readable grouping
 	std::vector<std::pair<G4String,G4String> > sortedParams;
 	sortedParams.reserve(fAddedParameters->size());
+
+	// Optional filtering by prefixes (e.g. Ge/Name, Sc/Name, So/Name, Gr/)
+	std::vector<G4String> filterPrefixes;
+	if (ParameterExists("Ts/ChangedParametersPrefixes")) {
+		G4int n = GetVectorLength("Ts/ChangedParametersPrefixes");
+		G4String* vals = GetStringVector("Ts/ChangedParametersPrefixes");
+		for (G4int i=0;i<n;++i) {
+			G4String v = vals[i];
+			G4StrUtil::to_lower(v);
+			filterPrefixes.push_back(v);
+		}
+	}
+
 	for (std::map<G4String, G4String>::const_iterator iter = fAddedParameters->begin(); iter != fAddedParameters->end(); ++iter)
 		sortedParams.push_back(std::make_pair(iter->first, iter->second));
 	std::sort(sortedParams.begin(), sortedParams.end(),
@@ -1662,6 +1677,21 @@ void TsParameterManager::DumpAddedParameters() {
 	for (size_t i = 0; i < sortedParams.size(); ++i) {
 		const G4String& nameWithType = sortedParams[i].first;
 		const G4String& value = sortedParams[i].second;
+
+		// Apply optional prefix filter
+		if (!filterPrefixes.empty()) {
+			G4String nameLower = nameWithType;
+			G4StrUtil::to_lower(nameLower);
+			G4bool match = false;
+			for (size_t pf=0; pf<filterPrefixes.size(); ++pf) {
+				if (nameLower.find(filterPrefixes[pf]) != std::string::npos) {
+					match = true;
+					break;
+				}
+			}
+			if (!match)
+				continue;
+		}
 
 		G4String category = "Other";
 		G4String component = "General";

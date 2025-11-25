@@ -173,3 +173,19 @@ void TsScoringHub::AddScorerFromGUI(G4String& scorerName, G4String& componentNam
 		fPm->AddParameter(parameterName, transValue);
 	}
 }
+
+
+std::vector<G4String> TsScoringHub::GetScorerNames() {
+	std::vector<G4String> names;
+	std::vector<G4String>* values = new std::vector<G4String>;
+	G4String prefix = "Sc";
+	G4String suffix = "/Quantity";
+	fPm->GetParameterNamesBracketedBy(prefix, suffix, values);
+	for (size_t i=0; i<values->size(); ++i) {
+		G4String scorerParmName = (*values)[i];
+		G4String scorerName = scorerParmName.substr(3,scorerParmName.length()-10);
+		names.push_back(scorerName);
+	}
+	delete values;
+	return names;
+}

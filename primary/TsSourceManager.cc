@@ -215,6 +215,17 @@ void TsSourceManager::Finalize()
 }
 
 
+std::vector<G4String> TsSourceManager::GetSourceNames() {
+	std::vector<G4String> names;
+	if (fSources) {
+		std::map<G4String, TsSource*>::const_iterator iter;
+		for (iter=fSources->begin(); iter!=fSources->end(); ++iter)
+			names.push_back(iter->first);
+	}
+	return names;
+}
+
+
 TsSource* TsSourceManager::GetSource(G4String sourceName) {
 	std::map<G4String, TsSource*>::const_iterator iter = fSources->find(sourceName);
 	if (iter != fSources->end())
