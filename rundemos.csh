@@ -125,17 +125,80 @@ set nozzle_cases = ( \
 	ScatteringNozzle_run.txt \
 	ScanningTargetMovingHorizontal.txt )
 
+set scoring_cases = ( \
+	ChargeInSphere.txt \
+	Complex.txt \
+	DepthDose.txt \
+	Dose.txt \
+	DoseInVoxelMaterials.txt \
+	DoseToMediumVsWater.txt \
+	DoseVolumeHistogram.txt \
+	EnergyAndDose.txt \
+	EnergyDepositBinnedByEnergy.txt \
+	EnergyDivisions.txt \
+	EnergyInBinnedCylinder.txt \
+	FilterByInteractionCount.txt \
+	Filters.txt \
+	FoilToBox.txt \
+	FoilToCylinder.txt \
+	FoilToSphere.txt \
+	Gated.txt \
+	GeometryDivisions.txt \
+	Histograms.txt \
+	Inactive.txt \
+	Ion.txt \
+	Origin.txt \
+	OriginCount.txt \
+	ParallelBoxRebinned.txt \
+	SparsifyAndSingleIndex.txt \
+	SplitByTimeFeature.txt \
+	Surfaces.txt )
+
+set optical_cases = ( \
+	OpticalPhotonCount.txt \
+	PixelatedDetector.txt \
+	PlasticScintillator.txt \
+	Rotating_Surfaces.txt \
+	Surfaces.txt \
+	WavelengthShifter.txt )
+
+set output_case = ( TestOutcomeModel.txt )
+
+set phasespace_cases = ( \
+	WriteIonsASCII.txt \
+	WriteROOT.txt \
+	WriteASCII.txt \
+	WriteBinary.txt \
+	WriteLimited.txt \
+	ReadASCII.txt \
+	ReadBinary.txt \
+	ReadLimited.txt )
+
 set base_cleanup = ( *.csv *.phsp *.header *.root *.bin *.dcm *.binheader *.html )
-set demo_dirs = ( Basic Brachytherapy MVLinac TimeFeature UCSFETF SpecialComponents Nozzle )
+set demo_dirs = ( Basic Brachytherapy MVLinac TimeFeature UCSFETF SpecialComponents Nozzle Scoring Optical Outcome)
 set demo_titles = ( \
 	"Basic demos" \
 	"Brachytherapy demo" \
 	"MVLinac with VRT demo" \
-	"Time Feature demos (set 1)" \
+	"Time Feature demos" \
 	"UCSF ETF demos" \
 	"Special component demos" \
-	"Nozzle demos" )
-set demo_cases = ( basic_examples brachytherapy_case mvlinac_case timefeature_intro ucsf_cases special_cases nozzle_cases )
+	"Nozzle demos" \
+	"Scoring demos" \
+	"Optical demos" \
+        "Outcome demo" )
+
+set demo_cases = ( \
+	basic_examples \
+	brachytherapy_case \
+	mvlinac_case \
+	timefeature_intro \
+	ucsf_cases \
+	special_cases \
+	nozzle_cases \
+	scoring_cases \
+	optical_cases \
+	output_case )
 
 set green = `tput setaf 2`
 set red = `tput setaf 1`
@@ -195,6 +258,7 @@ while ($demo_index <= $#demo_dirs)
 		echo 'b:Ts/UseQt = "False"' >> run.txt
 		echo 'b:Ts/PauseBeforeQuit = "False"' >> run.txt
 		echo 'b:Gr/Enable = "False"' >> run.txt
+		echo 'i:Ts/NumberOfThreads = 0' >> run.txt
 		echo "🚀 Running $case"
 		"$topas_cmd" run.txt >&! $exec_log
 		set matches = `awk '/Execution/ {count++} END {print count+0}' $exec_log`
@@ -267,6 +331,7 @@ foreach case ( ViewAbdomen.txt )
 	echo 'b:Ts/UseQt = "False"' >> run.txt
 	echo 'b:Ts/PauseBeforeQuit = "False"' >> run.txt
 	echo 'b:Gr/Enable = "False"' >> run.txt
+	echo 'i:Ts/NumberOfThreads = 0' >> run.txt
 	echo "🚀 Running $case"
 	"$topas_cmd" run.txt >&! $exec_log
 	set matches = `awk '/Execution/ {count++} END {print count+0}' $exec_log`
@@ -309,6 +374,7 @@ foreach case ( DoseTo4DCT.txt )
 	echo 'b:Ts/UseQt = "False"' >> run.txt
 	echo 'b:Ts/PauseBeforeQuit = "False"' >> run.txt
 	echo 'b:Gr/Enable = "False"' >> run.txt
+	echo 'i:Ts/NumberOfThreads = 0' >> run.txt
 	echo "🚀 Running $case"
 	"$topas_cmd" run.txt >&! $exec_log
 	set matches = `awk '/Execution/ {count++} END {print count+0}' $exec_log`
@@ -351,6 +417,7 @@ foreach case ( Implant.txt )
 	echo 'b:Ts/UseQt = "False"' >> run.txt
 	echo 'b:Ts/PauseBeforeQuit = "False"' >> run.txt
 	echo 'b:Gr/Enable = "False"' >> run.txt
+	echo 'i:Ts/NumberOfThreads = 0' >> run.txt
 	echo "🚀 Running $case"
 	"$topas_cmd" run.txt >&! $exec_log
 	set matches = `awk '/Execution/ {count++} END {print count+0}' $exec_log`
