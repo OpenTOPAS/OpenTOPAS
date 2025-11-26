@@ -175,7 +175,7 @@ set phasespace_cases = ( \
 	ReadLimited.txt )
 
 set base_cleanup = ( *.csv *.phsp *.header *.root *.bin *.dcm *.binheader *.html )
-set demo_dirs = ( Basic Brachytherapy MVLinac TimeFeature UCSFETF SpecialComponents Nozzle Scoring Optical Outcome)
+set demo_dirs = ( Basic Brachytherapy MVLinac TimeFeature UCSFETF SpecialComponents Nozzle Scoring Optical Outcome PhaseSpace) 
 set demo_titles = ( \
 	"Basic demos" \
 	"Brachytherapy demo" \
@@ -186,7 +186,8 @@ set demo_titles = ( \
 	"Nozzle demos" \
 	"Scoring demos" \
 	"Optical demos" \
-        "Outcome demo" )
+        "Outcome demo" \
+	"PhaseSpace demos" )
 
 set demo_cases = ( \
 	basic_examples \
@@ -198,7 +199,8 @@ set demo_cases = ( \
 	nozzle_cases \
 	scoring_cases \
 	optical_cases \
-	output_case )
+	output_case \
+	phasespace_cases )
 
 set green = `tput setaf 2`
 set red = `tput setaf 1`
@@ -271,16 +273,18 @@ while ($demo_index <= $#demo_dirs)
 			printf "   %s%s [ Fail ]%s %s\n" "$red" "$cross" "$reset" "$case"
 		endif
 		rm -f $exec_log run.txt
-		find . -maxdepth 1 -type f \( \
-			-name "*.csv" -o \
-			-name "*.phsp" -o \
-			-name "*.header" -o \
-			-name "*.root" -o \
-			-name "*.bin" -o \
-			-name "*.dcm" -o \
-			-name "*.binheader" -o \
-			-name "*.html" \
-		\) -delete
+		if ("$current_dir" != "PhaseSpace") then
+			find . -maxdepth 1 -type f \( \
+				-name "*.csv" -o \
+				-name "*.phsp" -o \
+				-name "*.header" -o \
+				-name "*.root" -o \
+				-name "*.bin" -o \
+				-name "*.dcm" -o \
+				-name "*.binheader" -o \
+				-name "*.html" \
+			\) -delete
+		endif
 		popd > /dev/null
 	end
 
