@@ -225,9 +225,9 @@ fShowReadOnlyNoteMessage(true)
     toolbar->addSeparator();
     QIcon pdfIcon = loadIcon("photo.svg");
     QAction* printAction = pdfIcon.isNull()
-    ? toolbar->addAction(QString("PDF"), printSignalMapper, SLOT(map()))
+    ? toolbar->addAction(QString("Capture"), printSignalMapper, SLOT(map()))
     : toolbar->addAction(pdfIcon, QString(""), printSignalMapper, SLOT(map()));
-    printAction->setToolTip("PDF");
+    printAction->setToolTip("Capture");
     connect(printSignalMapper, SIGNAL(mapped(int)),this, SLOT(PrintCallback()));
     int printIntVP = 0;
     printSignalMapper->setMapping(printAction, printIntVP);
