@@ -1,5 +1,5 @@
 #!/bin/csh
-# TOPAS demo runner modeled after the TOPAS-nBio workflow.
+# TOPAS demo runner
 
 set start_dir = `pwd`
 set repo_root = ""
@@ -125,8 +125,17 @@ set nozzle_cases = ( \
 	ScatteringNozzle_run.txt \
 	ScanningTargetMovingHorizontal.txt )
 
-set fhbptc_cases = ( \
-	FullSetupWithScattering_ZoomAndPan.txt )
+set base_cleanup = ( *.csv *.phsp *.header *.root *.bin *.dcm *.binheader *.html )
+set demo_dirs = ( Basic Brachytherapy MVLinac TimeFeature UCSFETF SpecialComponents Nozzle )
+set demo_titles = ( \
+	"Basic demos" \
+	"Brachytherapy demo" \
+	"MVLinac with VRT demo" \
+	"Time Feature demos (set 1)" \
+	"UCSF ETF demos" \
+	"Special component demos" \
+	"Nozzle demos" )
+set demo_cases = ( basic_examples brachytherapy_case mvlinac_case timefeature_intro ucsf_cases special_cases nozzle_cases )
 
 set green = `tput setaf 2`
 set red = `tput setaf 1`
@@ -141,214 +150,90 @@ else
 endif
 
 set exec_log = out
+set total_count = 0
+set success_count = 0
+set fail_count = 0
 set start_time = `date +%s`
 
 echo "Running TOPAS demos using repository root: $repo_root"
 echo "Using TOPAS executable: $topas_cmd"
 
-cd "$repo_root/examples/Basic"
-echo ""
-echo "======================================"
-echo "** Basic demos **"
-echo "======================================"
-foreach case ($basic_examples)
-	set case_dir = $case:h
-	set case_file = $case:t
-	if ("$case_dir" == "" || "$case_dir" == "$case") then
-		set case_dir = "."
-	endif
-	pushd "$case_dir" > /dev/null
-	echo "includeFile = $case_file" > run.txt
-	echo 'b:Ts/UseQt = "False"' >> run.txt
-	echo 'b:Ts/PauseBeforeQuit = "False"' >> run.txt
-	echo 'b:Gr/Enable = "False"' >> run.txt
-	echo "🚀 Running $case"
-	"$topas_cmd" run.txt >&! $exec_log
-	set matches = `awk '/Execution/ {count++} END {print count+0}' $exec_log`
-	if ("$matches" == "1") then
-		printf "   %s%s [ Success ]%s %s\n" "$green" "$check" "$reset" "$case"
-	else
-		printf "   %s%s [ Fail ]%s %s\n" "$red" "$cross" "$reset" "$case"
-	endif
-	rm -f $exec_log run.txt *.csv *.phsp *.header *.root *.bin 
-	popd > /dev/null
-end
-rm -f *.csv *.phsp *.header *.root *.bin *.html $exec_log
+cd "$repo_root/examples"
+@ demo_index = 1
+while ($demo_index <= $#demo_dirs)
+	set current_dir = "$demo_dirs[$demo_index]"
+	set current_title = "$demo_titles[$demo_index]"
+	set current_cases_var = $demo_cases[$demo_index]
+	set demo_path = "$repo_root/examples/$current_dir"
 
-cd "$repo_root/examples/Brachytherapy"
-echo ""
-echo "======================================"
-echo "** Brachytherapy demo **"
-echo "======================================"
-foreach case ($brachytherapy_case)
-	set case_dir = $case:h
-	set case_file = $case:t
-	if ("$case_dir" == "" || "$case_dir" == "$case") then
-		set case_dir = "."
+	if (! -d "$demo_path") then
+		echo ""
+		echo "======================================"
+		echo "** $current_title **"
+		echo "======================================"
+		echo "Skipping $current_dir because directory is missing."
+		@ demo_index++
+		continue
 	endif
-	pushd "$case_dir" > /dev/null
-	echo "includeFile = $case_file" > run.txt
-	echo 'b:Ts/UseQt = "False"' >> run.txt
-	echo 'b:Ts/PauseBeforeQuit = "False"' >> run.txt
-	echo 'b:Gr/Enable = "False"' >> run.txt
-	echo "🚀 Running $case"
-	"$topas_cmd" run.txt >&! $exec_log
-	set matches = `awk '/Execution/ {count++} END {print count+0}' $exec_log`
-	if ("$matches" == "1") then
-		printf "   %s%s [ Success ]%s %s\n" "$green" "$check" "$reset" "$case"
-	else
-		printf "   %s%s [ Fail ]%s %s\n" "$red" "$cross" "$reset" "$case"
-	endif
-	rm -f $exec_log run.txt *.csv *.phsp *.header *.root *.bin *.dcm
-	popd > /dev/null
-end
-rm -f *.csv *.phsp *.header *.root *.bin *.html $exec_log
 
-cd "$repo_root/examples/MVLinac"
-echo ""
-echo "======================================"
-echo "** MVLinac with VRT demo **"
-echo "======================================"
-foreach case ($mvlinac_case)
-	set case_dir = $case:h
-	set case_file = $case:t
-	if ("$case_dir" == "" || "$case_dir" == "$case") then
-		set case_dir = "."
-	endif
-	pushd "$case_dir" > /dev/null
-	echo "includeFile = $case_file" > run.txt
-	echo 'b:Ts/UseQt = "False"' >> run.txt
-	echo 'b:Ts/PauseBeforeQuit = "False"' >> run.txt
-	echo 'b:Gr/Enable = "False"' >> run.txt
-	echo "🚀 Running $case"
-	"$topas_cmd" run.txt >&! $exec_log
-	set matches = `awk '/Execution/ {count++} END {print count+0}' $exec_log`
-	if ("$matches" == "1") then
-		printf "   %s%s [ Success ]%s %s\n" "$green" "$check" "$reset" "$case"
-	else
-		printf "   %s%s [ Fail ]%s %s\n" "$red" "$cross" "$reset" "$case"
-	endif
-	rm -f $exec_log run.txt *.csv *.phsp *.header *.root *.bin *.binheader
-	popd > /dev/null
-end
-rm -f *.csv *.phsp *.header *.root *.bin *.html $exec_log
+	cd "$demo_path"
+	echo ""
+	echo "======================================"
+	echo "** $current_title **"
+	echo "======================================"
 
+	eval set cases = '($'$current_cases_var')'
 
-cd "$repo_root/examples/TimeFeature"
-echo ""
-echo "======================================"
-echo "** Time Feature demos (set 1) **"
-echo "======================================"
-foreach case ($timefeature_intro)
-	set case_dir = $case:h
-	set case_file = $case:t
-	if ("$case_dir" == "" || "$case_dir" == "$case") then
-		set case_dir = "."
-	endif
-	pushd "$case_dir" > /dev/null
-	echo "includeFile = $case_file" > run.txt
-	echo 'b:Ts/UseQt = "False"' >> run.txt
-	echo 'b:Ts/PauseBeforeQuit = "False"' >> run.txt
-	echo 'b:Gr/Enable = "False"' >> run.txt
-	echo "🚀 Running $case"
-	"$topas_cmd" run.txt >&! $exec_log
-	set matches = `awk '/Execution/ {count++} END {print count+0}' $exec_log`
-	if ("$matches" == "1") then
-		printf "   %s%s [ Success ]%s %s\n" "$green" "$check" "$reset" "$case"
-	else
-		printf "   %s%s [ Fail ]%s %s\n" "$red" "$cross" "$reset" "$case"
-	endif
-	rm -f $exec_log run.txt *.csv *.phsp *.header *.root *.bin 
-	popd > /dev/null
-end
-rm -f *.csv *.phsp *.header *.root *.bin $exec_log
+	foreach case ($cases)
+		set case_dir = $case:h
+		set case_file = $case:t
+		if ("$case_dir" == "" || "$case_dir" == "$case") then
+			set case_dir = "."
+		endif
+		pushd "$case_dir" > /dev/null
+		echo "includeFile = $case_file" > run.txt
+		echo 'b:Ts/UseQt = "False"' >> run.txt
+		echo 'b:Ts/PauseBeforeQuit = "False"' >> run.txt
+		echo 'b:Gr/Enable = "False"' >> run.txt
+		echo "🚀 Running $case"
+		"$topas_cmd" run.txt >&! $exec_log
+		set matches = `awk '/Execution/ {count++} END {print count+0}' $exec_log`
+		@ total_count++
+		if ("$matches" == "1") then
+			@ success_count++
+			printf "   %s%s [ Success ]%s %s\n" "$green" "$check" "$reset" "$case"
+		else
+			@ fail_count++
+			printf "   %s%s [ Fail ]%s %s\n" "$red" "$cross" "$reset" "$case"
+		endif
+		rm -f $exec_log run.txt
+		find . -maxdepth 1 -type f \( \
+			-name "*.csv" -o \
+			-name "*.phsp" -o \
+			-name "*.header" -o \
+			-name "*.root" -o \
+			-name "*.bin" -o \
+			-name "*.dcm" -o \
+			-name "*.binheader" -o \
+			-name "*.html" \
+		\) -delete
+		popd > /dev/null
+	end
 
-cd "$repo_root/examples/UCSFETF"
-echo ""
-echo "======================================"
-echo "** UCSF ETF demos **"
-echo "======================================"
-foreach case ($ucsf_cases)
-	set case_dir = $case:h
-	set case_file = $case:t
-	if ("$case_dir" == "" || "$case_dir" == "$case") then
-		set case_dir = "."
-	endif
-	pushd "$case_dir" > /dev/null
-	echo "includeFile = $case_file" > run.txt
-	echo 'b:Ts/UseQt = "False"' >> run.txt
-	echo 'b:Ts/PauseBeforeQuit = "False"' >> run.txt
-	echo 'b:Gr/Enable = "False"' >> run.txt
-	echo "🚀 Running $case"
-	"$topas_cmd" run.txt >&! $exec_log
-	set matches = `awk '/Execution/ {count++} END {print count+0}' $exec_log`
-	if ("$matches" == "1") then
-		printf "   %s%s [ Success ]%s %s\n" "$green" "$check" "$reset" "$case"
-	else
-		printf "   %s%s [ Fail ]%s %s\n" "$red" "$cross" "$reset" "$case"
-	endif
-	rm -f $exec_log run.txt *.csv *.phsp *.header *.root *.bin 
-	popd > /dev/null
-end
-rm -f *.csv *.phsp *.header *.root *.bin $exec_log
+	rm -f $base_cleanup $exec_log
+	find "$demo_path" -maxdepth 1 -type f \( \
+		-name "*.csv" -o \
+		-name "*.phsp" -o \
+		-name "*.header" -o \
+		-name "*.root" -o \
+		-name "*.bin" -o \
+		-name "*.dcm" -o \
+		-name "*.binheader" -o \
+		-name "*.html" \
+	\) -delete
 
-cd "$repo_root/examples/SpecialComponents"
-echo ""
-echo "======================================"
-echo "** Special component demos **"
-echo "======================================"
-foreach case ($special_cases)
-	set case_dir = $case:h
-	set case_file = $case:t
-	if ("$case_dir" == "" || "$case_dir" == "$case") then
-		set case_dir = "."
-	endif
-	pushd "$case_dir" > /dev/null
-	echo "includeFile = $case_file" > run.txt
-	echo 'b:Ts/UseQt = "False"' >> run.txt
-	echo 'b:Ts/PauseBeforeQuit = "False"' >> run.txt
-	echo 'b:Gr/Enable = "False"' >> run.txt
-	echo "🚀 Running $case"
-	"$topas_cmd" run.txt >&! $exec_log
-	set matches = `awk '/Execution/ {count++} END {print count+0}' $exec_log`
-	if ("$matches" == "1") then
-		printf "   %s%s [ Success ]%s %s\n" "$green" "$check" "$reset" "$case"
-	else
-		printf "   %s%s [ Fail ]%s %s\n" "$red" "$cross" "$reset" "$case"
-	endif
-	rm -f $exec_log run.txt *.csv *.phsp *.header *.root *.bin 
-	popd > /dev/null
+	@ demo_index++
 end
-rm -f *.csv *.phsp *.header *.root *.bin $exec_log
-
-cd "$repo_root/examples/Nozzle"
-echo ""
-echo "======================================"
-echo "** Nozzle demos **"
-echo "======================================"
-foreach case ($nozzle_cases)
-	set case_dir = $case:h
-	set case_file = $case:t
-	if ("$case_dir" == "" || "$case_dir" == "$case") then
-		set case_dir = "."
-	endif
-	pushd "$case_dir" > /dev/null
-	echo "includeFile = $case_file" > run.txt
-	echo 'b:Ts/UseQt = "False"' >> run.txt
-	echo 'b:Ts/PauseBeforeQuit = "False"' >> run.txt
-	echo 'b:Gr/Enable = "False"' >> run.txt
-	echo "🚀 Running $case"
-	"$topas_cmd" run.txt >&! $exec_log
-	set matches = `awk '/Execution/ {count++} END {print count+0}' $exec_log`
-	if ("$matches" == "1") then
-		printf "   %s%s [ Success ]%s %s\n" "$green" "$check" "$reset" "$case"
-	else
-		printf "   %s%s [ Fail ]%s %s\n" "$red" "$cross" "$reset" "$case"
-	endif
-	rm -f $exec_log run.txt *.csv *.phsp *.header *.root *.bin 
-	popd > /dev/null
-end
-rm -f *.csv *.phsp *.header *.root *.bin $exec_log
 
 cd "$repo_root/examples/Patient"
 echo ""
@@ -385,9 +270,12 @@ foreach case ( ViewAbdomen.txt )
 	echo "🚀 Running $case"
 	"$topas_cmd" run.txt >&! $exec_log
 	set matches = `awk '/Execution/ {count++} END {print count+0}' $exec_log`
+	@ total_count++
 	if ("$matches" == "1") then
+		@ success_count++
 		printf "   %s%s [ Success ]%s %s\n" "$green" "$check" "$reset" "$case"
 	else
+		@ fail_count++
 		printf "   %s%s [ Fail ]%s %s\n" "$red" "$cross" "$reset" "$case"
 	endif
 	rm -f $exec_log run.txt *.csv *.phsp *.header *.root *.bin 
@@ -424,9 +312,12 @@ foreach case ( DoseTo4DCT.txt )
 	echo "🚀 Running $case"
 	"$topas_cmd" run.txt >&! $exec_log
 	set matches = `awk '/Execution/ {count++} END {print count+0}' $exec_log`
+	@ total_count++
 	if ("$matches" == "1") then
+		@ success_count++
 		printf "   %s%s [ Success ]%s %s\n" "$green" "$check" "$reset" "$case"
 	else
+		@ fail_count++
 		printf "   %s%s [ Fail ]%s %s\n" "$red" "$cross" "$reset" "$case"
 	endif
 	rm -f $exec_log run.txt *.csv *.phsp *.header *.root *.bin *.dcm
@@ -463,9 +354,12 @@ foreach case ( Implant.txt )
 	echo "🚀 Running $case"
 	"$topas_cmd" run.txt >&! $exec_log
 	set matches = `awk '/Execution/ {count++} END {print count+0}' $exec_log`
+	@ total_count++
 	if ("$matches" == "1") then
+		@ success_count++
 		printf "   %s%s [ Success ]%s %s\n" "$green" "$check" "$reset" "$case"
 	else
+		@ fail_count++
 		printf "   %s%s [ Fail ]%s %s\n" "$red" "$cross" "$reset" "$case"
 	endif
 	rm -f $exec_log run.txt *.csv *.phsp *.header *.root *.bin *.dcm
@@ -483,6 +377,7 @@ set end_time = `date +%s`
 @ elapsed = $end_time - $start_time
 
 printf "\n📊  Regression completed in %d seconds (%.2f minutes)\n" $elapsed `echo "$elapsed / 60.0" | bc -l`
+printf "   Cases run: %d | Succeeded: %d | Failed: %d\n" $total_count $success_count $fail_count
 
 if (! $_demo_had_nonomatch) then
 	unset nonomatch
