@@ -63,6 +63,47 @@ if (! $_demo_had_nonomatch) then
 	set nonomatch
 endif
 
+set basic_examples = ( \
+	AllParameterForms.txt \
+	BatchJob1.txt \
+	BatchJob2.txt \
+	BatchJobShared.txt \
+	BoxRotatedAroundItsCorner.txt \
+	DistributedSourcePointsInShell.txt \
+	DistributedSourcePointsInSphere.txt \
+	DistributedSourcePointsInSphereGaussian.txt \
+	DistributedSourcePointsInTwistedTubs.txt \
+	DividedComponents.txt \
+	DNAModelByRegions.txt \
+	Emittance_Gaussian.txt \
+	Emittance_Twiss.txt \
+	EmModelByRegions.txt \
+	EnvironmentSource.txt \
+	ExtraSequence1.txt \
+	ExtraSequence2.txt \
+	FlatteningFilter.txt \
+	Isotope.txt \
+	LayeredMassGeometry.txt \
+	OneBox.txt \
+	OneBoxRotate.txt \
+	OneBoxTranslate.txt \
+	ParallelWorlds.txt \
+	ParticleSourcesFromGroup.txt \
+	PhysicsSetting.txt \
+	QtShapeTest.txt \
+	ShapeTestWithAllParameters.txt \
+	ShapeTestWithOnlyRequiredParameters.txt \
+	Spectrum.txt \
+	TwoBeams.txt \
+	VolumetricSource.txt \ \
+	VoxelMaterialsInDividedComponents.txt )
+
+set brachytherapy_case = ( \
+	DoseTLE.txt )
+
+set mvlinac_case = ( \
+	VRT_HD.txt )
+
 set timefeature_intro = ( \
 	BoxWithinBox.txt \
 	CameraRotateAndZoom.txt \
@@ -105,6 +146,94 @@ set start_time = `date +%s`
 echo "Running TOPAS demos using repository root: $repo_root"
 echo "Using TOPAS executable: $topas_cmd"
 
+cd "$repo_root/examples/Basic"
+echo ""
+echo "======================================"
+echo "** Basic demos **"
+echo "======================================"
+foreach case ($basic_examples)
+	set case_dir = $case:h
+	set case_file = $case:t
+	if ("$case_dir" == "" || "$case_dir" == "$case") then
+		set case_dir = "."
+	endif
+	pushd "$case_dir" > /dev/null
+	echo "includeFile = $case_file" > run.txt
+	echo 'b:Ts/UseQt = "False"' >> run.txt
+	echo 'b:Ts/PauseBeforeQuit = "False"' >> run.txt
+	echo 'b:Gr/Enable = "False"' >> run.txt
+	echo "🚀 Running $case"
+	"$topas_cmd" run.txt >&! $exec_log
+	set matches = `awk '/Execution/ {count++} END {print count+0}' $exec_log`
+	if ("$matches" == "1") then
+		printf "   %s%s [ Success ]%s %s\n" "$green" "$check" "$reset" "$case"
+	else
+		printf "   %s%s [ Fail ]%s %s\n" "$red" "$cross" "$reset" "$case"
+	endif
+	rm -f $exec_log run.txt *.csv *.phsp *.header *.root *.bin 
+	popd > /dev/null
+end
+rm -f *.csv *.phsp *.header *.root *.bin *.html $exec_log
+
+cd "$repo_root/examples/Brachytherapy"
+echo ""
+echo "======================================"
+echo "** Brachytherapy demo **"
+echo "======================================"
+foreach case ($brachytherapy_case)
+	set case_dir = $case:h
+	set case_file = $case:t
+	if ("$case_dir" == "" || "$case_dir" == "$case") then
+		set case_dir = "."
+	endif
+	pushd "$case_dir" > /dev/null
+	echo "includeFile = $case_file" > run.txt
+	echo 'b:Ts/UseQt = "False"' >> run.txt
+	echo 'b:Ts/PauseBeforeQuit = "False"' >> run.txt
+	echo 'b:Gr/Enable = "False"' >> run.txt
+	echo "🚀 Running $case"
+	"$topas_cmd" run.txt >&! $exec_log
+	set matches = `awk '/Execution/ {count++} END {print count+0}' $exec_log`
+	if ("$matches" == "1") then
+		printf "   %s%s [ Success ]%s %s\n" "$green" "$check" "$reset" "$case"
+	else
+		printf "   %s%s [ Fail ]%s %s\n" "$red" "$cross" "$reset" "$case"
+	endif
+	rm -f $exec_log run.txt *.csv *.phsp *.header *.root *.bin *.dcm
+	popd > /dev/null
+end
+rm -f *.csv *.phsp *.header *.root *.bin *.html $exec_log
+
+cd "$repo_root/examples/MVLinac"
+echo ""
+echo "======================================"
+echo "** MVLinac with VRT demo **"
+echo "======================================"
+foreach case ($mvlinac_case)
+	set case_dir = $case:h
+	set case_file = $case:t
+	if ("$case_dir" == "" || "$case_dir" == "$case") then
+		set case_dir = "."
+	endif
+	pushd "$case_dir" > /dev/null
+	echo "includeFile = $case_file" > run.txt
+	echo 'b:Ts/UseQt = "False"' >> run.txt
+	echo 'b:Ts/PauseBeforeQuit = "False"' >> run.txt
+	echo 'b:Gr/Enable = "False"' >> run.txt
+	echo "🚀 Running $case"
+	"$topas_cmd" run.txt >&! $exec_log
+	set matches = `awk '/Execution/ {count++} END {print count+0}' $exec_log`
+	if ("$matches" == "1") then
+		printf "   %s%s [ Success ]%s %s\n" "$green" "$check" "$reset" "$case"
+	else
+		printf "   %s%s [ Fail ]%s %s\n" "$red" "$cross" "$reset" "$case"
+	endif
+	rm -f $exec_log run.txt *.csv *.phsp *.header *.root *.bin *.binheader
+	popd > /dev/null
+end
+rm -f *.csv *.phsp *.header *.root *.bin *.html $exec_log
+
+
 cd "$repo_root/examples/TimeFeature"
 echo ""
 echo "======================================"
@@ -129,10 +258,10 @@ foreach case ($timefeature_intro)
 	else
 		printf "   %s%s [ Fail ]%s %s\n" "$red" "$cross" "$reset" "$case"
 	endif
-	rm -f $exec_log run.txt *.csv *.phsp *.header *.root *.bin *.xyz *.sdd
+	rm -f $exec_log run.txt *.csv *.phsp *.header *.root *.bin 
 	popd > /dev/null
 end
-rm -f *.csv *.phsp *.header *.root *.bin *.xyz *.sdd $exec_log
+rm -f *.csv *.phsp *.header *.root *.bin $exec_log
 
 cd "$repo_root/examples/UCSFETF"
 echo ""
@@ -158,10 +287,10 @@ foreach case ($ucsf_cases)
 	else
 		printf "   %s%s [ Fail ]%s %s\n" "$red" "$cross" "$reset" "$case"
 	endif
-	rm -f $exec_log run.txt *.csv *.phsp *.header *.root *.bin *.xyz *.sdd
+	rm -f $exec_log run.txt *.csv *.phsp *.header *.root *.bin 
 	popd > /dev/null
 end
-rm -f *.csv *.phsp *.header *.root *.bin *.xyz *.sdd $exec_log
+rm -f *.csv *.phsp *.header *.root *.bin $exec_log
 
 cd "$repo_root/examples/SpecialComponents"
 echo ""
@@ -187,10 +316,10 @@ foreach case ($special_cases)
 	else
 		printf "   %s%s [ Fail ]%s %s\n" "$red" "$cross" "$reset" "$case"
 	endif
-	rm -f $exec_log run.txt *.csv *.phsp *.header *.root *.bin *.xyz *.sdd
+	rm -f $exec_log run.txt *.csv *.phsp *.header *.root *.bin 
 	popd > /dev/null
 end
-rm -f *.csv *.phsp *.header *.root *.bin *.xyz *.sdd $exec_log
+rm -f *.csv *.phsp *.header *.root *.bin $exec_log
 
 cd "$repo_root/examples/Nozzle"
 echo ""
@@ -216,10 +345,10 @@ foreach case ($nozzle_cases)
 	else
 		printf "   %s%s [ Fail ]%s %s\n" "$red" "$cross" "$reset" "$case"
 	endif
-	rm -f $exec_log run.txt *.csv *.phsp *.header *.root *.bin *.xyz *.sdd
+	rm -f $exec_log run.txt *.csv *.phsp *.header *.root *.bin 
 	popd > /dev/null
 end
-rm -f *.csv *.phsp *.header *.root *.bin *.xyz *.sdd $exec_log
+rm -f *.csv *.phsp *.header *.root *.bin $exec_log
 
 cd "$repo_root/examples/Patient"
 echo ""
@@ -261,7 +390,7 @@ foreach case ( ViewAbdomen.txt )
 	else
 		printf "   %s%s [ Fail ]%s %s\n" "$red" "$cross" "$reset" "$case"
 	endif
-	rm -f $exec_log run.txt *.csv *.phsp *.header *.root *.bin *.xyz *.sdd
+	rm -f $exec_log run.txt *.csv *.phsp *.header *.root *.bin 
 	popd > /dev/null
 end
 rm -rf Abdomen
@@ -300,7 +429,7 @@ foreach case ( DoseTo4DCT.txt )
 	else
 		printf "   %s%s [ Fail ]%s %s\n" "$red" "$cross" "$reset" "$case"
 	endif
-	rm -f $exec_log run.txt *.csv *.phsp *.header *.root *.bin *.xyz *.sdd *.dcm
+	rm -f $exec_log run.txt *.csv *.phsp *.header *.root *.bin *.dcm
 	popd > /dev/null
 end
 rm -rf synthetic_lung
@@ -339,12 +468,12 @@ foreach case ( Implant.txt )
 	else
 		printf "   %s%s [ Fail ]%s %s\n" "$red" "$cross" "$reset" "$case"
 	endif
-	rm -f $exec_log run.txt *.csv *.phsp *.header *.root *.bin *.xyz *.sdd *.dcm
+	rm -f $exec_log run.txt *.csv *.phsp *.header *.root *.bin *.dcm
 	popd > /dev/null
 end
 rm -rf DICOM_Box __MACOSX
 
-rm -f *.csv *.phsp *.header *.root *.bin *.xyz *.sdd *.dcm $exec_log
+rm -f *.csv *.phsp *.header *.root *.bin *.dcm $exec_log
 
 rm -f "$repo_root"/examples/*/NbParticlesInTime.txt
 
