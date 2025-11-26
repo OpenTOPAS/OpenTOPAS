@@ -108,16 +108,7 @@ fShowReadOnlyNoteMessage(true)
     fUIQt->GetUserInterfaceWidget()->setWindowTitle("");
     
     // Set window and tab icon
-    QPixmap logoPixmap("/Applications/TOPAS/OpenTOPAS/graphics/TOPASLogo.png");
-    if (!logoPixmap.isNull()) {
-        QSize targetSize(286,192);
-        QIcon logoIcon(logoPixmap.scaled(targetSize, Qt::KeepAspectRatio, Qt::SmoothTransformation));
-        fUIQt->GetMainWindow()->setWindowIcon(logoIcon);
-        int tabIndex = fUIQt->GetUITabWidget()->addTab(fParameterEditorWidget,"Parameter Control");
-        fUIQt->GetUITabWidget()->setCurrentIndex(tabIndex);
-    } else {
-        fUIQt->GetUITabWidget()->addTab(fParameterEditorWidget,"Parameter Control");
-    }
+    fUIQt->GetUITabWidget()->addTab(fParameterEditorWidget,"Parameter Control");
     
     // Add our own control widget
     // Already added above
@@ -130,17 +121,24 @@ fShowReadOnlyNoteMessage(true)
         fUIQt->GetUITabWidget()->removeTab(1);
         fUIQt->GetUITabWidget()->setCurrentIndex(1);
         
-        // Remove many of the detault Geant4 Qt menu bar actions
+        // Reorder Geant4 Qt menu bar actions to preferred sequence
         QList<QToolBar *> allToolBars = fUIQt->GetMainWindow()->findChildren<QToolBar *>();
-        G4int actionCounter = 0;
-        QList<QAction*> actions = allToolBars[0]->actions();
-        G4int lastIndex = actions.size() - 1;
-        foreach (QAction *action, actions) {
-            // Keep first action (index 0), actions 3-7, and the last action
-            bool keep = (actionCounter >= 3 && actionCounter <= 7) || (actionCounter == lastIndex);
-            if (!keep)
+        if (!allToolBars.isEmpty()) {
+            QList<QAction*> actions = allToolBars[0]->actions();
+            QList<int> desiredOrder;
+            desiredOrder << 4 << 5 << 6 << 3 << 7 << 12 << 13 << 15;
+            
+            QList<QAction*> reordered;
+            foreach (int idx, desiredOrder) {
+                if (idx >= 0 && idx < actions.size())
+                    reordered.append(actions[idx]);
+            }
+            
+            foreach (QAction* action, actions)
                 allToolBars[0]->removeAction(action);
-            actionCounter++;
+            
+            foreach (QAction* action, reordered)
+                allToolBars[0]->addAction(action);
         }
         
         // Remove "Useful Tips" tab from Viewer Tab Widget
@@ -1742,4 +1740,3 @@ void TsQt::AddSourceWidgetSetItemChanged() {
 }
 
 #endif
-
