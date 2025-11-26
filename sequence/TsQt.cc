@@ -56,6 +56,7 @@
 #include "G4UIQt.hh"
 
 #include <qtoolbar.h>
+#include <qmenubar.h>
 #include <qlabel.h>
 #include <qaction.h>
 #include <qsignalmapper.h>
@@ -82,8 +83,14 @@
 #include <qinputdialog.h>
 #include <qicon.h>
 #include <qfile.h>
+#include <qfileinfo.h>
 #include <qdir.h>
 #include <qdialog.h>
+#include <qdialogbuttonbox.h>
+#include <qdesktopservices.h>
+#include <qstringlist.h>
+#include <qurl.h>
+#include <qtextedit.h>
 #include <map>
 #include <set>
 #include <qpixmap.h>
@@ -135,14 +142,59 @@ fShowReadOnlyNoteMessage(true)
             }
             
             foreach (QAction* action, actions)
-                allToolBars[0]->removeAction(action);
+            allToolBars[0]->removeAction(action);
             
             foreach (QAction* action, reordered)
-                allToolBars[0]->addAction(action);
+            allToolBars[0]->addAction(action);
         }
         
         // Remove "Useful Tips" tab from Viewer Tab Widget
         fUIQt->GetViewerTabWidget()->removeTab(0);
+    }
+    
+    // Add Help menu entries for TOPAS links and About dialog
+    QMenuBar* menuBar = fUIQt->GetMainWindow()->menuBar();
+    if (menuBar) {
+        QMenu* helpMenu = nullptr;
+        QList<QAction*> menuActions = menuBar->actions();
+        foreach (QAction* action, menuActions) {
+            QMenu* menu = action->menu();
+            if (menu) {
+                QString title = menu->title();
+                title.remove('&');
+                if (title.compare("Help", Qt::CaseInsensitive) == 0) {
+                    helpMenu = menu;
+                    break;
+                }
+            }
+        }
+        
+        if (!helpMenu)
+            helpMenu = menuBar->addMenu("Help");
+        
+        QString docBase("TOPAS Documentation");
+        QString communityBase("TOPAS Community");
+        QString reportBase("Report a bug");
+        int targetWidth = docBase.size();
+        if (communityBase.size() > targetWidth)
+            targetWidth = communityBase.size();
+        if (reportBase.size() > targetWidth)
+            targetWidth = reportBase.size();
+        QString docLabel = docBase.leftJustified(targetWidth, ' ') + "  \xE2\x86\x97";
+        QString communityLabel = communityBase.leftJustified(targetWidth, ' ') + "  \xE2\x86\x97";
+        QString reportLabel = reportBase.leftJustified(targetWidth, ' ') + "  \xE2\x86\x97";
+        QAction* docsAction = helpMenu->addAction(docLabel);
+        connect(docsAction, SIGNAL(triggered()), this, SLOT(OpenDocsCallback()));
+        QAction* supportAction = helpMenu->addAction(communityLabel);
+        connect(supportAction, SIGNAL(triggered()), this, SLOT(OpenSupportCallback()));
+        helpMenu->addSeparator();
+        QAction* bugAction = helpMenu->addAction(reportLabel);
+        connect(bugAction, &QAction::triggered, []() {
+            QDesktopServices::openUrl(QUrl("https://github.com/OpenTOPAS/OpenTOPAS/issues"));
+        });
+        helpMenu->addSeparator();
+        QAction* aboutAction = helpMenu->addAction("About TOPAS");
+        connect(aboutAction, SIGNAL(triggered()), this, SLOT(ShowAboutDialog()));
     }
     
     QToolBar* toolbar = new QToolBar();
@@ -1332,6 +1384,119 @@ void TsQt::SaveCallback() {
     fPm->AddParameter("d:" + parameterStart + "TargetPointY", G4UIcommand::ConvertToString(viewer->GetViewParameters().GetCurrentTargetPoint().y() / mm) + " mm", false, true);
     fPm->AddParameter("d:" + parameterStart + "TargetPointZ", G4UIcommand::ConvertToString(viewer->GetViewParameters().GetCurrentTargetPoint().z() / mm) + " mm", false, true);
     fPm->DumpAddedParameters(filespec);
+}
+
+
+void TsQt::OpenDocsCallback() {
+    QDesktopServices::openUrl(QUrl("https://opentopas.readthedocs.io/en/latest/"));
+}
+
+
+void TsQt::OpenSupportCallback() {
+    QDesktopServices::openUrl(QUrl("https://github.com/OpenTOPAS/OpenTOPAS/discussions"));
+}
+
+
+void TsQt::ShowAboutDialog() {
+    QDialog* aboutDialog = new QDialog(fUIQt->GetMainWindow());
+    aboutDialog->setWindowTitle("About TOPAS");
+    aboutDialog->setAttribute(Qt::WA_DeleteOnClose);
+    
+    QVBoxLayout* layout = new QVBoxLayout();
+    layout->setAlignment(Qt::AlignCenter);
+    
+    auto loadLogo = []() {
+        std::vector<QString> candidates = {
+            "/Applications/TOPAS/OpenTOPAS/graphics/TOPASLogo.png",
+            QDir::homePath() + "/Applications/TOPAS/OpenTOPAS/graphics/TOPASLogo.png",
+            "graphics/TOPASLogo.png"
+        };
+        for (size_t i=0; i<candidates.size(); ++i) {
+            QPixmap pix(candidates[i]);
+            if (!pix.isNull())
+                return pix;
+        }
+        return QPixmap();
+    };
+    
+    QLabel* logoLabel = new QLabel();
+    logoLabel->setAlignment(Qt::AlignCenter);
+    QPixmap logo = loadLogo();
+    if (!logo.isNull()) {
+        QSize targetSize = logo.size() / 6;
+        logoLabel->setPixmap(logo.scaled(targetSize, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    } else {
+        logoLabel->setText("TOPAS");
+        QFont font = logoLabel->font();
+        font.setPointSize(font.pointSize() + 4);
+        font.setBold(true);
+        logoLabel->setFont(font);
+    }
+    layout->addWidget(logoLabel, 0, Qt::AlignCenter);
+    
+    auto addCenteredLabel = [&](const QString& text) {
+        QLabel* label = new QLabel(text);
+        label->setAlignment(Qt::AlignCenter);
+        layout->addWidget(label);
+    };
+    
+    addCenteredLabel("TOPAS version OpenTOPAS v4.2.0");
+    addCenteredLabel("Built and linked against the toolkits: Geant4 v11.3.2, GDCM v2.6.8");
+    addCenteredLabel("Copyright (c): 2025 The TOPAS Collaboration");
+    QLabel* linkLabel = new QLabel("<a href=\"https://opentopas.github.io\">https://opentopas.github.io</a>");
+    linkLabel->setAlignment(Qt::AlignCenter);
+    linkLabel->setTextFormat(Qt::RichText);
+    linkLabel->setTextInteractionFlags(Qt::TextBrowserInteraction);
+    linkLabel->setOpenExternalLinks(true);
+    layout->addWidget(linkLabel);
+    
+    QDialogButtonBox* buttonBox = new QDialogButtonBox(Qt::Horizontal);
+    QPushButton* contactButton = buttonBox->addButton("Contact", QDialogButtonBox::ActionRole);
+    QPushButton* licenseButton = buttonBox->addButton("License", QDialogButtonBox::ActionRole);
+    QPushButton* closeButton = buttonBox->addButton("Close", QDialogButtonBox::RejectRole);
+    layout->addWidget(buttonBox);
+    
+    connect(closeButton, SIGNAL(clicked()), aboutDialog, SLOT(close()));
+    connect(contactButton, &QPushButton::clicked, []() {
+        QDesktopServices::openUrl(QUrl("https://opentopas.github.io/contact.html"));
+    });
+    connect(licenseButton, &QPushButton::clicked, [aboutDialog]() {
+        QString licenseText;
+        QStringList licenseCandidates;
+        licenseCandidates << "LICENSE.txt"
+        << "/Applications/TOPAS/OpenTOPAS/LICENSE.txt"
+        << QDir::homePath() + "/Applications/TOPAS/OpenTOPAS/LICENSE.txt";
+        for (int i = 0; i < licenseCandidates.size(); ++i) {
+            QFile file(licenseCandidates[i]);
+            if (file.exists() && file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+                licenseText = QString::fromUtf8(file.readAll());
+                file.close();
+                break;
+            }
+        }
+        if (licenseText.isEmpty())
+            licenseText = "License file not found. Please refer to the distributed LICENSE.txt.";
+        QDialog* licenseDialog = new QDialog(aboutDialog);
+        licenseDialog->setWindowTitle("TOPAS License");
+        licenseDialog->setAttribute(Qt::WA_DeleteOnClose);
+        QVBoxLayout* vbox = new QVBoxLayout();
+        QTextEdit* textEdit = new QTextEdit();
+        textEdit->setReadOnly(true);
+        textEdit->setPlainText(licenseText);
+        textEdit->setMinimumSize(495, 370);
+        vbox->addWidget(textEdit);
+        QDialogButtonBox* bb = new QDialogButtonBox(QDialogButtonBox::Close);
+        connect(bb, SIGNAL(rejected()), licenseDialog, SLOT(close()));
+        vbox->addWidget(bb);
+        licenseDialog->setLayout(vbox);
+        licenseDialog->setModal(true);
+        licenseDialog->resize(495, 370);
+        licenseDialog->show();
+    });
+    
+    aboutDialog->setLayout(layout);
+    aboutDialog->setModal(true);
+    aboutDialog->show();
 }
 
 

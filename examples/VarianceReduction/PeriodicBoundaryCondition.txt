@@ -32,14 +32,14 @@ s:So/radiationField/BeamPositionCutoffShape = "Rectangle"
 d:So/radiationField/BeamPositionCutoffX = 0.5 mm 
 d:So/radiationField/BeamPositionCutoffY = 0.5 mm 
 s:So/radiationField/BeamAngularDistribution = "None" 
-i:So/radiationField/NumberOfHistoriesInRun = 1000 
+i:So/radiationField/NumberOfHistoriesInRun = 24
 
 #######################################################
 i:Ts/ShowHistoryCountAtInterval = 100 
 i:Ts/NumberOfThreads = 0 
 i:Ts/Seed = 1 
 b:Ts/ShowCPUTime = "True"
-b:Gr/Enable = "False"
+b:Gr/Enable = "T"
 s:Gr/View/Type = "OpenGl"
 b:Ts/UseQt = Gr/Enable
 b:Ge/World/Invisible = "True"

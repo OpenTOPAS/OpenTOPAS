@@ -76,6 +76,9 @@ public:
 	void ParameterComboChanged();
 
 	void SaveCallback();
+	void OpenDocsCallback();
+	void OpenSupportCallback();
+	void ShowAboutDialog();
 
 	void AddComponentCallback();
 	void AddComponentWidgetSetItemChanged();
