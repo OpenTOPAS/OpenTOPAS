@@ -97,17 +97,83 @@
 #include <qpixmap.h>
 
 namespace {
-void OpenUrlWithHostHelper(const QString& url) {
+QWidget* GetQtParent(QWidget* preferredParent = nullptr) {
+    if (preferredParent)
+        return preferredParent;
+    
+    QWidget* activeWindow = QApplication::activeWindow();
+    if (activeWindow)
+        return activeWindow;
+    
+    return nullptr;
+}
+
+bool TryOpenWithHostHelper(const QString& helper, const QString& url) {
+    if (helper.isEmpty() || !QFile::exists(helper))
+        return false;
+    
+    QProcess process;
+    process.start(helper, QStringList() << url);
+    if (!process.waitForStarted(1000))
+        return false;
+    
+    // Helper should exit quickly; short timeout keeps UI responsive.
+    process.waitForFinished(3000);
+    return process.exitStatus() == QProcess::NormalExit && process.exitCode() == 0;
+}
+
+void ShowHostOpenFallback(const QString& url, QWidget* parent) {
+    QString message = "Could not find a host browser launcher. Please open\n"
+                      "  this URL manually:\n"
+                      "  " + url;
+    
+    QMessageBox box(QMessageBox::Information, "Open Documentation", message, QMessageBox::Ok, GetQtParent(parent));
+    box.exec();
+}
+
+bool ShowReadOnlyParametersDialog(QWidget* parent) {
+    QDialog dialog(GetQtParent(parent));
+    dialog.setWindowTitle("Read-Only Parameters");
+    dialog.setModal(true);
+    
+    QVBoxLayout* vbox = new QVBoxLayout();
+    QLabel* text = new QLabel("Note: Parameters in bold cannot be changed!");
+    text->setWordWrap(true);
+    vbox->addWidget(text);
+    
+    QHBoxLayout* buttonLayout = new QHBoxLayout();
+    QPushButton* okButton = new QPushButton("OK");
+    QPushButton* dontShowButton = new QPushButton("Don't show again");
+    buttonLayout->addWidget(okButton, 0, Qt::AlignLeft);
+    buttonLayout->addStretch();
+    buttonLayout->addWidget(dontShowButton, 0, Qt::AlignRight);
+    vbox->addLayout(buttonLayout);
+    
+    dialog.setLayout(vbox);
+    
+    bool suppressFuture = false;
+    QObject::connect(okButton, &QPushButton::clicked, &dialog, &QDialog::accept);
+    QObject::connect(dontShowButton, &QPushButton::clicked, [&dialog, &suppressFuture]() {
+        suppressFuture = true;
+        dialog.accept();
+    });
+    
+    dialog.exec();
+    return suppressFuture;
+}
+
+void OpenUrlWithHostHelper(const QString& url, QWidget* parent = nullptr) {
     QString helper = QString::fromLocal8Bit(qgetenv("TOPAS_HOST_OPEN"));
     if (helper.isEmpty())
         helper = "/opt/topas/host-open";
     
-    if (!helper.isEmpty() && QFile::exists(helper)) {
-        if (QProcess::startDetached(helper, QStringList() << url))
-            return;
-    }
+    if (TryOpenWithHostHelper(helper, url))
+        return;
     
-    QDesktopServices::openUrl(QUrl(url));
+    if (QDesktopServices::openUrl(QUrl(url)))
+        return;
+    
+    ShowHostOpenFallback(url, parent);
 }
 }
 
@@ -205,8 +271,8 @@ fShowReadOnlyNoteMessage(true)
         connect(supportAction, SIGNAL(triggered()), this, SLOT(OpenSupportCallback()));
         helpMenu->addSeparator();
         QAction* bugAction = helpMenu->addAction(reportLabel);
-        connect(bugAction, &QAction::triggered, []() {
-            OpenUrlWithHostHelper("https://github.com/OpenTOPAS/OpenTOPAS/issues");
+        connect(bugAction, &QAction::triggered, [this]() {
+            OpenUrlWithHostHelper("https://github.com/OpenTOPAS/OpenTOPAS/issues", fUIQt->GetMainWindow());
         });
         helpMenu->addSeparator();
         QAction* aboutAction = helpMenu->addAction("About TOPAS");
@@ -1404,12 +1470,12 @@ void TsQt::SaveCallback() {
 
 
 void TsQt::OpenDocsCallback() {
-    OpenUrlWithHostHelper("https://opentopas.readthedocs.io/en/latest/");
+    OpenUrlWithHostHelper("https://opentopas.readthedocs.io/en/latest/", fUIQt->GetMainWindow());
 }
 
 
 void TsQt::OpenSupportCallback() {
-    OpenUrlWithHostHelper("https://github.com/OpenTOPAS/OpenTOPAS/discussions");
+    OpenUrlWithHostHelper("https://github.com/OpenTOPAS/OpenTOPAS/discussions", fUIQt->GetMainWindow());
 }
 
 
@@ -1466,15 +1532,47 @@ void TsQt::ShowAboutDialog() {
     linkLabel->setOpenExternalLinks(true);
     layout->addWidget(linkLabel);
     
-    QDialogButtonBox* buttonBox = new QDialogButtonBox(Qt::Horizontal);
-    QPushButton* contactButton = buttonBox->addButton("Contact", QDialogButtonBox::ActionRole);
-    QPushButton* licenseButton = buttonBox->addButton("License", QDialogButtonBox::ActionRole);
-    QPushButton* closeButton = buttonBox->addButton("Close", QDialogButtonBox::RejectRole);
-    layout->addWidget(buttonBox);
+    QWidget* buttonRow = new QWidget();
+    QHBoxLayout* buttonLayout = new QHBoxLayout();
+    buttonLayout->setContentsMargins(0, 0, 0, 0);
+    QPushButton* contactButton = new QPushButton("Contact");
+    QPushButton* licenseButton = new QPushButton("License");
+    QPushButton* closeButton = new QPushButton("Close");
+    buttonLayout->addWidget(contactButton);
+    buttonLayout->addWidget(licenseButton);
+    buttonLayout->addStretch();
+    buttonLayout->addWidget(closeButton);
+    buttonRow->setLayout(buttonLayout);
+    layout->addWidget(buttonRow);
     
     connect(closeButton, SIGNAL(clicked()), aboutDialog, SLOT(close()));
-    connect(contactButton, &QPushButton::clicked, []() {
-        QDesktopServices::openUrl(QUrl("https://opentopas.github.io/contact.html"));
+    connect(contactButton, &QPushButton::clicked, [aboutDialog]() {
+        QDialog* contactDialog = new QDialog(aboutDialog);
+        contactDialog->setWindowTitle("Contact TOPAS Team");
+        contactDialog->setAttribute(Qt::WA_DeleteOnClose);
+        QVBoxLayout* vbox = new QVBoxLayout();
+        QLabel* text = new QLabel("Get in touch with the TOPAS team via our contact page:");
+        text->setWordWrap(true);
+        vbox->addWidget(text);
+        QLabel* link = new QLabel("<a href=\"https://opentopas.github.io/contact.html\">https://opentopas.github.io/contact.html</a>");
+        link->setTextFormat(Qt::RichText);
+        link->setTextInteractionFlags(Qt::TextBrowserInteraction);
+        link->setOpenExternalLinks(true);
+        vbox->addWidget(link);
+        QHBoxLayout* buttons = new QHBoxLayout();
+        QPushButton* openButton = new QPushButton("Open Contact Page");
+        QPushButton* closeBtn = new QPushButton("Close");
+        buttons->addWidget(openButton);
+        buttons->addStretch();
+        buttons->addWidget(closeBtn);
+        vbox->addLayout(buttons);
+        QObject::connect(openButton, &QPushButton::clicked, [contactDialog]() {
+            OpenUrlWithHostHelper("https://opentopas.github.io/contact.html", contactDialog);
+        });
+        QObject::connect(closeBtn, &QPushButton::clicked, contactDialog, &QDialog::accept);
+        contactDialog->setLayout(vbox);
+        contactDialog->setModal(true);
+        contactDialog->show();
     });
     connect(licenseButton, &QPushButton::clicked, [aboutDialog]() {
         QString licenseText;
@@ -1642,17 +1740,8 @@ void TsQt::AddComponentWidgetSetItemChanged() {
     fAddComponentDialog->hide();
     fAddComponentWidget->hide();
     
-    if (fShowReadOnlyNoteMessage) {
-        QMessageBox msgBox;
-        msgBox.setWindowTitle(QString("Read-Only Parameters"));
-        msgBox.setText(QString("Note: Parameters in bold cannot be changed!"));
-        msgBox.addButton(QString("OK"), QMessageBox::AcceptRole);
-        QPushButton* dontShowButton = msgBox.addButton(QString("Don't show again"), QMessageBox::RejectRole);
-        msgBox.exec();
-        if (msgBox.clickedButton() == dontShowButton)
-            fShowReadOnlyNoteMessage = false;
-        // Proceed regardless of which was clicked.
-    }
+    if (fShowReadOnlyNoteMessage)
+        fShowReadOnlyNoteMessage = !ShowReadOnlyParametersDialog(fUIQt->GetMainWindow());
     
     fCurrentComponentName = fAddComponentNameWidget->text().toStdString();
     fAddedComponentCounter++;
@@ -1775,16 +1864,8 @@ void TsQt::AddScorerWidgetSetItemChanged() {
     fAddScorerDialog->hide();
     fAddScorerWidget->hide();
     
-    if (fShowReadOnlyNoteMessage) {
-        QMessageBox msgBox;
-        msgBox.setWindowTitle(QString("Read-Only Parameters"));
-        msgBox.setText(QString("Note: Parameters in bold cannot be changed!"));
-        msgBox.addButton(QString("OK"), QMessageBox::AcceptRole);
-        QPushButton* dontShowButton = msgBox.addButton(QString("Don't show again"), QMessageBox::RejectRole);
-        msgBox.exec();
-        if (msgBox.clickedButton() == dontShowButton)
-            fShowReadOnlyNoteMessage = false;
-    }
+    if (fShowReadOnlyNoteMessage)
+        fShowReadOnlyNoteMessage = !ShowReadOnlyParametersDialog(fUIQt->GetMainWindow());
     
     fCurrentScorerName = fAddScorerNameWidget->text().toStdString();
     fAddedScorerCounter++;
@@ -1897,16 +1978,8 @@ void TsQt::AddSourceWidgetSetItemChanged() {
     fAddSourceDialog->hide();
     fAddSourceWidget->hide();
     
-    if (fShowReadOnlyNoteMessage) {
-        QMessageBox msgBox;
-        msgBox.setWindowTitle(QString("Read-Only Parameters"));
-        msgBox.setText(QString("Note: Parameters in bold cannot be changed!"));
-        msgBox.addButton(QString("OK"), QMessageBox::AcceptRole);
-        QPushButton* dontShowButton = msgBox.addButton(QString("Don't show again"), QMessageBox::RejectRole);
-        msgBox.exec();
-        if (msgBox.clickedButton() == dontShowButton)
-            fShowReadOnlyNoteMessage = false;
-    }
+    if (fShowReadOnlyNoteMessage)
+        fShowReadOnlyNoteMessage = !ShowReadOnlyParametersDialog(fUIQt->GetMainWindow());
     
     fCurrentSourceName = fAddSourceNameWidget->text().toStdString();
     fAddedSourceCounter++;
