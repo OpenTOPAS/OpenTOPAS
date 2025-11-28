@@ -370,7 +370,12 @@ void TsSourceManager::AddSourceFromGUI(G4String& sourceName, G4String& component
 			fPm->AddParameter(parameterName, transValue);
 
 			parameterName = "sc:So/" + sourceName + "/ActiveMaterial";
-			transValue = "\"G4_AIR\"";
+			if (fPm->ParameterExists("Ge/" + componentName + "/Material")) {
+				G4String volumeMaterial = fPm->GetStringParameter("Ge/" + componentName + "/Material");
+				transValue = "\"" + volumeMaterial + "\"";
+			} else {
+				transValue = "\"G4_AIR\"";
+			}
 			fPm->AddParameter(parameterName, transValue);
 
 			parameterName = "bc:So/" + sourceName + "/RecursivelyIncludeChildren";
