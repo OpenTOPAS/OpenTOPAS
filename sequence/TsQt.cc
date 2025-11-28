@@ -88,12 +88,28 @@
 #include <qdialog.h>
 #include <qdialogbuttonbox.h>
 #include <qdesktopservices.h>
+#include <qprocess.h>
 #include <qstringlist.h>
 #include <qurl.h>
 #include <qtextedit.h>
 #include <map>
 #include <set>
 #include <qpixmap.h>
+
+namespace {
+void OpenUrlWithHostHelper(const QString& url) {
+    QString helper = QString::fromLocal8Bit(qgetenv("TOPAS_HOST_OPEN"));
+    if (helper.isEmpty())
+        helper = "/opt/topas/host-open";
+    
+    if (!helper.isEmpty() && QFile::exists(helper)) {
+        if (QProcess::startDetached(helper, QStringList() << url))
+            return;
+    }
+    
+    QDesktopServices::openUrl(QUrl(url));
+}
+}
 
 TsQt::TsQt(TsParameterManager* pM, TsExtensionManager* eM, TsMaterialManager* mM, TsGeometryManager* gM, TsScoringManager* scM, TsSequenceManager* sqM,
            TsGraphicsManager* grM, TsSourceManager* soM) :
@@ -190,7 +206,7 @@ fShowReadOnlyNoteMessage(true)
         helpMenu->addSeparator();
         QAction* bugAction = helpMenu->addAction(reportLabel);
         connect(bugAction, &QAction::triggered, []() {
-            QDesktopServices::openUrl(QUrl("https://github.com/OpenTOPAS/OpenTOPAS/issues"));
+            OpenUrlWithHostHelper("https://github.com/OpenTOPAS/OpenTOPAS/issues");
         });
         helpMenu->addSeparator();
         QAction* aboutAction = helpMenu->addAction("About TOPAS");
@@ -1388,12 +1404,12 @@ void TsQt::SaveCallback() {
 
 
 void TsQt::OpenDocsCallback() {
-    QDesktopServices::openUrl(QUrl("https://opentopas.readthedocs.io/en/latest/"));
+    OpenUrlWithHostHelper("https://opentopas.readthedocs.io/en/latest/");
 }
 
 
 void TsQt::OpenSupportCallback() {
-    QDesktopServices::openUrl(QUrl("https://github.com/OpenTOPAS/OpenTOPAS/discussions"));
+    OpenUrlWithHostHelper("https://github.com/OpenTOPAS/OpenTOPAS/discussions");
 }
 
 
