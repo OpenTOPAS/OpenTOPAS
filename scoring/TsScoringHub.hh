@@ -32,6 +32,7 @@
 #define TsScoringHub_hh
 
 #include "globals.hh"
+#include <vector>
 
 class TsParameterManager;
 class TsExtensionManager;

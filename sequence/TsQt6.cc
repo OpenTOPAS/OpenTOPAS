@@ -30,7 +30,7 @@
 
 #ifdef G4UI_USE_QT
 
-#include "TsQt.hh"
+#include "TsQt6.hh"
 
 #include "TsParameterManager.hh"
 #include "TsExtensionManager.hh"
@@ -48,6 +48,7 @@
 #include "G4UImanager.hh"
 #include "G4VViewer.hh"
 #include "G4SystemOfUnits.hh"
+#include "TsTopasConfig.hh"
 
 #include <string.h>
 #include <string>
@@ -55,129 +56,79 @@
 
 #include "G4UIQt.hh"
 
-#include <qtoolbar.h>
-#include <qmenubar.h>
-#include <qlabel.h>
-#include <qaction.h>
-#include <qsignalmapper.h>
-#include <qmainwindow.h>
-#include <qlayout.h>
-#include <qlineedit.h>
-#include <qcombobox.h>
-#include <qgroupbox.h>
-#include <qtreewidget.h>
-#include <qheaderview.h>
-#include <qapplication.h>
-#include <qlist.h>
-#include <qpushbutton.h>
-#include <qfont.h>
-#include <qmessagebox.h>
-#include <qlineedit.h>
-#include <qtoolbutton.h>
-#include <qscrollbar.h>
-#include <qcolor.h>
-#include <qbrush.h>
-#include <qtoolbutton.h>
-#include <qscrollbar.h>
-#include <qmenu.h>
-#include <qinputdialog.h>
-#include <qicon.h>
-#include <qfile.h>
-#include <qfileinfo.h>
-#include <qdir.h>
-#include <qdialog.h>
-#include <qdialogbuttonbox.h>
-#include <qdesktopservices.h>
-#include <qprocess.h>
-#include <qstringlist.h>
-#include <qurl.h>
-#include <qtextedit.h>
+#include <QtGlobal>
+#include <QAction>
+#include <QApplication>
+#include <QBrush>
+#include <QColor>
+#include <QComboBox>
+#include <QDesktopServices>
+#include <QDialog>
+#include <QDialogButtonBox>
+#include <QDir>
+#include <QFile>
+#include <QFileInfo>
+#include <QFont>
+#include <QGroupBox>
+#include <QGridLayout>
+#include <QHBoxLayout>
+#include <QHeaderView>
+#include <QIcon>
+#include <QInputDialog>
+#include <QLabel>
+#include <QLineEdit>
+#include <QList>
+#include <QMainWindow>
+#include <QMenu>
+#include <QMenuBar>
+#include <QMessageBox>
+#include <QPixmap>
+#include <QPoint>
+#include <QProcess>
+#include <QPushButton>
+#include <QScrollBar>
+#include <QSize>
+#include <QSizePolicy>
+#include <QString>
+#include <QStringList>
+#include <QTextEdit>
+#include <QToolBar>
+#include <QToolButton>
+#include <QTreeWidget>
+#include <QTreeWidgetItem>
+#include <QUrl>
+#include <QVBoxLayout>
+#include <QWidget>
+#include <gdcmVersion.h>
 #include <map>
 #include <set>
-#include <qpixmap.h>
 
 namespace {
-QWidget* GetQtParent(QWidget* preferredParent = nullptr) {
-    if (preferredParent)
-        return preferredParent;
-    
-    QWidget* activeWindow = QApplication::activeWindow();
-    if (activeWindow)
-        return activeWindow;
-    
-    return nullptr;
-}
-
-bool TryOpenWithHostHelper(const QString& helper, const QString& url) {
-    if (helper.isEmpty() || !QFile::exists(helper))
-        return false;
-    
-    QProcess process;
-    process.start(helper, QStringList() << url);
-    if (!process.waitForStarted(1000))
-        return false;
-    
-    // Helper should exit quickly; short timeout keeps UI responsive.
-    process.waitForFinished(3000);
-    return process.exitStatus() == QProcess::NormalExit && process.exitCode() == 0;
-}
-
-void ShowHostOpenFallback(const QString& url, QWidget* parent) {
-    QString message = "Could not find a host browser launcher. Please open\n"
-                      "  this URL manually:\n"
-                      "  " + url;
-    
-    QMessageBox box(QMessageBox::Information, "Open Documentation", message, QMessageBox::Ok, GetQtParent(parent));
-    box.exec();
-}
-
-bool ShowReadOnlyParametersDialog(QWidget* parent) {
-    QDialog dialog(GetQtParent(parent));
-    dialog.setWindowTitle("Read-Only Parameters");
-    dialog.setModal(true);
-    
-    QVBoxLayout* vbox = new QVBoxLayout();
-    QLabel* text = new QLabel("Note: Parameters in bold cannot be changed!");
-    text->setWordWrap(true);
-    vbox->addWidget(text);
-    
-    QHBoxLayout* buttonLayout = new QHBoxLayout();
-    QPushButton* okButton = new QPushButton("OK");
-    QPushButton* dontShowButton = new QPushButton("Don't show again");
-    buttonLayout->addWidget(okButton, 0, Qt::AlignLeft);
-    buttonLayout->addStretch();
-    buttonLayout->addWidget(dontShowButton, 0, Qt::AlignRight);
-    vbox->addLayout(buttonLayout);
-    
-    dialog.setLayout(vbox);
-    
-    bool suppressFuture = false;
-    QObject::connect(okButton, &QPushButton::clicked, &dialog, &QDialog::accept);
-    QObject::connect(dontShowButton, &QPushButton::clicked, [&dialog, &suppressFuture]() {
-        suppressFuture = true;
-        dialog.accept();
-    });
-    
-    dialog.exec();
-    return suppressFuture;
-}
-
-void OpenUrlWithHostHelper(const QString& url, QWidget* parent = nullptr) {
+void OpenUrlWithHostHelper(const QString& url, QWidget* parent) {
     QString helper = QString::fromLocal8Bit(qgetenv("TOPAS_HOST_OPEN"));
     if (helper.isEmpty())
         helper = "/opt/topas/host-open";
     
-    if (TryOpenWithHostHelper(helper, url))
-        return;
+    if (!helper.isEmpty() && QFile::exists(helper)) {
+        if (QProcess::startDetached(helper, QStringList() << url))
+            return;
+    }
     
     if (QDesktopServices::openUrl(QUrl(url)))
         return;
     
-    ShowHostOpenFallback(url, parent);
+    QMessageBox msgBox(parent);
+    msgBox.setWindowTitle("Open Link");
+    QString richText = QString("Could not launch a browser. Please open this link manually:<br><a href=\"%1\">%1</a>").arg(url);
+    msgBox.setTextFormat(Qt::RichText);
+    msgBox.setText(richText);
+    msgBox.setTextInteractionFlags(Qt::LinksAccessibleByMouse | Qt::TextSelectableByMouse);
+    msgBox.setStandardButtons(QMessageBox::Ok);
+    msgBox.exec();
 }
 }
 
-TsQt::TsQt(TsParameterManager* pM, TsExtensionManager* eM, TsMaterialManager* mM, TsGeometryManager* gM, TsScoringManager* scM, TsSequenceManager* sqM,
+TsQt6::TsQt6(TsParameterManager* pM, TsExtensionManager* eM, TsMaterialManager* mM, TsGeometryManager* gM, TsScoringManager* scM, TsSequenceManager* sqM,
            TsGraphicsManager* grM, TsSourceManager* soM) :
 fPm(pM), fEm(eM), fMm(mM), fGm(gM), fScm(scM), fSqm(sqM), fGrm(grM), fSom(soM), fTestSucceeded(true), fParameterEditorDialog(0),
 fParameterTableWidget(0),
@@ -214,20 +165,20 @@ fShowReadOnlyNoteMessage(true)
         QList<QToolBar *> allToolBars = fUIQt->GetMainWindow()->findChildren<QToolBar *>();
         if (!allToolBars.isEmpty()) {
             QList<QAction*> actions = allToolBars[0]->actions();
-            QList<int> desiredOrder;
-            desiredOrder << 4 << 5 << 6 << 3 << 7 << 12 << 13 << 15;
-            
+            const QList<int> desiredOrder = {4, 5, 6, 3, 7, 12, 13, 15};
+
             QList<QAction*> reordered;
-            foreach (int idx, desiredOrder) {
-                if (idx >= 0 && idx < actions.size())
+            for (int idx : desiredOrder) {
+                if (idx >= 0 && idx < actions.size()) {
                     reordered.append(actions[idx]);
+                }
             }
-            
-            foreach (QAction* action, actions)
-            allToolBars[0]->removeAction(action);
-            
-            foreach (QAction* action, reordered)
-            allToolBars[0]->addAction(action);
+
+            for (QAction* action : actions)
+                allToolBars[0]->removeAction(action);
+
+            for (QAction* action : reordered)
+                allToolBars[0]->addAction(action);
         }
         
         // Remove "Useful Tips" tab from Viewer Tab Widget
@@ -239,7 +190,7 @@ fShowReadOnlyNoteMessage(true)
     if (menuBar) {
         QMenu* helpMenu = nullptr;
         QList<QAction*> menuActions = menuBar->actions();
-        foreach (QAction* action, menuActions) {
+        for (QAction* action : menuActions) {
             QMenu* menu = action->menu();
             if (menu) {
                 QString title = menu->title();
@@ -298,71 +249,53 @@ fShowReadOnlyNoteMessage(true)
         return QIcon();
     };
     
-    QSignalMapper* saveSignalMapper = new QSignalMapper(this);
     QIcon saveIcon = loadIcon("save_as.svg");
     QAction* saveAction = saveIcon.isNull()
-    ? toolbar->addAction(QString("Save"), saveSignalMapper, SLOT(map()))
-    : toolbar->addAction(saveIcon, QString(""), saveSignalMapper, SLOT(map()));
+    ? toolbar->addAction(QString("Save"))
+    : toolbar->addAction(saveIcon, QString(""));
     saveAction->setToolTip("Save");
-    connect(saveSignalMapper, SIGNAL(mapped(int)),this, SLOT(SaveCallback()));
-    int saveIntVP = 0;
-    saveSignalMapper->setMapping(saveAction, saveIntVP);
+    connect(saveAction, &QAction::triggered, this, &TsQt6::SaveCallback);
     
-    QSignalMapper* componentSignalMapper = new QSignalMapper(this);
     toolbar->addSeparator();
     QIcon componentIcon = loadIcon("add_box.svg");
     QAction* componentAction = componentIcon.isNull()
-    ? toolbar->addAction(QString("+Geom"), componentSignalMapper, SLOT(map()))
-    : toolbar->addAction(componentIcon, QString(""), componentSignalMapper, SLOT(map()));
+    ? toolbar->addAction(QString("+Geom"))
+    : toolbar->addAction(componentIcon, QString(""));
     componentAction->setToolTip("+Geom");
-    connect(componentSignalMapper, SIGNAL(mapped(int)),this, SLOT(AddComponentCallback()));
-    int componentIntVP = 0;
-    componentSignalMapper->setMapping(componentAction, componentIntVP);
+    connect(componentAction, &QAction::triggered, this, &TsQt6::AddComponentCallback);
     
-    QSignalMapper* scorerSignalMapper = new QSignalMapper(this);
     toolbar->addSeparator();
     QIcon scorerIcon = loadIcon("add_chart.svg");
     QAction* scorerAction = scorerIcon.isNull()
-    ? toolbar->addAction(QString("+Scorer"), scorerSignalMapper, SLOT(map()))
-    : toolbar->addAction(scorerIcon, QString(""), scorerSignalMapper, SLOT(map()));
+    ? toolbar->addAction(QString("+Scorer"))
+    : toolbar->addAction(scorerIcon, QString(""));
     scorerAction->setToolTip("+Scorer");
-    connect(scorerSignalMapper, SIGNAL(mapped(int)),this, SLOT(AddScorerCallback()));
-    int scorerIntVP = 0;
-    scorerSignalMapper->setMapping(scorerAction, scorerIntVP);
+    connect(scorerAction, &QAction::triggered, this, &TsQt6::AddScorerCallback);
     
-    QSignalMapper* sourceSignalMapper = new QSignalMapper(this);
     toolbar->addSeparator();
     QIcon sourceIcon = loadIcon("add_flash.svg");
     QAction* sourceAction = sourceIcon.isNull()
-    ? toolbar->addAction(QString("+Source"), sourceSignalMapper, SLOT(map()))
-    : toolbar->addAction(sourceIcon, QString(""), sourceSignalMapper, SLOT(map()));
+    ? toolbar->addAction(QString("+Source"))
+    : toolbar->addAction(sourceIcon, QString(""));
     sourceAction->setToolTip("+Source");
-    connect(sourceSignalMapper, SIGNAL(mapped(int)),this, SLOT(AddSourceCallback()));
-    int sourceIntVP = 0;
-    sourceSignalMapper->setMapping(sourceAction, sourceIntVP);
+    connect(sourceAction, &QAction::triggered, this, &TsQt6::AddSourceCallback);
     
-    QSignalMapper* runSignalMapper = new QSignalMapper(this);
     toolbar->addSeparator();
     QIcon runIcon = loadIcon("play.svg");
     if (!runIcon.isNull())
         toolbar->setIconSize(QSize(32,32));
-    QAction* runAction = runIcon.isNull() ? toolbar->addAction(QString("Run"), runSignalMapper, SLOT(map()))
-    : toolbar->addAction(runIcon, QString(""), runSignalMapper, SLOT(map()));
+    QAction* runAction = runIcon.isNull() ? toolbar->addAction(QString("Run"))
+    : toolbar->addAction(runIcon, QString(""));
     runAction->setToolTip("Run");
-    connect(runSignalMapper, SIGNAL(mapped(int)),this, SLOT(RunCallback()));
-    int runIntVP = 0;
-    runSignalMapper->setMapping(runAction, runIntVP);
+    connect(runAction, &QAction::triggered, this, &TsQt6::RunCallback);
     
-    QSignalMapper* printSignalMapper = new QSignalMapper(this);
     toolbar->addSeparator();
     QIcon pdfIcon = loadIcon("photo.svg");
     QAction* printAction = pdfIcon.isNull()
-    ? toolbar->addAction(QString("Capture"), printSignalMapper, SLOT(map()))
-    : toolbar->addAction(pdfIcon, QString(""), printSignalMapper, SLOT(map()));
+    ? toolbar->addAction(QString("Capture"))
+    : toolbar->addAction(pdfIcon, QString(""));
     printAction->setToolTip("Capture");
-    connect(printSignalMapper, SIGNAL(mapped(int)),this, SLOT(PrintCallback()));
-    int printIntVP = 0;
-    printSignalMapper->setMapping(printAction, printIntVP);
+    connect(printAction, &QAction::triggered, this, &TsQt6::PrintCallback);
     
     toolbar->addSeparator();
     QToolButton* expandCollapseButton = new QToolButton();
@@ -425,13 +358,13 @@ fShowReadOnlyNoteMessage(true)
 }
 
 
-void TsQt::AbortSession() {
+void TsQt6::AbortSession() {
     QApplication::processEvents();
     fTestSucceeded = false;
 }
 
 
-void TsQt::RunCallback() {
+void TsQt6::RunCallback() {
     if (fGm->GeometryHasOverlaps() && fPm->GetBooleanParameter("Ge/QuitIfOverlapDetected")) {
         G4cerr << "TOPAS Run Sequence can not begin until Geometry Overlaps are fixed." << G4endl;
     } else {
@@ -447,13 +380,13 @@ void TsQt::RunCallback() {
 }
 
 
-void TsQt::PrintCallback() {
+void TsQt6::PrintCallback() {
     G4UImanager::GetUIpointer()->ApplyCommand("/vis/ogl/set/exportFormat pdf");
     G4UImanager::GetUIpointer()->ApplyCommand("/vis/ogl/export");
 }
 
 
-void TsQt::UpdateParameterEditor() {
+void TsQt6::UpdateParameterEditor() {
     if (fParameterTableWidget) {
         fSavedScrollPosition = fParameterTableWidget->verticalScrollBar()->value();
     }
@@ -974,7 +907,7 @@ void TsQt::UpdateParameterEditor() {
 }
 
 
-void TsQt::ShowParameterContextMenu(const QPoint& pos) {
+void TsQt6::ShowParameterContextMenu(const QPoint& pos) {
     QTreeWidgetItem* item = fParameterTableWidget->itemAt(pos);
     if (!item)
         return;
@@ -1010,7 +943,7 @@ void TsQt::ShowParameterContextMenu(const QPoint& pos) {
         menu.exec(fParameterTableWidget->viewport()->mapToGlobal(pos));
 }
 
-void TsQt::DuplicateParameters(const G4String& categoryCode, const G4String& oldName, const G4String& newName, std::vector<G4String>* newParameterNames) {
+void TsQt6::DuplicateParameters(const G4String& categoryCode, const G4String& oldName, const G4String& newName, std::vector<G4String>* newParameterNames) {
     std::vector<G4String>* parameterNames = new std::vector<G4String>;
     std::vector<G4String>* parameterValues = new std::vector<G4String>;
     fPm->GetChangeableParameters(parameterNames, parameterValues);
@@ -1049,7 +982,7 @@ void TsQt::DuplicateParameters(const G4String& categoryCode, const G4String& old
 }
 
 
-G4bool TsQt::NameExistsInList(const std::vector<G4String>& list, const G4String& name) {
+G4bool TsQt6::NameExistsInList(const std::vector<G4String>& list, const G4String& name) {
     for (size_t i=0; i<list.size(); ++i)
         if (list[i] == name)
             return true;
@@ -1057,7 +990,7 @@ G4bool TsQt::NameExistsInList(const std::vector<G4String>& list, const G4String&
 }
 
 
-void TsQt::DuplicateGeometryCallback() {
+void TsQt6::DuplicateGeometryCallback() {
     std::vector<G4String> componentNames = fGm->GetComponentNames();
     if (componentNames.empty())
         return;
@@ -1071,7 +1004,7 @@ void TsQt::DuplicateGeometryCallback() {
     DoDuplicateGeometry(selected.toStdString());
 }
 
-void TsQt::DuplicateGeometryTreeCallback() {
+void TsQt6::DuplicateGeometryTreeCallback() {
     std::vector<G4String> componentNames = fGm->GetComponentNames();
     if (componentNames.empty())
         return;
@@ -1086,7 +1019,7 @@ void TsQt::DuplicateGeometryTreeCallback() {
 }
 
 
-void TsQt::DoDuplicateGeometry(const G4String& oldName) {
+void TsQt6::DoDuplicateGeometry(const G4String& oldName) {
     std::vector<G4String> componentNames = fGm->GetComponentNames();
     // Build dialog with name + transform presets
     QDialog dialog(fParameterEditorWidget);
@@ -1183,7 +1116,7 @@ void TsQt::DoDuplicateGeometry(const G4String& oldName) {
     UpdateParameterEditor();
 }
 
-void TsQt::CollectGeometryDescendants(const G4String& rootName, const std::map<G4String,G4String>& parentMap, std::vector<G4String>& ordered) {
+void TsQt6::CollectGeometryDescendants(const G4String& rootName, const std::map<G4String,G4String>& parentMap, std::vector<G4String>& ordered) {
     ordered.push_back(rootName);
     for (std::map<G4String,G4String>::const_iterator it = parentMap.begin(); it != parentMap.end(); ++it) {
         if (it->second == rootName)
@@ -1191,7 +1124,7 @@ void TsQt::CollectGeometryDescendants(const G4String& rootName, const std::map<G
     }
 }
 
-void TsQt::DoDuplicateGeometryTree(const G4String& rootName) {
+void TsQt6::DoDuplicateGeometryTree(const G4String& rootName) {
     std::vector<G4String> componentNames = fGm->GetComponentNames();
     if (componentNames.empty())
         return;
@@ -1278,11 +1211,11 @@ void TsQt::DoDuplicateGeometryTree(const G4String& rootName) {
 }
 
 
-void TsQt::DuplicateScorerCallback() {
+void TsQt6::DuplicateScorerCallback() {
     QMessageBox::information(fParameterEditorWidget, "Duplicate Scorer", "Scorer duplication is not available because key scorer parameters are read-only.");
 }
 
-void TsQt::DuplicateSourceCallback() {
+void TsQt6::DuplicateSourceCallback() {
     if (fSqm->GetRunID() != -1) {
         QMessageBox::warning(fParameterEditorWidget, "Duplicate Source", "Sources may only be duplicated before the first run.");
         return;
@@ -1301,7 +1234,7 @@ void TsQt::DuplicateSourceCallback() {
     DoDuplicateSource(selected.toStdString());
 }
 
-void TsQt::DoDuplicateSource(const G4String& oldName) {
+void TsQt6::DoDuplicateSource(const G4String& oldName) {
     std::vector<G4String> sourceNames = fSom->GetSourceNames();
     bool ok = false;
     QString newName = QInputDialog::getText(fParameterEditorWidget, "New Source Name", "Enter name for duplicate:", QLineEdit::Normal, QString(oldName.c_str()) + "_copy", &ok);
@@ -1326,7 +1259,7 @@ void TsQt::DoDuplicateSource(const G4String& oldName) {
 }
 
 
-void TsQt::ParameterTableWidgetSetItemChanged(QTreeWidgetItem* item, int column) {
+void TsQt6::ParameterTableWidgetSetItemChanged(QTreeWidgetItem* item, int column) {
     if (!item || column != 1)
         return;
     
@@ -1417,7 +1350,7 @@ void TsQt::ParameterTableWidgetSetItemChanged(QTreeWidgetItem* item, int column)
 }
 
 
-void TsQt::ParameterComboChanged() {
+void TsQt6::ParameterComboChanged() {
     G4String paramName = sender()->property("name").toString().toStdString();
     QComboBox *combo = qobject_cast<QComboBox *>(sender());
     G4String paramValue = combo->currentText().toStdString();
@@ -1434,7 +1367,7 @@ void TsQt::ParameterComboChanged() {
 }
 
 
-void TsQt::SaveCallback() {
+void TsQt6::SaveCallback() {
     G4String suggestedFileName = "ChangedParameters_1.txt";
     if (fPm->ParameterExists("Ts/ChangedParametersFile"))
         suggestedFileName = fPm->GetStringParameter("Ts/ChangedParametersFile");
@@ -1469,17 +1402,17 @@ void TsQt::SaveCallback() {
 }
 
 
-void TsQt::OpenDocsCallback() {
+void TsQt6::OpenDocsCallback() {
     OpenUrlWithHostHelper("https://opentopas.readthedocs.io/en/latest/", fUIQt->GetMainWindow());
 }
 
 
-void TsQt::OpenSupportCallback() {
+void TsQt6::OpenSupportCallback() {
     OpenUrlWithHostHelper("https://github.com/OpenTOPAS/OpenTOPAS/discussions", fUIQt->GetMainWindow());
 }
 
 
-void TsQt::ShowAboutDialog() {
+void TsQt6::ShowAboutDialog() {
     QDialog* aboutDialog = new QDialog(fUIQt->GetMainWindow());
     aboutDialog->setWindowTitle("About TOPAS");
     aboutDialog->setAttribute(Qt::WA_DeleteOnClose);
@@ -1522,8 +1455,20 @@ void TsQt::ShowAboutDialog() {
         layout->addWidget(label);
     };
     
-    addCenteredLabel("TOPAS version OpenTOPAS v4.2.0");
-    addCenteredLabel("Built and linked against the toolkits: Geant4 v11.3.2, GDCM v2.6.8");
+    QString topasVersion = QString("TOPAS version OpenTOPAS v%1.%2.%3")
+        .arg(TOPAS_VERSION_MAJOR).arg(TOPAS_VERSION_MINOR).arg(TOPAS_VERSION_PATCH);
+    QString geantVersion = QString("Geant4 v%1.%2.%3")
+        .arg(GEANT4_VERSION_MAJOR).arg(GEANT4_VERSION_MINOR).arg(GEANT4_VERSION_PATCH);
+    QString gdcmVersion = QString("GDCM v%1.%2.%3")
+#ifdef GDCM_VERSION_MAJOR
+        .arg(GDCM_VERSION_MAJOR).arg(GDCM_VERSION_MINOR).arg(GDCM_VERSION_PATCH);
+#else
+        .arg(2).arg(6).arg(8);
+#endif
+    QString qtVersion = QString("Qt v%1").arg(QT_VERSION_STR);
+
+    addCenteredLabel(topasVersion);
+    addCenteredLabel(QString("Built and linked against: %1, %2, %3").arg(geantVersion, gdcmVersion, qtVersion));
     addCenteredLabel("Copyright (c): 2025 The TOPAS Collaboration");
     QLabel* linkLabel = new QLabel("<a href=\"https://opentopas.github.io\">https://opentopas.github.io</a>");
     linkLabel->setAlignment(Qt::AlignCenter);
@@ -1532,47 +1477,15 @@ void TsQt::ShowAboutDialog() {
     linkLabel->setOpenExternalLinks(true);
     layout->addWidget(linkLabel);
     
-    QWidget* buttonRow = new QWidget();
-    QHBoxLayout* buttonLayout = new QHBoxLayout();
-    buttonLayout->setContentsMargins(0, 0, 0, 0);
-    QPushButton* contactButton = new QPushButton("Contact");
-    QPushButton* licenseButton = new QPushButton("License");
-    QPushButton* closeButton = new QPushButton("Close");
-    buttonLayout->addWidget(contactButton);
-    buttonLayout->addWidget(licenseButton);
-    buttonLayout->addStretch();
-    buttonLayout->addWidget(closeButton);
-    buttonRow->setLayout(buttonLayout);
-    layout->addWidget(buttonRow);
+    QDialogButtonBox* buttonBox = new QDialogButtonBox(Qt::Horizontal);
+    QPushButton* contactButton = buttonBox->addButton("Contact", QDialogButtonBox::ActionRole);
+    QPushButton* licenseButton = buttonBox->addButton("License", QDialogButtonBox::ActionRole);
+    QPushButton* closeButton = buttonBox->addButton("Close", QDialogButtonBox::RejectRole);
+    layout->addWidget(buttonBox);
     
     connect(closeButton, SIGNAL(clicked()), aboutDialog, SLOT(close()));
-    connect(contactButton, &QPushButton::clicked, [aboutDialog]() {
-        QDialog* contactDialog = new QDialog(aboutDialog);
-        contactDialog->setWindowTitle("Contact TOPAS Team");
-        contactDialog->setAttribute(Qt::WA_DeleteOnClose);
-        QVBoxLayout* vbox = new QVBoxLayout();
-        QLabel* text = new QLabel("Get in touch with the TOPAS team via our contact page:");
-        text->setWordWrap(true);
-        vbox->addWidget(text);
-        QLabel* link = new QLabel("<a href=\"https://opentopas.github.io/contact.html\">https://opentopas.github.io/contact.html</a>");
-        link->setTextFormat(Qt::RichText);
-        link->setTextInteractionFlags(Qt::TextBrowserInteraction);
-        link->setOpenExternalLinks(true);
-        vbox->addWidget(link);
-        QHBoxLayout* buttons = new QHBoxLayout();
-        QPushButton* openButton = new QPushButton("Open Contact Page");
-        QPushButton* closeBtn = new QPushButton("Close");
-        buttons->addWidget(openButton);
-        buttons->addStretch();
-        buttons->addWidget(closeBtn);
-        vbox->addLayout(buttons);
-        QObject::connect(openButton, &QPushButton::clicked, [contactDialog]() {
-            OpenUrlWithHostHelper("https://opentopas.github.io/contact.html", contactDialog);
-        });
-        QObject::connect(closeBtn, &QPushButton::clicked, contactDialog, &QDialog::accept);
-        contactDialog->setLayout(vbox);
-        contactDialog->setModal(true);
-        contactDialog->show();
+    connect(contactButton, &QPushButton::clicked, []() {
+        QDesktopServices::openUrl(QUrl("https://opentopas.github.io/contact.html"));
     });
     connect(licenseButton, &QPushButton::clicked, [aboutDialog]() {
         QString licenseText;
@@ -1614,7 +1527,7 @@ void TsQt::ShowAboutDialog() {
 }
 
 
-void TsQt::AddComponentCallback() {
+void TsQt6::AddComponentCallback() {
     if (fAddComponentDialog != NULL)
         delete fAddComponentDialog;
     
@@ -1626,7 +1539,7 @@ void TsQt::AddComponentCallback() {
 }
 
 
-void TsQt::CreateAddComponentDialog() {
+void TsQt6::CreateAddComponentDialog() {
     fAddComponentDialog = new QDialog();
     fAddComponentDialog->setWindowTitle("TOPAS Add Component");
     fAddComponentDialog->setSizePolicy (QSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding));
@@ -1735,13 +1648,22 @@ void TsQt::CreateAddComponentDialog() {
 }
 
 
-void TsQt::AddComponentWidgetSetItemChanged() {
+void TsQt6::AddComponentWidgetSetItemChanged() {
     fAddComponentWidget->blockSignals(true);
     fAddComponentDialog->hide();
     fAddComponentWidget->hide();
     
-    if (fShowReadOnlyNoteMessage)
-        fShowReadOnlyNoteMessage = !ShowReadOnlyParametersDialog(fUIQt->GetMainWindow());
+    if (fShowReadOnlyNoteMessage) {
+        QMessageBox msgBox;
+        msgBox.setWindowTitle(QString("Read-Only Parameters"));
+        msgBox.setText(QString("Note: Parameters in bold cannot be changed!"));
+        msgBox.addButton(QString("OK"), QMessageBox::AcceptRole);
+        QPushButton* dontShowButton = msgBox.addButton(QString("Don't show again"), QMessageBox::RejectRole);
+        msgBox.exec();
+        if (msgBox.clickedButton() == dontShowButton)
+            fShowReadOnlyNoteMessage = false;
+        // Proceed regardless of which was clicked.
+    }
     
     fCurrentComponentName = fAddComponentNameWidget->text().toStdString();
     fAddedComponentCounter++;
@@ -1771,7 +1693,7 @@ void TsQt::AddComponentWidgetSetItemChanged() {
 }
 
 
-void TsQt::AddScorerCallback() {
+void TsQt6::AddScorerCallback() {
     if (fSqm->GetRunID() != -1) {
         G4cerr << "Scorers may only be added before the first run." << G4endl;
     } else {
@@ -1787,7 +1709,7 @@ void TsQt::AddScorerCallback() {
 }
 
 
-void TsQt::CreateAddScorerDialog() {
+void TsQt6::CreateAddScorerDialog() {
     fAddScorerDialog = new QDialog();
     fAddScorerDialog->setWindowTitle("TOPAS Add Scorer");
     fAddScorerDialog->setSizePolicy (QSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding));
@@ -1859,13 +1781,21 @@ void TsQt::CreateAddScorerDialog() {
 }
 
 
-void TsQt::AddScorerWidgetSetItemChanged() {
+void TsQt6::AddScorerWidgetSetItemChanged() {
     fAddScorerWidget->blockSignals(true);
     fAddScorerDialog->hide();
     fAddScorerWidget->hide();
     
-    if (fShowReadOnlyNoteMessage)
-        fShowReadOnlyNoteMessage = !ShowReadOnlyParametersDialog(fUIQt->GetMainWindow());
+    if (fShowReadOnlyNoteMessage) {
+        QMessageBox msgBox;
+        msgBox.setWindowTitle(QString("Read-Only Parameters"));
+        msgBox.setText(QString("Note: Parameters in bold cannot be changed!"));
+        msgBox.addButton(QString("OK"), QMessageBox::AcceptRole);
+        QPushButton* dontShowButton = msgBox.addButton(QString("Don't show again"), QMessageBox::RejectRole);
+        msgBox.exec();
+        if (msgBox.clickedButton() == dontShowButton)
+            fShowReadOnlyNoteMessage = false;
+    }
     
     fCurrentScorerName = fAddScorerNameWidget->text().toStdString();
     fAddedScorerCounter++;
@@ -1880,7 +1810,7 @@ void TsQt::AddScorerWidgetSetItemChanged() {
 }
 
 
-void TsQt::AddSourceCallback() {
+void TsQt6::AddSourceCallback() {
     if (fSqm->GetRunID() != -1) {
         G4cerr << "Particle Sources may only be added before the first run." << G4endl;
     } else {
@@ -1896,7 +1826,7 @@ void TsQt::AddSourceCallback() {
 }
 
 
-void TsQt::CreateAddSourceDialog() {
+void TsQt6::CreateAddSourceDialog() {
     fAddSourceDialog = new QDialog();
     fAddSourceDialog->setWindowTitle("TOPAS Add Source");
     fAddSourceDialog->setSizePolicy (QSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding));
@@ -1973,13 +1903,21 @@ void TsQt::CreateAddSourceDialog() {
 }
 
 
-void TsQt::AddSourceWidgetSetItemChanged() {
+void TsQt6::AddSourceWidgetSetItemChanged() {
     fAddSourceWidget->blockSignals(true);
     fAddSourceDialog->hide();
     fAddSourceWidget->hide();
     
-    if (fShowReadOnlyNoteMessage)
-        fShowReadOnlyNoteMessage = !ShowReadOnlyParametersDialog(fUIQt->GetMainWindow());
+    if (fShowReadOnlyNoteMessage) {
+        QMessageBox msgBox;
+        msgBox.setWindowTitle(QString("Read-Only Parameters"));
+        msgBox.setText(QString("Note: Parameters in bold cannot be changed!"));
+        msgBox.addButton(QString("OK"), QMessageBox::AcceptRole);
+        QPushButton* dontShowButton = msgBox.addButton(QString("Don't show again"), QMessageBox::RejectRole);
+        msgBox.exec();
+        if (msgBox.clickedButton() == dontShowButton)
+            fShowReadOnlyNoteMessage = false;
+    }
     
     fCurrentSourceName = fAddSourceNameWidget->text().toStdString();
     fAddedSourceCounter++;

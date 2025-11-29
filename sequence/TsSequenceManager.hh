@@ -40,6 +40,8 @@
 #endif
 #include "G4Timer.hh"
 
+#include "TsQt.hh"
+
 #include <vector>
 
 class TsParameterManager;
@@ -56,7 +58,6 @@ class TsSourceManager;
 class TsGeneratorManager;
 
 class TsSteppingAction;
-class TsQt;
 
 #ifdef TOPAS_MT
 class TsSequenceManager : public G4MTRunManager

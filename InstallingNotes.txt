@@ -20,6 +20,13 @@ cmake /Users/ramosmendj/Applications/TOPAS/OpenTOPAS-myfork/ -DCMAKE_INSTALL_PRE
 # Geant4 libs fails to link topas, e.g., using DYLD_LIBRARY_PATH, so do this (for nrtest)
 install_name_tool -add_rpath /Users/ramosmendj/Applications/GEANT4/geant4-v11.3.2-install/lib /Users/ramosmendj/Applications/TOPAS/topas-g4-1132-install/bin/topas
 
+# New TOPAS building variables
+# For  QT5
+-DTOPAS_USE_QT=ON
+-DTOPAS_USE_QT6=OFF
+# For QT6
+-DTOPAS_USE_QT=ON
+-DTOPAS_USE_QT6=ON
 
 ################################
 cmake ../geant4-v11.3.2 -DCMAKE_INSTALL_PREFIX=../geant4-v11.3.2-qt6-install -DGEANT4_USE_QT=ON -DCMAKE_PREFIX_PATH=/opt/homebrew/Cellar/qt/6.9.3/ -DGEANT4_USE_QT_QT6=ON -DGEANT4_INSTALL_DATA=OFF

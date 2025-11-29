@@ -162,7 +162,7 @@ set optical_cases = ( \
 	Surfaces.txt \
 	WavelengthShifter.txt )
 
-set output_case = ( TestOutcomeModel.txt )
+set outcome_case = ( TestOutcomeModel.txt )
 
 set phasespace_cases = ( \
 	WriteIonsASCII.txt \
@@ -199,7 +199,7 @@ set demo_cases = ( \
 	nozzle_cases \
 	scoring_cases \
 	optical_cases \
-	output_case \
+	outcome_case \
 	phasespace_cases )
 
 set green = `tput setaf 2`

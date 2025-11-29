@@ -34,6 +34,7 @@
 #include "globals.hh"
 
 #include <map>
+#include <vector>
 
 class TsParameterManager;
 class TsGeometryManager;
