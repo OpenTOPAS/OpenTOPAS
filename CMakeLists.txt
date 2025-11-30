@@ -1,4 +1,4 @@
-cmake_minimum_required (VERSION 3.8 FATAL_ERROR)
+cmake_minimum_required (VERSION 3.10 FATAL_ERROR)
 
 if (CMAKE_VERSION VERSION_GREATER_EQUAL 3.17)
 	cmake_policy (SET CMP0100 NEW)
