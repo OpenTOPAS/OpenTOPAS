@@ -945,9 +945,10 @@ void TsQt6::ShowParameterContextMenu(const QPoint& pos) {
 }
 
 void TsQt6::DuplicateParameters(const G4String& categoryCode, const G4String& oldName, const G4String& newName, std::vector<G4String>* newParameterNames) {
-    std::vector<G4String>* parameterNames = new std::vector<G4String>;
-    std::vector<G4String>* parameterValues = new std::vector<G4String>;
-    fPm->GetChangeableParameters(parameterNames, parameterValues);
+	std::vector<G4String>* parameterNames = new std::vector<G4String>;
+	std::vector<G4String>* parameterValues = new std::vector<G4String>;
+	fPm->GetAllParametersWithValues(parameterNames, parameterValues);
+	std::map<G4String, std::pair<G4String,G4String> > sourceMap; // bareName -> (type, value)
     
     G4String needle = "/" + oldName + "/";
     for (size_t i = 0; i < parameterNames->size(); ++i) {
@@ -956,15 +957,36 @@ void TsQt6::DuplicateParameters(const G4String& categoryCode, const G4String& ol
         size_t firstSlash = pname.find("/", colonPos+1);
         if (firstSlash == std::string::npos)
             continue;
+        // Track source parameters for fallback copy (includes non-changeable).
+        if (colonPos != std::string::npos) {
+            G4String typeOnly = pname.substr(0, colonPos);
+            if (!typeOnly.empty() && typeOnly[typeOnly.size()-1] == 'c')
+                typeOnly = typeOnly.substr(0, typeOnly.size()-1);
+            G4String bare = pname.substr(colonPos+1);
+            // Skip copying Type/Parent; these are set by AddComponentFromGUI.
+            if (bare.find("/Type") != std::string::npos || bare.find("/Parent") != std::string::npos) {
+                continue;
+            }
+            sourceMap[bare] = std::make_pair(typeOnly, (*parameterValues)[i]);
+        }
         G4String prefix = pname.substr(colonPos+1, firstSlash-colonPos-1);
         if (prefix != categoryCode)
             continue;
-        size_t pos = pname.find(needle);
-        if (pos == std::string::npos)
-            continue;
+		size_t pos = pname.find(needle);
+		if (pos == std::string::npos)
+			continue;
         G4String newPname = pname;
         newPname.replace(pos+1, oldName.length(), newName);
+        // Normalize type (strip trailing 'c' for changeable variants) to preserve unit category
+        G4String typeOnly = pname.substr(0, colonPos);
+        if (!typeOnly.empty() && typeOnly[typeOnly.size()-1] == 'c')
+            typeOnly = typeOnly.substr(0, typeOnly.size()-1);
+        newPname = typeOnly + newPname.substr(colonPos); // rebuild with base type
         G4String newVal = (*parameterValues)[i];
+        // Skip Type/Parent; created by AddComponentFromGUI.
+        G4String bareNew = newPname.substr(newPname.find(":")+1);
+        if (bareNew.find("/Type") != std::string::npos || bareNew.find("/Parent") != std::string::npos)
+            continue;
         // Normalize any boolean (type starts with 'b') to "True"/"False"
         if (!newPname.empty() && newPname[0] == 'b') {
             if (newVal == "0")
@@ -972,10 +994,94 @@ void TsQt6::DuplicateParameters(const G4String& categoryCode, const G4String& ol
             else if (newVal == "1")
                 newVal = "\"True\"";
         }
+        // Fix dv vectors lacking space before unit.
+        if (typeOnly == "dv") {
+            size_t lastSpace = newVal.find_last_of(' ');
+            if (lastSpace != std::string::npos && lastSpace+1 < newVal.size()) {
+                // Ensure there is a space between last numeric and trailing unit.
+                size_t lastTokenSpace = newVal.find_last_of(' ');
+                if (lastTokenSpace != std::string::npos) {
+                    G4String lastToken = newVal.substr(lastTokenSpace+1);
+                    // If last token has no space and starts with digit and ends alpha, insert space before trailing alpha.
+                    if (!lastToken.empty() && isdigit(lastToken[0])) {
+                        size_t split = lastToken.find_last_not_of("0123456789.-+eE");
+                        if (split != G4String::npos && split+1 < lastToken.size()) {
+                            // split points to last non-unit? invert logic: find first alpha
+                        }
+                    }
+                }
+            }
+            // simpler: ensure a space before the trailing unit by inserting before last alphabetic run if missing
+            std::string v = newVal;
+            size_t posAlpha = v.find_last_not_of("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ");
+            if (posAlpha != std::string::npos && posAlpha+1 < v.size()) {
+                if (v[posAlpha] != ' ') {
+                    v.insert(posAlpha+1, " ");
+                    newVal = v;
+                }
+            }
+        }
         fPm->AddParameter(newPname, newVal);
         if (newParameterNames) {
             if (colonPos != std::string::npos && colonPos+1 < newPname.size())
                 newParameterNames->push_back(newPname.substr(colonPos+1));
+        }
+    }
+
+    // Copy any required parameters declared in the registry that were not changeable (and thus might not be copied above).
+    if (categoryCode == "Ge" && fPm->ParameterExists("Ge/" + oldName + "/Type")) {
+        G4String compType = fPm->GetStringParameter("Ge/" + oldName + "/Type");
+        G4String oldParent = fPm->ParameterExists("Ge/" + oldName + "/Parent") ? fPm->GetStringParameter("Ge/" + oldName + "/Parent") : "";
+        // Expand required list for the source, then remap child name to the destination.
+        std::vector<TsGeometryHub::RequiredParameter> required = TsGeometryHub::GetExpandedRequiredParameters(compType, oldName, oldParent);
+        for (const auto& req : required) {
+            G4String sourceName = req.NameTemplate;
+            G4String typePrefix = "";
+            G4String bareName = sourceName;
+            size_t colon = sourceName.find(':');
+            if (colon != std::string::npos) {
+                typePrefix = sourceName.substr(0, colon);
+                bareName = sourceName.substr(colon + 1);
+            }
+
+            size_t pos = bareName.find("/" + oldName + "/");
+            if (pos == std::string::npos)
+                continue;
+
+            G4String destBare = bareName;
+            destBare.replace(pos + 1, oldName.length(), newName);
+
+            if (fPm->ParameterExists(destBare))
+                continue;
+            // Look up source parameter from map (preserves vector prefixes like dv/iv/uv and c-variants).
+            G4String type;
+            G4String value;
+            auto it = sourceMap.find(bareName);
+            if (it != sourceMap.end()) {
+                type = it->second.first;
+                value = it->second.second;
+            } else {
+                if (!fPm->ParameterExists(bareName))
+                    continue;
+                type = !typePrefix.empty() ? typePrefix : fPm->GetTypeOfParameter(bareName);
+                value = fPm->GetParameterValueAsString(type, bareName);
+            }
+            if (!type.empty() && type[type.size()-1] == 'c')
+                type = type.substr(0, type.size()-1);
+            // Fix dv vector formatting if missing space before unit.
+            if (type == "dv") {
+                std::string v = value;
+                size_t posAlpha = v.find_last_not_of("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ");
+                if (posAlpha != std::string::npos && posAlpha+1 < v.size()) {
+                    if (v[posAlpha] != ' ') {
+                        v.insert(posAlpha+1, " ");
+                        value = v;
+                    }
+                }
+            }
+            fPm->AddParameter(type + ":" + destBare, value, false, true);
+            if (newParameterNames)
+                newParameterNames->push_back(destBare);
         }
     }
     delete parameterNames;
@@ -1088,9 +1194,9 @@ void TsQt6::DoDuplicateGeometry(const G4String& oldName) {
     G4String typeName = fPm->GetStringParameter("Ge/" + oldName + "/Type");
     G4String parentName = fPm->GetStringParameter("Ge/" + oldName + "/Parent");
     G4String noField("no field");
-    fGm->GetGeometryHub()->AddComponentFromGUI(fPm, fGm, newNameStr, parentName, typeName, noField);
     std::vector<G4String> newParams;
     DuplicateParameters("Ge", oldName, newNameStr, &newParams);
+    fGm->GetGeometryHub()->AddComponentFromGUI(fPm, fGm, newNameStr, parentName, typeName, noField);
     
     // Apply overrides from dialog
     for (int i=0;i<6;++i) {
@@ -1177,13 +1283,12 @@ void TsQt6::DoDuplicateGeometryTree(const G4String& rootName) {
                 parentName = prefix + parentOld;
         }
         
+        std::vector<G4String> newParams;
+        DuplicateParameters("Ge", oldComp, newComp, &newParams);
         G4String typeName = fPm->GetStringParameter("Ge/" + oldComp + "/Type");
         G4String noField("no field");
         fGm->GetGeometryHub()->AddComponentFromGUI(fPm, fGm, newComp, parentName, typeName, noField);
         newComponents.push_back(newComp);
-        
-        std::vector<G4String> newParams;
-        DuplicateParameters("Ge", oldComp, newComp, &newParams);
         
         // Override parent parameter to point to the mapped parent
         if (!parentName.empty()) {

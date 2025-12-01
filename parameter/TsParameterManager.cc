@@ -1131,6 +1131,21 @@ void TsParameterManager::GetChangeableParameters(std::vector<G4String>* paramete
 }
 
 
+void TsParameterManager::GetAllParametersWithValues(std::vector<G4String>* parameterNames, std::vector<G4String>* parameterValues) {
+	std::map<G4String, TsVParameter*>* parameterMap = new std::map<G4String, TsVParameter*>;
+	fParameterFile->GetAllParameters(parameterMap);
+	for (auto const& entry : *parameterMap) {
+		TsVParameter* parameter = entry.second;
+		G4String parameterName = parameter->GetName();
+		G4String parameterType = parameter->GetType();
+		G4String parameterValue = GetParameterValueAsString(parameterType, parameterName);
+		G4String nameWithType = parameterType + ":" + parameterName;
+		parameterNames->push_back(nameWithType);
+		parameterValues->push_back(parameterValue);
+	}
+}
+
+
 G4String TsParameterManager::GetParameterValueAsString(G4String parameterType, G4String parameterName) {
 	fNowDoingParameterDump = true;
 	G4String parameterValue = "Undefined";
