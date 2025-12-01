@@ -133,6 +133,7 @@ void TsGeometryHub::RegisterBuiltInTypes(GeometryRegistry& registry) {
             {"s:Ge/{child}/FileFormat", ""},
             {"d:Ge/{child}/RMax", ""},
             {"d:Ge/{child}/HL", ""}}});
+    
     AddType(registry, {"TsApertureArray",
         [](TsParameterManager* pM, TsExtensionManager* eM, TsMaterialManager* mM, TsGeometryManager* gM, TsVGeometryComponent* pgc, G4VPhysicalVolume* pv, G4String& childName) {
             return new TsApertureArray(pM, eM, mM, gM, pgc, pv, childName);
@@ -151,6 +152,7 @@ void TsGeometryHub::RegisterBuiltInTypes(GeometryRegistry& registry) {
             {"dc:Ge/{child}/AngleOffset", ""},
             {"b:Ge/{child}/UseFullLengthBeamlets", ""},
             {"s:Ge/{child}/GeometryMethod", ""}}});
+    
     AddType(registry, {"TsBrachyApplicator",
         [](TsParameterManager* pM, TsExtensionManager* eM, TsMaterialManager* mM, TsGeometryManager* gM, TsVGeometryComponent* pgc, G4VPhysicalVolume* pv, G4String& childName) {
             return new TsBrachyApplicator(pM, eM, mM, gM, pgc, pv, childName);
@@ -161,6 +163,7 @@ void TsGeometryHub::RegisterBuiltInTypes(GeometryRegistry& registry) {
             {"i:Ge/{child}/NumberOfRadialHoles", ""},
             {"dc:Ge/{child}/HoleRadius", ""},
             {"dc:Ge/{child}/HoleOffset", ""}}});
+    
     AddType(registry, {"TsBrachyShieldWedge",
         [](TsParameterManager* pM, TsExtensionManager* eM, TsMaterialManager* mM, TsGeometryManager* gM, TsVGeometryComponent* pgc, G4VPhysicalVolume* pv, G4String& childName) {
             return new TsBrachyShieldWedge(pM, eM, mM, gM, pgc, pv, childName);
@@ -174,6 +177,7 @@ void TsGeometryHub::RegisterBuiltInTypes(GeometryRegistry& registry) {
             {"i:Ge/{child}/NumberOfRadialHoles", ""},
             {"dc:Ge/{child}/HoleRadius", ""},
             {"dc:Ge/{child}/HoleOffset", ""}}});
+    
     AddType(registry, {"TsBrachyShieldStar",
         [](TsParameterManager* pM, TsExtensionManager* eM, TsMaterialManager* mM, TsGeometryManager* gM, TsVGeometryComponent* pgc, G4VPhysicalVolume* pv, G4String& childName) {
             return new TsBrachyShieldStar(pM, eM, mM, gM, pgc, pv, childName);
@@ -185,6 +189,7 @@ void TsGeometryHub::RegisterBuiltInTypes(GeometryRegistry& registry) {
             {"dc:Ge/{child}/HL", ""},
             {"i:Ge/{child}/NumberOfRadialHoles", ""},
             {"dc:Ge/{child}/SpokeWidth", ""}}});
+    
     AddType(registry, {"TsCompensator",
         [](TsParameterManager* pM, TsExtensionManager* eM, TsMaterialManager* mM, TsGeometryManager* gM, TsVGeometryComponent* pgc, G4VPhysicalVolume* pv, G4String& childName) {
             return new TsCompensator(pM, eM, mM, gM, pgc, pv, childName);
@@ -194,6 +199,7 @@ void TsGeometryHub::RegisterBuiltInTypes(GeometryRegistry& registry) {
             {"s:Ge/{child}/FileFormat", ""},
             {"dc:Ge/{child}/RMax", ""},
             {"s:Ge/{child}/Method", ""}}});
+    
     AddType(registry, {"TsEye",
         [](TsParameterManager* pM, TsExtensionManager* eM, TsMaterialManager* mM, TsGeometryManager* gM, TsVGeometryComponent* pgc, G4VPhysicalVolume* pv, G4String& childName) {
             return new TsEye(pM, eM, mM, gM, pgc, pv, childName);
@@ -214,6 +220,7 @@ void TsGeometryHub::RegisterBuiltInTypes(GeometryRegistry& registry) {
             {"dc:Ge/{child}/Lens/FrontOffset", ""},
             {"dc:Ge/{child}/Lens/BackOffset", ""},
             {"dc:Ge/{child}/Aqueous/LensOffset", ""}}});
+    
     AddType(registry, {"TsEyePlaque",
         [](TsParameterManager* pM, TsExtensionManager* eM, TsMaterialManager* mM, TsGeometryManager* gM, TsVGeometryComponent* pgc, G4VPhysicalVolume* pv, G4String& childName) {
             return new TsEyePlaque(pM, eM, mM, gM, pgc, pv, childName);
@@ -221,12 +228,15 @@ void TsGeometryHub::RegisterBuiltInTypes(GeometryRegistry& registry) {
         nullptr,
         {{"dc:Ge/{child}/Eye/Radius", ""},
             {"dc:Ge/{child}/Sphere/ROuter", ""},
-            {"dc:Ge/{child}/Cylinder/ROuter", ""},
-            {"dc:Ge/{child}/Cylinder/Length", ""},
             {"dc:Ge/{child}/Sphere/RInner", ""},
+            {"dc:Ge/{child}/Cylinder/ROuter", ""},
             {"dc:Ge/{child}/Cylinder/RInner", ""},
+            {"dc:Ge/{child}/Cylinder/Length", ""},
             {"dc:Ge/{child}/SphereCutCylinder/ROuter", ""},
-            {"dc:Ge/{child}/SphereCutCylinder/RInner", ""}}});
+            {"dc:Ge/{child}/SphereCutCylinder/RInner", ""},
+            {"s:Ge/{child}/Back/Material",""},
+            {"s:Ge/{child}/Lip/Material",""}}});
+    
     AddType(registry, {"TsRangeModulator",
         [](TsParameterManager* pM, TsExtensionManager* eM, TsMaterialManager* mM, TsGeometryManager* gM, TsVGeometryComponent* pgc, G4VPhysicalVolume* pv, G4String& childName) {
             return new TsRangeModulator(pM, eM, mM, gM, pgc, pv, childName);
@@ -238,6 +248,7 @@ void TsGeometryHub::RegisterBuiltInTypes(GeometryRegistry& registry) {
             {"dc:Ge/{child}/BumpWidth", ""},
             {"dc:Ge/{child}/BumpHeight", ""},
             {"dc:Ge/{child}/InitialAngle", ""}}});
+    
     AddType(registry, {"TsMultiWireChamber",
         [](TsParameterManager* pM, TsExtensionManager* eM, TsMaterialManager* mM, TsGeometryManager* gM, TsVGeometryComponent* pgc, G4VPhysicalVolume* pv, G4String& childName) {
             return new TsMultiWireChamber(pM, eM, mM, gM, pgc, pv, childName);
@@ -248,6 +259,7 @@ void TsGeometryHub::RegisterBuiltInTypes(GeometryRegistry& registry) {
             {"dc:Ge/{child}/HLZ", ""},
             {"i:Ge/{child}/NumberOfLayers", ""},
             {"dc:Ge/{child}/Layer1/PosZ", ""}}}); // PosZ per layer; GUI should extend per layer count
+    
     AddType(registry, {"TsMultiLeafCollimator",
         [](TsParameterManager* pM, TsExtensionManager* eM, TsMaterialManager* mM, TsGeometryManager* gM, TsVGeometryComponent* pgc, G4VPhysicalVolume* pv, G4String& childName) {
             return new TsMultiLeafCollimator(pM, eM, mM, gM, pgc, pv, childName);
@@ -260,6 +272,7 @@ void TsGeometryHub::RegisterBuiltInTypes(GeometryRegistry& registry) {
             {"dv:Ge/{child}/XMinusLeavesOpen", ""},
             {"dc:Ge/{child}/SAD", ""},
             {"dc:Ge/{child}/SourceToUpstreamSurfaceDistance", ""}}});
+    
     AddType(registry, {"TsRidgeFilter",
         [](TsParameterManager* pM, TsExtensionManager* eM, TsMaterialManager* mM, TsGeometryManager* gM, TsVGeometryComponent* pgc, G4VPhysicalVolume* pv, G4String& childName) {
             return new TsRidgeFilter(pM, eM, mM, gM, pgc, pv, childName);
@@ -270,6 +283,7 @@ void TsGeometryHub::RegisterBuiltInTypes(GeometryRegistry& registry) {
             {"dc:Ge/{child}/Width", ""},
             {"dv:Ge/{child}/Displacement", ""},
             {"dc:Ge/{child}/Length", ""}}});
+    
     AddType(registry, {"TsPropeller",
         [](TsParameterManager* pM, TsExtensionManager* eM, TsMaterialManager* mM, TsGeometryManager* gM, TsVGeometryComponent* pgc, G4VPhysicalVolume* pv, G4String& childName) {
             return new TsPropeller(pM, eM, mM, gM, pgc, pv, childName);
@@ -281,6 +295,7 @@ void TsGeometryHub::RegisterBuiltInTypes(GeometryRegistry& registry) {
             {"dv:Ge/{child}/Thickness", ""},
             {"dv:Ge/{child}/Angles", ""},
             {"sv:Ge/{child}/Materials", ""}}});
+    
     AddType(registry, {"TsImageCube",
         [](TsParameterManager* pM, TsExtensionManager* eM, TsMaterialManager* mM, TsGeometryManager* gM, TsVGeometryComponent* pgc, G4VPhysicalVolume* pv, G4String& childName) {
             return new TsImageCube(pM, eM, mM, gM, pgc, pv, childName);
@@ -303,24 +318,28 @@ void TsGeometryHub::RegisterBuiltInTypes(GeometryRegistry& registry) {
         {{"s:Ge/{child}/DicomDirectory", ""},
             {"s:Ge/{child}/ImagingToMaterialConverter", ""},
             {"s:Ge/{child}/DicomRTStructFile", ""}}});
+    
     AddType(registry, {"TsBox",
         [](TsParameterManager* pM, TsExtensionManager* eM, TsMaterialManager* mM, TsGeometryManager* gM, TsVGeometryComponent* pgc, G4VPhysicalVolume* pv, G4String& childName) {
             return new TsBox(pM, eM, mM, gM, pgc, pv, childName);
         },
         TsBox::CreateDefaults,
         {}});
+    
     AddType(registry, {"TsCylinder",
         [](TsParameterManager* pM, TsExtensionManager* eM, TsMaterialManager* mM, TsGeometryManager* gM, TsVGeometryComponent* pgc, G4VPhysicalVolume* pv, G4String& childName) {
             return new TsCylinder(pM, eM, mM, gM, pgc, pv, childName);
         },
         TsCylinder::CreateDefaults,
         {}});
+    
     AddType(registry, {"TsSphere",
         [](TsParameterManager* pM, TsExtensionManager* eM, TsMaterialManager* mM, TsGeometryManager* gM, TsVGeometryComponent* pgc, G4VPhysicalVolume* pv, G4String& childName) {
             return new TsSphere(pM, eM, mM, gM, pgc, pv, childName);
         },
         TsSphere::CreateDefaults,
         {}});
+    
     AddType(registry, {"TsCAD",
         [](TsParameterManager* pM, TsExtensionManager* eM, TsMaterialManager* mM, TsGeometryManager* gM, TsVGeometryComponent* pgc, G4VPhysicalVolume* pv, G4String& childName) {
             return new TsCADComponent(pM, eM, mM, gM, pgc, pv, childName);
@@ -329,6 +348,7 @@ void TsGeometryHub::RegisterBuiltInTypes(GeometryRegistry& registry) {
         {{"s:Ge/{child}/InputFile", ""},
             {"s:Ge/{child}/FileFormat", ""},
             {"d:Ge/{child}/Units", ""}}});
+    
     AddType(registry, {"TsJaws",
         [](TsParameterManager* pM, TsExtensionManager* eM, TsMaterialManager* mM, TsGeometryManager* gM, TsVGeometryComponent* pgc, G4VPhysicalVolume* pv, G4String& childName) {
             return new TsJaws(pM, eM, mM, gM, pgc, pv, childName);
@@ -341,6 +361,7 @@ void TsGeometryHub::RegisterBuiltInTypes(GeometryRegistry& registry) {
             {"dc:Ge/{child}/NegativeFieldSetting", ""},
             {"dc:Ge/{child}/SourceToUpstreamSurfaceDistance", ""},
             {"dc:Ge/{child}/SAD", ""}}});
+    
     AddType(registry, {"TsDivergingMLC",
         [](TsParameterManager* pM, TsExtensionManager* eM, TsMaterialManager* mM, TsGeometryManager* gM, TsVGeometryComponent* pgc, G4VPhysicalVolume* pv, G4String& childName) {
             return new TsDivergingMLC(pM, eM, mM, gM, pgc, pv, childName);
@@ -354,6 +375,7 @@ void TsGeometryHub::RegisterBuiltInTypes(GeometryRegistry& registry) {
             {"dc:Ge/{child}/SAD", ""},
             {"dc:Ge/{child}/SourceToUpstreamSurfaceDistance", ""},
             {"s:Ge/{child}/LeafTravelAxis", ""}}});
+    
     AddType(registry, {"TsPixelatedBox",
         [](TsParameterManager* pM, TsExtensionManager* eM, TsMaterialManager* mM, TsGeometryManager* gM, TsVGeometryComponent* pgc, G4VPhysicalVolume* pv, G4String& childName) {
             return new TsPixelatedBox(pM, eM, mM, gM, pgc, pv, childName);
@@ -364,6 +386,7 @@ void TsGeometryHub::RegisterBuiltInTypes(GeometryRegistry& registry) {
             {"dc:Ge/{child}/PixelSizeZ", ""},
             {"ic:Ge/{child}/NumberOfPixelsX", ""},
             {"ic:Ge/{child}/NumberOfPixelsY", ""},
+            {"s:Ge/{child}/Pixel/Material", ""},
             {"dc:Ge/{child}/PitchX", ""},
             {"dc:Ge/{child}/PitchY", ""}}});
     
