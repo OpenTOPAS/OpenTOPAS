@@ -36,12 +36,11 @@
 #include "TsExtensionManager.hh"
 #include "TsMaterialManager.hh"
 #include "TsGeometryManager.hh"
+#include "TsGeometryHub.hh"
 #include "TsScoringManager.hh"
 #include "TsSequenceManager.hh"
 #include "TsGraphicsManager.hh"
 #include "TsSourceManager.hh"
-
-#include "TsGeometryHub.hh"
 #include "TsScoringHub.hh"
 #include "TsVGeometryComponent.hh"
 
@@ -71,6 +70,7 @@
 #include <QFont>
 #include <QGroupBox>
 #include <QGridLayout>
+#include <QFormLayout>
 #include <QHBoxLayout>
 #include <QHeaderView>
 #include <QIcon>
@@ -99,6 +99,7 @@
 #include <QUrl>
 #include <QVBoxLayout>
 #include <QWidget>
+#include <QCompleter>
 #include <gdcmVersion.h>
 #include <map>
 #include <set>
@@ -1611,6 +1612,14 @@ void TsQt6::CreateAddComponentDialog() {
     for (iter=componentTypeNames.begin(); iter!=componentTypeNames.end(); iter++)
         fAddComponentTableWidget->addItem(QString(*iter));
     fAddComponentTableWidget->setCurrentIndex(0);
+    // Enable typing/filtering through a completer; the dropdown remains scrollable.
+    fAddComponentTableWidget->setEditable(true);
+    fAddComponentTableWidget->setInsertPolicy(QComboBox::NoInsert);
+    QCompleter* completer = new QCompleter(fAddComponentTableWidget->model(), fAddComponentTableWidget);
+    completer->setCompletionMode(QCompleter::PopupCompletion);
+    completer->setFilterMode(Qt::MatchContains);
+    completer->setCaseSensitivity(Qt::CaseInsensitive);
+    fAddComponentTableWidget->setCompleter(completer);
     
     vbox->addWidget(fAddComponentTableWidget);
     groupBox->setLayout(vbox);
@@ -1666,12 +1675,45 @@ void TsQt6::AddComponentWidgetSetItemChanged() {
     }
     
     fCurrentComponentName = fAddComponentNameWidget->text().toStdString();
-    fAddedComponentCounter++;
     G4String parentName = fAddComponentParentWidget->currentText().toStdString();
     G4String typeName = fAddComponentTableWidget->currentText().toStdString();
     G4String fieldName = fAddComponentFieldWidget->currentText().toStdString();
+
+    // Collect required parameters for this component type before creation.
+    std::vector<TsGeometryHub::RequiredParameter> required = TsGeometryHub::GetExpandedRequiredParameters(typeName, fCurrentComponentName, parentName);
+    if (!required.empty()) {
+        QDialog dialog;
+        dialog.setWindowTitle(QString("Required Parameters for ") + QString(typeName));
+        QFormLayout* form = new QFormLayout(&dialog);
+        std::vector<QLineEdit*> edits;
+        edits.reserve(required.size());
+        for (const auto& req : required) {
+            QLineEdit* edit = new QLineEdit(QString::fromStdString(req.DefaultValue));
+            form->addRow(QString::fromStdString(req.NameTemplate), edit);
+            edits.push_back(edit);
+        }
+        QDialogButtonBox* buttons = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
+        form->addWidget(buttons);
+        connect(buttons, SIGNAL(accepted()), &dialog, SLOT(accept()));
+        connect(buttons, SIGNAL(rejected()), &dialog, SLOT(reject()));
+        if (dialog.exec() != QDialog::Accepted) {
+            fAddComponentWidget->blockSignals(false);
+            return;
+        }
+        // Persist user-supplied required parameters before component creation.
+        for (size_t i = 0; i < required.size(); ++i) {
+            QString value = edits[i]->text().trimmed();
+            if (value.isEmpty())
+                continue; // allow user to omit; component code may still require it
+            // Auto-quote string categories (s:)
+            if (required[i].NameTemplate.find("s:") == 0 && !value.startsWith("\""))
+                value = QString("\"") + value + QString("\"");
+            fPm->AddParameter(required[i].NameTemplate, value.toStdString(), false, true);
+        }
+    }
     
     fGm->GetGeometryHub()->AddComponentFromGUI(fPm, fGm, fCurrentComponentName, parentName, typeName, fieldName);
+    fAddedComponentCounter++;
     
     // Apply optional transform overrides
     const char* names[6] = {"TransX","TransY","TransZ","RotX","RotY","RotZ"};

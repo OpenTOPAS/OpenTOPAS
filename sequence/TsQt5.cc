@@ -90,6 +90,8 @@
 #include <qdialog.h>
 #include <qdialogbuttonbox.h>
 #include <qdesktopservices.h>
+#include <qformlayout.h>
+#include <qcompleter.h>
 #include <qprocess.h>
 #include <qstringlist.h>
 #include <qurl.h>
@@ -1713,6 +1715,13 @@ void TsQt5::CreateAddComponentDialog() {
     for (iter=componentTypeNames.begin(); iter!=componentTypeNames.end(); iter++)
         fAddComponentTableWidget->addItem(QString(*iter));
     fAddComponentTableWidget->setCurrentIndex(0);
+    fAddComponentTableWidget->setEditable(true);
+    fAddComponentTableWidget->setInsertPolicy(QComboBox::NoInsert);
+    QCompleter* completer = new QCompleter(fAddComponentTableWidget->model(), fAddComponentTableWidget);
+    completer->setCompletionMode(QCompleter::PopupCompletion);
+    completer->setFilterMode(Qt::MatchContains);
+    completer->setCaseSensitivity(Qt::CaseInsensitive);
+    fAddComponentTableWidget->setCompleter(completer);
     
     vbox->addWidget(fAddComponentTableWidget);
     groupBox->setLayout(vbox);
@@ -1759,12 +1768,42 @@ void TsQt5::AddComponentWidgetSetItemChanged() {
         fShowReadOnlyNoteMessage = !ShowReadOnlyParametersDialog(fUIQt->GetMainWindow());
     
     fCurrentComponentName = fAddComponentNameWidget->text().toStdString();
-    fAddedComponentCounter++;
     G4String parentName = fAddComponentParentWidget->currentText().toStdString();
     G4String typeName = fAddComponentTableWidget->currentText().toStdString();
     G4String fieldName = fAddComponentFieldWidget->currentText().toStdString();
-    
+
+    std::vector<TsGeometryHub::RequiredParameter> required = TsGeometryHub::GetExpandedRequiredParameters(typeName, fCurrentComponentName, parentName);
+    if (!required.empty()) {
+        QDialog dialog(GetQtParent(fUIQt->GetMainWindow()));
+        dialog.setWindowTitle(QString("Required Parameters for ") + QString(typeName));
+        QFormLayout* form = new QFormLayout(&dialog);
+        std::vector<QLineEdit*> edits;
+        edits.reserve(required.size());
+        for (const auto& req : required) {
+            QLineEdit* edit = new QLineEdit(QString::fromStdString(req.DefaultValue));
+            form->addRow(QString::fromStdString(req.NameTemplate), edit);
+            edits.push_back(edit);
+        }
+        QDialogButtonBox* buttons = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
+        form->addWidget(buttons);
+        connect(buttons, SIGNAL(accepted()), &dialog, SLOT(accept()));
+        connect(buttons, SIGNAL(rejected()), &dialog, SLOT(reject()));
+        if (dialog.exec() != QDialog::Accepted) {
+            fAddComponentWidget->blockSignals(false);
+            return;
+        }
+        for (size_t i = 0; i < required.size(); ++i) {
+            QString value = edits[i]->text().trimmed();
+            if (value.isEmpty())
+                continue; // allow user to omit; component code may still require it
+            if (required[i].NameTemplate.find("s:") == 0 && !value.startsWith("\""))
+                value = QString("\"") + value + QString("\"");
+            fPm->AddParameter(required[i].NameTemplate, value.toStdString(), false, true);
+        }
+    }
+
     fGm->GetGeometryHub()->AddComponentFromGUI(fPm, fGm, fCurrentComponentName, parentName, typeName, fieldName);
+    fAddedComponentCounter++;
     
     // Apply optional transform overrides
     const char* names[6] = {"TransX","TransY","TransZ","RotX","RotY","RotZ"};
