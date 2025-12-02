@@ -514,10 +514,16 @@ void TsQt5::UpdateParameterEditor() {
     G4StrUtil::to_lower(searchName);
     G4bool findLineToSelect = true;
     
+    auto normalizeName = [](G4String name) {
+        G4StrUtil::to_lower(name);
+        return name;
+    };
+
     std::map<G4String, QTreeWidgetItem*> categoryItems;
     std::map<G4String, QTreeWidgetItem*> componentItems;
     std::map<G4String, QTreeWidgetItem*> geometryItems;
     std::map<G4String, G4String> geometryParents;
+    std::map<G4String, G4String> geometryDisplayNames;
     std::set<G4String> componentsWithParentRow;
     
     auto getCategoryItem = [&](const G4String& categoryName) {
@@ -557,45 +563,51 @@ void TsQt5::UpdateParameterEditor() {
         return groupItem;
     };
     
-    // Build parent map for geometries to show hierarchy
+    // Build parent map for geometries to show hierarchy (normalize for case-insensitive lookups)
     std::vector<G4String> geoNames = fGm->GetComponentNames();
     for (size_t i=0; i<geoNames.size(); ++i) {
         G4String name = geoNames[i];
+        G4String nameLower = normalizeName(name);
         G4String parent = "";
         if (fPm->ParameterExists("Ge/" + name + "/Parent"))
             parent = fPm->GetStringParameter("Ge/" + name + "/Parent");
-        geometryParents[name] = parent;
+        geometryParents[nameLower] = normalizeName(parent);
+        geometryDisplayNames[nameLower] = name;
     }
     
     std::function<QTreeWidgetItem*(const G4String&)> getGeometryItem = [&](const G4String& compName) -> QTreeWidgetItem* {
-        std::map<G4String, QTreeWidgetItem*>::iterator iter = geometryItems.find(compName);
+        G4String compKey = normalizeName(compName);
+        std::map<G4String, QTreeWidgetItem*>::iterator iter = geometryItems.find(compKey);
         if (iter != geometryItems.end())
             return iter->second;
         
         G4String parent = "";
-        std::map<G4String,G4String>::const_iterator pIt = geometryParents.find(compName);
+        std::map<G4String,G4String>::const_iterator pIt = geometryParents.find(compKey);
         if (pIt != geometryParents.end())
             parent = pIt->second;
         
         QTreeWidgetItem* parentItem = 0;
-        if (parent != "" && geometryParents.find(parent) != geometryParents.end())
-            parentItem = getGeometryItem(parent);
+        if (parent != "" && geometryParents.find(parent) != geometryParents.end()) {
+            G4String parentDisplay = geometryDisplayNames.count(parent) ? geometryDisplayNames[parent] : parent;
+            parentItem = getGeometryItem(parentDisplay);
+        }
         
         QTreeWidgetItem* catItem = getCategoryItem("Geometries");
+        G4String displayName = geometryDisplayNames.count(compKey) ? geometryDisplayNames[compKey] : compName;
         QTreeWidgetItem* compItem = new QTreeWidgetItem(parentItem ? parentItem : catItem);
-        compItem->setText(0, QString(compName));
-        compItem->setData(0, Qt::UserRole, QString("component:") + QString(compName));
+        compItem->setText(0, QString(displayName));
+        compItem->setData(0, Qt::UserRole, QString("component:") + QString(displayName));
         compItem->setFlags(compItem->flags() ^ Qt::ItemIsEditable);
-        G4String compKey = G4String("Geometries/") + compName;
+        G4String compKeyExpanded = G4String("Geometries/") + displayName;
         bool expanded = false;
-        std::map<G4String, bool>::const_iterator expandIter = previousComponentExpansion.find(compKey);
+        std::map<G4String, bool>::const_iterator expandIter = previousComponentExpansion.find(compKeyExpanded);
         if (expandIter != previousComponentExpansion.end())
             expanded = expandIter->second;
         compItem->setExpanded(expanded);
         if (!parentItem)
             catItem->addChild(compItem);
-        geometryItems[compName] = compItem;
-        componentItems[compKey] = compItem;
+        geometryItems[compKey] = compItem;
+        componentItems[compKeyExpanded] = compItem;
         return compItem;
     };
     
@@ -1269,8 +1281,12 @@ void TsQt5::DoDuplicateGeometry(const G4String& oldName) {
 
 void TsQt5::CollectGeometryDescendants(const G4String& rootName, const std::map<G4String,G4String>& parentMap, std::vector<G4String>& ordered) {
     ordered.push_back(rootName);
+    G4String rootLower = rootName;
+    G4StrUtil::to_lower(rootLower);
     for (std::map<G4String,G4String>::const_iterator it = parentMap.begin(); it != parentMap.end(); ++it) {
-        if (it->second == rootName)
+        G4String parentLower = it->second;
+        G4StrUtil::to_lower(parentLower);
+        if (parentLower == rootLower)
             CollectGeometryDescendants(it->first, parentMap, ordered);
     }
 }
@@ -1287,6 +1303,11 @@ void TsQt5::DoDuplicateGeometryTree(const G4String& rootName) {
         return;
     G4String prefix = prefixQ.toStdString();
     
+    auto normalizeName = [](G4String name) {
+        G4StrUtil::to_lower(name);
+        return name;
+    };
+
     // Build parent map
     std::map<G4String,G4String> parentMap;
     for (size_t i=0;i<componentNames.size();++i) {
@@ -1298,6 +1319,9 @@ void TsQt5::DoDuplicateGeometryTree(const G4String& rootName) {
     // Collect descendants including root, top-down
     std::vector<G4String> ordered;
     CollectGeometryDescendants(rootName, parentMap, ordered);
+    std::set<G4String> orderedLower;
+    for (size_t i=0;i<ordered.size(); ++i)
+        orderedLower.insert(normalizeName(ordered[i]));
     
     // Ensure no name collisions
     for (size_t i=0;i<ordered.size();++i) {
@@ -1319,13 +1343,11 @@ void TsQt5::DoDuplicateGeometryTree(const G4String& rootName) {
         G4String parentName = "";
         if (parentMap.find(oldComp) != parentMap.end())
             parentName = parentMap[oldComp];
+        G4String parentLower = normalizeName(parentName);
         
         // If parent is in the subtree, map it to the prefixed name
-        if (parentMap.find(oldComp) != parentMap.end()) {
-            G4String parentOld = parentMap[oldComp];
-            if (std::find(ordered.begin(), ordered.end(), parentOld) != ordered.end())
-                parentName = prefix + parentOld;
-        }
+        if (!parentLower.empty() && orderedLower.find(parentLower) != orderedLower.end())
+            parentName = prefix + parentMap[oldComp];
         
         std::vector<G4String> newParams;
         DuplicateParameters("Ge", oldComp, newComp, &newParams);
@@ -1734,6 +1756,7 @@ void TsQt5::CreateAddComponentDialog() {
     QGroupBox* groupBox1 = new QGroupBox();
     groupBox1->setTitle(QString("Set Component Name"));
     fCurrentComponentName = "AddedComp_" + G4UIcommand::ConvertToString(fAddedComponentCounter);
+    G4StrUtil::to_lower(fCurrentComponentName);
     fAddComponentNameWidget = new QLineEdit(QString(fCurrentComponentName));
     QVBoxLayout *vbox1 = new QVBoxLayout;
     vbox1->addWidget(fAddComponentNameWidget);
@@ -1845,7 +1868,11 @@ void TsQt5::AddComponentWidgetSetItemChanged() {
     if (fShowReadOnlyNoteMessage)
         fShowReadOnlyNoteMessage = !ShowReadOnlyParametersDialog(fUIQt->GetMainWindow());
     
-    fCurrentComponentName = fAddComponentNameWidget->text().toStdString();
+    QString enteredName = fAddComponentNameWidget->text().trimmed();
+    QString normalizedName = enteredName.toLower();
+    if (enteredName != normalizedName)
+        fAddComponentNameWidget->setText(normalizedName);
+    fCurrentComponentName = normalizedName.toStdString();
     G4String parentName = fAddComponentParentWidget->currentText().toStdString();
     G4String typeName = fAddComponentTableWidget->currentText().toStdString();
     G4String fieldName = fAddComponentFieldWidget->currentText().toStdString();
