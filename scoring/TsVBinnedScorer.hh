@@ -89,6 +89,8 @@ protected:
 	std::vector <G4long> fCountMap;
 	std::vector <G4double> fMinMap;
 	std::vector <G4double> fMaxMap;
+	std::vector <G4long> fHistoryCountMap;
+	std::vector <G4long> fLastHistorySeenMap;
 
 private:
 	void ActuallySetUnit(const G4String& unitName);

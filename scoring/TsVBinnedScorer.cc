@@ -63,6 +63,7 @@
 
 #include <sstream>
 #include <iomanip>
+#include <algorithm>
 
 TsVBinnedScorer::TsVBinnedScorer(TsParameterManager* pM, TsMaterialManager* mM, TsGeometryManager* gM, TsScoringManager* scM, TsExtensionManager* eM,
                                  G4String scorerName, G4String quantity, G4String outFileName, G4bool isSubScorer)
@@ -948,9 +949,14 @@ void TsVBinnedScorer::ActuallySetUnit(const G4String& theUnitName)
     
     if (fReportSum || fReportMean || fAccumulateSecondMoment || fReportCVolHist || fReportDVolHist)
         fFirstMomentMap.assign(fNBins, 0.);
-    
+
     if (fReportMean || fAccumulateSecondMoment)
         fSecondMomentMap.assign(fNBins, 0.);
+
+    if (fReportMean || fAccumulateSecondMoment) {
+        fHistoryCountMap.assign(fNBins, 0);
+        fLastHistorySeenMap.assign(fNBins, 0);
+    }
     
     // Setup outcome modeling only if model name is given and the unitName is Gy
     if ( fPm-> ParameterExists( GetFullParmNameLower( "OutcomeModelName" ) ) ) {
@@ -1120,23 +1126,12 @@ void TsVBinnedScorer::AccumulateEvent()
     UserHookForEndOfEvent();
     
     fScoredHistories++;
-    
-    // Iterator to use with fEvtMap, the map of hits in the event
-    std::map<G4int, G4double>::iterator itrX;
-    
-    // Bin index
-    G4int index;
-    
-    // Value from one specific bin
-    G4double x;
-    G4double mean;
-    G4double delta;
-    G4double mom2;
+    const G4long historyIndex = fScoredHistories;
     
     // Iterate over all the hits in this event
-    for (itrX = fEvtMap->begin(); itrX != fEvtMap->end(); itrX++) {
-        index = itrX->first;
-        x = itrX->second;
+    for (std::map<G4int, G4double>::iterator itrX = fEvtMap->begin(); itrX != fEvtMap->end(); itrX++) {
+        G4int index = itrX->first;
+        G4double x = itrX->second;
         
         if (fAccumulateCount)
             fCountMap[index]++;
@@ -1149,57 +1144,19 @@ void TsVBinnedScorer::AccumulateEvent()
             if (x > fMaxMap[index])
                 fMaxMap[index] = x;
         
-        // Use numerically stable algoritm from Donald E. Knuth (1998).
-        // The Art of Computer Programming, volume 2: Seminumerical Algorithms,
-        // 3rd edn., p. 232. Boston: Addison-Wesley.
-        // for x in data:
-        //   n = n + 1
-        //   delta = x - mean
-        //   mean = mean + delta/n
-        //   mom2 = mom2 + delta*(x - mean)
-        // variance = mom2/(n - 1)
-        if (fAccumulateMean) {
-            if (fAccumulateSecondMoment && fCountMap[index]==1) {
-                // Initialize values to account for all previous histories having zero value
-                // If we want Mean but don't want SecondMoment, can use a faster method at end of scoring.
-                mean = x/fScoredHistories;
-                fFirstMomentMap[index] = mean;
-                mom2 = (fScoredHistories-1)*mean*mean + (x - mean)*(x - mean);
-                fSecondMomentMap[index] = mom2;
-            } else {
-                mean = fFirstMomentMap[index];
-                delta = x - mean;
-                
-                if (fAccumulateSecondMoment) {
-                    mean += delta/fScoredHistories;
-                    mom2 = fSecondMomentMap[index];
-                    mom2 += delta*(x-mean);
-                    fSecondMomentMap[index] = mom2;
-                } else {
-                    mean += delta/fCountMap[index];
-                }
-                fFirstMomentMap[index] = mean;
+        if (fReportSum || fReportMean || fAccumulateSecondMoment || fReportCVolHist || fReportDVolHist) {
+            if (!fHistoryCountMap.empty()) {
+                G4long lastSeen = fLastHistorySeenMap[index];
+                G4long skipped = historyIndex - lastSeen - 1;
+                if (skipped > 0)
+                    fHistoryCountMap[index] += skipped;
+                fLastHistorySeenMap[index] = historyIndex;
+                fHistoryCountMap[index]++;
             }
-        } else if (fReportSum || fReportCVolHist || fReportDVolHist) {
-            // Only need to accumulate sum
+            
             fFirstMomentMap[index] += x;
-        }
-    }
-    
-    if (fAccumulateSecondMoment) {
-        // Any bins hit in previous events but not hit in this event must accumulate a zero.
-        // If fNDivisions is very large and many of the divisions have already been hit,
-        // this loop becomes very time consuming. But I don't see a way around this.
-        // If we want Mean but don't want SecondMoment, can use a faster method at end of scoring.
-        for (index = 0; index < fNBins; index++) {
-            if (fCountMap[index] > 0) {
-                itrX = fEvtMap->find(index);
-                if (itrX == fEvtMap->end()) {
-                    mean = fFirstMomentMap[index];
-                    fFirstMomentMap[index] -=  mean /fScoredHistories;
-                    fSecondMomentMap[index] += mean * mean;
-                }
-            }
+            if (fAccumulateSecondMoment)
+                fSecondMomentMap[index] += x * x;
         }
     }
     
@@ -1211,9 +1168,9 @@ void TsVBinnedScorer::AccumulateEvent()
         else
             analysisManager = fScm->GetXmlAnalysisManager();
         
-        for (itrX = fEvtMap->begin(); itrX != fEvtMap->end(); itrX++) {
-            index = itrX->first;
-            x = itrX->second;
+        for (std::map<G4int, G4double>::iterator itrX = fEvtMap->begin(); itrX != fEvtMap->end(); itrX++) {
+            G4int index = itrX->first;
+            G4double x = itrX->second;
             
             if (fNDivisions==1 && fNEorTBins==0)
                 analysisManager->FillH1(fHistogramID, x / GetUnitValue(), 1.);
@@ -1238,6 +1195,12 @@ void TsVBinnedScorer::ApplyRTStructureFilterToRestoredData() {
             
             if (fAccumulateSecondMoment)
                 fSecondMomentMap[idx] = 0.;
+
+            if (!fHistoryCountMap.empty())
+                fHistoryCountMap[idx] = 0;
+
+            if (!fLastHistorySeenMap.empty())
+                fLastHistorySeenMap[idx] = 0;
         }
     }
 }
@@ -1712,24 +1675,42 @@ void TsVBinnedScorer::ReadOneValueFromBinary(G4int idx)
 
 
 void TsVBinnedScorer::StoreOneValue(G4int idx) {
-    // What we store in fFirstMomentMap depends on what we are reporting
-    if (fReportMean || fAccumulateSecondMoment) {
-        // fFirstMomentMap will store Mean
-        if (fReadBackHasMean) fFirstMomentMap[idx] = fMean * GetUnitValue();
-        else if (fScoredHistories == 0)
-            fFirstMomentMap[idx] = 0.;
-        else fFirstMomentMap[idx] = fSum / fScoredHistories * GetUnitValue();
+    G4double sumValue = 0.;
+    G4double sumSquaresValue = 0.;
+    G4long historiesForBin = fScoredHistories;
+
+    if (fReportSum || fReportMean || fAccumulateSecondMoment || fReportCVolHist || fReportDVolHist) {
+        if (fReadBackHasSum)
+            sumValue = fSum * GetUnitValue();
+        else if (fReadBackHasMean && historiesForBin > 0)
+            sumValue = fMean * historiesForBin * GetUnitValue();
+        else
+            sumValue = 0.;
         
-        if (fAccumulateSecondMoment) {
-            if (fReadBackHasSecondMoment) fSecondMomentMap[idx] = fSecondMoment * GetUnitValue() * GetUnitValue();
-            else if (fReadBackHasVariance) fSecondMomentMap[idx] = fVariance * (fScoredHistories-1) * GetUnitValue() * GetUnitValue();
-            else fSecondMomentMap[idx] = fStandardDeviation * fStandardDeviation * (fScoredHistories-1) * GetUnitValue() * GetUnitValue();
-        }
-    } else if (fReportSum) {
-        // fFirstMomentMap will store Sum
-        if (fReadBackHasSum) fFirstMomentMap[idx] = fSum * GetUnitValue();
-        else fFirstMomentMap[idx] = fMean * fScoredHistories * GetUnitValue();
+        fFirstMomentMap[idx] = sumValue;
     }
+    
+    if (fAccumulateSecondMoment) {
+        if (historiesForBin > 0) {
+            if (fReadBackHasSecondMoment) {
+                G4double second = fSecondMoment * GetUnitValue() * GetUnitValue();
+                sumSquaresValue = second + sumValue * sumValue / historiesForBin;
+            } else if (fReadBackHasVariance) {
+                G4double second = fVariance * (historiesForBin-1) * GetUnitValue() * GetUnitValue();
+                sumSquaresValue = second + sumValue * sumValue / historiesForBin;
+            } else if (fReadBackHasStandardDeviation) {
+                G4double second = fStandardDeviation * fStandardDeviation * (historiesForBin-1) * GetUnitValue() * GetUnitValue();
+                sumSquaresValue = second + sumValue * sumValue / historiesForBin;
+            }
+        }
+        
+        fSecondMomentMap[idx] = sumSquaresValue;
+    }
+
+    if (!fHistoryCountMap.empty())
+        fHistoryCountMap[idx] = historiesForBin;
+    if (!fLastHistorySeenMap.empty())
+        fLastHistorySeenMap[idx] = historiesForBin;
     
     if (fReportCountInBin) fCountMap[idx] = fCountInBin;
     
@@ -1758,43 +1739,15 @@ void TsVBinnedScorer::AbsorbResultsFromWorkerScorer(TsVScorer* workerScorer)
 {
 	TsVBinnedScorer* workerHistScorer = dynamic_cast<TsVBinnedScorer*>(workerScorer);
 
-	// Absorb counts per bin
-    G4bool mergedMeanByCount = false;
+	// Absorb counts per bin (number of contributing histories)
 	if (fAccumulateCount) {
 		std::vector<G4long>::iterator itrMasterCount = fCountMap.begin();
 		std::vector<G4long>::iterator itrWorkerCount = workerHistScorer->fCountMap.begin();
-        
-        if (fReportMean && !fAccumulateSecondMoment) {
-            mergedMeanByCount = true;
-            std::vector<G4double>::iterator itrMasterMean = fFirstMomentMap.begin();
-            std::vector<G4double>::iterator itrWorkerMean = workerHistScorer->fFirstMomentMap.begin();
-            
-            while (itrMasterCount != fCountMap.end()) {
-                G4long masterCount = *itrMasterCount;
-                G4long workerCount = *itrWorkerCount;
-                G4long totalCount = masterCount + workerCount;
-                
-                if (totalCount > 0) {
-                    *itrMasterMean = (masterCount * (*itrMasterMean) + workerCount * (*itrWorkerMean)) / totalCount;
-                } else {
-                    *itrMasterMean = 0.;
-                }
-                
-                *itrMasterCount = totalCount;
-                itrMasterCount++;
-                itrWorkerCount++;
-                itrMasterMean++;
-                itrWorkerMean++;
-            }
-            
-            workerHistScorer->fFirstMomentMap.assign(fNBins, 0.);
-        } else {
-            while (itrMasterCount != fCountMap.end()) {
-                *itrMasterCount += *itrWorkerCount;
-                itrMasterCount++;
-                itrWorkerCount++;
-            }
-        }
+		while (itrMasterCount != fCountMap.end()) {
+			*itrMasterCount += *itrWorkerCount;
+			itrMasterCount++;
+			itrWorkerCount++;
+		}
 		workerHistScorer->fCountMap.assign(fNBins, 0);
 	}
 
@@ -1828,39 +1781,8 @@ void TsVBinnedScorer::AbsorbResultsFromWorkerScorer(TsVScorer* workerScorer)
 		workerHistScorer->fMaxMap.assign(fNBins, -9.e+99);
 	}
 
-	if ((fReportMean || fAccumulateSecondMoment) && !mergedMeanByCount) {
-		std::vector<G4double>::iterator itrMaster = fFirstMomentMap.begin();
-		std::vector<G4double>::iterator itrWorker = workerHistScorer->fFirstMomentMap.begin();
-
-        const G4double masterHistories = static_cast<G4double>(fScoredHistories);
-        const G4double workerHistories = static_cast<G4double>(workerHistScorer->fScoredHistories);
-        const G4double totalHistories = masterHistories + workerHistories;
-        while (itrMaster != fFirstMomentMap.end()) {
-            if (totalHistories > 0.) {
-                *itrMaster = ( *itrMaster * masterHistories + *itrWorker * workerHistories ) / totalHistories;
-            } else {
-                *itrMaster = 0.;
-            }
-            itrMaster++;
-            itrWorker++;
-        }
-
-		workerHistScorer->fFirstMomentMap.assign(fNBins, 0);
-
-		if (fAccumulateSecondMoment) {
-			std::vector<G4double>::iterator itrSecondMaster = fSecondMomentMap.begin();
-			std::vector<G4double>::iterator itrSecondWorker = workerHistScorer->fSecondMomentMap.begin();
-			while (itrSecondMaster != fSecondMomentMap.end()) {
-				*itrSecondMaster += *itrSecondWorker;
-				itrSecondMaster++;
-				itrSecondWorker++;
-			}
-
-			workerHistScorer->fSecondMomentMap.assign(fNBins, 0);
-		}
-
-	} else if (!mergedMeanByCount && (fReportSum || fReportCVolHist || fReportDVolHist)) {
-		// Only need to absorb sum
+	// Absorb sums (used for Sum, Mean and related reporting)
+	if (fReportSum || fReportMean || fAccumulateSecondMoment || fReportCVolHist || fReportDVolHist) {
 		std::vector<G4double>::iterator itrMaster = fFirstMomentMap.begin();
 		std::vector<G4double>::iterator itrWorker = workerHistScorer->fFirstMomentMap.begin();
 		while (itrMaster != fFirstMomentMap.end()) {
@@ -1870,6 +1792,32 @@ void TsVBinnedScorer::AbsorbResultsFromWorkerScorer(TsVScorer* workerScorer)
 		}
 
 		workerHistScorer->fFirstMomentMap.assign(fNBins, 0);
+	}
+
+	// Absorb sum of squares for variance/standard deviation
+	if (fAccumulateSecondMoment) {
+		std::vector<G4double>::iterator itrSecondMaster = fSecondMomentMap.begin();
+		std::vector<G4double>::iterator itrSecondWorker = workerHistScorer->fSecondMomentMap.begin();
+		while (itrSecondMaster != fSecondMomentMap.end()) {
+			*itrSecondMaster += *itrSecondWorker;
+			itrSecondMaster++;
+			itrSecondWorker++;
+		}
+
+		workerHistScorer->fSecondMomentMap.assign(fNBins, 0);
+	}
+
+	// Absorb per-bin history bookkeeping used for zero-padding
+	if (!fHistoryCountMap.empty()) {
+		std::vector<G4long>::iterator itrHistMaster = fHistoryCountMap.begin();
+		std::vector<G4long>::iterator itrHistWorker = workerHistScorer->fHistoryCountMap.begin();
+		while (itrHistMaster != fHistoryCountMap.end()) {
+			*itrHistMaster += *itrHistWorker;
+			itrHistMaster++;
+			itrHistWorker++;
+		}
+		workerHistScorer->fHistoryCountMap.assign(fNBins, 0);
+		workerHistScorer->fLastHistorySeenMap.assign(fNBins, 0);
 	}
 
 	fScoredHistories += workerHistScorer->fScoredHistories;
@@ -1891,12 +1839,6 @@ void TsVBinnedScorer::Output()
     if (G4Threading::IsWorkerThread()) return;
 #endif
     if (fIsSubScorer) return;
-    
-    // Account for empty bins in Mean (handled earlier if accumulating second moment)
-    if (fAccumulateMean && !fAccumulateSecondMoment)
-        for (G4int index = 0; index < fNBins; index++)
-            if (fCountMap[index] > 0)
-                fFirstMomentMap[index] *= (G4double)fCountMap[index] / fScoredHistories;
     
     fMissedSubScorerVoxels = CallCombineOnSubScorers();
     
@@ -2372,9 +2314,15 @@ void TsVBinnedScorer::Clear()
     
     if (fReportSum || fReportMean || fAccumulateSecondMoment || fReportCVolHist || fReportDVolHist)
         fFirstMomentMap.assign(fNBins, 0.);
-    
+
     if (fReportMean || fAccumulateSecondMoment)
         fSecondMomentMap.assign(fNBins, 0.);
+
+    if (!fHistoryCountMap.empty())
+        fHistoryCountMap.assign(fNBins, 0);
+
+    if (!fLastHistorySeenMap.empty())
+        fLastHistorySeenMap.assign(fNBins, 0);
 }
 
 
@@ -3025,27 +2973,36 @@ void TsVBinnedScorer::CalculateOneValue(G4int idx)
                 fVariance = -1;
                 fStandardDeviation = -1;
             } else {
-                if (fFirstMomentMap[idx]==0.) {
+                G4double histories = static_cast<G4double>(fScoredHistories);
+                if (!fHistoryCountMap.empty())
+                    histories = std::max(histories, static_cast<G4double>(fHistoryCountMap[idx]));
+                
+                if (histories <= 0.) {
                     fMean = 0.;
                     fSum = 0.;
                     fSecondMoment = 0.;
                     fVariance = 0.;
                     fStandardDeviation = 0.;
                 } else {
-                    if (fReportMean || fAccumulateSecondMoment) {
-                        fMean = fFirstMomentMap[idx] / GetUnitValue();
-                        fSum = fScoredHistories * fMean;
-                        
-                        if (fAccumulateSecondMoment) {
-                            fSecondMoment = fSecondMomentMap[idx] / GetUnitValue() / GetUnitValue();
-                            if (fScoredHistories > 1)
-                                fVariance = fSecondMoment/(fScoredHistories-1);
-                            else
-                                fVariance = 0.;
-                            fStandardDeviation = sqrt(fVariance);
-                        }
+                    const G4double sum = fFirstMomentMap[idx];
+                    fSum = sum / GetUnitValue();
+                    fMean = sum / histories / GetUnitValue();
+                    
+                    if (fAccumulateSecondMoment) {
+                        const G4double sumSquares = fSecondMomentMap[idx];
+                        G4double secondMomentNumerator = sumSquares - (sum * sum) / histories;
+                        if (secondMomentNumerator < 0.)
+                            secondMomentNumerator = 0.;
+                        fSecondMoment = secondMomentNumerator / (GetUnitValue() * GetUnitValue());
+                        if (histories > 1.)
+                            fVariance = fSecondMoment/(histories-1.);
+                        else
+                            fVariance = 0.;
+                        fStandardDeviation = sqrt(fVariance);
                     } else {
-                        fSum = fFirstMomentMap[idx] / GetUnitValue();
+                        fSecondMoment = 0.;
+                        fVariance = 0.;
+                        fStandardDeviation = 0.;
                     }
                 }
             }
@@ -3065,4 +3022,3 @@ void TsVBinnedScorer::ColorBy(G4double value) {
     visAtt->SetColor( fPm->GetColor(fColorNames[iValue])->GetColor() );
     fComponent->SetVisAttribute(visAtt);
 }
-
