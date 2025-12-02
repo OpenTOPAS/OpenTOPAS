@@ -315,9 +315,14 @@ G4bool TsSplitProcess::AcceptTrack(const G4Track& track, G4double radius, G4doub
 
 
 G4int TsSplitProcess::CalculateNSplit(G4int pre, G4int post) {
-	double postOverPre = (double)post/pre;
-        G4int splitNumber = static_cast<G4int>(postOverPre);
-	return splitNumber; 
+	if (pre <= 0 || post <= 0)
+		return 0;
+
+	G4double postOverPre = static_cast<G4double>(post) / static_cast<G4double>(pre);
+	if (postOverPre < 1.0)
+		return 0;
+
+	return static_cast<G4int>(postOverPre);
 }
 
 

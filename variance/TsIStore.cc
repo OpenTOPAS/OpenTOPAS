@@ -35,8 +35,15 @@
 #include "G4GeometryCellStepStream.hh"
 #include "G4LogicalVolume.hh"
 #include "G4TransportationManager.hh"
+#include "G4AutoLock.hh"
 
-G4ThreadLocal TsIStore* TsIStore::fInstance = 0;
+namespace {
+#ifdef TOPAS_MT
+	G4Mutex tsIStoreMutex = G4MUTEX_INITIALIZER;
+#endif
+}
+
+TsIStore* TsIStore::fInstance = 0;
 
 TsIStore::TsIStore(const G4String& ParallelWorldName)
 :fWorldVolume(G4TransportationManager::GetTransportationManager()->GetParallelWorld(ParallelWorldName))
@@ -70,6 +77,9 @@ G4int TsIStore::GetPropertyValue(const G4GeometryCell &gCell, G4int propertyOpti
 
 
 TsIStore* TsIStore::GetInstance(const G4String& ParallelWorldName) {
+	#ifdef TOPAS_MT
+	G4AutoLock lock(&tsIStoreMutex);
+	#endif
 	if (!fInstance) {
 		G4cout << "TsStore:: Creating new IStore " << ParallelWorldName <<  G4endl;
 		fInstance = new TsIStore(ParallelWorldName);

@@ -91,6 +91,14 @@ protected:
 	std::vector <G4double> fMaxMap;
 	std::vector <G4long> fHistoryCountMap;
 	std::vector <G4long> fLastHistorySeenMap;
+	std::vector <G4double> fKnuthMeanMap;
+	std::vector <G4double> fKnuthM2Map;
+    
+    enum ReportMethod {
+        kLastHistorySeen,
+        kKnuth
+    };
+    ReportMethod fReportMethod;
 
 private:
 	void ActuallySetUnit(const G4String& unitName);

@@ -58,7 +58,7 @@ private:
 
 	const G4VPhysicalVolume* fWorldVolume;
 
-	static G4ThreadLocal TsIStore* fInstance;
+	static TsIStore* fInstance;
 
 	G4GeometryCellImportance fGeometryCelli;
 
