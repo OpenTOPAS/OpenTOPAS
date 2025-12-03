@@ -3081,7 +3081,9 @@ void TsVBinnedScorer::CalculateOneValue(G4int idx)
                     if (!fHistoryCountMap.empty())
                         histories = std::max(histories, static_cast<G4double>(fHistoryCountMap[idx]));
                 } else {
-                    histories = static_cast<G4double>(fCountMap[idx]);
+                    // For Knuth, use total histories (zeros included) while the running
+                    // mean/M2 tracked only hits; zeros contribute via the total count below.
+                    histories = static_cast<G4double>(fScoredHistories);
                 }
                 
                 if (histories <= 0.) {
@@ -3108,8 +3110,15 @@ void TsVBinnedScorer::CalculateOneValue(G4int idx)
                                 fVariance = 0.;
                             fStandardDeviation = sqrt(fVariance);
                         } else {
-                            const G4double m2 = fKnuthM2Map[idx];
-                            fSecondMoment = m2 / (GetUnitValue() * GetUnitValue());
+                            // Combine hit-only M2 with zero-contributing histories
+                            const G4double hits = static_cast<G4double>(fCountMap[idx]);
+                            const G4double meanHit = fKnuthMeanMap[idx];
+                            const G4double m2Hits = fKnuthM2Map[idx];
+                            const G4double sumSquares = m2Hits + hits * meanHit * meanHit;
+                            G4double secondMomentNumerator = sumSquares - (sum * sum) / histories;
+                            if (secondMomentNumerator < 0.)
+                                secondMomentNumerator = 0.;
+                            fSecondMoment = secondMomentNumerator / (GetUnitValue() * GetUnitValue());
                             if (histories > 1.)
                                 fVariance = fSecondMoment/(histories-1.);
                             else
