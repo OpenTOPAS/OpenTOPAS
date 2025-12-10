@@ -196,7 +196,7 @@ Compile OpenTOPAS by using the following commands:
         cd OpenTOPAS-build
         export Geant4_DIR=~/Applications/GEANT4/geant4-install
         export GDCM_DIR=~/Applications/TOPAS/OpenTOPAS/gdcm-install
-        cmake ../OpenTOPAS -DCMAKE_INSTALL_PREFIX=../OpenTOPAS-install
+        cmake ../OpenTOPAS -DCMAKE_INSTALL_PREFIX=../OpenTOPAS-install -DTOPAS_USE_QT=ON -DTOPAS_USE_QT6=OFF
         make -j10 install
 
 Next, copy the Geant4 libraries into the "lib" folder of OpenTOPAS. To do so, we will use the following commands:

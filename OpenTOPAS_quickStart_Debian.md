@@ -1,5 +1,5 @@
 # QuickStart Guide for OpenTOPAS: TOol for PArticle Simulation
-This file details the steps to be followed by <ins>Debian 10 or 11</ins> in order to install OpenTOPAS and launch your first simulation. 
+This file details the steps to be followed by <ins>Debian 10, 11 or 12</ins> in order to install OpenTOPAS and launch your first simulation. 
 
 These instructions target TOPAS version **v4.2.0** built against Geant4 **v11.3.2**.
 
@@ -47,10 +47,10 @@ Install `git`:
 ## Step 4
 Install `qt5`:
 
-        sudo apt install qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools
+        sudo apt install qt6-base-dev qt6-base-dev-tools qt6-tools-dev qt6-tools-dev-tools libqt6opengl6-dev 
 
 > [!WARNING]
-> The visualization of the current version of OpenTOPAS is only compatible with `qt5`, not `qt6` or other `qt` versions. 
+> The visualization of the current version of OpenTOPAS is only compatible with `qt`, not `qt` versions. 
 
 > [!NOTE]
 > Steps 5-7 are used to install Geant4, the Monte Carlo toolkit that provides the radiation transport.
@@ -124,7 +124,7 @@ Build Geant4.
         rm -rf geant4-install geant4-build
         mkdir geant4-{build,install}
         cd geant4-build
-        cmake ../geant4-v11.3.2 -DGEANT4_INSTALL_DATA=OFF -DGEANT4_BUILD_MULTITHREADED=ON -DGEANT4_BUILD_VERBOSE_CODE=OFF -DCMAKE_INSTALL_PREFIX=../geant4-install -DCMAKE_PREFIX_PATH=/usr/lib/qt5 -DGEANT4_USE_QT=ON -DGEANT4_USE_OPENGL_X11=ON -DGEANT4_USE_RAYTRACER_X11=ON 
+        cmake ../geant4-v11.3.2 -DGEANT4_INSTALL_DATA=OFF -DGEANT4_BUILD_MULTITHREADED=ON -DGEANT4_BUILD_VERBOSE_CODE=OFF -DCMAKE_INSTALL_PREFIX=../geant4-install -DCMAKE_PREFIX_PATH=/usr/lib/qt6 -DGEANT4_USE_QT=ON -DGEANT4_USE_QT_QT6=ON 
         sudo make -j20 install
 
 > [!NOTE]
@@ -171,7 +171,7 @@ Then use the following commands to move GDCM(<em>gdcm-2.6.8.tar.gz</em>) from th
         cd OpenTOPAS-build
         export Geant4_DIR=$HOME/Applications/GEANT4/geant4-install
         export GDCM_DIR=$HOME/Applications/GDCM/gdcm-install
-        cmake ../OpenTOPAS -DCMAKE_INSTALL_PREFIX=../OpenTOPAS-install
+        cmake ../OpenTOPAS -DCMAKE_INSTALL_PREFIX=../OpenTOPAS-install -DTOPAS_USE_QT=ON -DTOPAS_USE_QT6=ON
         sudo make -j20 install
 
 ## Step 9

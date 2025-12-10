@@ -4,7 +4,7 @@ This file details the steps to be followed by <ins>Mac users</ins> in order to i
 These instructions target TOPAS version **v4.2.0** built against Geant4 **v11.3.2**.
 
 > [!WARNING]
-> We recommend macOS version 14.0 (Sonoma) or higher. Furthermore these instructions are only compatible with `qt@5` (see the warnings in Step 6 to ensure that `qt@6` is not installed on your system). We take no responsibility for users who wish to proceed with `qt@6` already installed on their system.
+> We recommend macOS version 14.0 (Sonoma) or higher. Furthermore following these instructions are solely responsability of the end user. 
 
 > [!NOTE]
 > **Steps 1-3 are used to prepare your system for installation of OpenTOPAS**. Run these steps from a "terminal" window (found in the Utilities subfolder of the Applications folder on your system) when logged in as a user with administrative privileges (a so-called super user or su). 
@@ -13,7 +13,7 @@ These instructions target TOPAS version **v4.2.0** built against Geant4 **v11.3.
 > You can skip steps 1 and 2 if your system has XCode and Homebrew. You can check for this by entering the command `which xcode-select` for XCode and `which brew` for Homebrew. If the command is available the system will respond, showing you where it is installed on your system. 
 
 ## Step 1
-Download [XCode](https://apps.apple.com/fr/app/xcode/id497799835?l=en-GB&mt=12), which can be found on the Mac App Store, then enter the following command to install xcode-select (you can copy commands from here and paste them to your terminal):
+Install XQuartz. Download [XCode](https://apps.apple.com/fr/app/xcode/id497799835?l=en-GB&mt=12), which can be found on the Mac App Store, then enter the following command to install xcode-select (you can copy commands from here and paste them to your terminal):
 
         sudo xcode-select --install
 
@@ -28,9 +28,9 @@ Follow the instructions posted to your terminal at the end of the Homebrew insta
         eval "$(/opt/homebrew/bin/brew shellenv)"
 
 ## Step 3
-Once Homebrew is installed, you will have access to the command `brew install`. Use this command to install `qt@5`, `git`, `wget`, and `cmake` by entering the following commands into your terminal:
+Once Homebrew is installed, you will have access to the command `brew install`. Use this command to install `qt`, `git`, `wget`, and `cmake` by entering the following commands into your terminal:
 
-        brew install qt@5
+        brew install qt
         brew install git
         brew install wget
         brew install cmake
@@ -106,9 +106,9 @@ Build Geant4. Take note of the following warnings before running the commands sh
         cmake --version
 
 > [!WARNING]
-> Verify that `qt@6` is not linked or installed in your system. The following command should yield no output if `qt@6` is indeed **NOT** installed on your system. See the warning at the top of the document about `qt@6` compatibility.
+> Verify that `qt@5` is not linked or installed in your system. The following command should yield no output if `qt@5` is indeed **NOT** installed on your system. See the warning at the top of the document about `qt@5` compatibility.
 
-        brew list --versions qt@6
+        brew list --versions qt@5
 
 > [!WARNING]
 > Depending on your MacOS version you may or may not have XQuartz installed on your system. This can be tested with the following command which should yield no output if it is **NOT** installed. If this is the case please head to the official [Xquartz](https://www.xquartz.org) website to download the application.
@@ -118,9 +118,9 @@ Build Geant4. Take note of the following warnings before running the commands sh
 > [!WARNING]
 > Those with M1, M2 or M3 chips (check by going to the apple logo on the upper left of your screen and clicking on “About this Mac”) have `arm64` architecture and should include this architecture in the `DCMAKE_OSX_ARCHITECTURES` option of the cmake command in step 6.2 below. Those with Intel chips should not include this command and can delete the last line of the cmake command.
 
-6.1. Check which version of `qt@5` you have installed on your system as well as the associated installation path with the following command. 
+6.1. Check which version of `qt` you have installed on your system as well as the associated installation path with the following command. 
 
-        readlink -f $(brew --prefix qt@5)
+        readlink -f $(brew --prefix qt)
 
 Replace the path supplied to `DCMAKE_PREFIX_PATH` in step 6.2 with the output of the above command.
 
@@ -133,11 +133,13 @@ Replace the path supplied to `DCMAKE_PREFIX_PATH` in step 6.2 with the output of
                                 -DGEANT4_BUILD_MULTITHREADED=ON \
                                 -DGEANT4_BUILD_VERBOSE_CODE=OFF \
                                 -DCMAKE_INSTALL_PREFIX=../geant4-install \
-                                -DCMAKE_PREFIX_PATH=/opt/homebrew/Cellar/qt@5/5.15.11 \
-                                -DGEANT4_USE_QT=ON -DGEANT4_USE_OPENGL_X11=ON \
-                                -DGEANT4_USE_RAYTRACER_X11=ON \
+                                -DCMAKE_PREFIX_PATH=/opt/homebrew/Cellar/qt/6.9.3 \
+                                -DGEANT4_USE_QT=ON -DGEANT4_USE_OPENGL=ON \
                                 -DCMAKE_OSX_ARCHITECTURES=arm64
         make -j20 install
+
+> [!NOTE]
+> In newer MacOS systems an incompatiblity between ZLIB and the CommandLineTools might occur. In those cases, try `cmake` by appending the extra variable `-DGeant4_USE_SYSTEM_ZLIB=ON` 
 
 > [!NOTE]
 > The remaining steps complete the download and installation of OpenTOPAS and start you on the road to successful simulations.
