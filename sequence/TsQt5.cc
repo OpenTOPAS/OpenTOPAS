@@ -1031,7 +1031,16 @@ void TsQt5::DuplicateParameters(const G4String& categoryCode, const G4String& ol
 	std::vector<G4String>* parameterNames = new std::vector<G4String>;
 	std::vector<G4String>* parameterValues = new std::vector<G4String>;
     fPm->GetAllParametersWithValues(parameterNames, parameterValues);
-	std::map<G4String, std::pair<G4String,G4String> > sourceMap;
+    struct ParamInfo {
+        G4String baseType;
+        G4bool changeable;
+        G4String value;
+    };
+	std::map<G4String, ParamInfo> sourceMap;
+    auto preferChangeable = [](const ParamInfo& existingInfo, const ParamInfo& newInfo) {
+        return newInfo.changeable && !existingInfo.changeable;
+    };
+    std::map<G4String, ParamInfo> destParams; // destBare -> param
     
     G4String needle = "/" + oldName + "/";
     for (size_t i = 0; i < parameterNames->size(); ++i) {
@@ -1042,37 +1051,35 @@ void TsQt5::DuplicateParameters(const G4String& categoryCode, const G4String& ol
             continue;
         if (colonPos != std::string::npos) {
             G4String typeOnly = pname.substr(0, colonPos);
-            if (!typeOnly.empty() && typeOnly[typeOnly.size()-1]=='c')
-                typeOnly = typeOnly.substr(0, typeOnly.size()-1);
             G4String bare = pname.substr(colonPos+1);
             if (bare.find("/Type") != std::string::npos || bare.find("/Parent") != std::string::npos)
                 continue;
-            sourceMap[bare] = std::make_pair(typeOnly, (*parameterValues)[i]);
+            ParamInfo info = {typeOnly, fPm->IsChangeable(bare), (*parameterValues)[i]};
+            if (sourceMap.find(bare) == sourceMap.end() || preferChangeable(sourceMap[bare], info))
+                sourceMap[bare] = info;
         }
         G4String prefix = pname.substr(colonPos+1, firstSlash-colonPos-1);
         if (prefix != categoryCode)
             continue;
-        size_t pos = pname.find(needle);
-        if (pos == std::string::npos)
+        size_t barePos = pname.substr(colonPos+1).find(needle);
+        if (barePos == std::string::npos)
             continue;
-        G4String newPname = pname;
-        newPname.replace(pos+1, oldName.length(), newName);
-        G4String typeOnly = pname.substr(0, colonPos);
-        if (!typeOnly.empty() && typeOnly[typeOnly.size()-1]=='c')
-            typeOnly = typeOnly.substr(0, typeOnly.size()-1);
-        newPname = typeOnly + newPname.substr(colonPos);
+        G4String bare = pname.substr(colonPos+1);
+        G4String destBare = bare;
+        destBare.replace(barePos+1, oldName.length(), newName);
+        G4String baseType = pname.substr(0, colonPos);
+        G4bool isChangeable = fPm->IsChangeable(bare);
+        if (destBare.find("/Type") != std::string::npos || destBare.find("/Parent") != std::string::npos)
+            continue;
         G4String newVal = (*parameterValues)[i];
-        G4String bareNew = newPname.substr(newPname.find(":")+1);
-        if (bareNew.find("/Type") != std::string::npos || bareNew.find("/Parent") != std::string::npos)
-            continue;
         // Normalize any boolean (type starts with 'b') to "True"/"False"
-        if (!newPname.empty() && newPname[0] == 'b') {
+        if (!baseType.empty() && baseType[0] == 'b') {
             if (newVal == "0")
                 newVal = "\"False\"";
             else if (newVal == "1")
                 newVal = "\"True\"";
         }
-        if (typeOnly == "dv") {
+        if (baseType == "dv") {
             std::string v = newVal;
             size_t posAlpha = v.find_last_not_of("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ");
             if (posAlpha != std::string::npos && posAlpha+1 < v.size()) {
@@ -1082,11 +1089,18 @@ void TsQt5::DuplicateParameters(const G4String& categoryCode, const G4String& ol
                 }
             }
         }
-        fPm->AddParameter(newPname, newVal);
-        if (newParameterNames) {
-            if (colonPos != std::string::npos && colonPos+1 < newPname.size())
-                newParameterNames->push_back(newPname.substr(colonPos+1));
+        ParamInfo info = {baseType, isChangeable, newVal};
+        if (destParams.find(destBare) == destParams.end() || preferChangeable(destParams[destBare], info)) {
+            destParams[destBare] = info;
         }
+    }
+    for (const auto& kv : destParams) {
+        const G4String& destBare = kv.first;
+        const ParamInfo& cp = kv.second;
+        G4String typePrefix = cp.baseType + (cp.changeable ? "c" : "");
+        fPm->AddParameter(typePrefix + ":" + destBare, cp.value);
+        if (newParameterNames)
+            newParameterNames->push_back(destBare);
     }
     // Copy any required parameters declared in the registry that were not changeable (and thus might not be copied above).
     if (categoryCode == "Ge" && fPm->ParameterExists("Ge/" + oldName + "/Type")) {
@@ -1111,31 +1125,29 @@ void TsQt5::DuplicateParameters(const G4String& categoryCode, const G4String& ol
             destBare.replace(pos + 1, oldName.length(), newName);
             if (fPm->ParameterExists(destBare))
                 continue;
-            G4String type;
-            G4String value;
+            ParamInfo info;
             auto it = sourceMap.find(bareName);
             if (it != sourceMap.end()) {
-                type = it->second.first;
-                value = it->second.second;
+                info = it->second;
             } else {
                 if (!fPm->ParameterExists(bareName))
                     continue;
-                type = !typePrefix.empty() ? typePrefix : fPm->GetTypeOfParameter(bareName);
-                value = fPm->GetParameterValueAsString(type, bareName);
+                G4String base = !typePrefix.empty() ? typePrefix : fPm->GetTypeOfParameter(bareName);
+                info = {base, fPm->IsChangeable(bareName), fPm->GetParameterValueAsString(base, bareName)};
             }
-            if (!type.empty() && type[type.size()-1]=='c')
-                type = type.substr(0, type.size()-1);
-            if (type == "dv") {
-                std::string v = value;
+            G4String baseType = info.baseType;
+            if (baseType == "dv") {
+                std::string v = info.value;
                 size_t posAlpha = v.find_last_not_of("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ");
                 if (posAlpha != std::string::npos && posAlpha+1 < v.size()) {
                     if (v[posAlpha] != ' ') {
                         v.insert(posAlpha+1, " ");
-                        value = v;
+                        info.value = v;
                     }
                 }
             }
-            fPm->AddParameter(type + ":" + destBare, value, false, true);
+            G4String typePrefixFull = baseType + (info.changeable ? "c" : "");
+            fPm->AddParameter(typePrefixFull + ":" + destBare, info.value, false, true);
             if (newParameterNames)
                 newParameterNames->push_back(destBare);
         }

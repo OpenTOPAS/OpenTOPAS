@@ -79,7 +79,12 @@ namespace {
     }
 
     void AddParameterIfMissing(TsParameterManager* pM, const G4String& name, const G4String& value) {
-        if (!pM->ParameterExists(name))
+        // Treat parameters with the same bare name as identical, regardless of changeable prefix.
+        G4String bare = name;
+        size_t colon = bare.find(':');
+        if (colon != std::string::npos)
+            bare = bare.substr(colon + 1);
+        if (!pM->ParameterExists(bare))
             pM->AddParameter(name, value);
     }
 
