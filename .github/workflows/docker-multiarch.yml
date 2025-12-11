@@ -36,22 +36,24 @@ jobs:
   build:
     name: Build ${{ matrix.platform }}
     needs: resolve-tags
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.runner }}
     strategy:
       fail-fast: false
       matrix:
         include:
           - platform: linux/amd64
             suffix: amd64
+            runner: ubuntu-latest
           - platform: linux/arm64
             suffix: arm64
+            runner: ubuntu-24.04-arm
 
     steps:
       - name: Checkout source
         uses: actions/checkout@v4
 
       - name: Set up QEMU
-        if: matrix.platform != 'linux/amd64'
+        if: matrix.platform != 'linux/amd64' && matrix.runner != 'ubuntu-24.04-arm'
         uses: docker/setup-qemu-action@v3
         with:
           platforms: ${{ matrix.platform }}
