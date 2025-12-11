@@ -1,7 +1,7 @@
 //
 // ********************************************************************
 // *                                                                  *
-// * Copyright 2024 The TOPAS Collaboration                           *
+// * Copyright 2025 The TOPAS Collaboration                           *
 // * Copyright 2022 The TOPAS Collaboration                           *
 // *                                                                  *
 // * Permission is hereby granted, free of charge, to any person      *
@@ -43,11 +43,7 @@ fPm(pM), fInitialMomentum(0), fRequireSplitTrackID(false)
     if (fPm->ParameterExists("Vr/UseVarianceReduction") && fPm->GetBooleanParameter("Vr/UseVarianceReduction") &&
         fPm->ParameterExists("Vr/ParticleSplit/Active") && fPm->GetBooleanParameter("Vr/ParticleSplit/Active")) {
         G4String vrtType = fPm->GetStringParameter("Vr/ParticleSplit/Type");
-#if GEANT4_VERSION_MAJOR >= 11
         G4StrUtil::to_lower(vrtType);
-#else
-	vrtType.toLower();
-#endif
         if ( vrtType == "flaggeduniformsplit" ) {
             fRequireSplitTrackID = true;
         }

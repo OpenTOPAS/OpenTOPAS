@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+# Minimal helper to open URLs on the host from inside the container.
+# Tries macOS `open`, then Linux `xdg-open`, otherwise prints the URL so users can copy it.
+
+set -euo pipefail
+
+url="${1:-}"
+if [ -z "$url" ]; then
+    echo "Usage: topas-host-open <url>" >&2
+    exit 1
+fi
+
+if command -v open >/dev/null 2>&1; then
+    open "$url" >/dev/null 2>&1 && exit 0
+fi
+
+if command -v xdg-open >/dev/null 2>&1; then
+    xdg-open "$url" >/dev/null 2>&1 && exit 0
+fi
+
+echo "Could not find a host browser launcher. Please open this URL manually:"
+echo "$url"
+exit 1

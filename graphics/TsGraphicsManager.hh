@@ -59,6 +59,8 @@ public:
 	G4bool UsingOpenGL();
 	G4bool UsingRayTracer();
 	G4VViewer* GetCurrentViewer();
+	G4String GetCurrentViewName();
+	G4String GetAnyViewName();
 
 private:
 	TsParameterManager* fPm;

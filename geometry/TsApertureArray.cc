@@ -1,7 +1,7 @@
 //
 // ********************************************************************
 // *                                                                  *
-// * Copyright 2024 The TOPAS Collaboration                           *
+// * Copyright 2025 The TOPAS Collaboration                           *
 // * Copyright 2022 The TOPAS Collaboration                           *
 // *                                                                  *
 // * Permission is hereby granted, free of charge, to any person      *
@@ -69,11 +69,7 @@ G4VPhysicalVolume* TsApertureArray::Construct()
 	G4bool useFullLengthBeamlets = fPm->GetBooleanParameter(GetFullParmName("UseFullLengthBeamlets"));
 
 	G4String geometryMethod = fPm->GetStringParameter(GetFullParmName("GeometryMethod")); // addbeamlets, subtractbeamlets or onlybeamlets
-#if GEANT4_VERSION_MAJOR >= 11
 	G4StrUtil::to_lower(geometryMethod);
-#else
-	geometryMethod.toLower();
-#endif
 
 	G4int totalBeamlets = nBeamletsWidth * nBeamletsLength;
 	if (geometryMethod != "addbeamlets" && totalBeamlets==1) {

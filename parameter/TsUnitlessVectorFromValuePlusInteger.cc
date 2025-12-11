@@ -1,7 +1,7 @@
 //
 // ********************************************************************
 // *                                                                  *
-// * Copyright 2024 The TOPAS Collaboration                           *
+// * Copyright 2025 The TOPAS Collaboration                           *
 // * Copyright 2022 The TOPAS Collaboration                           *
 // *                                                                  *
 // * Permission is hereby granted, free of charge, to any person      *
@@ -47,8 +47,8 @@ TsUnitlessVectorFromValuePlusInteger::TsUnitlessVectorFromValuePlusInteger(TsPar
 
 TsUnitlessVectorFromValuePlusInteger::~TsUnitlessVectorFromValuePlusInteger()
 {
-	delete fValues;
-	delete fValuesIfParameterNames;
+	delete [] fValues;
+	delete [] fValuesIfParameterNames;
 }
 
 

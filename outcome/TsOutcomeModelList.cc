@@ -1,7 +1,7 @@
 //
 // ********************************************************************
 // *                                                                  *
-// * Copyright 2024 The TOPAS Collaboration                           *
+// * Copyright 2025 The TOPAS Collaboration                           *
 // * Copyright 2022 The TOPAS Collaboration                           *
 // *                                                                  *
 // * Permission is hereby granted, free of charge, to any person      *
@@ -63,11 +63,7 @@ TsOutcomeModelList::TsOutcomeModelList(TsParameterManager* pm, TsExtensionManage
 	// Just for set all the parameters of the corresponding model
 	for ( int i = 0; i < lengthModelName; i++ ) {
 		modelName = modelNames[i];
-#if GEANT4_VERSION_MAJOR >= 11
 		G4StrUtil::to_lower(modelName);
-#else
-		modelName.toLower();
-#endif
 
 		TsVOutcomeModel* model = em->InstantiateOutcomeModel(fPm, parmPrefix, modelName);
 		if (model) {

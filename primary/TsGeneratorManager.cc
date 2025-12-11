@@ -1,7 +1,7 @@
 //
 // ********************************************************************
 // *                                                                  *
-// * Copyright 2024 The TOPAS Collaboration                           *
+// * Copyright 2025 The TOPAS Collaboration                           *
 // * Copyright 2022 The TOPAS Collaboration                           *
 // *                                                                  *
 // * Permission is hereby granted, free of charge, to any person      *
@@ -73,11 +73,7 @@ TsGeneratorManager::TsGeneratorManager(TsParameterManager* pM, TsExtensionManage
 		G4String generatorName = generatorParmName.substr(3,generatorParmName.length()-8);
 		G4String generatorTypeParm = "So/" + generatorName + "/Type";
 		G4String generatorType = fPm->GetStringParameter(generatorTypeParm);
-#if GEANT4_VERSION_MAJOR >= 11
 		G4StrUtil::to_lower(generatorType);
-#else
-		generatorType.toLower();
-#endif
 
 		TsVGenerator* generator;
 
@@ -224,11 +220,7 @@ void TsGeneratorManager::NoteAnyUseOfChangeableParameters(const G4String& name)
 		// is interrogated twice for the same generator, the generator would update twice for the same change).
 		G4bool matched = false;
 		G4String nameToLower = name;
-#if GEANT4_VERSION_MAJOR >= 11
 		G4StrUtil::to_lower(nameToLower);
-#else
-		nameToLower.toLower();
-#endif
 		std::multimap< G4String, std::pair<TsVGenerator*,G4String> >::const_iterator iter;
 		for (iter = fChangeableParameterMap.begin(); iter != fChangeableParameterMap.end() && !matched; iter++) {
 			G4String gotParm = iter->first;

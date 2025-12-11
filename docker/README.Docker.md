@@ -9,6 +9,7 @@ Mount your Geant4 data and simulation files from the host:
 ```
 - `/simulations` maps to the directory where you run the command (or `-data=PATH`).
 - `/Applications/G4Data` is mounted read-only from `-g4data=/path/to/G4DATA`.
+- Help menu links in the Qt GUI are forwarded to the host via `docker/topas-host-open`, which is auto-mounted from `/Applications/TOPAS/OpenTOPAS/docker` (macOS) or `$HOME/Applications/TOPAS/OpenTOPAS/docker` (Linux). Override with `-hostopen=/path/to/script` if you keep the helper elsewhere.
 Headless operation (default on macOS and whenever you skip `--x11`) is handled by the container entrypoint, which launches `Xvfb` internally so you can still save scorers output in `/simulations/output`. If you need a different virtual display, set `TOPAS_XVFB_DISPLAY` or `TOPAS_XVFB_SCREEN` before running `topas-docker`.
 
 ### Apptainer / HPC Environments
@@ -99,4 +100,3 @@ docker run --rm -it \
 ```
 
 **Outputs (e.g., CSV scorers) are stored in your host directory mapped to `/simulations`. For frequently asked questions see `FAQ.md`**.
-

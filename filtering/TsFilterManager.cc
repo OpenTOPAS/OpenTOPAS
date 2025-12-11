@@ -1,7 +1,7 @@
 //
 // ********************************************************************
 // *                                                                  *
-// * Copyright 2024 The TOPAS Collaboration                           *
+// * Copyright 2025 The TOPAS Collaboration                           *
 // * Copyright 2022 The TOPAS Collaboration                           *
 // *                                                                  *
 // * Permission is hereby granted, free of charge, to any person      *
@@ -110,11 +110,8 @@ void TsFilterManager::NoteAnyUseOfChangeableParameters(const G4String& name)
 		// See if this parameter has already been registered as used by this filter (otherwise if this parameter
 		// is interrogated twice for the same filter, the filter would update twice for the same change).
 		G4String nameToLower = name;
-#if GEANT4_VERSION_MAJOR >= 11
 		G4StrUtil::to_lower(nameToLower);
-#else
-		nameToLower.toLower();
-#endif
+
 		G4bool matched = false;
 		std::multimap< G4String, std::pair<TsVFilter*,G4String> >::const_iterator iter;
 		for (iter = fChangeableParameterMap.begin(); iter != fChangeableParameterMap.end() && !matched; iter++) {

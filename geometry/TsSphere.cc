@@ -1,7 +1,7 @@
 //
 // ********************************************************************
 // *                                                                  *
-// * Copyright 2024 The TOPAS Collaboration                           *
+// * Copyright 2025 The TOPAS Collaboration                           *
 // * Copyright 2022 The TOPAS Collaboration                           *
 // *                                                                  *
 // * Permission is hereby granted, free of charge, to any person      *
@@ -243,11 +243,8 @@ G4int TsSphere::GetBin(G4int index, G4int iBin) {
 TsVGeometryComponent::SurfaceType TsSphere::GetSurfaceID(G4String surfaceName) {
 	SurfaceType surfaceID;
 	G4String surfaceNameLower = surfaceName;
-#if GEANT4_VERSION_MAJOR >= 11
 	G4StrUtil::to_lower(surfaceNameLower);
-#else 
-	surfaceNameLower.toLower();
-#endif
+
 	if (surfaceNameLower=="outercurvedsurface")
 		surfaceID = OuterCurvedSurface;
 	else if (surfaceNameLower=="innercurvedsurface")
@@ -475,11 +472,7 @@ void TsSphere::ComputeDimensions(G4Sphere& sphere, const G4int copyNo, const G4V
 	G4int iPhi = int( ( copyNo - iR * fDivisionCounts[1] * fDivisionCounts[2] ) / fDivisionCounts[2] );
 	G4int iTheta = copyNo - iR * fDivisionCounts[1] * fDivisionCounts[2] - iPhi * fDivisionCounts[2];
 
-#if GEANT4_VERSION_MAJOR >= 11
 	sphere.SetInnerRadius( fTotalRMin + iR * fFullWidths[0] / fDivisionCounts[0] );
-#else
-	sphere.SetInsideRadius( fTotalRMin + iR * fFullWidths[0] / fDivisionCounts[0] );
-#endif
 	sphere.SetOuterRadius( fTotalRMin + (iR+1) * fFullWidths[0] / fDivisionCounts[0] );
 	sphere.SetStartThetaAngle( fTotalSTheta + iTheta * fFullWidths[2] / fDivisionCounts[2] );
 }

@@ -1,7 +1,7 @@
 //
 // ********************************************************************
 // *                                                                  *
-// * Copyright 2024 The TOPAS Collaboration                           *
+// * Copyright 2025 The TOPAS Collaboration                           *
 // * Copyright 2022 The TOPAS Collaboration                           *
 // *                                                                  *
 // * Permission is hereby granted, free of charge, to any person      *
@@ -246,7 +246,7 @@ void TsDicomActivityMap::ReadImage()
 		fFullWidths[1] = fVoxelCountY * fVoxelSizeY;
 
 		// Read the pixels
-		gdcm::PixelFormat pixelFormat = image->GetPixelFormat();
+		//gdcm::PixelFormat pixelFormat = image->GetPixelFormat();
 
 		G4double slope = image->GetSlope();
 		G4double intercept = image->GetIntercept();

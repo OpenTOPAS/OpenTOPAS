@@ -1,7 +1,7 @@
 //
 // ********************************************************************
 // *                                                                  *
-// * Copyright 2024 The TOPAS Collaboration                           *
+// * Copyright 2025 The TOPAS Collaboration                           *
 // * Copyright 2022 The TOPAS Collaboration                           *
 // *                                                                  *
 // * Permission is hereby granted, free of charge, to any person      *
@@ -60,11 +60,7 @@ TsWeightWindow::~TsWeightWindow()
 
 void TsWeightWindow::ResolveParameters() {
 	fType = fPm->GetStringParameter(GetFullParmName("Type"));
-#if GEANT4_VERSION_MAJOR >= 11
 	G4StrUtil::to_lower(fType);
-#else
-	fType.toLower();
-#endif
 	
 	fParticleName = fPm->GetStringVector(GetFullParmName("ParticleName"));
 	fParticleNameLength = fPm->GetVectorLength(GetFullParmName("ParticleName"));
@@ -117,11 +113,7 @@ void TsWeightWindow::SetWeightWindow() {
 	if (fClearSampling)
 		G4WeightWindowStore::GetInstance()->Clear();
 
-#if GEANT4_VERSION_MAJOR >= 11
 	G4WeightWindowStore* wwstore = G4WeightWindowStore::GetInstance(fPhysVol[0]->GetName());
-#else
-	G4WeightWindowStore* wwstore = G4WeightWindowStore::GetInstance(*fPhysVol[0]->GetName());
-#endif
 
 	G4GeometryCell world(*(fPhysVol[0]), 0);
 	G4GeometryCell component(*(fPhysVol[1]), 0);
@@ -186,11 +178,7 @@ void TsWeightWindow::AddBiasingProcess() {
 	G4double survivalFactor = fPm->GetUnitlessParameter(GetFullParmName("SurvivalFactor"));
 	G4int maximumSplitNumber = fPm->GetIntegerParameter(GetFullParmName("MaximumSplitNumber"));
 	G4String placeOfAction = fPm->GetStringParameter(GetFullParmName("PlaceOfAction"));
-#if GEANT4_VERSION_MAJOR >= 11
 	G4StrUtil::to_lower(placeOfAction);
-#else
-	placeOfAction.toLower();
-#endif
 	G4PlaceOfAction thePlaceOfAction = onBoundary;
 	if ( placeOfAction == "oncollision")
 		thePlaceOfAction = onCollision;

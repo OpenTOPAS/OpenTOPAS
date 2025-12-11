@@ -1,7 +1,7 @@
 //
 // ********************************************************************
 // *                                                                  *
-// * Copyright 2024 The TOPAS Collaboration                           *
+// * Copyright 2025 The TOPAS Collaboration                           *
 // * Copyright 2022 The TOPAS Collaboration                           *
 // *                                                                  *
 // * Permission is hereby granted, free of charge, to any person      *
@@ -36,9 +36,13 @@
 
 TsGeneratorEmittance::TsGeneratorEmittance(TsParameterManager* pM, TsGeometryManager* gM, TsGeneratorManager* psM, G4String sourceName) :
 TsVGenerator(pM,gM,psM,sourceName), fTwissX(fSourceName), fTwissY(fSourceName)
-{
-	ResolveParameters();
-}
+	{
+		SetParticleParameterName("EmittanceParticle");
+		SetEnergyParameterNames("EmittanceEnergy", "EmittanceEnergySpread");
+		SetEnergySpectrumParameterNames("EmittanceEnergySpectrumType", "EmittanceEnergySpectrumValues",
+			"EmittanceEnergySpectrumWeights");
+		ResolveParameters();
+	}
 
 TsGeneratorEmittance::~TsGeneratorEmittance(){;}
 
@@ -46,11 +50,7 @@ void TsGeneratorEmittance::ResolveParameters(){
 	TsVGenerator::ResolveParameters();
 
 	fEmittanceDistName = fPm->GetStringParameter(GetFullParmName("Distribution"));
-#if GEANT4_VERSION_MAJOR >= 11
    	G4StrUtil::to_lower(fEmittanceDistName);
-#else
-    fEmittanceDistName.toLower();
-#endif
 
 	if ( fEmittanceDistName == "bigaussian" ){
 		fEmittanceDistType = BiGaussian;
@@ -138,11 +138,7 @@ void TsGeneratorEmittance::ResolveParameters(){
 	fBeamShape = NONE;
 	if (fPm->ParameterExists(GetFullParmName("BeamPositionCutoffShape"))) {
 		G4String beamShape = fPm->GetStringParameter(GetFullParmName("BeamPositionCutoffShape"));
-#if GEANT4_VERSION_MAJOR >= 11
    		G4StrUtil::to_lower(beamShape);
-#else
-    	beamShape.toLower();
-#endif
 		if (beamShape == "rectangle")
 			fBeamShape = RECTANGLE;
 		else if (beamShape == "ellipse")
