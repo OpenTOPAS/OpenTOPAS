@@ -11,7 +11,7 @@
 
 set -euo pipefail
 
-IMAGE=${IMAGE:-docker://opentopas/opentopas:v4.2.0}
+IMAGE=${IMAGE:-docker://opentopas/opentopas:latest}
 BUILD_EXTENSIONS=false
 EXT_DIR=""
 DATA_DIR=""

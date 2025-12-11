@@ -13,7 +13,7 @@
 set -euo pipefail
 
 # Default image if not provided
-IMAGE=${IMAGE:-opentopas/opentopas:v4.2.0}
+IMAGE=${IMAGE:-opentopas/opentopas:latest}
 ENABLE_X11=false
 DISPLAY_OVERRIDE=""
 ENV_FLAGS=""
