@@ -34,6 +34,7 @@
 #include "globals.hh"
 
 #include <map>
+#include <vector>
 
 class TsParameterManager;
 class TsGeometryManager;
@@ -58,6 +59,7 @@ public:
 	void Finalize();
 
 	TsSource* GetSource(G4String sourceName);
+	std::vector<G4String> GetSourceNames();
 
 	TsGeometryManager* GetGeometryManager();
 

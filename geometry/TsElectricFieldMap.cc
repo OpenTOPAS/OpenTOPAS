@@ -1,7 +1,7 @@
 // * Created on 2025.10.06 by @srmarcballestero <marc.ballestero-ribo@psi.ch>
 // ********************************************************************
 // *                                                                  *
-// * Copyright 2024 The TOPAS Collaboration                           *
+// * Copyright 2025 The TOPAS Collaboration                           *
 // * Copyright 2022 The TOPAS Collaboration                           *
 // *                                                                  *
 // * Permission is hereby granted, free of charge, to any person      *

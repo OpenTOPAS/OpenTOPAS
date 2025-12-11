@@ -1,7 +1,7 @@
 //
 // ********************************************************************
 // *                                                                  *
-// * Copyright 2024 The TOPAS Collaboration                           *
+// * Copyright 2025 The TOPAS Collaboration                           *
 // * Copyright 2022 The TOPAS Collaboration                           *
 // *                                                                  *
 // * Permission is hereby granted, free of charge, to any person      *
@@ -78,11 +78,7 @@ void TsSourceDistributed::ResolveParameters()
 	else
 		dist = "flat";
 
-#if GEANT4_VERSION_MAJOR >= 11
 	G4StrUtil::to_lower(dist);
-#else
-	dist.toLower();
-#endif
 	if (dist == "flat") {
 		fPointDistribution = FLAT;
 	} else if (dist == "gaussian") {

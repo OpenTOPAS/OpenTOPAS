@@ -1,7 +1,7 @@
 //
 // ********************************************************************
 // *                                                                  *
-// * Copyright 2024 The TOPAS Collaboration                           *
+// * Copyright 2025 The TOPAS Collaboration                           *
 // * Copyright 2022 The TOPAS Collaboration                           *
 // *                                                                  *
 // * Permission is hereby granted, free of charge, to any person      *
@@ -70,11 +70,7 @@ void TsDirectionalRussianRoulette::ResolveParameters() {
 		
 		for ( int i = 0; i < int(regionNames->size()); i++ ) {
 			G4String parmName = (*regionNames)[i];
-#if GEANT4_VERSION_MAJOR >= 11
 			G4StrUtil::to_lower(parmName);
-#else
-			parmName.toLower();
-#endif
  			parmName = parmName.substr(0, parmName.size()-22 );
 			 
 			G4String* processNames = fPm->GetStringVector(parmName + "processesNamed");
@@ -95,11 +91,7 @@ void TsDirectionalRussianRoulette::ResolveParameters() {
 			G4int prefixLength = 14 + fName.size();
 			G4String regionName = parmName.substr( prefixLength, parmName.size());
 			regionName = regionName.substr(0, regionName.size()-1);
-#if GEANT4_VERSION_MAJOR >= 11
 			G4StrUtil::to_lower(regionName);
-#else
-			regionName.toLower();
-#endif
 			G4Region* aRegion = G4RegionStore::GetInstance()->FindOrCreateRegion(regionName);
 			fRegion.push_back(aRegion);
 	

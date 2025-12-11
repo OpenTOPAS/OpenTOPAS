@@ -55,11 +55,6 @@ class G4MultiFunctionalDetector;
 #include "G4RootAnalysisManager.hh"
 #include "G4XmlAnalysisManager.hh"
 
-#if GEANT4_VERSION_MAJOR <= 10
-#include "g4root.hh"
-#include "g4xml.hh"
-#endif
-
 class TsScoringManager
 {
 public:

@@ -211,11 +211,12 @@ public:
 	G4bool AddParameterHasBeenCalled();
 
 	void GetChangeableParameters(std::vector<G4String>* names, std::vector<G4String>* values);
+	void GetAllParametersWithValues(std::vector<G4String>* names, std::vector<G4String>* values);
 	G4String GetParameterValueAsString(G4String parameterType, G4String parameterName);
 	void DumpParameters(G4double currentTime, G4bool includeDefaults);
 	void DumpParametersToSimpleFile(G4double currentTime);
 	void DumpParametersToSemicolonSeparatedFile(G4double currentTime);
-	void DumpAddedParameters();
+	void DumpAddedParameters(const G4String& filespec = "");
 	void ListUnusedParameters();
 	G4bool NowDoingParameterDump();
 	void UnableToCalculateForDump();

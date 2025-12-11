@@ -1,7 +1,7 @@
 //
 // ********************************************************************
 // *                                                                  *
-// * Copyright 2024 The TOPAS Collaboration                           *
+// * Copyright 2025 The TOPAS Collaboration                           *
 // * Copyright 2022 The TOPAS Collaboration                           *
 // *                                                                  *
 // * Permission is hereby granted, free of charge, to any person      *
@@ -37,6 +37,14 @@
 #include "G4VisExecutive.hh"
 #include "G4VisManager.hh"
 
+#if __has_include("G4OpenGLStoredQt.hh")
+#  include "G4OpenGLStoredQt.hh"
+#  include "G4OpenGLImmediateQt.hh"
+#  define TOPAS_HAVE_OPENGL_QT 1
+#else
+#  define TOPAS_HAVE_OPENGL_QT 0
+#endif
+
 TsGraphicsManager::TsGraphicsManager(TsParameterManager* pM, TsGeometryManager* gM)
 :fPm(pM), fGm(gM), fUsingOpenGL(false), fUsingRayTracer(false), fCurrentView(0)
 {
@@ -68,6 +76,10 @@ TsGraphicsManager::TsGraphicsManager(TsParameterManager* pM, TsGeometryManager* 
 		fViews = new std::map<G4String, TsGraphicsView*>;
 
 		fVisManager = new G4VisExecutive("Quiet");
+#if TOPAS_HAVE_OPENGL_QT
+		fVisManager->RegisterGraphicsSystem(new G4OpenGLStoredQt);
+		fVisManager->RegisterGraphicsSystem(new G4OpenGLImmediateQt);
+#endif
 		fVisManager->Initialize();
 
 		// Sequence Manager will need to know early on whether there will be any OpenGL or RayTracer views
@@ -80,12 +92,9 @@ TsGraphicsManager::TsGraphicsManager(TsParameterManager* pM, TsGeometryManager* 
 		for (G4int iToken=0; iToken<length; iToken++) {
 			G4String viewerParmName = (*values)[iToken];
 			G4String viewerType = fPm->GetStringParameter(viewerParmName);
-#if GEANT4_VERSION_MAJOR >= 11
 			G4StrUtil::to_lower(viewerType);
-#else
-			viewerType.toLower();
-#endif
-			if (viewerType == "opengl" || viewerType.substr(0,3) == "ogl")
+
+			if (viewerType.find("opengl") == 0 || (viewerType.size() >= 3 && viewerType.substr(0,3) == "ogl"))
 				fUsingOpenGL = true;
 			if (viewerType == "raytracer")
 				fUsingRayTracer = true;
@@ -116,12 +125,9 @@ void TsGraphicsManager::Initialize() {
 		for (G4int iToken=0; iToken<length; iToken++) {
 			G4String viewerParmName = (*values)[iToken];
 			G4String viewerType = fPm->GetStringParameter(viewerParmName);
-#if GEANT4_VERSION_MAJOR >= 11
 			G4StrUtil::to_lower(viewerType);
-#else
-			viewerType.toLower();
-#endif
-			if (viewerType == "opengl" || viewerType.substr(0,3) == "ogl") {
+
+			if (viewerType.find("opengl") == 0 || (viewerType.size() >= 3 && viewerType.substr(0,3) == "ogl")) {
 				size_t pos1 = viewerParmName.find("/Type");
 				G4String viewerName = viewerParmName.substr(3, pos1-3);
 				(*fViews)[viewerName] = new TsGraphicsView(fPm, this, fGm, viewerName);
@@ -132,11 +138,8 @@ void TsGraphicsManager::Initialize() {
 		for (G4int iToken=0; iToken<length; iToken++) {
 			G4String viewerParmName = (*values)[iToken];
 			G4String viewerType = fPm->GetStringParameter(viewerParmName);
-#if GEANT4_VERSION_MAJOR >= 11
 			G4StrUtil::to_lower(viewerType);
-#else
-			viewerType.toLower();
-#endif
+
 			if (viewerType != "opengl" && viewerType.substr(0,3) != "ogl" && viewerType != "heprep") {
 				size_t pos1 = viewerParmName.find("/Type");
 				G4String viewerName = viewerParmName.substr(3, pos1-3);
@@ -149,11 +152,8 @@ void TsGraphicsManager::Initialize() {
 		for (G4int iToken=0; iToken<length; iToken++) {
 			G4String viewerParmName = (*values)[iToken];
 			G4String viewerType = fPm->GetStringParameter(viewerParmName);
-#if GEANT4_VERSION_MAJOR >= 11
 			G4StrUtil::to_lower(viewerType);
-#else
-			viewerType.toLower();
-#endif
+
 			if (viewerType == "heprep") {
 				if (haveHepRep) {
 					G4cerr << "Topas is exiting due to error in graphics setup." << G4endl;
@@ -194,11 +194,8 @@ void TsGraphicsManager::NoteAnyUseOfChangeableParameters(const G4String& name)
 		// is interrogated twice for the same view, the view would update twice for the same change).
 		G4bool matched = false;
 		G4String nameToLower = name;
-#if GEANT4_VERSION_MAJOR >= 11
 		G4StrUtil::to_lower(nameToLower);
-#else
-		nameToLower.toLower();
-#endif
+
 		std::multimap< G4String, std::pair<TsGraphicsView*, G4String> >::const_iterator iter;
 		for (iter = fChangeableParameterMap.begin(); iter != fChangeableParameterMap.end() && !matched; iter++) {
 			G4String gotParm = iter->first;
@@ -279,4 +276,17 @@ G4bool TsGraphicsManager::UsingRayTracer() {
 
 G4VViewer* TsGraphicsManager::GetCurrentViewer() {
 	return fVisManager->GetCurrentViewer();
+}
+
+G4String TsGraphicsManager::GetCurrentViewName() {
+	if (fCurrentView)
+		return fCurrentView->GetName();
+	return "";
+}
+
+G4String TsGraphicsManager::GetAnyViewName() {
+	if (fViews && !fViews->empty()) {
+		return fViews->begin()->first;
+	}
+	return "";
 }

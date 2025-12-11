@@ -1,7 +1,7 @@
 //
 // ********************************************************************
 // *                                                                  *
-// * Copyright 2024 The TOPAS Collaboration                           *
+// * Copyright 2025 The TOPAS Collaboration                           *
 // * Copyright 2022 The TOPAS Collaboration                           *
 // *                                                                  *
 // * Permission is hereby granted, free of charge, to any person      *
@@ -61,22 +61,14 @@ void TsForcedInteraction::ResolveParameters() {
 	if ( numberOfRegions > 0 ) {
 		for ( int i = 0; i < numberOfRegions; i++ ) {
 			G4String aRegionName = (*regionNames)[i];
-#if GEANT4_VERSION_MAJOR >= 11
 			G4StrUtil::to_lower(aRegionName);
-#else
-			aRegionName.toLower();
-#endif
 			if ( aRegionName == "defaultregionfortheworld" )
 				aRegionName = "DefaultRegionForTheWorld";
 			
 			found = false;
 			for ( int j = i + 1; j < numberOfRegions; j++ ) {
 				G4String tempRegName = (*regionNames)[j];
-#if GEANT4_VERSION_MAJOR >= 11
 				G4StrUtil::to_lower(tempRegName);
-#else
-				tempRegName.toLower();
-#endif
 				if ( tempRegName == "defaultregionfortheworld")
 					tempRegName = "DefaultRegionForTheWorld";
 				

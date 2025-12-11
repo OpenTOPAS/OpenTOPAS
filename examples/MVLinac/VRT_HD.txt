@@ -8,7 +8,7 @@ b:Gr/Enable = "False"
 b:Ts/UseQT = "False"
 
 So/electronBeam/NumberOfHistoriesInRun = 10 * Ts/ShowHistoryCountAtInterval
-Ts/ShowHistoryCountAtInterval          = 100000
+Ts/ShowHistoryCountAtInterval          = 10000
 
 # Multithreading
 i:Ts/NumberOfThreads = 0

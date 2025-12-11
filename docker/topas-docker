@@ -26,6 +26,8 @@ BUILD_EXT_DIR=""
 INSTALL_EXT_DIR=""
 DATA_DIR=""
 G4DATA_DIR=""
+HOST_OPEN_PATH=""
+HOST_OPEN_CONTAINER="/opt/topas/host-open"
 
 # ---------------------------------------------------------------------------
 # Parse command-line arguments
@@ -53,6 +55,10 @@ while [ $# -gt 0 ]; do
             DISPLAY_OVERRIDE="${1#*=}"
             shift
             ;;
+        -hostopen=*|--host-open=*)
+            HOST_OPEN_PATH="${1#*=}"
+            shift
+            ;;
         --build-extensions|--build-extension)
             BUILD_EXTENSIONS=true
             shift
@@ -72,6 +78,7 @@ while [ $# -gt 0 ]; do
             echo "  -image=<image:tag>           Select a specific Docker image (default: opentopas:latest)"
             echo "  -extensions=/path/to/dir     Path to TOPAS extensions source directory"
             echo "  -g4data=/path/to/G4Data      Path to Geant4 data libraries (REQUIRED if not in /Applications/G4Data)"
+            echo "  -hostopen=/path/to/script    Optional host URL opener script (defaults to auto-detect)"
             echo "  --display=host:0             Override DISPLAY value passed into the container"
             echo "  --x11                        Force native X11/Qt visualization (macOS uses XQuartz)"
             echo "  --build-extensions           Force rebuild of extensions (otherwise cached build is reused)"
@@ -135,6 +142,27 @@ fi
 # ---------------------------------------------------------------------------
 MOUNT_DIR=${DATA_DIR:-$(pwd -P)}
 MOUNT_FLAGS="-v $MOUNT_DIR:/simulations -v $G4DATA_HOST:/Applications/G4Data:ro"
+
+# Auto-detect host opener helper if not provided
+if [ -z "$HOST_OPEN_PATH" ]; then
+    for candidate in \
+        "/Applications/TOPAS/OpenTOPAS/docker/topas-host-open" \
+        "$HOME/Applications/TOPAS/OpenTOPAS/docker/topas-host-open" \
+        "$(pwd -P)/docker/topas-host-open"
+    do
+        if [ -f "$candidate" ]; then
+            HOST_OPEN_PATH="$candidate"
+            break
+        fi
+    done
+fi
+
+if [ -n "$HOST_OPEN_PATH" ] && [ -f "$HOST_OPEN_PATH" ]; then
+    MOUNT_FLAGS="$MOUNT_FLAGS -v $HOST_OPEN_PATH:$HOST_OPEN_CONTAINER:ro"
+    ENV_FLAGS="$ENV_FLAGS -e TOPAS_HOST_OPEN=$HOST_OPEN_CONTAINER"
+else
+    echo "ℹ️  No host opener script found; Help links inside the Qt UI will fall back to container handlers."
+fi
 
 # Add extensions mounts if provided
 if [ -n "$EXT_DIR" ]; then

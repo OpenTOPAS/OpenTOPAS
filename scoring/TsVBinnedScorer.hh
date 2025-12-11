@@ -85,10 +85,11 @@ protected:
 
 	std::map<G4int, G4double>* fEvtMap;
 
-	std::vector <G4double> fSecondMomentMap;
 	std::vector <G4long> fCountMap;
 	std::vector <G4double> fMinMap;
 	std::vector <G4double> fMaxMap;
+	std::vector <G4double> fKnuthMeanMap;
+	std::vector <G4double> fKnuthM2Map;
 
 private:
 	void ActuallySetUnit(const G4String& unitName);

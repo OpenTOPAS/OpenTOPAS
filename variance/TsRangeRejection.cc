@@ -1,7 +1,7 @@
 //
 // ********************************************************************
 // *                                                                  *
-// * Copyright 2024 The TOPAS Collaboration                           *
+// * Copyright 2025 The TOPAS Collaboration                           *
 // * Copyright 2022 The TOPAS Collaboration                           *
 // *                                                                  *
 // * Permission is hereby granted, free of charge, to any person      *
@@ -120,11 +120,7 @@ void TsRangeRejection::ResolveParameters() {
 	for ( int i = 0; i < fNumberOfRegions; i++ ) {
 		G4String aRegionName = regionsNamed[i];
 		G4String lowerCaseName = aRegionName;
-#if GEANT4_VERSION_MAJOR >= 11
 		G4StrUtil::to_lower(lowerCaseName);
-#else
-		lowerCaseName.toLower();
-#endif
 		if ( lowerCaseName == "defaultregionfortheworld" ) {
 			fRegions.push_back( G4RegionStore::GetInstance()->FindOrCreateRegion("DefaultRegionForTheWorld") );
 		} else if ( G4RegionStore::GetInstance()->GetRegion(lowerCaseName) == nullptr ) {

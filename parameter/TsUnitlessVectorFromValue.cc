@@ -1,7 +1,7 @@
 //
 // ********************************************************************
 // *                                                                  *
-// * Copyright 2024 The TOPAS Collaboration                           *
+// * Copyright 2025 The TOPAS Collaboration                           *
 // * Copyright 2022 The TOPAS Collaboration                           *
 // *                                                                  *
 // * Permission is hereby granted, free of charge, to any person      *
@@ -43,8 +43,8 @@ TsUnitlessVectorFromValue::TsUnitlessVectorFromValue(TsParameterManager* pM, TsP
 
 TsUnitlessVectorFromValue::~TsUnitlessVectorFromValue()
 {
-	delete fValues;
-	delete fValuesIfParameterNames;
+	delete [] fValues;
+	delete [] fValuesIfParameterNames;
 }
 
 

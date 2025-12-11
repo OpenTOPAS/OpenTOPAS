@@ -1,7 +1,7 @@
 //
 // ********************************************************************
 // *                                                                  *
-// * Copyright 2024 The TOPAS Collaboration                           *
+// * Copyright 2025 The TOPAS Collaboration                           *
 // * Copyright 2022 The TOPAS Collaboration                           *
 // *                                                                  *
 // * Permission is hereby granted, free of charge, to any person      *
@@ -41,8 +41,12 @@
 
 TsGeneratorVolumetric::TsGeneratorVolumetric(TsParameterManager* pM, TsGeometryManager* gM, TsGeneratorManager* pgM, G4String sourceName) :
 TsVGenerator(pM, gM, pgM, sourceName), fNeedToCalculateExtent(true)
-{
-	fRecursivelyIncludeChildren = false;
+	{
+		SetParticleParameterName("VolumetricParticle");
+		SetEnergyParameterNames("VolumetricEnergy", "VolumetricEnergySpread");
+		SetEnergySpectrumParameterNames("VolumetricEnergySpectrumType", "VolumetricEnergySpectrumValues",
+			"VolumetricEnergySpectrumWeights");
+		fRecursivelyIncludeChildren = false;
 	if (fPm->ParameterExists(GetFullParmName("RecursivelyIncludeChildren")))
 		fRecursivelyIncludeChildren = fPm->GetBooleanParameter(GetFullParmName("RecursivelyIncludeChildren"));
 	

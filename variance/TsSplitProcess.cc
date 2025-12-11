@@ -1,7 +1,7 @@
 //
 // ********************************************************************
 // *                                                                  *
-// * Copyright 2024 The TOPAS Collaboration                           *
+// * Copyright 2025 The TOPAS Collaboration                           *
 // * Copyright 2022 The TOPAS Collaboration                           *
 // *                                                                  *
 // * Permission is hereby granted, free of charge, to any person      *
@@ -65,11 +65,7 @@ TsSplitProcess::~TsSplitProcess() {
 void TsSplitProcess::ResolveParameters(){
 	if (fPm->UseVarianceReduction()) {
 		G4String type = fPm->GetStringParameter(GetFullParmName("Type"));
-#if GEANT4_VERSION_MAJOR >= 11
 		G4StrUtil::to_lower(type);
-#else
-		type.toLower();
-#endif
 		
 		if ( type == "geometricalparticlesplit")  {
 			G4String componentName = fPm->GetStringParameter(GetFullParmName("Component"));
@@ -83,11 +79,7 @@ void TsSplitProcess::ResolveParameters(){
 			
 			G4String axis = fPm->GetStringParameter(GetFullParmName("SplitAxis"));
 			
-#if GEANT4_VERSION_MAJOR >= 11
 			G4StrUtil::to_lower(axis);
-#else
-			axis.toLower();
-#endif
 			if ( axis == "zaxis" )
 				fAxisVector = G4ThreeVector(0, 0, 1);
 			else if ( axis == "yaxis" )
@@ -323,9 +315,14 @@ G4bool TsSplitProcess::AcceptTrack(const G4Track& track, G4double radius, G4doub
 
 
 G4int TsSplitProcess::CalculateNSplit(G4int pre, G4int post) {
-	double postOverPre = (double)post/pre;
-        G4int splitNumber = static_cast<G4int>(postOverPre);
-	return splitNumber; 
+	if (pre <= 0 || post <= 0)
+		return 0;
+
+	G4double postOverPre = static_cast<G4double>(post) / static_cast<G4double>(pre);
+	if (postOverPre < 1.0)
+		return 0;
+
+	return static_cast<G4int>(postOverPre);
 }
 
 

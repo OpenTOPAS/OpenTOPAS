@@ -1,7 +1,7 @@
 //
 // ********************************************************************
 // *                                                                  *
-// * Copyright 2024 The TOPAS Collaboration                           *
+// * Copyright 2025 The TOPAS Collaboration                           *
 // * Copyright 2022 The TOPAS Collaboration                           *
 // *                                                                  *
 // * Permission is hereby granted, free of charge, to any person      *
@@ -58,11 +58,7 @@ TsGeometricalParticleSplit::~TsGeometricalParticleSplit()
 
 void TsGeometricalParticleSplit::ResolveParameters() {
 	fType = fPm->GetStringParameter(GetFullParmName("Type"));
-#if GEANT4_VERSION_MAJOR >= 11
 	G4StrUtil::to_lower(fType);
-#else
-	fType.toLower();
-#endif
 	
 	if ( fType == "geometricalparticlesplit" ) {
 		fParticleName = fPm->GetStringVector(GetFullParmName("ParticleName"));
@@ -73,11 +69,7 @@ void TsGeometricalParticleSplit::ResolveParameters() {
 		fSubCompSize = fPm->GetVectorLength(GetFullParmName("SubComponents"));
 		
 		G4String splitAxis = fPm->GetStringParameter(GetFullParmName("SplitAxis"));
-#if GEANT4_VERSION_MAJOR >= 11
 		G4StrUtil::to_lower(splitAxis);
-#else
-		splitAxis.toLower();
-#endif
 		
 		G4int splSize = fPm->GetVectorLength(GetFullParmName("SplitNumber"));
 		G4int symSize = fPm->GetVectorLength(GetFullParmName("Symmetric"));

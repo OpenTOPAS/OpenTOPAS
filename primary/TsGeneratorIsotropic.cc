@@ -1,7 +1,7 @@
 //
 // ********************************************************************
 // *                                                                  *
-// * Copyright 2024 The TOPAS Collaboration                           *
+// * Copyright 2025 The TOPAS Collaboration                           *
 // * Copyright 2022 The TOPAS Collaboration                           *
 // *                                                                  *
 // * Permission is hereby granted, free of charge, to any person      *
@@ -37,9 +37,13 @@
 
 TsGeneratorIsotropic::TsGeneratorIsotropic(TsParameterManager* pM, TsGeometryManager* gM, TsGeneratorManager* pgM, G4String sourceName) :
 TsVGenerator(pM, gM, pgM, sourceName)
-{
-	ResolveParameters();
-}
+	{
+		SetParticleParameterName("IsotropicParticle");
+		SetEnergyParameterNames("IsotropicEnergy", "IsotropicEnergySpread");
+		SetEnergySpectrumParameterNames("IsotropicEnergySpectrumType", "IsotropicEnergySpectrumValues",
+			"IsotropicEnergySpectrumWeights");
+		ResolveParameters();
+	}
 
 
 TsGeneratorIsotropic::~TsGeneratorIsotropic()

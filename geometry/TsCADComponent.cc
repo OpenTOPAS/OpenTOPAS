@@ -1,7 +1,7 @@
 //
 // ********************************************************************
 // *                                                                  *
-// * Copyright 2024 The TOPAS Collaboration                           *
+// * Copyright 2025 The TOPAS Collaboration                           *
 // * Copyright 2022 The TOPAS Collaboration                           *
 // *                                                                  *
 // * Permission is hereby granted, free of charge, to any person      *
@@ -64,11 +64,7 @@ G4VPhysicalVolume* TsCADComponent::Construct()
 	fFileName = fPm->GetStringParameter(GetFullParmName("InputFile"));
 
 	G4String fileFormat = fPm->GetStringParameter(GetFullParmName("FileFormat"));
-#if GEANT4_VERSION_MAJOR >= 11
 	G4StrUtil::to_lower(fileFormat);
-#else
-	fileFormat.toLower();
-#endif
 
 	if ( fileFormat == "stl" )
 		ReadCADFromSTL();
@@ -106,12 +102,8 @@ void TsCADComponent::ReadCADFromPLY() {
 
 	while (!cadFile.eof()) {
 		getline(cadFile,aLine);
-
-#if GEANT4_VERSION_MAJOR >= 11
 		G4StrUtil::to_lower(aLine);
-#else
-		aLine.toLower();
-#endif
+
 		if ( aLine == "end_header" ) break;
 
 		if ( aLine.find("binary")!=std::string::npos) {

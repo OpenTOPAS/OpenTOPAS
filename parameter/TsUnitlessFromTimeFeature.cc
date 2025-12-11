@@ -1,7 +1,7 @@
 //
 // ********************************************************************
 // *                                                                  *
-// * Copyright 2024 The TOPAS Collaboration                           *
+// * Copyright 2025 The TOPAS Collaboration                           *
 // * Copyright 2022 The TOPAS Collaboration                           *
 // *                                                                  *
 // * Permission is hereby granted, free of charge, to any person      *
@@ -81,11 +81,7 @@ void TsUnitlessFromTimeFeature::InitializeTimeFeatureValue() {
 	G4String funcValue = fPm->GetStringParameter(G4String(fNameOfBaseParameter+"/Function"));
 	G4Tokenizer next(funcValue);
 	G4String funcname = next();
-#if GEANT4_VERSION_MAJOR >= 11
 	G4StrUtil::to_lower(funcname);
-#else
-	funcname.toLower();
-#endif
 	G4String category1;
 	G4String category2;
 	G4double rate;

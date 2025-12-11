@@ -1,7 +1,7 @@
 //
 // ********************************************************************
 // *                                                                  *
-// * Copyright 2024 The TOPAS Collaboration                           *
+// * Copyright 2025 The TOPAS Collaboration                           *
 // * Copyright 2022 The TOPAS Collaboration                           *
 // *                                                                  *
 // * Permission is hereby granted, free of charge, to any person      *
@@ -45,11 +45,29 @@
 #include "Randomize.hh"
 
 TsVGenerator::TsVGenerator(TsParameterManager* pM, TsGeometryManager* gM, TsGeneratorManager* pgM, G4String sourceName)
-:fPm(pM), fBeamEnergyParameterExists(false),
-fUseSpectrum(false), fSpectrumIsContinuous(false), fSpectrumNBins(0), fIsGenericIon(false), fIonCharge(0), fIsOpticalPhoton(false), fSetRandomPolarization(true),
-fGm(gM), fSourceName(sourceName), fHistoriesGeneratedInRun(0),
-fPgm(pgM), fIsExecutingSequence(false), fHadParameterChangeSinceLastRun(false), fFilter(0),
-fTotalHistoriesGenerated(0), fParticlesGeneratedInRun(0), fParticlesSkippedInRun(0)
+:fPm(pM),
+fEnergy(0.), fEnergySpread(0.),
+fBeamEnergyParameterExists(false),
+fUseSpectrum(false), fSpectrumIsContinuous(false), fSpectrumNBins(0),
+fSpectrumEnergies(0), fSpectrumWeights(0), fSpectrumBinTops(0), fSpectrumWeightSums(0), fSpectrumSlopes(0),
+fParticleDefinition(0), fIsGenericIon(false), fIonCharge(0), fIsOpticalPhoton(false), fSetRandomPolarization(true),
+fPolX(0.), fPolY(0.), fPolZ(0.),
+fGm(gM), fPs(0),
+fSourceName(sourceName),
+fHistoriesGeneratedInRun(0), fComponent(0),
+fPgm(pgM),
+fVerbosity(0),
+fIsExecutingSequence(false), fHadParameterChangeSinceLastRun(false),
+fParticleParameterName("BeamParticle"), fEnergyParameterName("BeamEnergy"), fEnergySpreadParameterName("BeamEnergySpread"),
+fEnergySpectrumTypeParameterName("BeamEnergySpectrumType"), fEnergySpectrumValuesParameterName("BeamEnergySpectrumValues"),
+fEnergySpectrumWeightsParameterName("BeamEnergySpectrumWeights"),
+fResolvedEnergyParameterName(""), fResolvedEnergySpreadParameterName(""),
+fResolvedEnergySpectrumTypeParameterName(""), fResolvedEnergySpectrumValuesParameterName(""),
+fResolvedEnergySpectrumWeightsParameterName(""),
+fFilter(0),
+fProbabilityOfUsingAGivenRandomTime(0.), fNumberOfHistoriesInRandomJob(0),
+	fTotalHistoriesGenerated(0), fParticlesGeneratedInRun(0), fParticlesSkippedInRun(0),
+	fDeprecatedParameterWarningsEmitted()
 {
 	fVerbosity = fPm->GetIntegerParameter("So/Verbosity");
 
@@ -63,6 +81,25 @@ fTotalHistoriesGenerated(0), fParticlesGeneratedInRun(0), fParticlesSkippedInRun
 
 TsVGenerator::~TsVGenerator()
 {
+}
+
+
+void TsVGenerator::SetParticleParameterName(const G4String& particleParameterName) {
+	fParticleParameterName = particleParameterName;
+}
+
+
+void TsVGenerator::SetEnergyParameterNames(const G4String& energyParameterName, const G4String& energySpreadParameterName) {
+	fEnergyParameterName = energyParameterName;
+	fEnergySpreadParameterName = energySpreadParameterName;
+}
+
+
+void TsVGenerator::SetEnergySpectrumParameterNames(const G4String& spectrumTypeParameterName,
+	const G4String& spectrumValuesParameterName, const G4String& spectrumWeightsParameterName) {
+	fEnergySpectrumTypeParameterName = spectrumTypeParameterName;
+	fEnergySpectrumValuesParameterName = spectrumValuesParameterName;
+	fEnergySpectrumWeightsParameterName = spectrumWeightsParameterName;
 }
 
 
@@ -106,47 +143,48 @@ void TsVGenerator::ResolveParameters() {
 	if (fVerbosity>0)
 		G4cout << "TsVGenerator::ResolveParameters" << G4endl;
 
+	fUseSpectrum = false;
+	fSpectrumIsContinuous = false;
+
 	G4bool isSpectrum = false;
-	if (fPm->ParameterExists(GetFullParmName("BeamEnergySpectrumType"))) {
-		G4String spectrumType = fPm->GetStringParameter(GetFullParmName("BeamEnergySpectrumType"));
-#if GEANT4_VERSION_MAJOR >= 11
+	fResolvedEnergySpectrumTypeParameterName =
+		ResolveGeneratorParameterName(fEnergySpectrumTypeParameterName, "BeamEnergySpectrumType");
+	G4String spectrumType = "";
+	if (fPm->ParameterExists(fResolvedEnergySpectrumTypeParameterName)) {
+		spectrumType = fPm->GetStringParameter(fResolvedEnergySpectrumTypeParameterName);
 		G4StrUtil::to_lower(spectrumType);
-#else
-		spectrumType.toLower();
-#endif
-		if (spectrumType != "none") isSpectrum = true;
+		if (spectrumType != "none")
+			isSpectrum = true;
 	}
+
+	fResolvedEnergySpectrumValuesParameterName =
+		ResolveGeneratorParameterName(fEnergySpectrumValuesParameterName, "BeamEnergySpectrumValues");
+	fResolvedEnergySpectrumWeightsParameterName =
+		ResolveGeneratorParameterName(fEnergySpectrumWeightsParameterName, "BeamEnergySpectrumWeights");
 
 	if (isSpectrum) {
 		fEnergy = 0.;
 		fEnergySpread  = 0.;
 
-		G4String spectrumType = fPm->GetStringParameter(GetFullParmName("BeamEnergySpectrumType"));
-#if GEANT4_VERSION_MAJOR >= 11
-		G4StrUtil::to_lower(spectrumType);
-#else
-		spectrumType.toLower();
-#endif
-
 		if (spectrumType=="discrete" || spectrumType=="continuous") {
 			fUseSpectrum = true;
 
-			fSpectrumNBins = fPm->GetVectorLength(GetFullParmName("BeamEnergySpectrumValues"));
+			fSpectrumNBins = fPm->GetVectorLength(fResolvedEnergySpectrumValuesParameterName);
 			if (fSpectrumNBins < 1) {
-				G4cout << GetFullParmName("BeamEnergySpectrumValues") << " has wrong length." << G4endl;
+				G4cout << fResolvedEnergySpectrumValuesParameterName << " has wrong length." << G4endl;
 				G4cout << "Must be greater than 0." << G4endl;
 				fPm->AbortSession(1);
 			}
 
-			G4double* spectrumEnergies = fPm->GetDoubleVector(GetFullParmName("BeamEnergySpectrumValues"), "Energy");
+			G4double* spectrumEnergies = fPm->GetDoubleVector(fResolvedEnergySpectrumValuesParameterName, "Energy");
 
-			if (fPm->GetVectorLength(GetFullParmName("BeamEnergySpectrumWeights")) != fSpectrumNBins) {
-				G4cout << GetFullParmName("BeamEnergySpectrumWeights") << " has wrong length." << G4endl;
-				G4cout << "Length must match: " << GetFullParmName("BeamEnergySpectrumValues") << G4endl;
+			if (fPm->GetVectorLength(fResolvedEnergySpectrumWeightsParameterName) != fSpectrumNBins) {
+				G4cout << fResolvedEnergySpectrumWeightsParameterName << " has wrong length." << G4endl;
+				G4cout << "Length must match: " << fResolvedEnergySpectrumValuesParameterName << G4endl;
 				fPm->AbortSession(1);
 			}
 
-			G4double* spectrumWeights = fPm->GetUnitlessVector(GetFullParmName("BeamEnergySpectrumWeights"));
+			G4double* spectrumWeights = fPm->GetUnitlessVector(fResolvedEnergySpectrumWeightsParameterName);
 
 			if (spectrumType=="continuous") {
 				fSpectrumIsContinuous = true;
@@ -177,31 +215,39 @@ void TsVGenerator::ResolveParameters() {
 					fSpectrumBinTops[i] = fSpectrumBinTops[i-1] + fSpectrumWeights[i];
 
 				if (fSpectrumBinTops[fSpectrumNBins-1] < .999 || fSpectrumBinTops[fSpectrumNBins-1] > 1.001) {
-					G4cout << "Sum of weights in " << GetFullParmName("BeamEnergySpectrumWeights") <<
+					G4cout << "Sum of weights in " << fResolvedEnergySpectrumWeightsParameterName <<
 					" needs to be exactly 1 but instead is: " << fSpectrumBinTops[fSpectrumNBins-1] << G4endl;
 					fPm->AbortSession(1);
 				}
 			}
 		} else if (spectrumType != "none") {
-			G4cout << "Invalid parameter: " << GetFullParmName("BeamEnergySpectrumType") << G4endl;
+			G4cout << "Invalid parameter: " << fResolvedEnergySpectrumTypeParameterName << G4endl;
 			G4cout << "Value must be one of \"None\", \"Discrete\" or \"Continuous\"" << G4endl;
 			fPm->AbortSession(1);
 		}
 	} else {
-		if (fPm->ParameterExists(GetFullParmName("BeamEnergy"))) {
-			fBeamEnergyParameterExists = "true";
-			fEnergy = fPm->GetDoubleParameter(GetFullParmName("BeamEnergy"), "Energy");
+		fResolvedEnergyParameterName = ResolveGeneratorParameterName(fEnergyParameterName, "BeamEnergy");
+		if (fPm->ParameterExists(fResolvedEnergyParameterName)) {
+			fBeamEnergyParameterExists = true;
+			fEnergy = fPm->GetDoubleParameter(fResolvedEnergyParameterName, "Energy");
 
-			if (fPm->ParameterExists(GetFullParmName("BeamEnergySpread")))
-				fEnergySpread  = fPm->GetUnitlessParameter(GetFullParmName("BeamEnergySpread")) * fEnergy / 100.;
+			fResolvedEnergySpreadParameterName = ResolveGeneratorParameterName(fEnergySpreadParameterName, "BeamEnergySpread");
+			if (fPm->ParameterExists(fResolvedEnergySpreadParameterName))
+				fEnergySpread  = fPm->GetUnitlessParameter(fResolvedEnergySpreadParameterName) * fEnergy / 100.;
+			else
+				fEnergySpread = 0.;
+		} else {
+			fBeamEnergyParameterExists = false;
 		}
 	}
 
 
-	TsParticleDefinition resolvedDef = fPm->GetParticleDefinition(fPm->GetStringParameter(GetFullParmName("BeamParticle")));
+	G4String particleParameter = ResolveGeneratorParameterName(fParticleParameterName, "BeamParticle");
+	G4String particleValue = fPm->GetStringParameter(particleParameter);
+	TsParticleDefinition resolvedDef = fPm->GetParticleDefinition(particleValue);
 
 	if (!resolvedDef.particleDefinition)
-		G4cout << "Unknown particle type read from parameter = " << GetFullParmName("BeamParticle") << G4endl;
+		G4cout << "Unknown particle type read from parameter = " << particleParameter << G4endl;
 
 	fParticleDefinition = resolvedDef.particleDefinition;
 
@@ -210,7 +256,7 @@ void TsVGenerator::ResolveParameters() {
 
 		if ( resolvedDef.ionZ == -1 || resolvedDef.ionA == -1) {
 			G4cerr << "Topas is exiting. Particle source: " << fSourceName << G4endl;
-			G4cerr <<" is attempting to use wild card in Generic Ion Z or A: " << fPm->GetStringParameter(GetFullParmName("BeamParticle")) << G4endl;
+			G4cerr <<" is attempting to use wild card in Generic Ion Z or A: " << particleValue << G4endl;
 			fPm->AbortSession(1);
 		}
 
@@ -285,7 +331,10 @@ void TsVGenerator::SetEnergy(TsPrimaryParticle &p) const
 				p.kEnergy = G4RandGauss::shoot(fEnergy, fEnergySpread);
 		} else {
 			G4cerr << "Topas is exiting. Particle source: " << fSourceName << G4endl;
-			G4cerr << "is missing the required parameter: BeamEnergy" << G4endl;
+			G4String missingParameter = fResolvedEnergyParameterName;
+			if (missingParameter.empty())
+				missingParameter = GetFullParmName(fEnergyParameterName);
+			G4cerr << "is missing the required parameter: " << missingParameter << G4endl;
 			fPm->AbortSession(1);
 		}
 	}
@@ -402,9 +451,35 @@ void TsVGenerator::SetIsExecutingSequence(G4bool isExecutingSequence) {
 }
 
 
-G4String TsVGenerator::GetFullParmName(const char* parm) {
+G4String TsVGenerator::ResolveGeneratorParameterName(const G4String& preferred, const G4String& legacy) {
+	G4String preferredFull = GetFullParmName(preferred);
+	if (fPm->ParameterExists(preferredFull))
+		return preferredFull;
+
+	if (preferred != legacy) {
+		G4String legacyFull = GetFullParmName(legacy);
+		if (fPm->ParameterExists(legacyFull)) {
+			if (fDeprecatedParameterWarningsEmitted.find(legacyFull) == fDeprecatedParameterWarningsEmitted.end()) {
+				G4cout << "WARNING: Parameter " << legacyFull << " is deprecated for non-beam sources. "
+					<< "Please use " << preferredFull << " instead." << G4endl;
+				fDeprecatedParameterWarningsEmitted.insert(legacyFull);
+			}
+			return legacyFull;
+		}
+	}
+
+	return preferredFull;
+}
+
+
+G4String TsVGenerator::GetFullParmName(const char* parm) const {
 	G4String fullName = "So/"+fSourceName+"/"+parm;
 	return fullName;
+}
+
+
+G4String TsVGenerator::GetFullParmName(const G4String& parm) const {
+	return GetFullParmName(parm.c_str());
 }
 
 

@@ -1,7 +1,7 @@
 //
 // ********************************************************************
 // *                                                                  *
-// * Copyright 2024 The TOPAS Collaboration                           *
+// * Copyright 2025 The TOPAS Collaboration                           *
 // * Copyright 2022 The TOPAS Collaboration                           *
 // *                                                                  *
 // * Permission is hereby granted, free of charge, to any person      *
@@ -87,11 +87,7 @@ TsVScorer* TsScoringHub::InstantiateScorer(TsParameterManager* pM, TsExtensionMa
 										   G4String outFileName, G4bool isSubScorer)
 {
 	G4String quantityNameLower = quantityName;
-#if GEANT4_VERSION_MAJOR >= 11
 	G4StrUtil::to_lower(quantityNameLower);
-#else
-	quantityNameLower.toLower();
-#endif
 
 	// First see if the user's extensions include this scorer
 	TsVScorer* scorer = eM->InstantiateScorer(pM, mM, gM, scM, scorerName, quantityName, quantityNameLower, outFileName, isSubScorer);
@@ -176,4 +172,20 @@ void TsScoringHub::AddScorerFromGUI(G4String& scorerName, G4String& componentNam
 		transValue = "\"ASCII\"";
 		fPm->AddParameter(parameterName, transValue);
 	}
+}
+
+
+std::vector<G4String> TsScoringHub::GetScorerNames() {
+	std::vector<G4String> names;
+	std::vector<G4String>* values = new std::vector<G4String>;
+	G4String prefix = "Sc";
+	G4String suffix = "/Quantity";
+	fPm->GetParameterNamesBracketedBy(prefix, suffix, values);
+	for (size_t i=0; i<values->size(); ++i) {
+		G4String scorerParmName = (*values)[i];
+		G4String scorerName = scorerParmName.substr(3,scorerParmName.length()-10);
+		names.push_back(scorerName);
+	}
+	delete values;
+	return names;
 }
