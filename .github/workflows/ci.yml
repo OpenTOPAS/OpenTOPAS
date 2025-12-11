@@ -137,7 +137,11 @@ jobs:
         cd OpenTOPAS-build
         export Geant4_DIR=$HOME/geant4-install/
         export GDCM_DIR=$HOME/gdcm-install/
-        cmake $GITHUB_WORKSPACE -DCMAKE_INSTALL_PREFIX=../OpenTOPAS-install -DTOPAS_USE_QT=ON -DTOPAS_USE_QT6=OFF
+        if [[ "$RUNNER_OS" == "macOS" ]]; then
+          cmake $GITHUB_WORKSPACE -DCMAKE_INSTALL_PREFIX=../OpenTOPAS-install -DTOPAS_USE_QT=ON -DTOPAS_USE_QT6=OFF -DCMAKE_PREFIX_PATH=/opt/homebrew/opt/qt@5
+        else
+          cmake $GITHUB_WORKSPACE -DCMAKE_INSTALL_PREFIX=../OpenTOPAS-install -DTOPAS_USE_QT=ON -DTOPAS_USE_QT6=OFF
+        fi  
         ${{ matrix.make_command }}
         echo "$(readlink -f $HOME/OpenTOPAS-install/bin/)" >> $GITHUB_PATH
       shell: bash
