@@ -1,7 +1,7 @@
 //
 // ********************************************************************
 // *                                                                  *
-// * Copyright 2024 The TOPAS Collaboration                           *
+// * Copyright 2025 The TOPAS Collaboration                           *
 // * Copyright 2022 The TOPAS Collaboration                           *
 // *                                                                  *
 // * Permission is hereby granted, free of charge, to any person      *
@@ -72,11 +72,8 @@ G4VPhysicalVolume* TsCompensator::Construct()
 	}
 
 	G4String fileFormat = fPm->GetStringParameter(GetFullParmName("FileFormat"));
-#if GEANT4_VERSION_MAJOR >= 11
 	G4StrUtil::to_lower(fileFormat);
-#else
-	fileFormat.toLower();
-#endif
+
 	if (fileFormat=="mgh" ) {
 		// MGH format uses inches
 		fConversionFactor = 2.54 * cm;
@@ -155,11 +152,7 @@ G4VPhysicalVolume* TsCompensator::Construct()
 	fMainCylinder = new G4Tubs(fName, .0, fMainCylinderRadius, fMainCylinderThickness/2., 0., 360.);
 
 	G4String method = fPm->GetStringParameter(GetFullParmName("Method"));
-#if GEANT4_VERSION_MAJOR >= 11
 	G4StrUtil::to_lower(method);
-#else
-	method.toLower();
-#endif
 
 	if (method == "polyhedra")
 		BuildAsPolyhedra();

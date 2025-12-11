@@ -1,7 +1,7 @@
 //
 // ********************************************************************
 // *                                                                  *
-// * Copyright 2024 The TOPAS Collaboration                           *
+// * Copyright 2025 The TOPAS Collaboration                           *
 // * Copyright 2022 The TOPAS Collaboration                           *
 // *                                                                  *
 // * Permission is hereby granted, free of charge, to any person      *
@@ -51,11 +51,7 @@ TsScoreProtonLET_Denominator::TsScoreProtonLET_Denominator(TsParameterManager* p
 	G4String weightType = "dose";
 	if (fPm->ParameterExists(GetFullParmName("WeightBy")))
 		weightType = fPm->GetStringParameter(GetFullParmName("WeightBy"));
-#if GEANT4_VERSION_MAJOR >= 11
     G4StrUtil::to_lower(weightType);
-#else
-    weightType.toLower();
-#endif
 
 	if (weightType == "dose") {
 		fDoseWeighted = true;

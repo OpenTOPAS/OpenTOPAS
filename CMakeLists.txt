@@ -1,4 +1,4 @@
-cmake_minimum_required (VERSION 3.8 FATAL_ERROR)
+cmake_minimum_required (VERSION 3.10 FATAL_ERROR)
 
 if (CMAKE_VERSION VERSION_GREATER_EQUAL 3.17)
 	cmake_policy (SET CMP0100 NEW)
@@ -9,8 +9,8 @@ project (topas)
 enable_testing()
 
 set (TOPAS_VERSION_MAJOR 4)
-set (TOPAS_VERSION_MINOR 1)
-set (TOPAS_VERSION_PATCH 1)
+set (TOPAS_VERSION_MINOR 2)
+set (TOPAS_VERSION_PATCH 0)
 
 # Print compiler information
 message (STATUS "CMAKE_CXX_COMPILER_ID: " ${CMAKE_CXX_COMPILER_ID})

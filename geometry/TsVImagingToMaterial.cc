@@ -1,7 +1,7 @@
 //
 // ********************************************************************
 // *                                                                  *
-// * Copyright 2024 The TOPAS Collaboration                           *
+// * Copyright 2025 The TOPAS Collaboration                           *
 // * Copyright 2022 The TOPAS Collaboration                           *
 // *                                                                  *
 // * Permission is hereby granted, free of charge, to any person      *
@@ -50,11 +50,8 @@ G4String TsVImagingToMaterial::GetDataType() {
 	
 	if (fPm->ParameterExists(GetFullParmName("DataType"))) {
 		dataTypeString = fPm->GetStringParameter(GetFullParmName("DataType"));
-#if GEANT4_VERSION_MAJOR >= 11
 		G4StrUtil::to_lower(dataTypeString);
-#else
-		dataTypeString.toLower();
-#endif
+
 		if (dataTypeString!="short" && dataTypeString!="int"  && dataTypeString!="float") {
 			G4cerr << "Error: " << GetFullParmName("DataType") << "Has invalid value: " << fPm->GetStringParameter(GetFullParmName("DataType")) << G4endl;
 			G4cerr << "Value must be either SHORT, INT or FLOAT." << G4endl;

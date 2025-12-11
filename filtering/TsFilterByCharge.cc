@@ -1,7 +1,7 @@
 //
 // ********************************************************************
 // *                                                                  *
-// * Copyright 2024 The TOPAS Collaboration                           *
+// * Copyright 2025 The TOPAS Collaboration                           *
 // * Copyright 2022 The TOPAS Collaboration                           *
 // *                                                                  *
 // * Permission is hereby granted, free of charge, to any person      *
@@ -50,11 +50,7 @@ void TsFilterByCharge::ResolveParameters() {
 	G4int length = fPm->GetVectorLength(GetFullParmName(GetName()));
 
 	for (G4int i = 0; i < length; i++) {
-#if GEANT4_VERSION_MAJOR >= 11
 		G4StrUtil::to_lower(acceptCharges[i]);
-#else
-		acceptCharges[i].toLower();
-#endif
 		if (acceptCharges[i]=="negative") fAcceptNegative = true;
 		if (acceptCharges[i]=="neutral") fAcceptNeutral = true;
 		if (acceptCharges[i]=="positive") fAcceptPositive = true;

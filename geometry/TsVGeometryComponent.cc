@@ -1,7 +1,7 @@
 //
 // ********************************************************************
 // *                                                                  *
-// * Copyright 2024 The TOPAS Collaboration                           *
+// * Copyright 2025 The TOPAS Collaboration                           *
 // * Copyright 2022 The TOPAS Collaboration                           *
 // *                                                                  *
 // * Permission is hereby granted, free of charge, to any person      *
@@ -300,11 +300,7 @@ void TsVGeometryComponent::InstantiateAndConstructChild(G4String childName) {
 				G4int length = values->size();
 				for (G4int iToken=0; iToken<length; iToken++) {
 					parmName = (*values)[iToken];
-#if GEANT4_VERSION_MAJOR >= 11
 					G4String scorerParmNameBase = parmName.substr(0, parmName.size()-8);
-#else
-					G4String scorerParmNameBase = parmName(0,parmName.size()-8);
-#endif
 
 					G4String componentNameParm = scorerParmNameBase + "Component";
 					if (fPm->ParameterExists(componentNameParm)) {
@@ -401,11 +397,7 @@ void TsVGeometryComponent::InstantiateChildren(G4VPhysicalVolume*) {
 void TsVGeometryComponent::InstantiateFields() {
 	if (fPm->ParameterExists(GetFullParmName("Field"))) {
 		G4String fieldType = fPm->GetStringParameter(GetFullParmName("Field"));
-#if GEANT4_VERSION_MAJOR >= 11
 		G4StrUtil::to_lower(fieldType);
-#else
-		fieldType.toLower();
-#endif
 
 		TsVMagneticField* magneticField = 0;
 		TsVElectroMagneticField* electroMagneticField = 0;
@@ -590,11 +582,7 @@ G4String TsVGeometryComponent::GetFullParmName(G4String& subComponentName, const
 
 G4String TsVGeometryComponent::GetFullParmNameLower(const char* parmName) {
 	G4String fullName = GetFullParmName(parmName);
-#if GEANT4_VERSION_MAJOR >= 11
 	G4StrUtil::to_lower(fullName);
-#else
-	fullName.toLower();
-#endif
 	return fullName;
 }
 
@@ -633,11 +621,7 @@ G4String TsVGeometryComponent::GetResolvedMaterialName(G4String& subComponentNam
 	}
 
 	G4String lowerCaseName = materialName;
-#if GEANT4_VERSION_MAJOR >= 11
 	G4StrUtil::to_lower(lowerCaseName);
-#else
-	lowerCaseName.toLower();
-#endif
 
 	if (lowerCaseName == "parent")
 		materialName = fParentComponent->GetResolvedMaterialName();
@@ -723,11 +707,7 @@ G4LogicalVolume* TsVGeometryComponent::CreateLogicalVolume(G4String& subComponen
 	if (lVol->GetName() != "World") {
 		if (fPm->ParameterExists(GetFullParmName(subComponentName, "AssignToRegionNamed"))) {
 			G4String regionName = fPm->GetStringParameter(GetFullParmName(subComponentName, "AssignToRegionNamed"));
-#if GEANT4_VERSION_MAJOR >= 11
 			G4StrUtil::to_lower(regionName);
-#else
-			regionName.toLower();
-#endif
 			if (regionName == "defaultregionfortheworld" )
 				regionName = "DefaultRegionForTheWorld";
 			
@@ -1212,11 +1192,8 @@ G4VisAttributes* TsVGeometryComponent::GetVisAttributes(G4String subComponentNam
 
 	if ( fPm->ParameterExists(GetFullParmName(subComponentName, "DrawingStyle")) ) {
 		G4String style = fPm->GetStringParameter(GetFullParmName(subComponentName, "DrawingStyle"));
-#if GEANT4_VERSION_MAJOR >= 11
 		G4StrUtil::to_lower(style);
-#else
-		style.toLower();
-#endif
+
 		if ( style == "solid" )
 			visAtt->SetForceSolid(true);
 		else if ( style == "wireframe")
@@ -1383,6 +1360,13 @@ void TsVGeometryComponent::MarkAsNeedToUpdatePlacement() {
 			(*ChildIter)->MarkAsNeedToUpdatePlacement();
 }
 
+void TsVGeometryComponent::ForceRebuild() {
+	fNeedToRebuild = true;
+	std::vector<TsVGeometryComponent*>::iterator ChildIter;
+	for (ChildIter=fChildren.begin(); ChildIter!=fChildren.end(); ChildIter++)
+		(*ChildIter)->ForceRebuild();
+}
+
 
 G4bool TsVGeometryComponent::HasParallelWorldDescendents() {
 	return fHasParallelWorldDescendents;
@@ -1463,11 +1447,8 @@ void TsVGeometryComponent::MarkAllVolumesForReoptimize() {
 
 TsVGeometryComponent::SurfaceType TsVGeometryComponent::GetSurfaceID(G4String surfaceName) {
 	G4String surfaceNameLower = surfaceName;
-#if GEANT4_VERSION_MAJOR >= 11
 	G4StrUtil::to_lower(surfaceNameLower);
-#else
-	surfaceNameLower.toLower();
-#endif
+
 	if (surfaceNameLower!="anysurface") {
 		G4cerr << "Topas is exiting due to a serious error." << G4endl;
 		G4cerr << "TsVGeometryComponent::GetSurfaceID called for surface: " << surfaceName <<
@@ -1706,11 +1687,7 @@ void TsVGeometryComponent::AddVolumesToScene(G4BoundingExtentScene& scene) {
 	} else {
 		const G4Transform3D& transform3D = G4Transform3D(fRotRelToWorld->inverse(), *fTransRelToWorld);
 		G4PhysicalVolumeModel pvModel(fEnvelopePhys, 0, transform3D, 0, true);
-#if GEANT4_VERSION_MAJOR >= 11
 		const G4VisExtent& thisExtent = pvModel.GetExtent();
-#else
-		const G4VisExtent& thisExtent = pvModel.GetTransformedExtent();
-#endif
 		scene.AccrueBoundingExtent(thisExtent);
 	}
 }

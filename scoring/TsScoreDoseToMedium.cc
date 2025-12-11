@@ -1,7 +1,7 @@
 //
 // ********************************************************************
 // *                                                                  *
-// * Copyright 2024 The TOPAS Collaboration                           *
+// * Copyright 2025 The TOPAS Collaboration                           *
 // * Copyright 2022 The TOPAS Collaboration                           *
 // *                                                                  *
 // * Permission is hereby granted, free of charge, to any person      *
@@ -51,11 +51,7 @@ void TsScoreDoseToMedium::UpdateForSpecificParameterChange(G4String parameter)
 {		
 
 	G4String parameterLower = parameter;
-#if GEANT4_VERSION_MAJOR >= 11
 	G4StrUtil::to_lower(parameterLower);
-#else
-	parameterLower.toLower();
-#endif
 
 	if (parameterLower == GetFullParmNameLower("OutputWeightingFactor")) {
 		fOutputWeightingFactor = fPm->GetUnitlessParameter(GetFullParmName("OutputWeightingFactor"));

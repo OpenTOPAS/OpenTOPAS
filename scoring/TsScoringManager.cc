@@ -1,7 +1,7 @@
 //
 // ********************************************************************
 // *                                                                  *
-// * Copyright 2024 The TOPAS Collaboration                           *
+// * Copyright 2025 The TOPAS Collaboration                           *
 // * Copyright 2022 The TOPAS Collaboration                           *
 // *                                                                  *
 // * Permission is hereby granted, free of charge, to any person      *
@@ -40,13 +40,9 @@
 
 #include "G4UIcommand.hh"
 #include "G4Tokenizer.hh"
-#if GEANT4_VERSION_MAJOR >= 11
 #include "g4hntools_defs.hh"
 #include "G4ToolsAnalysisManager.hh"
 #include "G4AnalysisManager.hh"
-#else
-#include "g4analysis_defs.hh"
-#endif
 
 #ifdef TOPAS_MT
 #include "G4Threading.hh"
@@ -132,11 +128,7 @@ void TsScoringManager::Initialize()
 		G4String quantityName = fPm->GetStringParameter(fQuantityParmName);
 
 		G4String quantityParmNameLower = fQuantityParmName;
-#if GEANT4_VERSION_MAJOR >= 11
 		G4StrUtil::to_lower(quantityParmNameLower);
-#else
-		quantityParmNameLower.toLower();
-#endif
 		size_t pos1 = quantityParmNameLower.find("/quantity");
 		G4String outFileName = fQuantityParmName.substr(3, pos1-3);
 #ifdef TOPAS_MT
@@ -153,11 +145,7 @@ void TsScoringManager::Initialize()
 #endif
 			// Protect against using the same file name for two different scorers.
 			G4String testName = outFileName;
-#if GEANT4_VERSION_MAJOR >= 11
 			G4StrUtil::to_lower(testName);
-#else
-			testName.toLower();
-#endif
 			std::vector<G4String>::iterator iter;
 			for (iter=fOutFileNames.begin(); iter!=fOutFileNames.end(); iter++)
 				if (*iter==testName) {
@@ -171,11 +159,7 @@ void TsScoringManager::Initialize()
 #endif
 
 		G4String quantityNameLower = quantityName;
-#if GEANT4_VERSION_MAJOR >= 11
 		G4StrUtil::to_lower(quantityNameLower);
-#else
-		quantityNameLower.toLower();
-#endif
 
 		// If scorer does not have Sc/MyScorer/SplitByTimeFeature, create a single scorer as usual.
 		// If scorer does have Sc/MyScorer/SplitByTimeFeature, loop to create multiple scorers, each with own fCopyId.
@@ -202,11 +186,7 @@ void TsScoringManager::Initialize()
 			G4String timeFeatureFunction = fPm->GetStringParameter(timeFeatureFunctionParmName);
 			G4Tokenizer next(timeFeatureFunction);
 			splitFunction = next();
-#if GEANT4_VERSION_MAJOR >= 11
 			G4StrUtil::to_lower(splitFunction);
-#else
-			splitFunction.toLower();
-#endif
 
 			if (splitFunction == "step") {
 				// If time feature is a step feature, will create one scorer for each of the time feature's step values.
@@ -228,22 +208,14 @@ void TsScoringManager::Initialize()
 				} else {
 					splitUnit = fPm->GetUnitOfParameter(timeFeatureValueParamName);
 					splitUnitLower = splitUnit;
-#if GEANT4_VERSION_MAJOR >= 11
 					G4StrUtil::to_lower(splitUnitLower);
-#else
-					splitUnitLower.toLower();
-#endif
 					splitUnitCategory = fPm->GetUnitCategory(splitUnit);
 					splitDoubleValues = fPm->GetDoubleVector(timeFeatureValueParamName, splitUnitCategory);
 				}
 			} else {
 				splitUnit = next();
 				splitUnitLower = splitUnit;
-#if GEANT4_VERSION_MAJOR >= 11
 				G4StrUtil::to_lower(splitUnitLower);
-#else
-				splitUnitLower.toLower();
-#endif
 
 				// If time feature is not a step feature, will create one scorer for each specified range.
 				G4String rangeParmName = GetFullParmName("SplitByTimeFeatureValues");
@@ -447,11 +419,7 @@ void TsScoringManager::NoteAnyUseOfChangeableParameters(const G4String& name)
 		// of the same name.
 		G4String directParm = fPm->GetLastDirectParameterName();
 		G4String directParmLower = directParm;
-#if GEANT4_VERSION_MAJOR >= 11
 			G4StrUtil::to_lower(directParmLower);
-#else
-			directParmLower.toLower();
-#endif
 
 #ifdef TOPAS_MT
 		if (directParmLower == fCurrentScorer.Get()->GetFullParmNameLower("Component")) {
@@ -499,11 +467,7 @@ void TsScoringManager::NoteAnyUseOfChangeableParameters(const G4String& name)
 		// is interrogated twice for the same scorer, the scorer would update twice for the same change).
 		G4bool matched = false;
 		G4String nameToLower = name;
-#if GEANT4_VERSION_MAJOR >= 11
 		G4StrUtil::to_lower(nameToLower);
-#else
-		nameToLower.toLower();
-#endif
 		std::multimap< G4String, std::pair< TsVScorer*,G4String> >::const_iterator iter;
 		for (iter = fChangeableParameterMap.begin(); iter != fChangeableParameterMap.end() && !matched; iter++) {
 			G4String gotParm = iter->first;
@@ -662,11 +626,7 @@ G4RootAnalysisManager* TsScoringManager::GetRootAnalysisManager() {
 	// If analysis manager already exists, just return it.
 	// Otherwise, instantiate it and open the output file.
 	if (!fRootAnalysisManager) {
-#if GEANT4_VERSION_MAJOR >= 11
 		fRootAnalysisManager = G4RootAnalysisManager::Instance();
-#else
-		fRootAnalysisManager = G4Root::G4AnalysisManager::Instance();
-#endif
 		fRootAnalysisManager->OpenFile(fPm->GetStringParameter("Sc/RootFileName"));
 	}
 
@@ -678,11 +638,7 @@ G4XmlAnalysisManager* TsScoringManager::GetXmlAnalysisManager() {
 	// If analysis manager already exists, just return it.
 	// Otherwise, instantiate it and open the output file.
 	if (!fXmlAnalysisManager) {
-#if GEANT4_VERSION_MAJOR >= 11
 		fXmlAnalysisManager = G4XmlAnalysisManager::Instance();
-#else
-		fXmlAnalysisManager = G4Xml::G4AnalysisManager::Instance();
-#endif
 		fXmlAnalysisManager->OpenFile(fPm->GetStringParameter("Sc/XmlFileName"));
 	}
 

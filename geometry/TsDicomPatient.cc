@@ -1,7 +1,7 @@
 //
 // ********************************************************************
 // *                                                                  *
-// * Copyright 2024 The TOPAS Collaboration                           *
+// * Copyright 2025 The TOPAS Collaboration                           *
 // * Copyright 2022 The TOPAS Collaboration                           *
 // *                                                                  *
 // * Permission is hereby granted, free of charge, to any person      *
@@ -551,25 +551,47 @@ void TsDicomPatient::ReadImage() {
 				}
 			} else {
 
-				// Use scanner to see if there are any structure set files
-				std::vector<std::string> structure_set_filenames =
-				scanner.GetAllFilenamesFromTagToValue(modalityTag, "RTSTRUCT");
-				if (structure_set_filenames.size() == 0) {
-					G4cout << "No files of modality RTSTRUCT in the specified DICOM directory." << G4endl;
-					fPm->AbortSession(1);
+				G4String structureSetFilename;
+
+				if (fPm->ParameterExists(GetFullParmName("DicomRTStructFile"))) {
+					structureSetFilename = fPm->GetStringParameter(GetFullParmName("DicomRTStructFile"));
+					if (fVerbosity>0)
+						G4cout << "Using RTSTRUCT file from parameter: " << structureSetFilename << G4endl;
+				} else {
+					// Use scanner to see if there are any structure set files
+					std::vector<std::string> structure_set_filenames =
+					scanner.GetAllFilenamesFromTagToValue(modalityTag, "RTSTRUCT");
+					if (structure_set_filenames.size() == 0) {
+						G4cout << "No files of modality RTSTRUCT in the specified DICOM directory." << G4endl;
+						fPm->AbortSession(1);
+					}
+					if (fVerbosity>0)
+						G4cout << "Found RTSTRUCT file: " << structure_set_filenames[0] << G4endl;
+					structureSetFilename = structure_set_filenames[0];
 				}
-				if (fVerbosity>0)
-					G4cout << "Found RTSTRUCT file: " << structure_set_filenames[0] << G4endl;
 
 				// Read structure set file
 				gdcm::Reader RTreader;
-				RTreader.SetFileName( structure_set_filenames[0].c_str() );
+				RTreader.SetFileName( structureSetFilename.c_str() );
 				if (!RTreader.Read())
 				{
-					G4cout << "Failed on attempt to read data from RTSTRUCT file: " << structure_set_filenames[0] << G4endl;
+					G4cout << "Failed on attempt to read data from RTSTRUCT file: " << structureSetFilename << G4endl;
 					fPm->AbortSession(1);
 				}
 				const gdcm::DataSet& structureSetDataSet = RTreader.GetFile().GetDataSet();
+
+				// Verify modality is RTSTRUCT
+				gdcm::Attribute<0x0008,0x0060> atModality;
+				if( !structureSetDataSet.FindDataElement( atModality.GetTag() ) ) {
+					G4cout << "Missing Modality tag (0008,0060) in file: " << structureSetFilename << G4endl;
+					fPm->AbortSession(1);
+				}
+				atModality.SetFromDataElement( structureSetDataSet.GetDataElement( atModality.GetTag() ) );
+				G4String modalityValue = atModality.GetValue();
+				if (modalityValue != "RTSTRUCT") {
+					G4cout << "The file specified for RTSTRUCT is not of modality RTSTRUCT: " << structureSetFilename << G4endl;
+					fPm->AbortSession(1);
+				}
 
 				// Get region of interest sequence data
 				gdcm::Tag regionOfInterestSequenceTag(0x3006,0x0020);
@@ -582,7 +604,7 @@ void TsDicomPatient::ReadImage() {
 				gdcm::SmartPointer<gdcm::SequenceOfItems> regionOfInterestSequenceOfItems = regionOfInterestSequenceData.GetValueAsSQ();
 				if( !regionOfInterestSequenceOfItems || !regionOfInterestSequenceOfItems->GetNumberOfItems() )
 				{
-					G4cout << "No regions of interest found in RTSTRUCT file: " << structure_set_filenames[0] << G4endl;
+					G4cout << "No regions of interest found in RTSTRUCT file: " << structureSetFilename << G4endl;
 					fPm->AbortSession(1);
 				}
 
@@ -597,7 +619,7 @@ void TsDicomPatient::ReadImage() {
 				gdcm::SmartPointer<gdcm::SequenceOfItems> contourSequenceOfItems = contourSequenceData.GetValueAsSQ();
 				if( !contourSequenceOfItems || !contourSequenceOfItems->GetNumberOfItems() )
 				{
-					G4cout << "No contours found in RTSTRUCT file: " << structure_set_filenames[0] << G4endl;
+					G4cout << "No contours found in RTSTRUCT file: " << structureSetFilename << G4endl;
 					fPm->AbortSession(1);
 				}
 				G4int numberOfStructures = contourSequenceOfItems->GetNumberOfItems();
@@ -784,7 +806,7 @@ void TsDicomPatient::ReadImage() {
 							found = true;
 					}
 					if (!found) {
-						G4cout << "Required structure " << fStructureNames[i] << " not found in RTSTRUCT file: " << structure_set_filenames[0] << G4endl;
+						G4cout << "Required structure " << fStructureNames[i] << " not found in RTSTRUCT file: " << structureSetFilename << G4endl;
 						fPm->AbortSession(1);
 					}
 				}

@@ -1,6 +1,8 @@
 # QuickStart Guide for WSL
 This page details the steps to be followed by <ins>Windows users</ins> in order to install OpenTOPAS in <ins>WSL</ins> and launch your first simulation. 
 
+These instructions target TOPAS version **v4.2.0** built against Geant4 **v11.3.2**.
+
 > [!WARNING]
 > We recommend Windows 11 or higher since it includes all the visualization libraries built in. We take no responsibility if users encounter an issue with their PCs while following this guide.
 
@@ -88,7 +90,7 @@ Install all the required libraries for Geant4 and TOPAS by using the following c
         sudo apt-get install -y qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools
 
 ## Step 7
-Install Gean4 11.1.3.
+Install Gean4 11.3.2.
 Make sure you are located in the "Applications" folder by doing the following command:
 
         cd ~/Applications
@@ -97,8 +99,8 @@ Then follow the next commands to create a Geant4 folder and download Geant4 from
 
         mkdir ~/Applications/GEANT4
         cd ~/Applications/GEANT4
-        wget https://gitlab.cern.ch/geant4/geant4/-/archive/v11.1.3/geant4-v11.1.3.tar.gz
-        tar -zxf geant4-v11.1.3.tar.gz 
+        wget https://gitlab.cern.ch/geant4/geant4/-/archive/v11.3.2/geant4-v11.3.2.tar.gz
+        tar -zxf geant4-v11.3.2.tar.gz 
 
 Your GEANT4 folder should look like this
 
@@ -117,42 +119,46 @@ Again, the GEANT4 folder should look as follows:
 Now we can finish up the installation of Geant4 by using the following commands:
 
         cd ~/Applications/GEANT4/geant4-build
-        cmake ../geant4-v11.1.3 -DGEANT4_INSTALL_DATA=OFF -DGEANT4_BUILD_MULTITHREADED=ON -DCMAKE_INSTALL_PREFIX=~/Applications/GEANT4/geant4-install -DCMAKE_PREFIX_PATH=/usr/lib/qt5 -DGEANT4_USE_QT=ON -DGEANT4_USE_OPENGL_X11=ON -DGEANT4_USE_RAYTRACER_X11=ON
+        cmake ../geant4-v11.3.2 -DGEANT4_INSTALL_DATA=OFF -DGEANT4_BUILD_MULTITHREADED=ON -DGEANT4_BUILD_VERBOSE_CODE=OFF -DCMAKE_INSTALL_PREFIX=~/Applications/GEANT4/geant4-install -DCMAKE_PREFIX_PATH=/usr/lib/qt5 -DGEANT4_USE_QT=ON -DGEANT4_USE_OPENGL_X11=ON -DGEANT4_USE_RAYTRACER_X11=ON
         make -j10
         make install
 
 Next, download the Geant4 data files by typing the following commands in the terminal:
 
         cd ~/Applications/GEANT4/G4DATA
-        wget https://cern.ch/geant4-data/datasets/G4NDL.4.7.tar.gz
-        wget https://cern.ch/geant4-data/datasets/G4EMLOW.8.2.tar.gz
-        wget https://cern.ch/geant4-data/datasets/G4PhotonEvaporation.5.7.tar.gz
-        wget https://cern.ch/geant4-data/datasets/G4RadioactiveDecay.5.6.tar.gz
-        wget https://cern.ch/geant4-data/datasets/G4PARTICLEXS.4.0.tar.gz
+        wget https://cern.ch/geant4-data/datasets/G4NDL.4.7.1.tar.gz
+        wget https://cern.ch/geant4-data/datasets/G4EMLOW.8.6.1.tar.gz
+        wget https://cern.ch/geant4-data/datasets/G4PhotonEvaporation.6.1.tar.gz
+        wget https://cern.ch/geant4-data/datasets/G4RadioactiveDecay.6.1.2.tar.gz
+        wget https://cern.ch/geant4-data/datasets/G4PARTICLEXS.4.1.tar.gz
+        wget https://cern.ch/geant4-data/datasets/G4ABLA.3.3.tar.gz
+        wget https://cern.ch/geant4-data/datasets/G4INCL.1.2.tar.gz
+        wget https://cern.ch/geant4-data/datasets/G4ENSDFSTATE.3.0.tar.gz
+        wget https://cern.ch/geant4-data/datasets/G4CHANNELING.1.0.tar.gz
+        wget https://cern.ch/geant4-data/datasets/G4NUDEXLIB.1.0.tar.gz
+        wget https://cern.ch/geant4-data/datasets/G4URRPT.1.1.tar.gz
         wget https://cern.ch/geant4-data/datasets/G4PII.1.3.tar.gz
         wget https://cern.ch/geant4-data/datasets/G4RealSurface.2.2.tar.gz
         wget https://cern.ch/geant4-data/datasets/G4SAIDDATA.2.0.tar.gz
-        wget https://cern.ch/geant4-data/datasets/G4ABLA.3.1.tar.gz
-        wget https://cern.ch/geant4-data/datasets/G4INCL.1.0.tar.gz
-        wget https://cern.ch/geant4-data/datasets/G4ENSDFSTATE.2.3.tar.gz
         wget https://cern.ch/geant4-data/datasets/G4TENDL.1.4.tar.gz
-        wget ftp://gdo-nuclear.ucllnl.org/LEND_GND1.3/LEND_GND1.3_ENDF.BVII.1.tar.gz
 
 Then, decompress the files with tar -zxf and clean the folder:
 
-        tar -zxf G4NDL.4.7.tar.gz
-        tar -zxf G4EMLOW.8.2.tar.gz
-        tar -zxf G4PhotonEvaporation.5.7.tar.gz
-        tar -zxf G4RadioactiveDecay.5.6.tar.gz
-        tar -zxf G4PARTICLEXS.4.0.tar.gz
+        tar -zxf G4NDL.4.7.1.tar.gz
+        tar -zxf G4EMLOW.8.6.1.tar.gz
+        tar -zxf G4PhotonEvaporation.6.1.tar.gz
+        tar -zxf G4RadioactiveDecay.6.1.2.tar.gz
+        tar -zxf G4PARTICLEXS.4.1.tar.gz
         tar -zxf G4PII.1.3.tar.gz
         tar -zxf G4RealSurface.2.2.tar.gz
         tar -zxf G4SAIDDATA.2.0.tar.gz
-        tar -zxf G4ABLA.3.1.tar.gz
-        tar -zxf G4INCL.1.0.tar.gz
-        tar -zxf G4ENSDFSTATE.2.3.tar.gz
+        tar -zxf G4ABLA.3.3.tar.gz
+        tar -zxf G4INCL.1.2.tar.gz
+        tar -zxf G4ENSDFSTATE.3.0.tar.gz
+        tar -zxf G4CHANNELING.1.0.tar.gz
+        tar -zxf G4NUDEXLIB.1.0.tar.gz
+        tar -zxf G4URRPT.1.1.tar.gz
         tar -zxf G4TENDL.1.4.tar.gz
-        tar -zxf LEND_GND1.3_ENDF.BVII.1.tar.gz
         rm *tar.gz
 
 Your folder should look as follows:
@@ -169,6 +175,8 @@ Then, download OpenTOPAS from the GitHub repository using:
 
         cd ~/Applications/TOPAS
         git clone https://github.com/OpenTOPAS/OpenTOPAS.git
+        cd OpenTOPAS
+        git checkout v4.2.0
 
 Compile GDCM as follows:
 
@@ -188,7 +196,7 @@ Compile OpenTOPAS by using the following commands:
         cd OpenTOPAS-build
         export Geant4_DIR=~/Applications/GEANT4/geant4-install
         export GDCM_DIR=~/Applications/TOPAS/OpenTOPAS/gdcm-install
-        cmake ../OpenTOPAS -DCMAKE_INSTALL_PREFIX=../OpenTOPAS-install
+        cmake ../OpenTOPAS -DCMAKE_INSTALL_PREFIX=../OpenTOPAS-install -DTOPAS_USE_QT=ON -DTOPAS_USE_QT6=OFF
         make -j10 install
 
 Next, copy the Geant4 libraries into the "lib" folder of OpenTOPAS. To do so, we will use the following commands:
@@ -256,9 +264,9 @@ The OpenTOPAS tests are located [here](https://github.com/OpenTOPAS/qi-opentopas
         pip3 install nrtest
         pip3 install git+https://github.com/davidchall/nrtest-topas.git
 
-Modify the `apps/topas-v4.0.json` metadata file according to your directories and configuration (remember to set your environment variables) and execute the entire test suite as follows:
+Modify the `apps/topas-v4.2.0.json` metadata file according to your directories and configuration (remember to set your environment variables) and execute the entire test suite as follows:
 
-        nrtest execute apps/topas-v4.0.json tests/ -o benchmarks/todayDate
+        nrtest execute apps/topas-v4.2.0.json tests/ -o benchmarks/todayDate
 
 Comparisons can also be made with the following command:
         

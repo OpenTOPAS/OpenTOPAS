@@ -1,7 +1,7 @@
 //
 // ********************************************************************
 // *                                                                  *
-// * Copyright 2024 The TOPAS Collaboration                           *
+// * Copyright 2025 The TOPAS Collaboration                           *
 // * Copyright 2022 The TOPAS Collaboration                           *
 // *                                                                  *
 // * Permission is hereby granted, free of charge, to any person      *
@@ -43,11 +43,7 @@ TsBorderSurface::TsBorderSurface(TsParameterManager* pm, TsGeometryManager* gm,
 :fPm(pm), fGm(gm), fBorderSurfaceParameterName(borderSurfaceParameterName),
 fBorderSurface(0), fMarkedForRebuild("true")
 {
-#if GEANT4_VERSION_MAJOR >= 11
 	G4StrUtil::to_lower(fBorderSurfaceParameterName);
-#else
-	fBorderSurfaceParameterName.toLower();
-#endif
 
 	size_t pos = fBorderSurfaceParameterName.find("opticalbehaviorto");
 	fFromComponentName = fBorderSurfaceParameterName.substr(3,pos-4);
@@ -82,11 +78,7 @@ void TsBorderSurface::MarkForRebuild()
 
 
 void TsBorderSurface::MarkForRebuildIfMatchesDestination(G4String toComponentName) {
-#if GEANT4_VERSION_MAJOR >= 11
 	G4StrUtil::to_lower(toComponentName);
-#else
-	toComponentName.toLower();
-#endif
 
 	if (toComponentName == fToComponentName)
 		fMarkedForRebuild = true;

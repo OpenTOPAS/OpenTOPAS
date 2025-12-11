@@ -1,7 +1,7 @@
 //
 // ********************************************************************
 // *                                                                  *
-// * Copyright 2024 The TOPAS Collaboration                           *
+// * Copyright 2025 The TOPAS Collaboration                           *
 // * Copyright 2022 The TOPAS Collaboration                           *
 // *                                                                  *
 // * Permission is hereby granted, free of charge, to any person      *
@@ -29,12 +29,8 @@
 //
 
 #include "TsNtupleRoot.hh"
-#if GEANT4_VERSION_MAJOR >= 11
 #include "g4hntools_defs.hh"
 #include "G4ToolsAnalysisManager.hh"
-#else
-#include "g4analysis_defs.hh"
-#endif
 
 TsNtupleRoot::TsNtupleRoot(TsParameterManager* pM, G4String fileName, G4String mode, TsVFile *masterFile, G4VAnalysisManager* analysisManager)
 : TsVNtuple(pM, fileName, mode, masterFile),
@@ -76,33 +72,20 @@ void TsNtupleRoot::ConfirmCanOpen()
 
 	fNtupleID = fAnalysisManager->CreateNtuple(fNtupleName, fNtupleName);
 
-	G4int iColD = 0;
-	G4int iColF = 0;
-	G4int iColI = 0;
-	G4int iColB = 0;
-	G4int iColS = 0;
-	G4int iColI8 = 0;
-
 	for (int iCol = 0; iCol < fNumberOfColumns; ++iCol) {
 
 		if (fNamesD.find(iCol) != fNamesD.end()) {
 			fAnalysisManager->CreateNtupleDColumn(fNtupleID, CreateValidBranchName(fNamesD[iCol]));
-			iColD++;
 		} else if (fNamesF.find(iCol) != fNamesF.end()) {
 			fAnalysisManager->CreateNtupleFColumn(fNtupleID, CreateValidBranchName(fNamesF[iCol]));
-			iColF++;
 		} else if (fNamesI.find(iCol) != fNamesI.end()) {
 			fAnalysisManager->CreateNtupleIColumn(fNtupleID, CreateValidBranchName(fNamesI[iCol]));
-			iColI++;
 		} else if (fNamesB.find(iCol) != fNamesB.end()) {
 			fAnalysisManager->CreateNtupleIColumn(fNtupleID, CreateValidBranchName(fNamesB[iCol]));
-			iColB++;
 		} else if (fNamesS.find(iCol) != fNamesS.end()) {
 			fAnalysisManager->CreateNtupleSColumn(fNtupleID, CreateValidBranchName(fNamesS[iCol]));
-			iColS++;
 		} else if (fNamesI8.find(iCol) != fNamesI8.end()) {
 			fAnalysisManager->CreateNtupleIColumn(fNtupleID, CreateValidBranchName(fNamesI8[iCol]));
-			iColI8++;
 		} else {
 			G4cerr << "Topas is exiting due to a serious error in file output." << G4endl;
 			G4cerr << "A column could not be found" << G4endl;
@@ -173,11 +156,7 @@ G4String TsNtupleRoot::CreateValidBranchName(G4String branchName)
 	}
 
 	// strip leading underscores
-#if GEANT4_VERSION_MAJOR >= 11
    	G4StrUtil::lstrip(branchName,'_');
-#else
-    branchName.strip(G4String::leading, '_');
-#endif
 
 	return branchName;
 }

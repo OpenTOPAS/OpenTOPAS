@@ -1,7 +1,7 @@
 //
 // ********************************************************************
 // *                                                                  *
-// * Copyright 2024 The TOPAS Collaboration                           *
+// * Copyright 2025 The TOPAS Collaboration                           *
 // * Copyright 2022 The TOPAS Collaboration                           *
 // *                                                                  *
 // * Permission is hereby granted, free of charge, to any person      *
@@ -70,11 +70,7 @@ fHandledFirstEvent(false), fIsInQt(false), fIsFindingSeed(false), fUseVarianceRe
 	// Flag to tell if we are testing a new parameter file syntax
 	if ( getenv( "TOPAS_Test_Mode" ) ) {
 		G4String testNewSyntax = getenv( "TOPAS_Test_Mode" );
-#if GEANT4_VERSION_MAJOR >= 11
 		G4StrUtil::to_lower(testNewSyntax);
-#else
-		testNewSyntax.toLower();
-#endif
 		fTestMode = (testNewSyntax=="t" || testNewSyntax=="true" || testNewSyntax=="1");
 		if (fTestMode) {
 			G4cout << "######### TOPAS detected environment variable TOPAS_Test_Mode set to True. #########" << G4endl;
@@ -134,11 +130,7 @@ fHandledFirstEvent(false), fIsInQt(false), fIsFindingSeed(false), fUseVarianceRe
 	for (size_t iToken=0; iToken<length; iToken++) {
 		G4String colorParmName = (*values)[iToken];
 		G4String colorName = colorParmName.substr(9);
-#if GEANT4_VERSION_MAJOR >= 11
 		G4StrUtil::to_lower(colorName);
-#else
-		colorName.toLower();
-#endif
 
 		G4int* colorValues = GetIntegerVector(colorParmName);
 		G4double alpha;
@@ -640,11 +632,7 @@ void TsParameterManager::CloneParameter(const G4String& oldName, const G4String&
 G4String TsParameterManager::GetPartAfterLastSlash(const G4String& name) {
 	const auto lastSlashPos = name.find_last_of( "/" );
 	G4String lastPart = name.substr(lastSlashPos+1);
-#if GEANT4_VERSION_MAJOR >= 11
 	G4StrUtil::to_lower(lastPart);
-#else
-	lastPart.toLower();
-#endif
 	return lastPart;
 }
 
@@ -760,7 +748,18 @@ G4String TsParameterManager::GetUnitCategory(const G4String& unitString) {
     else if (unitString == "um3") category = "Volume";
     else if (unitString == "nm3") category = "Volume";
 	else if (!G4UnitDefinition::IsUnitDefined(unitString)) category = "None";
-	else category = G4UIcommand::CategoryOf(unitString);
+	else {
+		category = G4UIcommand::CategoryOf(unitString);
+
+		// Geant4 11.3 adds category names such as Velocity or Angular velocity.
+		// TOPAS historically refers to the same dimensionalities using the
+		// explicit "<base>/Time" naming scheme, so translate the new names back
+		// to the strings expected by the rest of the code.
+		if (category == "Velocity")
+			category = "Length/Time";
+		else if (category == "Angular velocity")
+			category = "Angle/Time";
+	}
 
 	return category;
 }
@@ -857,11 +856,7 @@ TsParameterFile* TsParameterManager::GetParameterFile(G4String fileName) {
 
 G4VisAttributes* TsParameterManager::GetColor(G4String name)
 {
-#if GEANT4_VERSION_MAJOR >= 11
 	G4StrUtil::to_lower(name);
-#else
-	name.toLower();
-#endif
 	std::map<G4String, G4VisAttributes*>::const_iterator iter = fColorMap->find(name);
 	if (iter == fColorMap->end()) {
 		G4cout << "Color not found: " << name << G4endl;
@@ -964,11 +959,7 @@ TsParticleDefinition TsParameterManager::GetParticleDefinition(G4String name) {
 		}
 	} else {
 		G4String nameLower = name;
-#if GEANT4_VERSION_MAJOR >= 11
 		G4StrUtil::to_lower(nameLower);
-#else
-		nameLower.toLower();
-#endif
 		if (nameLower == "he3") {
 			p.particleDefinition = G4ParticleTable::GetParticleTable()->FindParticle("He3");
 			return p;
@@ -1136,6 +1127,21 @@ void TsParameterManager::GetChangeableParameters(std::vector<G4String>* paramete
 			parameterNames->push_back(nameWithType);
 			parameterValues->push_back(parameterValue);
 		}
+	}
+}
+
+
+void TsParameterManager::GetAllParametersWithValues(std::vector<G4String>* parameterNames, std::vector<G4String>* parameterValues) {
+	std::map<G4String, TsVParameter*>* parameterMap = new std::map<G4String, TsVParameter*>;
+	fParameterFile->GetAllParameters(parameterMap);
+	for (auto const& entry : *parameterMap) {
+		TsVParameter* parameter = entry.second;
+		G4String parameterName = parameter->GetName();
+		G4String parameterType = parameter->GetType();
+		G4String parameterValue = GetParameterValueAsString(parameterType, parameterName);
+		G4String nameWithType = parameterType + ":" + parameterName;
+		parameterNames->push_back(nameWithType);
+		parameterValues->push_back(parameterValue);
 	}
 }
 
@@ -1641,9 +1647,18 @@ void TsParameterManager::DumpParametersToSemicolonSeparatedFile(G4double current
 }
 
 
-void TsParameterManager::DumpAddedParameters() {
-	G4String filespec = "ChangedParameters_"
-						+ G4UIcommand::ConvertToString(fAddedParameterFileCounter++) + ".txt";
+void TsParameterManager::DumpAddedParameters(const G4String& filespecOverride) {
+	G4String filespec;
+
+	if (filespecOverride.empty()) {
+		filespec = "ChangedParameters_"
+				   + G4UIcommand::ConvertToString(fAddedParameterFileCounter++) + ".txt";
+		if (ParameterExists("Ts/ChangedParametersFile"))
+			filespec = GetStringParameter("Ts/ChangedParametersFile");
+	} else {
+		filespec = filespecOverride;
+		fAddedParameterFileCounter++;
+	}
 	std::ofstream outFile(filespec);
 	if (!outFile) {
 		G4cerr << "ERROR: Failed to open file " << filespec << G4endl;
@@ -1655,9 +1670,100 @@ void TsParameterManager::DumpAddedParameters() {
 
 	outFile << "includeFile = " << fTopParameterFileSpec << "\n" << G4endl;
 
-	std::map<G4String, G4String>::const_iterator iter;
-	for (iter = fAddedParameters->begin(); iter != fAddedParameters->end(); ++iter)
-		outFile << iter->first << " = " << iter->second << G4endl;
+	// Collect and sort parameters for readable grouping
+	std::vector<std::pair<G4String,G4String> > sortedParams;
+	sortedParams.reserve(fAddedParameters->size());
+
+	// Optional filtering by prefixes (e.g. Ge/Name, Sc/Name, So/Name, Gr/)
+	std::vector<G4String> filterPrefixes;
+	if (ParameterExists("Ts/ChangedParametersPrefixes")) {
+		G4int n = GetVectorLength("Ts/ChangedParametersPrefixes");
+		G4String* vals = GetStringVector("Ts/ChangedParametersPrefixes");
+		for (G4int i=0;i<n;++i) {
+			G4String v = vals[i];
+			G4StrUtil::to_lower(v);
+			filterPrefixes.push_back(v);
+		}
+	}
+
+	for (std::map<G4String, G4String>::const_iterator iter = fAddedParameters->begin(); iter != fAddedParameters->end(); ++iter)
+		sortedParams.push_back(std::make_pair(iter->first, iter->second));
+	std::sort(sortedParams.begin(), sortedParams.end(),
+		[](const std::pair<G4String,G4String>& a, const std::pair<G4String,G4String>& b) {
+			return a.first < b.first;
+		});
+
+	// map category -> map component -> list of params
+	std::map<G4String, std::map<G4String, std::vector<std::pair<G4String,G4String> > > > grouped;
+
+	for (size_t i = 0; i < sortedParams.size(); ++i) {
+		const G4String& nameWithType = sortedParams[i].first;
+		//const G4String& value = sortedParams[i].second;
+
+		// Apply optional prefix filter
+		if (!filterPrefixes.empty()) {
+			G4String nameLower = nameWithType;
+			G4StrUtil::to_lower(nameLower);
+			G4bool match = false;
+			for (size_t pf=0; pf<filterPrefixes.size(); ++pf) {
+				if (nameLower.find(filterPrefixes[pf]) != std::string::npos) {
+					match = true;
+					break;
+				}
+			}
+			if (!match)
+				continue;
+		}
+
+		G4String category = "Other";
+		G4String component = "General";
+		size_t colonPos = nameWithType.find(":");
+		if (colonPos != std::string::npos) {
+			size_t firstSlash = nameWithType.find("/", colonPos+1);
+			if (firstSlash != std::string::npos) {
+				G4String prefix = nameWithType.substr(colonPos+1, firstSlash-colonPos-1);
+				if (prefix == "Ge")
+					category = "Geometries";
+				else if (prefix == "Sc")
+					category = "Scorers";
+				else if (prefix == "So")
+					category = "Sources";
+				else if (prefix == "Gr")
+					category = "Graphics";
+				size_t secondSlash = nameWithType.find("/", firstSlash+1);
+				if (secondSlash != std::string::npos)
+					component = nameWithType.substr(firstSlash+1, secondSlash-firstSlash-1);
+			}
+		}
+		grouped[category][component].push_back(sortedParams[i]);
+	}
+
+	// Define category order
+	std::vector<G4String> catOrder;
+	catOrder.push_back("Geometries");
+	catOrder.push_back("Scorers");
+	catOrder.push_back("Sources");
+	catOrder.push_back("Graphics");
+	catOrder.push_back("Other");
+
+	for (size_t i = 0; i < sortedParams.size(); ++i) {
+		// just to ensure sortedParams used; actual output below
+		(void)i;
+	}
+
+	for (size_t iCat=0; iCat<catOrder.size(); ++iCat) {
+		G4String cat = catOrder[iCat];
+		if (grouped.find(cat) == grouped.end())
+			continue;
+		outFile << "\n# " << cat << G4endl;
+		std::map<G4String, std::vector<std::pair<G4String,G4String> > >& comps = grouped[cat];
+		for (std::map<G4String, std::vector<std::pair<G4String,G4String> > >::iterator cIt = comps.begin(); cIt != comps.end(); ++cIt) {
+			outFile << "\n#   " << cIt->first << G4endl;
+			for (size_t iParam=0; iParam<cIt->second.size(); ++iParam) {
+				outFile << cIt->second[iParam].first << " = " << cIt->second[iParam].second << G4endl;
+			}
+		}
+	}
 
 	outFile.close();
 
@@ -1854,11 +1960,7 @@ void TsParameterManager::ReadFile(G4String fileSpec, std::ifstream& infile,
 				// Protect against reserved characters in name
 				if (name.find_first_of(forbiddeninName) < name.size()) {
 					char badChar = name[name.find_first_of(forbiddeninName)];
-#if GEANT4_VERSION_MAJOR >= 11
 					G4String badString(1,badChar);
-#else
-					G4String badString = badChar;
-#endif
 					if (badChar=='\"') badString = "Double Quotes";
 					else if (badChar==' ') badString = "Space";
 					else if (badChar=='\t') badString = "Tab";
@@ -1872,11 +1974,7 @@ void TsParameterManager::ReadFile(G4String fileSpec, std::ifstream& infile,
 				// Protect against reserved characters in value
  				if (value.find_first_of(forbiddeninValue) < value.size()) {
 					char badChar = value[value.find_first_of(forbiddeninValue)];
-#if GEANT4_VERSION_MAJOR >= 11
 					G4String badString(1,badChar);
-#else
-					G4String badString = badChar;
-#endif
 					if (badChar=='\r') badString = "Carriage Return";
 					G4cerr << "Topas quitting, parameter name: " << name << " in parameter file:" << fileSpec <<
 					" uses the following reserved character in its value: \"" << badString << "\"" << G4endl;
@@ -2125,11 +2223,7 @@ G4int TsParameterManager::IsInteger(const char* buf, short maxDigits)
 G4int TsParameterManager::IsBoolean(const char* buf)
 {
 	G4String testString = buf;
-#if GEANT4_VERSION_MAJOR >= 11
 	G4StrUtil::to_lower(testString);
-#else
-	testString.toLower();
-#endif
 	if (testString=="t" || testString=="true" || testString=="1" || testString=="f" || testString=="false" || testString=="0")
 		return 1;
 	else

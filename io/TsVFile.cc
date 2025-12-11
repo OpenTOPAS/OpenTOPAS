@@ -1,7 +1,7 @@
 //
 // ********************************************************************
 // *                                                                  *
-// * Copyright 2024 The TOPAS Collaboration                           *
+// * Copyright 2025 The TOPAS Collaboration                           *
 // * Copyright 2022 The TOPAS Collaboration                           *
 // *                                                                  *
 // * Permission is hereby granted, free of charge, to any person      *
@@ -39,11 +39,7 @@ TsVFile::TsVFile(TsParameterManager* pM, G4String fileName, G4String mode, TsVFi
 {
 	fMasterFile = masterFile ? masterFile : this;
 
-#if GEANT4_VERSION_MAJOR >= 11
 	G4StrUtil::to_lower(mode);
-#else
-	mode.toLower();
-#endif
 	if (mode == "overwrite") fMode = OVERWRITE;
 	else if (mode == "increment") fMode = INCREMENT;
 	else fMode = EXIT;
