@@ -50,7 +50,7 @@ RUN mkdir GEANT4 && cd GEANT4 && \
 
 WORKDIR $APP_HOME
 # Pin to the released OpenTOPAS tag so image builds stay reproducible
-RUN git clone --branch ${TOPAS_VERSION} --depth 1 https://github.com/OpenTOPAS/OpenTOPAS.git
+RUN git clone https://github.com/OpenTOPAS/OpenTOPAS.git
 
 # =========================================================
 # 2. Build GDCM 2.6.8
