@@ -100,17 +100,34 @@ jobs:
           TAG: ${{ needs.resolve-tags.outputs.tag }}
         run: |
           set -euo pipefail
-          ARCH_TAGS=(
-            "${IMAGE}:${TAG}-amd64"
-            "${IMAGE}:${TAG}-arm64"
-          )
+          amd_digest=$(
+            docker buildx imagetools inspect "${IMAGE}:${TAG}-amd64" --raw \
+            | jq -r '.manifests[] | select(.platform.architecture=="amd64").digest'
+          )   
+          arm_digest=$(
+            docker buildx imagetools inspect "${IMAGE}:${TAG}-arm64" --raw \
+            | jq -r '.manifests[] | select(.platform.architecture=="arm64").digest'
+          )   
 
-          docker manifest create "${IMAGE}:${TAG}" "${ARCH_TAGS[@]}"
+          if [[ -z "${amd_digest}" || "${amd_digest}" == "null" ]]; then
+            echo "Failed to resolve digest for amd64 image"
+            exit 1
+          fi  
+          if [[ -z "${arm_digest}" || "${arm_digest}" == "null" ]]; then
+            echo "Failed to resolve digest for arm64 image"
+            exit 1
+          fi  
+
+          docker manifest create "${IMAGE}:${TAG}" \
+            "${IMAGE}@${amd_digest}" \
+            "${IMAGE}@${arm_digest}"
           docker manifest push "${IMAGE}:${TAG}"
 
           if [[ "${TAG}" != "latest" ]]; then
-            docker manifest create "${IMAGE}:latest" "${ARCH_TAGS[@]}"
+            docker manifest create "${IMAGE}:latest" \
+              "${IMAGE}@${amd_digest}" \
+              "${IMAGE}@${arm_digest}"
             docker manifest push "${IMAGE}:latest"
-          fi
+          fi 
 
           docker manifest inspect "${IMAGE}:${TAG}"
