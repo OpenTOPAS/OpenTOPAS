@@ -191,7 +191,7 @@ mkdir -p /extensions/build
 cd /extensions/build
 cmake /Applications/TOPAS/OpenTOPAS \
     -DCMAKE_INSTALL_PREFIX=/extensions/install \
-    -DTOPAS_EXTENSIONS_DIR=/extensions/src
+    -DTOPAS_EXTENSIONS_DIR=/extensions/src -DTOPAS_USE_QT=ON
 make -j$(nproc) install
 EOS
 )
