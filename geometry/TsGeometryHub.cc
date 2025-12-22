@@ -328,22 +328,41 @@ void TsGeometryHub::RegisterBuiltInTypes(GeometryRegistry& registry) {
         [](TsParameterManager* pM, TsExtensionManager* eM, TsMaterialManager* mM, TsGeometryManager* gM, TsVGeometryComponent* pgc, G4VPhysicalVolume* pv, G4String& childName) {
             return new TsBox(pM, eM, mM, gM, pgc, pv, childName);
         },
-        TsBox::CreateDefaults,
-        {}});
+        nullptr,
+        {{"dc:Ge/{child}/HLX", ""},
+            {"dc:Ge/{child}/HLY", ""},
+            {"dc:Ge/{child}/HLZ", ""},
+            {"ic:Ge/{child}/XBins", ""},
+            {"ic:Ge/{child}/YBins", ""},
+            {"ic:Ge/{child}/ZBins", ""}}});
     
     AddType(registry, {"TsCylinder",
         [](TsParameterManager* pM, TsExtensionManager* eM, TsMaterialManager* mM, TsGeometryManager* gM, TsVGeometryComponent* pgc, G4VPhysicalVolume* pv, G4String& childName) {
             return new TsCylinder(pM, eM, mM, gM, pgc, pv, childName);
         },
-        TsCylinder::CreateDefaults,
-        {}});
+        nullptr,
+        {{"dc:Ge/{child}/HL", ""},
+            {"dc:Ge/{child}/RMin", ""},
+            {"dc:Ge/{child}/RMax", ""},
+            {"dc:Ge/{child}/SPhi", "0. deg"},
+            {"dc:Ge/{child}/DPhi", "360. deg"},
+            {"ic:Ge/{child}/ZBins", ""},
+            {"ic:Ge/{child}/RBins",""},
+            {"ic:Ge/{child}/PhiBins",""}}});
     
     AddType(registry, {"TsSphere",
         [](TsParameterManager* pM, TsExtensionManager* eM, TsMaterialManager* mM, TsGeometryManager* gM, TsVGeometryComponent* pgc, G4VPhysicalVolume* pv, G4String& childName) {
             return new TsSphere(pM, eM, mM, gM, pgc, pv, childName);
         },
-        TsSphere::CreateDefaults,
-        {}});
+        nullptr,
+        {{"dc:Ge/{child}/RMin", ""},
+            {"dc:Ge/{child}/RMax", ""},
+            {"dc:Ge/{child}/STheta", "0. deg"},
+            {"dc:Ge/{child}/DTheta", "180. deg"},
+            {"dc:Ge/{child}/SPhi", "0. deg"},
+            {"dc:Ge/{child}/DPhi", "360. deg"},
+            {"ic:Ge/{child}/RBins",""},
+            {"ic:Ge/{child}/PhiBins",""}}});
     
     AddType(registry, {"TsCAD",
         [](TsParameterManager* pM, TsExtensionManager* eM, TsMaterialManager* mM, TsGeometryManager* gM, TsVGeometryComponent* pgc, G4VPhysicalVolume* pv, G4String& childName) {
@@ -352,7 +371,7 @@ void TsGeometryHub::RegisterBuiltInTypes(GeometryRegistry& registry) {
         nullptr,
         {{"s:Ge/{child}/InputFile", ""},
             {"s:Ge/{child}/FileFormat", ""},
-            {"d:Ge/{child}/Units", ""}}});
+            {"dc:Ge/{child}/Units", ""}}});
     
     AddType(registry, {"TsJaws",
         [](TsParameterManager* pM, TsExtensionManager* eM, TsMaterialManager* mM, TsGeometryManager* gM, TsVGeometryComponent* pgc, G4VPhysicalVolume* pv, G4String& childName) {
