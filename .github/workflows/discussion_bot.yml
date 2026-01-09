@@ -1,0 +1,161 @@
+name: Discussion Bot
+
+on:
+  discussion:
+    types: [created]
+
+env:
+  # Must match the model used when building the index.json embeddings.
+  OPENAI_EMBEDDING_MODEL: "text-embedding-3-small"
+  BOT_REPO: OpenTOPAS/TOPAS-assistant-bot
+
+permissions:
+  contents: read
+
+jobs:
+  gpt-response:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check user opted in to bot response
+        id: optin
+        env:
+          BODY: ${{ github.event.discussion.body }}
+        run: |
+          set -euo pipefail
+          # Match the exact checked checkbox line produced by the discussion form.
+          # Use "--" so grep does not treat leading "-" in the pattern as an option.
+          opt_in="- [x] I would like to receive an immediate response from the TOPAS-BOT."
+          if printf "%s" "$BODY" | tr -d '\r' | grep -Fqi -- "$opt_in"; then
+            echo "opted_in=true" >> "$GITHUB_OUTPUT"
+            echo "Opt-in checkbox checked."
+          else
+            echo "opted_in=false" >> "$GITHUB_OUTPUT"
+            echo "Opt-in checkbox not checked; skipping bot response."
+          fi
+
+      - name: Checkout OpenTOPAS
+        if: steps.optin.outputs.opted_in == 'true'
+        uses: actions/checkout@v4
+
+      - name: Validate required secrets
+        if: steps.optin.outputs.opted_in == 'true'
+        env:
+          BOT_APP_ID: ${{ secrets.BOT_APP_ID }}
+          BOT_APP_PRIVATE_KEY: ${{ secrets.BOT_APP_PRIVATE_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          set -euo pipefail
+          if [ -z "${BOT_APP_ID:-}" ]; then
+            echo "Missing required secret: BOT_APP_ID (must be the GitHub App ID)."
+            exit 1
+          fi
+          if [ -z "${BOT_APP_PRIVATE_KEY:-}" ]; then
+            echo "Missing required secret: BOT_APP_PRIVATE_KEY (paste the full .pem contents)."
+            exit 1
+          fi
+          if [ -z "${OPENAI_API_KEY:-}" ]; then
+            echo "Missing required secret: OPENAI_API_KEY."
+            exit 1
+          fi
+
+      # Solution using the GitHub App avoids problems with private/public bot/source code repos. It works for both.
+      - name: Create GitHub App token
+        if: steps.optin.outputs.opted_in == 'true'
+        id: app-token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.BOT_APP_ID }}
+          private-key: ${{ secrets.BOT_APP_PRIVATE_KEY }}
+          owner: OpenTOPAS
+          # Explicitly scope the token to the repos we need to access.
+          # This avoids cases where the token only has access to the current repo.
+          repositories: OpenTOPAS,TOPAS-assistant-bot
+
+      - name: Debug App token repository access
+        if: steps.optin.outputs.opted_in == 'true'
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+        run: |
+          set -euo pipefail
+          echo "Token can access these repos:"
+          gh api installation/repositories -q '.repositories[].full_name'
+
+      - name: Verify App token can access bot repo
+        if: steps.optin.outputs.opted_in == 'true'
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+        run: |
+          set -euo pipefail
+          # For private repos, GitHub returns 404 when the token lacks access.
+          if ! gh api "repos/${BOT_REPO}" >/dev/null; then
+            echo "GitHub App token cannot access ${BOT_REPO}."
+            echo "Fix: ensure the GitHub App installation includes ${BOT_REPO} and has Contents: read, then re-run."
+            exit 1
+          fi
+
+      - name: Verify App token has Contents read on bot repo
+        if: steps.optin.outputs.opted_in == 'true'
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+        run: |
+          set -euo pipefail
+          # Cloning requires Contents: read. Metadata-only access can still list repos but cannot read files.
+          # This call should succeed if Contents permission has been granted AND re-approved on the installation.
+          if ! gh api "repos/${BOT_REPO}/contents/" >/dev/null; then
+            echo "GitHub App token can see ${BOT_REPO} but cannot read repository contents."
+            echo "Fix: in the GitHub App settings, set Repository permissions -> Contents: Read-only,"
+            echo "then re-install (or re-configure) the app installation on ${BOT_REPO} to approve new permissions."
+            exit 1
+          fi
+
+      - name: Checkout bot repo
+        if: steps.optin.outputs.opted_in == 'true'
+        id: bot-repo
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ env.BOT_REPO }}
+          token: ${{ steps.app-token.outputs.token }}
+          path: topas-bot
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install bot dependencies
+        if: steps.optin.outputs.opted_in == 'true'
+        run: pip install -r topas-bot/requirements.txt
+
+      - name: Download latest index.json from bot repo releases
+        if: steps.optin.outputs.opted_in == 'true'
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+        run: |
+          mkdir -p topas-bot/.bot
+
+          # Since index.json is a release asset we need to first find the API URL. 
+          # gh api returns an array of releases where [0] is the latest.
+          # .assets loops over assets of that release then we select index.json
+          asset_api_url="$(gh api repos/${{ env.BOT_REPO }}/releases -q '.[0].assets[] | select(.name=="index.json") | .url')"
+          if [ -z "${asset_api_url}" ]; then
+            echo "Could not find index.json asset on latest release in ${{ env.BOT_REPO }}"
+            exit 1
+          fi
+
+          curl -fsSL \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            -H "Accept: application/octet-stream" \
+            "${asset_api_url}" \
+            -o topas-bot/.bot/index.json
+
+          test -s topas-bot/.bot/index.json
+
+      - name: Run GPT Response Script
+        if: steps.optin.outputs.opted_in == 'true'
+        working-directory: topas-bot
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          OPENAI_EMBEDDING_MODEL: ${{ env.OPENAI_EMBEDDING_MODEL }}
+          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
+        run: python .github/actions/get_gpt_response.py
