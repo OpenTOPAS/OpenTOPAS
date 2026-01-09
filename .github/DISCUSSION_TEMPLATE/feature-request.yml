@@ -31,6 +31,14 @@ body:
     validations:
       required: true
   - type: checkboxes
+    id: TOPAS-BOT
+    attributes:
+       label: TOPAS-BOT
+       description: Please mark this checkbox if you are willing to receive a single response from the TOPAS-BOT (beta version).
+       options:
+         - label: I would like to receive an immediate response from the TOPAS-BOT.
+           required: false
+  - type: checkboxes
     id: terms
     attributes:
       label: Code of Conduct
@@ -46,4 +54,3 @@ body:
        options:
          - label: I testify that I have fully read the bug reporting guideline beforehand.
            required: true
-
