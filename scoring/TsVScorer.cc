@@ -148,12 +148,17 @@ void TsVScorer::PostConstructor()
 		}
 
 		// If scorer needs surface area calculation, check that component provides this feature
-		if (fNeedsSurfaceAreaCalculation &! fComponent->CanCalculateSurfaceArea()) {
-			G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
-			G4cerr << "Scorer name: " << GetName() << " requires surface area calculation." << G4endl;
-			G4cerr << "But the component: " << fComponent->GetName() << " is of a type" << G4endl;
-			G4cerr << "that does not provide this calculation." << G4endl;
-			fPm->AbortSession(1);
+		// or that AnySurface is requested (can use the solid's total surface area).
+		if (fNeedsSurfaceAreaCalculation && !fComponent->CanCalculateSurfaceArea()) {
+			G4String surfaceNameLower = fSurfaceName;
+			G4StrUtil::to_lower(surfaceNameLower);
+			if (surfaceNameLower != "anysurface") {
+				G4cerr << "Topas is exiting due to a serious error in scoring." << G4endl;
+				G4cerr << "Scorer name: " << GetName() << " requires surface area calculation." << G4endl;
+				G4cerr << "But the component: " << fComponent->GetName() << " is of a type" << G4endl;
+				G4cerr << "that does not provide this calculation." << G4endl;
+				fPm->AbortSession(1);
+			}
 		}
 
 		// Ask the component to convert the string surface name to an integer surface id.

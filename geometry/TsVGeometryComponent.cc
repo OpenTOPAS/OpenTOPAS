@@ -1492,7 +1492,11 @@ G4bool TsVGeometryComponent::IsOnBoundary(G4ThreeVector, G4VSolid*, SurfaceType)
 }
 
 
-G4double TsVGeometryComponent::GetAreaOfSelectedSurface(G4VSolid*, SurfaceType, G4int, G4int, G4int) {
+G4double TsVGeometryComponent::GetAreaOfSelectedSurface(G4VSolid* solid, SurfaceType surfaceID, G4int, G4int, G4int) {
+	if (surfaceID == AnySurface) {
+		return solid->GetSurfaceArea();
+	}
+
 	G4cerr << "Topas is exiting due to a serious error." << G4endl;
 	G4cerr << "TsVGeometryComponent::GetAreaOfSelectedSurface called for component that does not handle surface scoring: " << fName << G4endl;
 	fPm->AbortSession(1);
