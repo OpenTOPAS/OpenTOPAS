@@ -12,7 +12,7 @@ import sys
 text = open(sys.argv[1], "r", encoding="utf-8").read()
 
 def get(name: str) -> str:
-    match = re.search(rf"set \\(\\s*{name}\\s+([0-9]+)\\s*\\)", text)
+    match = re.search(rf"set\\s*\\(\\s*{name}\\s+([0-9]+)\\s*\\)", text)
     if not match:
         raise SystemExit(f"Missing {name} in {sys.argv[1]}")
     return match.group(1)
