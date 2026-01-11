@@ -12,7 +12,7 @@ import sys
 text = open(sys.argv[1], "r", encoding="utf-8").read()
 
 def get(name: str) -> str:
-    match = re.search(rf"set\\s*\\(\\s*{name}\\s+([0-9]+)\\s*\\)", text)
+    match = re.search(rf"set\s*\(\s*{name}\s+([0-9]+)\s*\)", text)
     if not match:
         raise SystemExit(f"Missing {name} in {sys.argv[1]}")
     return match.group(1)
@@ -45,34 +45,34 @@ for path in paths:
     updated = text
     if path.name.startswith("OpenTOPAS_quickStart_"):
         updated = re.sub(
-            r"(TOPAS version \\*\\*)v\\d+\\.\\d+\\.\\d+(\\*\\*)",
+            r"(TOPAS version \*\*)v\d+\.\d+\.\d+(\*\*)",
             rf"\\1{tag}\\2",
             updated,
         )
         updated = re.sub(
-            r"\\bgit checkout v\\d+\\.\\d+\\.\\d+\\b",
+            r"\bgit checkout v\d+\.\d+\.\d+\b",
             f"git checkout {tag}",
             updated,
         )
         updated = re.sub(
-            r"\\bapps/topas-v\\d+\\.\\d+\\.\\d+\\.json\\b",
+            r"\bapps/topas-v\d+\.\d+\.\d+\.json\b",
             f"apps/topas-{tag}.json",
             updated,
         )
     elif path.name == "Dockerfile.topas.workflow":
         updated = re.sub(
-            r"TOPAS v\\d+\\.\\d+\\.\\d+",
+            r"TOPAS v\d+\.\d+\.\d+",
             f"TOPAS {tag}",
             updated,
         )
         updated = re.sub(
-            r"ARG TOPAS_VERSION=v\\d+\\.\\d+\\.\\d+",
+            r"ARG TOPAS_VERSION=v\d+\.\d+\.\d+",
             f"ARG TOPAS_VERSION={tag}",
             updated,
         )
     elif path.name in {"README.Docker.md", "FAQ.Docker.md"}:
         updated = re.sub(
-            r"OpenTOPAS v\\d+\\.\\d+\\.\\d+",
+            r"OpenTOPAS v\d+\.\d+\.\d+",
             f"OpenTOPAS {tag}",
             updated,
         )

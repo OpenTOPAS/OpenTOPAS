@@ -12,7 +12,7 @@ import sys
 text = open(sys.argv[1], "r", encoding="utf-8").read()
 
 def get(name: str) -> str:
-    match = re.search(rf"set\\s*\\(\\s*{name}\\s+([0-9]+)\\s*\\)", text)
+    match = re.search(rf"set\s*\(\s*{name}\s+([0-9]+)\s*\)", text)
     if not match:
         raise SystemExit(f"Missing {name} in {sys.argv[1]}")
     return match.group(1)
@@ -53,21 +53,21 @@ for path in paths:
     text = path.read_text(encoding="utf-8")
     if path.name.startswith("OpenTOPAS_quickStart_"):
         version_line = re.findall(
-            r"TOPAS version \\*\\*(v\\d+\\.\\d+\\.\\d+)\\*\\*",
+            r"TOPAS version \*\*(v\d+\.\d+\.\d+)\*\*",
             text,
         )
-        checkout_tags = re.findall(r"\\bgit checkout (v\\d+\\.\\d+\\.\\d+)\\b", text)
-        app_tags = re.findall(r"\\bapps/topas-(v\\d+\\.\\d+\\.\\d+)\\.json\\b", text)
+        checkout_tags = re.findall(r"\bgit checkout (v\d+\.\d+\.\d+)\b", text)
+        app_tags = re.findall(r"\bapps/topas-(v\d+\.\d+\.\d+)\.json\b", text)
         expect_all_equal(version_line, "TOPAS version", path)
         expect_all_equal(checkout_tags, "git checkout tag", path)
         expect_all_equal(app_tags, "apps/topas tag", path)
     elif path.name == "Dockerfile.topas.workflow":
-        desc_tags = re.findall(r"TOPAS (v\\d+\\.\\d+\\.\\d+)", text)
-        arg_tags = re.findall(r"ARG TOPAS_VERSION=(v\\d+\\.\\d+\\.\\d+)", text)
+        desc_tags = re.findall(r"TOPAS (v\d+\.\d+\.\d+)", text)
+        arg_tags = re.findall(r"ARG TOPAS_VERSION=(v\d+\.\d+\.\d+)", text)
         expect_all_equal(desc_tags, "description tag", path)
         expect_all_equal(arg_tags, "ARG TOPAS_VERSION", path)
     elif path.name in {"README.Docker.md", "FAQ.Docker.md"}:
-        docker_tags = re.findall(r"OpenTOPAS (v\\d+\\.\\d+\\.\\d+)", text)
+        docker_tags = re.findall(r"OpenTOPAS (v\d+\.\d+\.\d+)", text)
         expect_all_equal(docker_tags, "OpenTOPAS tag", path)
 
 if errors:
