@@ -31,7 +31,6 @@ python3 - "$tag" \
   "$root/OpenTOPAS_quickStart_MacOS.md" \
   "$root/OpenTOPAS_quickStart_WSL.md" \
   "$root/docker/README.Docker.md" \
-  "$root/docker/FAQ.Docker.md" \
   "$root/.github/workflows/Dockerfile.topas.workflow" <<'PY'
 import re
 import sys
@@ -46,7 +45,12 @@ for path in paths:
     if path.name.startswith("OpenTOPAS_quickStart_"):
         updated = re.sub(
             r"(TOPAS version \*\*)v\d+\.\d+\.\d+(\*\*)",
-            rf"\\1{tag}\\2",
+            r"\1" + tag + r"\2",
+            updated,
+        )
+        updated = re.sub(
+            r"(target )\\1v\d+\.\d+\.\d+\\2",
+            r"\1**" + tag + r"**",
             updated,
         )
         updated = re.sub(
@@ -70,7 +74,7 @@ for path in paths:
             f"ARG TOPAS_VERSION={tag}",
             updated,
         )
-    elif path.name in {"README.Docker.md", "FAQ.Docker.md"}:
+    elif path.name == "README.Docker.md":
         updated = re.sub(
             r"OpenTOPAS v\d+\.\d+\.\d+",
             f"OpenTOPAS {tag}",

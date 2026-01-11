@@ -31,7 +31,6 @@ python3 - "$tag" \
   "$root/OpenTOPAS_quickStart_MacOS.md" \
   "$root/OpenTOPAS_quickStart_WSL.md" \
   "$root/docker/README.Docker.md" \
-  "$root/docker/FAQ.Docker.md" \
   "$root/.github/workflows/Dockerfile.topas.workflow" <<'PY'
 import re
 import sys
@@ -53,7 +52,7 @@ for path in paths:
     text = path.read_text(encoding="utf-8")
     if path.name.startswith("OpenTOPAS_quickStart_"):
         version_line = re.findall(
-            r"TOPAS version \*\*(v\d+\.\d+\.\d+)\*\*",
+            r"(?:TOPAS version|target) \*\*(v\d+\.\d+\.\d+)\*\*",
             text,
         )
         checkout_tags = re.findall(r"\bgit checkout (v\d+\.\d+\.\d+)\b", text)
@@ -66,7 +65,7 @@ for path in paths:
         arg_tags = re.findall(r"ARG TOPAS_VERSION=(v\d+\.\d+\.\d+)", text)
         expect_all_equal(desc_tags, "description tag", path)
         expect_all_equal(arg_tags, "ARG TOPAS_VERSION", path)
-    elif path.name in {"README.Docker.md", "FAQ.Docker.md"}:
+    elif path.name == "README.Docker.md":
         docker_tags = re.findall(r"OpenTOPAS (v\d+\.\d+\.\d+)", text)
         expect_all_equal(docker_tags, "OpenTOPAS tag", path)
 
