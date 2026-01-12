@@ -1,6 +1,6 @@
 # TOPAS Docker
 
-This repository provides Docker recipes and helper scripts for (re)building and running TOPAS (OpenTOPAS v4.1.1, Geant4 11.1.3, GDCM 2.6.8) on macOS or Linux. Use it to keep Geant4 data outside the container while iterating on parameter files, extensions, or visualization workflows.
+This repository provides Docker recipes and helper scripts for (re)building and running TOPAS (OpenTOPAS v4.2.1, Geant4 11.1.3, GDCM 2.6.8) on macOS or Linux. Use it to keep Geant4 data outside the container while iterating on parameter files, extensions, or visualization workflows.
 
 ## Run Simulations
 Mount your Geant4 data and simulation files from the host:
