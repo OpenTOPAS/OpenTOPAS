@@ -1,7 +1,7 @@
 # QuickStart Guide for WSL
 This page details the steps to be followed by <ins>Windows users</ins> in order to install OpenTOPAS in <ins>WSL</ins> and launch your first simulation. 
 
-These instructions target TOPAS version **v4.2.0** built against Geant4 **v11.3.2**.
+These instructions target **v4.2.1** built against Geant4 **v11.3.2**.
 
 > [!WARNING]
 > We recommend Windows 11 or higher since it includes all the visualization libraries built in. We take no responsibility if users encounter an issue with their PCs while following this guide.
@@ -176,7 +176,7 @@ Then, download OpenTOPAS from the GitHub repository using:
         cd ~/Applications/TOPAS
         git clone https://github.com/OpenTOPAS/OpenTOPAS.git
         cd OpenTOPAS
-        git checkout v4.2.0
+        git checkout v4.2.1
 
 Compile GDCM as follows:
 
@@ -264,9 +264,9 @@ The OpenTOPAS tests are located [here](https://github.com/OpenTOPAS/qi-opentopas
         pip3 install nrtest
         pip3 install git+https://github.com/davidchall/nrtest-topas.git
 
-Modify the `apps/topas-v4.2.0.json` metadata file according to your directories and configuration (remember to set your environment variables) and execute the entire test suite as follows:
+Modify the `apps/topas-v4.2.1.json` metadata file according to your directories and configuration (remember to set your environment variables) and execute the entire test suite as follows:
 
-        nrtest execute apps/topas-v4.2.0.json tests/ -o benchmarks/todayDate
+        nrtest execute apps/topas-v4.2.1.json tests/ -o benchmarks/todayDate
 
 Comparisons can also be made with the following command:
         

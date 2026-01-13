@@ -2032,6 +2032,9 @@ void TsVBinnedScorer::Output()
                     if (!GetUnit().empty())
                         seriesDescription = seriesDescription + " [" + GetUnit() + "]";
                 }
+				if (!GetUnit().empty() && GetUnit()=="Gy") {
+					anon.Replace(gdcm::Tag(0x3004, 0x0002), "GY");
+				}
                 anon.Replace(gdcm::Tag(0x0008,0x103e), seriesDescription);          // Series Description
                 anon.Replace(gdcm::Tag(0x0008,0x0070), "TOPAS");                    // Manufacturer
                 G4String topasVersionString = "TOPAS " + fPm->GetTOPASVersion();
