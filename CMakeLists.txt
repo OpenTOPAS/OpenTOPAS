@@ -10,7 +10,7 @@ enable_testing()
 
 set (TOPAS_VERSION_MAJOR 4)
 set (TOPAS_VERSION_MINOR 2)
-set (TOPAS_VERSION_PATCH 1)
+set (TOPAS_VERSION_PATCH 2)
 
 # Print compiler information
 message (STATUS "CMAKE_CXX_COMPILER_ID: " ${CMAKE_CXX_COMPILER_ID})
