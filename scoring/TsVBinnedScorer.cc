@@ -1023,13 +1023,13 @@ void TsVBinnedScorer::AccumulateHit(G4Step* aStep, G4double value, G4int index)
 			if (fHaveIncidentParticle) {
 				if (fIncidentParticleEnergy < fBinMin)
 					iBin = 0;
-				else if (fIncidentParticleEnergy > fBinMax)
+				else if (fIncidentParticleEnergy >= fBinMax)
 					iBin = fNEorTBins + 1;
 				else {
 					if (!fBinLog )
 						iBin = (int)( (fIncidentParticleEnergy - fBinMin) / fBinWidth ) + 1;
 					else
-						for ( iBin = 0; fIncidentParticleEnergy >= fTempEBins[iBin]; iBin++ );
+						for ( iBin = 0; iBin < fNEorTBins && fIncidentParticleEnergy >= fTempEBins[iBin]; iBin++ );
 				}
 			} else {
 				iBin = fNEorTBins + 2;
@@ -1055,13 +1055,13 @@ void TsVBinnedScorer::AccumulateHit(G4Step* aStep, G4double value, G4int index)
 
 			if (edep < fBinMin)
 				iBin = 0;
-			else if (edep > fBinMax)
+			else if (edep >= fBinMax)
 				iBin = fNEorTBins + 1;
 			else {
 				if (!fBinLog )
 					iBin = (int)( (edep - fBinMin) / fBinWidth ) + 1;
 				else
-					for ( iBin = 0; edep >= fTempEBins[iBin]; iBin++ );
+					for ( iBin = 0; iBin < fNEorTBins && edep >= fTempEBins[iBin]; iBin++ );
 			}
 
 			index = index * (fNEorTBins + 2) + iBin;

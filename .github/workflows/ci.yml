@@ -7,11 +7,16 @@ on:
         description: 'Log level'     
         required: true
         default: 'warning'
+  push:
+    paths-ignore:
+      - '*.md'
+      - '.github/workflows/**'
   pull_request:
     branches:
       - main
     paths-ignore:
       - '*.md'
+      - '.github/workflows/**'
 
 jobs:
   build:
