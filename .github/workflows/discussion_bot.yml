@@ -25,7 +25,7 @@ jobs:
           set -euo pipefail
           # Match the exact checked checkbox line produced by the discussion form.
           # Use "--" so grep does not treat leading "-" in the pattern as an option.
-          opt_in="- [x] I would like to receive an immediate response from the TOPAS-BOT."
+          opt_in="- [x] I would like to receive an immediate response from the TOPAS-assistant-bot."
           if printf "%s" "$BODY" | tr -d '\r' | grep -Fqi -- "$opt_in"; then
             echo "opted_in=true" >> "$GITHUB_OUTPUT"
             echo "Opt-in checkbox checked."
