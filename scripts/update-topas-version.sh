@@ -49,7 +49,7 @@ for path in paths:
             updated,
         )
         updated = re.sub(
-            r"(target )\\1v\d+\.\d+\.\d+\\2",
+            r"(target )\*\*v\d+\.\d+\.\d+\*\*",
             r"\1**" + tag + r"**",
             updated,
         )

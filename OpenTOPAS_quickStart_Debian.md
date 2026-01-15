@@ -1,7 +1,7 @@
 # QuickStart Guide for OpenTOPAS: TOol for PArticle Simulation
 This file details the steps to be followed by <ins>Debian 10, 11 or 12</ins> in order to install OpenTOPAS and launch your first simulation. 
 
-These instructions target **v4.2.1** built against Geant4 **v11.3.2**.
+These instructions target **v4.2.2** built against Geant4 **v11.3.2**.
 
 > [!TIP]
 > The directory path setting proposed in this quickStart guide sets a local installation at the home directory (path defined by `$HOME` environment variable). 
@@ -139,7 +139,7 @@ Downloading and installing OpenTOPAS and GDCM.
         cd $HOME/Applications/TOPAS
         git clone https://github.com/OpenTOPAS/OpenTOPAS.git
         cd OpenTOPAS
-        git checkout v4.2.1
+        git checkout v4.2.2
 
 8.1.b Alternatively, you can download OpenTOPAS manually. For a manual download, go to the OpenTOPAS GitHub [website](https://github.com/OpenTOPAS/OpenTOPAS/tree/master), click on the green tab named `<> Code` and `Download ZIP`. Create a directory called `TOPAS` in your `$HOME/Applications` directory, move the compressed folder into this directory, and decompress the file. To follow the following commands, rename the decompressed folder `OpenTOPAS-main` as `OpenTOPAS`. You should have the directory `$HOME/Applications/TOPAS/Open-TOPAS` 
 
@@ -235,9 +235,9 @@ The OpenTOPAS tests are located [here](https://github.com/OpenTOPAS/qi-opentopas
         pip3 install nrtest
         pip3 install git+https://github.com/davidchall/nrtest-topas.git
 
-Modify the `apps/topas-v4.2.1.json` metadata file according to your directories and configuration (remember to set your environment variables) and execute the entire test suite as follows:
+Modify the `apps/topas-v4.2.2.json` metadata file according to your directories and configuration (remember to set your environment variables) and execute the entire test suite as follows:
 
-        nrtest execute apps/topas-v4.2.1.json tests/ -o benchmarks/todayDate
+        nrtest execute apps/topas-v4.2.2.json tests/ -o benchmarks/todayDate
 
 Comparisons can also be made with the following command:
         
