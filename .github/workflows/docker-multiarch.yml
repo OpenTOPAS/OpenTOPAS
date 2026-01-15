@@ -3,6 +3,8 @@ name: Build and Push Multi-Arch TOPAS Image
 on:
   push:
     tags: [ 'v*' ]
+    paths-ignore:
+      - '.github/workflows/**'
   workflow_dispatch:
     inputs:
       tag:

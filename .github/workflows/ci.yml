@@ -12,6 +12,7 @@ on:
       - main
     paths-ignore:
       - '*.md'
+      - '.github/workflows/**'
 
 jobs:
   build:

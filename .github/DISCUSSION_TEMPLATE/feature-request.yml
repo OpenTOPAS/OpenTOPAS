@@ -34,7 +34,7 @@ body:
     id: TOPAS-assistant-bot
     attributes:
        label: TOPAS-assistant-bot
-       description: Please mark this checkbox if you are willing to receive a single response from the TOPAS-assistant-bot (beta version).
+       description: Please mark this checkbox if you are willing to receive a single response from the TOPAS-assistant-bot (beta version). If you need to attach files, upload ASCII text files only.
        options:
          - label: I would like to receive an immediate response from the TOPAS-assistant-bot.
            required: false
