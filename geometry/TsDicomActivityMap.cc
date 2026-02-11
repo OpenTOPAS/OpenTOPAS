@@ -134,7 +134,7 @@ void TsDicomActivityMap::ReadImage()
 		modalityTags = fPm->GetStringVector(GetFullParmName("DicomModalityTags"));
 		nModalityTags = fPm->GetVectorLength(GetFullParmName("DicomModalityTags"));
 	} else {
-		modalityTags = new G4String[1];
+		modalityTags = new G4String[2];
 		modalityTags[0] = "NM";
 		modalityTags[1] = "PT";
 		nModalityTags = 2;

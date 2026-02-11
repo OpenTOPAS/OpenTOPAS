@@ -323,7 +323,15 @@ void TsGeometryHub::RegisterBuiltInTypes(GeometryRegistry& registry) {
         {{"s:Ge/{child}/DicomDirectory", ""},
             {"s:Ge/{child}/ImagingToMaterialConverter", ""},
             {"s:Ge/{child}/DicomRTStructFile", ""}}});
-    
+
+    AddType(registry, {"TsDicomActivityMap",
+        [](TsParameterManager* pM, TsExtensionManager* eM, TsMaterialManager* mM, TsGeometryManager*$
+            return new TsDicomActivityMap(pM, eM, mM, gM, pgc, pv, childName);
+        },
+        nullptr,
+        {{"s:Ge/{child}/DicomDirectory", ""},
+            {"i:Ge/{child}/LowerCountThreshold", "0"}}});
+
     AddType(registry, {"TsBox",
         [](TsParameterManager* pM, TsExtensionManager* eM, TsMaterialManager* mM, TsGeometryManager* gM, TsVGeometryComponent* pgc, G4VPhysicalVolume* pv, G4String& childName) {
             return new TsBox(pM, eM, mM, gM, pgc, pv, childName);
