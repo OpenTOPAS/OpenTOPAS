@@ -325,7 +325,7 @@ void TsGeometryHub::RegisterBuiltInTypes(GeometryRegistry& registry) {
             {"s:Ge/{child}/DicomRTStructFile", ""}}});
 
     AddType(registry, {"TsDicomActivityMap",
-        [](TsParameterManager* pM, TsExtensionManager* eM, TsMaterialManager* mM, TsGeometryManager*, TsVGeometryComponent* pgc, G4VPhysicalVolume* pv, G4String& childName) {
+        [](TsParameterManager* pM, TsExtensionManager* eM, TsMaterialManager* mM, TsGeometryManager* gM, TsVGeometryComponent* pgc, G4VPhysicalVolume* pv, G4String& childName) {
             return new TsDicomActivityMap(pM, eM, mM, gM, pgc, pv, childName);
         },
         nullptr,
