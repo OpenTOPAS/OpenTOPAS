@@ -7,12 +7,16 @@ on:
         description: 'Log level'     
         required: true
         default: 'warning'
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - '*.md'
   pull_request:
     branches:
       - main
     paths-ignore:
       - '*.md'
-      - '.github/workflows/**'
 
 jobs:
   build:
@@ -92,7 +96,15 @@ jobs:
         done
       shell: bash
 
+    - name: Cache Geant4 installation
+      uses: actions/cache@v4
+      id: cache-geant4
+      with:
+        path: ~/geant4-install
+        key: ${{ runner.os }}-geant4-v11.3.2-install
+
     - name: Clone and install Geant4
+      if: steps.cache-geant4.outputs.cache-hit != 'true'
       run: |
         cd $HOME
         git clone https://github.com/Geant4/geant4 --branch v11.3.2
