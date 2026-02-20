@@ -24,8 +24,9 @@ Install [Homebrew](https://brew.sh/). Access the Homebrew website given in Step 
 
 Follow the instructions posted to your terminal at the end of the Homebrew installation; e.g., enter the following commands:
 
-        (echo; echo 'eval "$(/opt/homebrew/bin/brew shellenv)"') >> $HOME/.zprofile
-        eval "$(/opt/homebrew/bin/brew shellenv)"
+	echo >> $HOME/.zprofile
+	echo 'eval "$(/opt/homebrew/bin/brew shellenv zsh)"' >> $HOME/.zprofile
+	eval "$(/opt/homebrew/bin/brew shellenv zsh)"
 
 ## Step 3
 Once Homebrew is installed, you will have access to the command `brew install`. Use this command to install `qt`, `git`, `wget`, and `cmake` by entering the following commands into your terminal:
@@ -108,11 +109,6 @@ Build Geant4. Take note of the following warnings before running the commands sh
 > Using the most recent versions of CMake might trigger undesireable warnings or errors. If this occurs we **recommend downgrading to 3.24.3 or 3.28.1**, which have been confirmed to work.
 
 > [!WARNING]
-> Verify that `qt@5` is not linked or installed in your system. The following command should yield no output if `qt@5` is indeed **NOT** installed on your system. See the warning at the top of the document about `qt@5` compatibility.
-
-        brew list --versions qt@5
-
-> [!WARNING]
 > Depending on your MacOS version you may or may not have XQuartz installed on your system. This can be tested with the following command which should yield no output if it is **NOT** installed. If this is the case please head to the official [Xquartz](https://www.xquartz.org) website to download the application.
 
         which xquartz
@@ -126,6 +122,9 @@ Build Geant4. Take note of the following warnings before running the commands sh
 
 Replace the path supplied to `DCMAKE_PREFIX_PATH` in step 6.2 with the output of the above command.
 
+> [!NOTE]
+> In newer MacOS systems an incompatiblity between ZLIB and the CommandLineTools might occur. In those cases, add the extra variable `-DGeant4_USE_SYSTEM_ZLIB=ON`. This may not be needed for older macs.
+
 6.2. Run the following commands: 
 
         cd /Applications/GEANT4/
@@ -136,12 +135,10 @@ Replace the path supplied to `DCMAKE_PREFIX_PATH` in step 6.2 with the output of
                                 -DGEANT4_BUILD_VERBOSE_CODE=OFF \
                                 -DCMAKE_INSTALL_PREFIX=../geant4-install \
                                 -DCMAKE_PREFIX_PATH=/opt/homebrew/Cellar/qt/6.9.3 \
-                                -DGEANT4_USE_QT=ON -DGEANT4_USE_OPENGL=ON \
+                                -DGEANT4_USE_QT=ON -DGEANT4_USE_QT_QT6=ON -DGEANT4_USE_OPENGL=ON \
+				-DGEANT4_USE_SYSTEM_ZLIB=ON \
                                 -DCMAKE_OSX_ARCHITECTURES=arm64
         make -j20 install
-
-> [!NOTE]
-> In newer MacOS systems an incompatiblity between ZLIB and the CommandLineTools might occur. In those cases, try `cmake` by appending the extra variable `-DGeant4_USE_SYSTEM_ZLIB=ON` 
 
 > [!NOTE]
 > The remaining steps complete the download and installation of OpenTOPAS and start you on the road to successful simulations.
@@ -185,9 +182,11 @@ Then use the following commands to move GDCM(<em>gdcm-2.6.8.tar.gz</em>) from th
         cd /Applications/TOPAS
         mkdir OpenTOPAS-{build,install}
         cd OpenTOPAS-build
+	QT_PREFIX=$(brew --prefix qt)
+	export CMAKE_PREFIX_PATH="$QT_PREFIX:$CMAKE_PREFIX_PATH"
         export Geant4_DIR=/Applications/GEANT4/geant4-install \
                GDCM_DIR=/Applications/GDCM/gdcm-install/
-        cmake ../OpenTOPAS -DCMAKE_INSTALL_PREFIX=../OpenTOPAS-install
+        cmake ../OpenTOPAS -DCMAKE_INSTALL_PREFIX=../OpenTOPAS-install -DTOPAS_USE_QT=ON -DTOPAS_USE_QT6=ON -DCMAKE_PREFIX_PATH="$QT5_PREFIX"
         make -j20 install
 
 ## Step 8
