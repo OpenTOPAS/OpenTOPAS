@@ -49,6 +49,7 @@ class TsSourceManager;
 class TsVGeometryComponent;
 
 class G4UIQt;
+class QIcon;
 class QDialog;
 class QWidget;
 class QLineEdit;
@@ -79,6 +80,7 @@ public:
 	void OpenDocsCallback();
 	void OpenSupportCallback();
 	void ShowAboutDialog();
+    void OpenUrlWithHostHelper(const QString& url, QWidget* parent);
 
 	void AddComponentCallback();
 	void AddComponentWidgetSetItemChanged();
@@ -100,6 +102,7 @@ public:
 	void ShowParameterContextMenu(const QPoint& pos);
 
 private:
+	QIcon LoadIcon(const QString& baseName);
 	void DuplicateParameters(const G4String& categoryCode, const G4String& oldName, const G4String& newName, std::vector<G4String>* newParameterNames = nullptr);
 	G4bool NameExistsInList(const std::vector<G4String>& list, const G4String& name);
 	void DoDuplicateGeometry(const G4String& oldName);
