@@ -104,30 +104,32 @@
 #include <map>
 #include <set>
 
-namespace {
-void OpenUrlWithHostHelper(const QString& url, QWidget* parent) {
-    QString helper = QString::fromLocal8Bit(qgetenv("TOPAS_HOST_OPEN"));
-    if (helper.isEmpty())
-        helper = "/opt/topas/host-open";
-    
-    if (!helper.isEmpty() && QFile::exists(helper)) {
-        if (QProcess::startDetached(helper, QStringList() << url))
-            return;
+
+QIcon TsQt6::LoadIcon(const QString& baseName)
+{
+    QStringList roots;
+    roots << "/Applications/TOPAS/OpenTOPAS/graphics/"
+          << QDir::homePath() + "/Applications/TOPAS/OpenTOPAS/graphics/"
+          << "graphics/";
+
+    QStringList extensions;
+    extensions << ".svg" << ".png";
+
+    for (int i = 0; i < extensions.size(); ++i) {
+        for (int j = 0; j < roots.size(); ++j) {
+            QString path = roots[j] + baseName + extensions[i];
+            if (!QFile::exists(path))
+                continue;
+
+            QIcon icon(path);
+            if (!icon.isNull())
+                return icon;
+        }
     }
-    
-    if (QDesktopServices::openUrl(QUrl(url)))
-        return;
-    
-    QMessageBox msgBox(parent);
-    msgBox.setWindowTitle("Open Link");
-    QString richText = QString("Could not launch a browser. Please open this link manually:<br><a href=\"%1\">%1</a>").arg(url);
-    msgBox.setTextFormat(Qt::RichText);
-    msgBox.setText(richText);
-    msgBox.setTextInteractionFlags(Qt::LinksAccessibleByMouse | Qt::TextSelectableByMouse);
-    msgBox.setStandardButtons(QMessageBox::Ok);
-    msgBox.exec();
+
+    return QIcon();
 }
-}
+
 
 TsQt6::TsQt6(TsParameterManager* pM, TsExtensionManager* eM, TsMaterialManager* mM, TsGeometryManager* gM, TsScoringManager* scM, TsSequenceManager* sqM,
            TsGraphicsManager* grM, TsSourceManager* soM) :
@@ -233,24 +235,7 @@ fShowReadOnlyNoteMessage(true)
     
     QToolBar* toolbar = new QToolBar();
     
-    auto loadIcon = [](const QString& fileName) {
-        std::vector<QString> candidates = {
-            "/Applications/TOPAS/OpenTOPAS/graphics/" + fileName,
-            QDir::homePath() + "/Applications/TOPAS/OpenTOPAS/graphics/" + fileName,
-            "graphics/" + fileName
-        };
-        for (size_t i=0; i<candidates.size(); ++i) {
-            const QString& path = candidates[i];
-            if (!QFile::exists(path))
-                continue;
-            QIcon icon(path);
-            if (!icon.isNull())
-                return icon;
-        }
-        return QIcon();
-    };
-    
-    QIcon saveIcon = loadIcon("save_as.svg");
+    QIcon saveIcon = LoadIcon("save_as");
     QAction* saveAction = saveIcon.isNull()
     ? toolbar->addAction(QString("Save"))
     : toolbar->addAction(saveIcon, QString(""));
@@ -258,7 +243,7 @@ fShowReadOnlyNoteMessage(true)
     connect(saveAction, &QAction::triggered, this, &TsQt6::SaveCallback);
     
     toolbar->addSeparator();
-    QIcon componentIcon = loadIcon("add_box.svg");
+    QIcon componentIcon = LoadIcon("add_box");
     QAction* componentAction = componentIcon.isNull()
     ? toolbar->addAction(QString("+Geom"))
     : toolbar->addAction(componentIcon, QString(""));
@@ -266,7 +251,7 @@ fShowReadOnlyNoteMessage(true)
     connect(componentAction, &QAction::triggered, this, &TsQt6::AddComponentCallback);
     
     toolbar->addSeparator();
-    QIcon scorerIcon = loadIcon("add_chart.svg");
+    QIcon scorerIcon = LoadIcon("add_chart");
     QAction* scorerAction = scorerIcon.isNull()
     ? toolbar->addAction(QString("+Scorer"))
     : toolbar->addAction(scorerIcon, QString(""));
@@ -274,7 +259,7 @@ fShowReadOnlyNoteMessage(true)
     connect(scorerAction, &QAction::triggered, this, &TsQt6::AddScorerCallback);
     
     toolbar->addSeparator();
-    QIcon sourceIcon = loadIcon("add_flash.svg");
+    QIcon sourceIcon = LoadIcon("add_flash");
     QAction* sourceAction = sourceIcon.isNull()
     ? toolbar->addAction(QString("+Source"))
     : toolbar->addAction(sourceIcon, QString(""));
@@ -282,7 +267,7 @@ fShowReadOnlyNoteMessage(true)
     connect(sourceAction, &QAction::triggered, this, &TsQt6::AddSourceCallback);
     
     toolbar->addSeparator();
-    QIcon runIcon = loadIcon("play.svg");
+    QIcon runIcon = LoadIcon("play");
     if (!runIcon.isNull())
         toolbar->setIconSize(QSize(32,32));
     QAction* runAction = runIcon.isNull() ? toolbar->addAction(QString("Run"))
@@ -291,7 +276,7 @@ fShowReadOnlyNoteMessage(true)
     connect(runAction, &QAction::triggered, this, &TsQt6::RunCallback);
     
     toolbar->addSeparator();
-    QIcon pdfIcon = loadIcon("photo.svg");
+    QIcon pdfIcon = LoadIcon("photo");
     QAction* printAction = pdfIcon.isNull()
     ? toolbar->addAction(QString("Capture"))
     : toolbar->addAction(pdfIcon, QString(""));
@@ -300,8 +285,8 @@ fShowReadOnlyNoteMessage(true)
     
     toolbar->addSeparator();
     QToolButton* expandCollapseButton = new QToolButton();
-    QIcon collapseIcon = loadIcon("collapse_all.svg");
-    QIcon expandIcon = loadIcon("expand_all.svg");
+    QIcon collapseIcon = LoadIcon("collapse_all");
+    QIcon expandIcon = LoadIcon("expand_all");
     bool haveIcons = !collapseIcon.isNull() && !expandIcon.isNull();
     if (haveIcons) {
         expandCollapseButton->setIcon(collapseIcon);
@@ -1665,6 +1650,30 @@ void TsQt6::ShowAboutDialog() {
     aboutDialog->setLayout(layout);
     aboutDialog->setModal(true);
     aboutDialog->show();
+}
+
+
+void TsQt6::OpenUrlWithHostHelper(const QString& url, QWidget* parent) {
+    QString helper = QString::fromLocal8Bit(qgetenv("TOPAS_HOST_OPEN"));
+    if (helper.isEmpty())
+        helper = "/opt/topas/host-open";
+    
+    if (!helper.isEmpty() && QFile::exists(helper)) {
+        if (QProcess::startDetached(helper, QStringList() << url))
+            return;
+    }
+    
+    if (QDesktopServices::openUrl(QUrl(url)))
+        return;
+    
+    QMessageBox msgBox(parent);
+    msgBox.setWindowTitle("Open Link");
+    QString richText = QString("Could not launch a browser. Please open this link manually:<br><a href=\"%1\">%1</a>").arg(url);
+    msgBox.setTextFormat(Qt::RichText);
+    msgBox.setText(richText);
+    msgBox.setTextInteractionFlags(Qt::LinksAccessibleByMouse | Qt::TextSelectableByMouse);
+    msgBox.setStandardButtons(QMessageBox::Ok);
+    msgBox.exec();
 }
 
 
