@@ -103,14 +103,17 @@
 #include <gdcmVersion.h>
 #include <map>
 #include <set>
+#include <QCoreApplication>
 
 
 QIcon TsQt6::LoadIcon(const QString& baseName)
 {
+    const QString appDir = QCoreApplication::applicationDirPath();
     QStringList roots;
     roots << "/Applications/TOPAS/OpenTOPAS/graphics/"
           << QDir::homePath() + "/Applications/TOPAS/OpenTOPAS/graphics/"
-          << "graphics/";
+          << "graphics/"
+          << appDir + "/../../OpenTOPAS/graphics/";
 
     QStringList extensions;
     extensions << ".svg" << ".png";
@@ -1547,10 +1550,12 @@ void TsQt6::ShowAboutDialog() {
     layout->setAlignment(Qt::AlignCenter);
     
     auto loadLogo = []() {
+        const QString appDir = QCoreApplication::applicationDirPath();
         std::vector<QString> candidates = {
             "/Applications/TOPAS/OpenTOPAS/graphics/TOPASLogo.png",
             QDir::homePath() + "/Applications/TOPAS/OpenTOPAS/graphics/TOPASLogo.png",
-            "graphics/TOPASLogo.png"
+            "graphics/TOPASLogo.png",
+            appDir + "/../../OpenTOPAS/graphics/TOPASLogo.png"
         };
         for (size_t i=0; i<candidates.size(); ++i) {
             QPixmap pix(candidates[i]);
@@ -1614,11 +1619,13 @@ void TsQt6::ShowAboutDialog() {
         QDesktopServices::openUrl(QUrl("https://opentopas.github.io/contact.html"));
     });
     connect(licenseButton, &QPushButton::clicked, [aboutDialog]() {
+        const QString appDir = QCoreApplication::applicationDirPath();
         QString licenseText;
         QStringList licenseCandidates;
         licenseCandidates << "LICENSE.txt"
         << "/Applications/TOPAS/OpenTOPAS/LICENSE.txt"
-        << QDir::homePath() + "/Applications/TOPAS/OpenTOPAS/LICENSE.txt";
+        << QDir::homePath() + "/Applications/TOPAS/OpenTOPAS/LICENSE.txt"
+        << appDir + "/../../OpenTOPAS/LICENSE.txt";
         for (int i = 0; i < licenseCandidates.size(); ++i) {
             QFile file(licenseCandidates[i]);
             if (file.exists() && file.open(QIODevice::ReadOnly | QIODevice::Text)) {
