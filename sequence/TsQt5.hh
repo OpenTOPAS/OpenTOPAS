@@ -94,7 +94,7 @@ public:
 
 	void PrintCallback();
 
-    QTWidget* GetQtParent(QWidget* preferredParent = nullptr);
+    QWidget* GetQtParent(QWidget* preferredParent = nullptr);
     G4bool TryOpenWithHostHelper(const QString& helper, const QString& url);
     void ShowHostOpenFallback(const QString& url, QWidget* parent);
     G4bool ShowReadOnlyParametersDialog(QWidget* parent);
