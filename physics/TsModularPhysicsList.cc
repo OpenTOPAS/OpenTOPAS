@@ -60,18 +60,10 @@
 #include "G4EmDNAChemistry_option3.hh"
 #include "G4EmDNAPhysics.hh"
 #include "G4EmDNAPhysicsActivator.hh"
-#include "G4EmDNAPhysics_option1.hh"
 #include "G4EmDNAPhysics_option2.hh"
-#include "G4EmDNAPhysics_option3.hh"
 #include "G4EmDNAPhysics_option4.hh"
-#include "G4EmDNAPhysics_option5.hh"
 #include "G4EmDNAPhysics_option6.hh"
-#include "G4EmDNAPhysics_option7.hh"
 #include "G4EmDNAPhysics_option8.hh"
-#include "G4EmDNAPhysics_stationary.hh"
-#include "G4EmDNAPhysics_stationary_option2.hh"
-#include "G4EmDNAPhysics_stationary_option4.hh"
-#include "G4EmDNAPhysics_stationary_option6.hh"
 #include "G4EmExtraPhysics.hh"
 #include "G4EmLivermorePhysics.hh"
 #include "G4EmLivermorePolarizedPhysics.hh"
@@ -144,19 +136,19 @@ TsModularPhysicsList::TsModularPhysicsList(TsParameterManager* pM, TsExtensionMa
 	fPhysicsTable.insert(std::make_pair("g4h-chargeexchange", new Creator<G4ChargeExchangePhysics>()));
 	fPhysicsTable.insert(std::make_pair("g4decay", new Creator<G4DecayPhysics>()));
 	fPhysicsTable.insert(std::make_pair("g4em-dna", new Creator<G4EmDNAPhysics>()));
-	fPhysicsTable.insert(std::make_pair("g4em-dna_opt1", new Creator<G4EmDNAPhysics_option1>()));
+//	fPhysicsTable.insert(std::make_pair("g4em-dna_opt1", new Creator<G4EmDNAPhysics_option1>()));
 	fPhysicsTable.insert(std::make_pair("g4em-dna_opt2", new Creator<G4EmDNAPhysics_option2>()));
-	fPhysicsTable.insert(std::make_pair("g4em-dna_opt3", new Creator<G4EmDNAPhysics_option3>()));
+//	fPhysicsTable.insert(std::make_pair("g4em-dna_opt3", new Creator<G4EmDNAPhysics_option3>()));
 	fPhysicsTable.insert(std::make_pair("g4em-dna_opt4", new Creator<G4EmDNAPhysics_option4>()));
-	fPhysicsTable.insert(std::make_pair("g4em-dna_opt5", new Creator<G4EmDNAPhysics_option5>()));
+//	fPhysicsTable.insert(std::make_pair("g4em-dna_opt5", new Creator<G4EmDNAPhysics_option5>()));
 	fPhysicsTable.insert(std::make_pair("g4em-dna-chemistry", new Creator<G4EmDNAChemistry>()));
 	fPhysicsTable.insert(std::make_pair("g4em-dna_opt6", new Creator<G4EmDNAPhysics_option6>()));
-	fPhysicsTable.insert(std::make_pair("g4em-dna_opt7", new Creator<G4EmDNAPhysics_option7>()));
+//	fPhysicsTable.insert(std::make_pair("g4em-dna_opt7", new Creator<G4EmDNAPhysics_option7>()));
 	fPhysicsTable.insert(std::make_pair("g4em-dna_opt8", new Creator<G4EmDNAPhysics_option8>()));
-	fPhysicsTable.insert(std::make_pair("g4em-dna-stationary", new Creator<G4EmDNAPhysics_stationary>()));
-	fPhysicsTable.insert(std::make_pair("g4em-dna-stationary_opt2", new Creator<G4EmDNAPhysics_stationary_option2>()));
-	fPhysicsTable.insert(std::make_pair("g4em-dna-stationary_opt4", new Creator<G4EmDNAPhysics_stationary_option4>()));
-	fPhysicsTable.insert(std::make_pair("g4em-dna-stationary_opt6", new Creator<G4EmDNAPhysics_stationary_option6>()));
+//	fPhysicsTable.insert(std::make_pair("g4em-dna-stationary", new Creator<G4EmDNAPhysics_stationary>()));
+//	fPhysicsTable.insert(std::make_pair("g4em-dna-stationary_opt2", new Creator<G4EmDNAPhysics_stationary_option2>()));
+//	fPhysicsTable.insert(std::make_pair("g4em-dna-stationary_opt4", new Creator<G4EmDNAPhysics_stationary_option4>()));
+//	fPhysicsTable.insert(std::make_pair("g4em-dna-stationary_opt6", new Creator<G4EmDNAPhysics_stationary_option6>()));
 	fPhysicsTable.insert(std::make_pair("g4em-dna-chemistry_opt1", new Creator<G4EmDNAChemistry_option1>()));
     fPhysicsTable.insert(std::make_pair("g4em-dna-chemistry_opt2", new Creator<G4EmDNAChemistry_option2>()));
     fPhysicsTable.insert(std::make_pair("g4em-dna-chemistry_opt3", new Creator<G4EmDNAChemistry_option3>()));
