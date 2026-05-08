@@ -2950,7 +2950,7 @@ void TsVBinnedScorer::CalculateOneValue(G4int idx)
                     const G4double sum = fFirstMomentMap[idx];
                     fSum = sum / GetUnitValue();
 
-                    if (fReportMean )
+                    if (fReportMean || fRelativeSDLimit > 0)
                         fMean = sum / histories / GetUnitValue();
                     else
                         fMean = 0.;
