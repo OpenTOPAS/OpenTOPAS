@@ -47,6 +47,7 @@ class TsSequenceManager;
 class TsGraphicsManager;
 class TsSourceManager;
 class TsVGeometryComponent;
+class TsQtAWS;
 
 class G4UIQt;
 class QIcon;
@@ -94,6 +95,8 @@ public:
 	void RunCallback();
 
 	void PrintCallback();
+
+	void CloudCallback();
 
 	void DuplicateGeometryCallback();
 	void DuplicateGeometryTreeCallback();
@@ -157,6 +160,8 @@ private:
 	G4int fAddedSourceCounter;
 
 	G4bool fShowReadOnlyNoteMessage = true;
+
+	TsQtAWS* fAws;
 };
 
 #endif
