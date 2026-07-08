@@ -59,6 +59,41 @@ TsPhysicsManager::~TsPhysicsManager()
 {
 }
 
+G4String TsPhysicsManager::GetLowerCaseString(G4String value)
+{
+	G4StrUtil::to_lower(value);
+	return value;
+}
+
+G4String TsPhysicsManager::ResolveReferencePhysListName(const G4PhysListFactory& referenceList, const G4String& listType)
+{
+	if (referenceList.IsReferencePhysList(listType))
+		return listType;
+
+	G4String lowerListType = GetLowerCaseString(listType);
+	G4String requestedBase = listType;
+	G4String requestedEmOption = "";
+	const std::vector<G4String>& emOptions = referenceList.AvailablePhysListsEM();
+	for (std::size_t i = 1; i < emOptions.size(); ++i) {
+		G4String lowerEmOption = GetLowerCaseString(emOptions[i]);
+		if (lowerListType.size() >= lowerEmOption.size() &&
+			lowerListType.substr(lowerListType.size() - lowerEmOption.size()) == lowerEmOption) {
+			requestedBase = listType.substr(0, listType.size() - emOptions[i].size());
+			requestedEmOption = emOptions[i];
+			break;
+		}
+	}
+
+	G4String lowerRequestedBase = GetLowerCaseString(requestedBase);
+	const std::vector<G4String>& availableLists = referenceList.AvailablePhysLists();
+	for (auto iter = availableLists.cbegin(); iter != availableLists.cend(); ++iter) {
+		if (GetLowerCaseString(*iter) == lowerRequestedBase)
+			return *iter + requestedEmOption;
+	}
+
+	return "";
+}
+
 G4VUserPhysicsList* TsPhysicsManager::GetPhysicsList() {
 	G4VUserPhysicsList* physicsList = 0;
 
@@ -71,12 +106,11 @@ G4VUserPhysicsList* TsPhysicsManager::GetPhysicsList() {
 	if (fPm->ParameterExists(GetFullParmName("Type"))) {
 		G4String listType = fPm->GetStringParameter(GetFullParmName("Type"));
 		G4String lowerListType = listType;
-		G4String upperListType = listType;
 		G4StrUtil::to_lower(lowerListType);
-		G4StrUtil::to_upper(upperListType);
 
 		G4PhysListFactory ReferenceList;
-		if (ReferenceList.IsReferencePhysList( upperListType ) || lowerListType=="shielding") {
+		G4String referenceListType = ResolveReferencePhysListName(ReferenceList, listType);
+		if (referenceListType != "") {
 			if (fGm->HaveParallelComponentsThatAreNotGroups()) {
 				G4cerr << "Topas is exiting due to inappropriate physics list for your setup." << G4endl;
 				G4cerr << "Your geometry involves parallel worlds, either from explicit IsParallel parameters" << G4endl;
@@ -85,8 +119,7 @@ G4VUserPhysicsList* TsPhysicsManager::GetPhysicsList() {
 				fPm->AbortSession(1);
 			}
 
-			if (lowerListType=="shielding") upperListType = "Shielding";
-			physicsList = ReferenceList.GetReferencePhysList( upperListType );
+			physicsList = ReferenceList.GetReferencePhysList(referenceListType);
 
 			if (fPm->ParameterExists(GetFullParmName("CutForAllParticles")))
 				physicsList->SetDefaultCutValue(fPm->GetDoubleParameter(GetFullParmName("CutForAllParticles"), "Length"));

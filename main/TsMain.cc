@@ -184,6 +184,7 @@ void setDataEnvVars(G4String dataDirectory)
 	dataVars.push_back({"G4INCLDATA", "G4INCL1.2"});
 	dataVars.push_back({"G4ENSDFSTATEDATA", "G4ENSDFSTATE3.0"});
 	dataVars.push_back({"G4TENDLDATA", "G4TENDL1.4"});
+	dataVars.push_back({"G4PARTICLEHPDATA", "G4TENDL1.4"});
 	dataVars.push_back({"G4PROTONHPDATA", "G4TENDL1.4/Proton"});
 	dataVars.push_back({"G4LENDDATA", "LEND_GND1.3_ENDF.BVII.1"});
 #elif GEANT4_VERSION_MAJOR == 11 && GEANT4_VERSION_MINOR == 4
@@ -199,6 +200,7 @@ void setDataEnvVars(G4String dataDirectory)
 	dataVars.push_back({"G4INCLDATA", "G4INCL1.3"});
 	dataVars.push_back({"G4ENSDFSTATEDATA", "G4ENSDFSTATE3.0"});
 	dataVars.push_back({"G4TENDLDATA", "G4TENDL1.4"});
+	dataVars.push_back({"G4PARTICLEHPDATA", "G4TENDL1.4"});
 	dataVars.push_back({"G4PROTONHPDATA", "G4TENDL1.4/Proton"});
 	dataVars.push_back({"G4CHANNELING", "G4CHANNELING2.0"});
 	dataVars.push_back({"G4LENDDATA", "LEND_GND1.3_ENDF.BVII.1"});
