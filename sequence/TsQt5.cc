@@ -387,7 +387,7 @@ void TsQt5::PrintCallback() {
 }
 
 
-QWidget* TsQt5::GetQtParent(QWidget* preferredParent = nullptr) {
+QWidget* TsQt5::GetQtParent(QWidget* preferredParent) {
     if (preferredParent)
         return preferredParent;
     
@@ -446,7 +446,7 @@ G4bool TsQt5::ShowReadOnlyParametersDialog(QWidget* parent) {
     
     bool suppressFuture = false;
     QObject::connect(okButton, &QPushButton::clicked, &dialog, &QDialog::accept);
-    QObject::connect(dontShowButton, &QPushButton::clicked, [&dialog, &suppressFuture]() {
+    QObject::connect(dontShowButton, &QPushButton::clicked, &dialog, [&dialog, &suppressFuture]() {
         suppressFuture = true;
         dialog.accept();
     });
@@ -456,7 +456,7 @@ G4bool TsQt5::ShowReadOnlyParametersDialog(QWidget* parent) {
 }
 
 
-void TsQt5::OpenUrlWithHostHelper(const QString& url, QWidget* parent = nullptr) {
+void TsQt5::OpenUrlWithHostHelper(const QString& url, QWidget* parent) {
     QString helper = QString::fromLocal8Bit(qgetenv("TOPAS_HOST_OPEN"));
     if (helper.isEmpty())
         helper = "/opt/topas/host-open";
@@ -1257,8 +1257,8 @@ void TsQt5::DoDuplicateGeometry(const G4String& oldName) {
     buttons.addWidget(&cancelBtn);
     layout.addLayout(&buttons);
     bool accepted = false;
-    QObject::connect(&okBtn, &QPushButton::clicked, [&](){ accepted=true; dialog.accept(); });
-    QObject::connect(&cancelBtn, &QPushButton::clicked, [&](){ dialog.reject(); });
+    QObject::connect(&okBtn, &QPushButton::clicked, &dialog, [&](){ accepted=true; dialog.accept(); });
+    QObject::connect(&cancelBtn, &QPushButton::clicked, &dialog, [&](){ dialog.reject(); });
     
     if (dialog.exec() != QDialog::Accepted || !accepted)
         return;
@@ -1688,7 +1688,7 @@ void TsQt5::ShowAboutDialog() {
     layout->addWidget(buttonRow);
     
     connect(closeButton, SIGNAL(clicked()), aboutDialog, SLOT(close()));
-    connect(contactButton, &QPushButton::clicked, [aboutDialog]() {
+    connect(contactButton, &QPushButton::clicked, this, [this, aboutDialog]() {
         QDialog* contactDialog = new QDialog(aboutDialog);
         contactDialog->setWindowTitle("Contact TOPAS Team");
         contactDialog->setAttribute(Qt::WA_DeleteOnClose);
@@ -1708,7 +1708,7 @@ void TsQt5::ShowAboutDialog() {
         buttons->addStretch();
         buttons->addWidget(closeBtn);
         vbox->addLayout(buttons);
-        QObject::connect(openButton, &QPushButton::clicked, [contactDialog]() {
+        QObject::connect(openButton, &QPushButton::clicked, contactDialog, [this, contactDialog]() {
             OpenUrlWithHostHelper("https://opentopas.github.io/contact.html", contactDialog);
         });
         QObject::connect(closeBtn, &QPushButton::clicked, contactDialog, &QDialog::accept);
@@ -1716,7 +1716,7 @@ void TsQt5::ShowAboutDialog() {
         contactDialog->setModal(true);
         contactDialog->show();
     });
-    connect(licenseButton, &QPushButton::clicked, [aboutDialog]() {
+    connect(licenseButton, &QPushButton::clicked, this, [aboutDialog]() {
         QString licenseText;
         QStringList licenseCandidates;
         licenseCandidates << "LICENSE.txt"
