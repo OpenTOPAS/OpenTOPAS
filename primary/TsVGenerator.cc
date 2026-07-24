@@ -44,6 +44,8 @@
 
 #include "Randomize.hh"
 
+#include <cmath>
+
 TsVGenerator::TsVGenerator(TsParameterManager* pM, TsGeometryManager* gM, TsGeneratorManager* pgM, G4String sourceName)
 :fPm(pM),
 fEnergy(0.), fEnergySpread(0.),
@@ -391,13 +393,12 @@ void TsVGenerator::GenerateOnePrimary(G4Event*, TsPrimaryParticle p)
 	// (will have already written relevant warning message during phase space reading).
 	if (p.particleDefinition) {
 		G4double mass = p.particleDefinition->GetPDGMass();
-		G4double energy = p.kEnergy + mass;
-		G4double arg = energy*energy - mass*mass;
-		if (arg < 0.) {
-			G4cerr << "Invalid kinetic energy; energy^2 - mass^2 < 0 for source " << fSourceName << G4endl;
+		G4double kineticEnergy = p.kEnergy;
+		if (!std::isfinite(kineticEnergy) || kineticEnergy < 0.) {
+			G4cerr << "Invalid kinetic energy " << kineticEnergy << " for source " << fSourceName << G4endl;
 			fPm->AbortSession(1);
 		}
-		G4double pmom = sqrt(arg);
+		G4double pmom = sqrt(kineticEnergy * (kineticEnergy + 2. * mass));
 		G4double px = pmom * p.dCos1;
 		G4double py = pmom * p.dCos2;
 		G4double pz = pmom * p.dCos3;
