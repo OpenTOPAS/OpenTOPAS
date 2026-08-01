@@ -472,9 +472,12 @@ void TsSourcePhaseSpace::ReadSomeDataFromFileToBuffer(std::queue<TsPrimaryPartic
 
         // If we're read the last particle in the file, close out last history
 		if ((fDataFile.tellg() == -1) || FileIsEmpty || ((fDataFile.tellg() > (fFileSize-fRecordLength)) && (fNumberOfEmptyHistoriesAppended == fNumberOfEmptyHistoriesToAppend))) {
-            if (particleBuffer && (fIncludeEmptyHistories || fPrimaryParticle.particleDefinition != 0))
-                particleBuffer->push(fPrimaryParticle);
-            nHistoriesRead++;
+			// A failed ASCII read leaves fPrimaryParticle unchanged. Since that particle
+			// was already pushed at the start of this iteration, do not push it again.
+			G4bool failedAsciiRead = !fIsBinary && !fIsLimited && FileIsEmpty;
+			if (!failedAsciiRead && particleBuffer && (fIncludeEmptyHistories || fPrimaryParticle.particleDefinition != 0))
+				particleBuffer->push(fPrimaryParticle);
+			nHistoriesRead++;
         } else {
             if (fPrimaryParticle.isNewHistory && (fIncludeEmptyHistories || fPrimaryParticle.particleDefinition != 0))
                 nHistoriesRead++;
@@ -552,11 +555,10 @@ G4bool TsSourcePhaseSpace::ReadOneParticle(std::queue<TsPrimaryParticle>* partic
         // Advance to next particle record in file
         fFilePosition+=fRecordLength;
         fDataFile.seekg(fFilePosition);
-    } else {
-        // Reading ASCII data
-        getline(fDataFile,fAsciiLine);
-        if (!fDataFile.good()) return true;
-        std::istringstream input(fAsciiLine);
+	} else {
+		// Reading ASCII data
+		if (!getline(fDataFile,fAsciiLine)) return true;
+		std::istringstream input(fAsciiLine);
         input >> fPrimaryParticle.posX >> fPrimaryParticle.posY >> fPrimaryParticle.posZ >> fPrimaryParticle.dCos1 >> fPrimaryParticle.dCos2
         >> fPrimaryParticle.kEnergy >> fPrimaryParticle.weight >> particleCode >> cosZIsNegative >> fPrimaryParticle.isNewHistory;
     }
