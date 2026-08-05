@@ -45,7 +45,6 @@ class QLabel;
 class QFrame;
 class QPlainTextEdit;
 class QLineEdit;
-class QCheckBox;
 class QPushButton;
 class QRadioButton;
 class QScrollArea;
@@ -64,7 +63,6 @@ public:
 
 private slots:
     void OnPollJobs();
-    void OnPollPostprocessJob();
 
 private:
     TsParameterManager* fPm;
@@ -95,21 +93,7 @@ private:
 
     QString fProjectName;
     QString fRunDate;
-    QString fSimDirBase;
-    QString fNumJobs;
-    QString fJobName;
-    QString fInputBucket;
     QString fOutputBucket;
-    QString fLocalSimDir;
-    QString fFileToRun;
-    QString fJobQueue;
-    QString fJobDefinitionName;
-
-    QString fPpProjectName;
-    QString fPpRunDate;
-    QString fPpOutputBucket;
-    QString fPpLocalScript;
-    QString fPpExtraPip;
 
     QWidget* fWizardParent;
     QDialog* fWizard;
@@ -135,9 +119,7 @@ private:
     QLabel* fMonitorLastUpdated;
     QMap<QString, QFrame*> fMonitorStateDots;
     QMap<QString, QLabel*> fMonitorStateLabels;
-    QTextEdit* fPostprocessMonitorText;
     QTimer* fPollTimer;
-    QTimer* fPostTimer;
 
     QLineEdit* fEditProjectName;
     QLineEdit* fEditRunDate;
@@ -213,7 +195,6 @@ private:
     QLineEdit* fEditExistingJobQueue;
     QLineEdit* fEditExistingJobDefSim;
     QLineEdit* fEditExistingJobDefPost;
-    QCheckBox* fChkExistingNoPostprocess;
     QLineEdit* fEditProvisionInputBucket;
     QLineEdit* fEditProvisionOutputBucket;
     QLineEdit* fEditProvisionLogGroup;
@@ -260,6 +241,8 @@ private:
     void ReloadAwsFilesFromUi();
     void SaveAwsSessionOnly();
 
+    void CreateWizardPagesAndNavigation();
+
     bool RunProcess(const QString& program, const QStringList& args, const QString& workingDir,
                     QString* out, QString* err, int* exitCode);
     bool RunAws(const QStringList& args, QString* out, QString* err, int* exitCode);
@@ -287,9 +270,6 @@ private:
     void RefreshJobStatus();
 
     void BuildPostprocessScriptToFile(const QString& path);
-    void StartPostprocessMonitor();
-    void StopPostprocessMonitor();
-    void RefreshPostprocessStatus();
 
     void ApplyAwsConfigFromFile();
     void RebuildComputeFormFromCurrentJson();
