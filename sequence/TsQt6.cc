@@ -32,6 +32,7 @@
 
 #include "TsQt6.hh"
 
+#include "TsQtAWS.hh"
 #include "TsParameterManager.hh"
 #include "TsExtensionManager.hh"
 #include "TsMaterialManager.hh"
@@ -103,14 +104,17 @@
 #include <gdcmVersion.h>
 #include <map>
 #include <set>
+#include <QCoreApplication>
 
 
 QIcon TsQt6::LoadIcon(const QString& baseName)
 {
+    const QString appDir = QCoreApplication::applicationDirPath();
     QStringList roots;
     roots << "/Applications/TOPAS/OpenTOPAS/graphics/"
           << QDir::homePath() + "/Applications/TOPAS/OpenTOPAS/graphics/"
-          << "graphics/";
+          << "graphics/"
+          << appDir + "/../../OpenTOPAS/graphics/";
 
     QStringList extensions;
     extensions << ".svg" << ".png";
@@ -138,7 +142,7 @@ fParameterTableWidget(0),
 fAddComponentDialog(0), fCurrentComponentName(""), fAddedComponentCounter(0),
 fAddScorerDialog(0), fCurrentScorerName(""), fAddedScorerCounter(0),
 fAddSourceDialog(0), fCurrentSourceName(""), fAddedSourceCounter(0),
-fShowReadOnlyNoteMessage(true)
+fShowReadOnlyNoteMessage(true), fAws(0)
 {
     fParameterEditorWidget = new QWidget();
     QVBoxLayout* layoutWidget = new QVBoxLayout();
@@ -149,6 +153,8 @@ fShowReadOnlyNoteMessage(true)
     
     fUIQt = static_cast<G4UIQt*> (G4UImanager::GetUIpointer()->GetG4UIWindow());
     fUIQt->GetUserInterfaceWidget()->setWindowTitle("");
+
+    fAws = new TsQtAWS(fPm, this);
     
     // Set window and tab icon
     fUIQt->GetUITabWidget()->addTab(fParameterEditorWidget,"Parameter Control");
@@ -284,6 +290,14 @@ fShowReadOnlyNoteMessage(true)
     connect(printAction, &QAction::triggered, this, &TsQt6::PrintCallback);
     
     toolbar->addSeparator();
+    QIcon cloudIcon = LoadIcon("cloud");
+    QAction* cloudAction = cloudIcon.isNull()
+    ? toolbar->addAction(QString("AWS"))
+    : toolbar->addAction(cloudIcon, QString(""));
+    cloudAction->setToolTip("AWS cloud");
+    connect(cloudAction, &QAction::triggered, this, &TsQt6::CloudCallback);
+
+    toolbar->addSeparator();
     QToolButton* expandCollapseButton = new QToolButton();
     QIcon collapseIcon = LoadIcon("collapse_all");
     QIcon expandIcon = LoadIcon("expand_all");
@@ -371,6 +385,10 @@ void TsQt6::PrintCallback() {
     G4UImanager::GetUIpointer()->ApplyCommand("/vis/ogl/export");
 }
 
+void TsQt6::CloudCallback() {
+    if (fAws)
+        fAws->ShowWizard(fUIQt->GetMainWindow());
+}
 
 void TsQt6::UpdateParameterEditor() {
     if (fParameterTableWidget) {
@@ -1547,10 +1565,12 @@ void TsQt6::ShowAboutDialog() {
     layout->setAlignment(Qt::AlignCenter);
     
     auto loadLogo = []() {
+        const QString appDir = QCoreApplication::applicationDirPath();
         std::vector<QString> candidates = {
             "/Applications/TOPAS/OpenTOPAS/graphics/TOPASLogo.png",
             QDir::homePath() + "/Applications/TOPAS/OpenTOPAS/graphics/TOPASLogo.png",
-            "graphics/TOPASLogo.png"
+            "graphics/TOPASLogo.png",
+            appDir + "/../../OpenTOPAS/graphics/TOPASLogo.png"
         };
         for (size_t i=0; i<candidates.size(); ++i) {
             QPixmap pix(candidates[i]);
@@ -1614,11 +1634,13 @@ void TsQt6::ShowAboutDialog() {
         QDesktopServices::openUrl(QUrl("https://opentopas.github.io/contact.html"));
     });
     connect(licenseButton, &QPushButton::clicked, [aboutDialog]() {
+        const QString appDir = QCoreApplication::applicationDirPath();
         QString licenseText;
         QStringList licenseCandidates;
         licenseCandidates << "LICENSE.txt"
         << "/Applications/TOPAS/OpenTOPAS/LICENSE.txt"
-        << QDir::homePath() + "/Applications/TOPAS/OpenTOPAS/LICENSE.txt";
+        << QDir::homePath() + "/Applications/TOPAS/OpenTOPAS/LICENSE.txt"
+        << appDir + "/../../OpenTOPAS/LICENSE.txt";
         for (int i = 0; i < licenseCandidates.size(); ++i) {
             QFile file(licenseCandidates[i]);
             if (file.exists() && file.open(QIODevice::ReadOnly | QIODevice::Text)) {
