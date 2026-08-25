@@ -96,6 +96,7 @@
 #include <qstringlist.h>
 #include <qurl.h>
 #include <qtextedit.h>
+#include <qtabwidget.h>
 #include <map>
 #include <set>
 #include <qpixmap.h>
@@ -151,37 +152,62 @@ fShowReadOnlyNoteMessage(true)
     fUIQt->GetUserInterfaceWidget()->setWindowTitle("");
     
     // Set window and tab icon
-    fUIQt->GetUITabWidget()->addTab(fParameterEditorWidget,"Parameter Control");
+    QTabWidget* uiTabs = fUIQt->GetUITabWidget();
+    uiTabs->addTab(fParameterEditorWidget,"Parameter Control");
     
     // Add our own control widget
     // Already added above
     
     if (fPm->GetBooleanParameter("Ts/IncludeDefaultGeant4QtWidgets")) {
-        fUIQt->GetUITabWidget()->setCurrentIndex(3);
+        uiTabs->setCurrentWidget(fParameterEditorWidget);
     } else {
-        // Get rid of the default Geant4 Qt control widgets
-        fUIQt->GetUITabWidget()->removeTab(1);
-        fUIQt->GetUITabWidget()->removeTab(1);
-        fUIQt->GetUITabWidget()->setCurrentIndex(1);
+        // Keep only the scene tree and TOPAS parameter controls. Geant4 has
+        // changed the number and order of its tabs between releases, so do
+        // not identify them by index.
+        QWidget* sceneTreeWidget = fUIQt->GetSceneTreeWidget();
+        for (G4int i = uiTabs->count() - 1; i >= 0; --i) {
+            QWidget* widget = uiTabs->widget(i);
+            if (widget != sceneTreeWidget && widget != fParameterEditorWidget)
+                uiTabs->removeTab(i);
+        }
+        uiTabs->setCurrentWidget(fParameterEditorWidget);
         
-        // Reorder Geant4 Qt menu bar actions to preferred sequence
+        // Keep and reorder selected Geant4 toolbar actions by name. Numeric
+        // action indexes changed when Geant4 added new visualization tools.
         QList<QToolBar *> allToolBars = fUIQt->GetMainWindow()->findChildren<QToolBar *>();
-        if (!allToolBars.isEmpty()) {
-            QList<QAction*> actions = allToolBars[0]->actions();
-            QList<int> desiredOrder;
-            desiredOrder << 4 << 5 << 6 << 3 << 7 << 12 << 13 << 15;
-            
-            QList<QAction*> reordered;
-            foreach (int idx, desiredOrder) {
-                if (idx >= 0 && idx < actions.size())
-                    reordered.append(actions[idx]);
+        QToolBar* geant4Toolbar = 0;
+        foreach (QToolBar* candidate, allToolBars) {
+            foreach (QAction* action, candidate->actions()) {
+                if (action->text() == "exit") {
+                    geant4Toolbar = candidate;
+                    break;
+                }
             }
-            
+            if (geant4Toolbar)
+                break;
+        }
+
+        if (geant4Toolbar) {
+            const QList<QAction*> actions = geant4Toolbar->actions();
+            QStringList desiredNames;
+            desiredNames << "pick" << "zoom_out" << "zoom_in" << "move" << "rotate"
+                         << "point_cloud" << "perspective" << "ortho" << "exit";
+
+            QList<QAction*> reordered;
+            foreach (const QString& name, desiredNames) {
+                foreach (QAction* action, actions) {
+                    if (action->text() == name) {
+                        reordered.append(action);
+                        break;
+                    }
+                }
+            }
+
             foreach (QAction* action, actions)
-            allToolBars[0]->removeAction(action);
-            
+                geant4Toolbar->removeAction(action);
+
             foreach (QAction* action, reordered)
-            allToolBars[0]->addAction(action);
+                geant4Toolbar->addAction(action);
         }
         
         // Remove "Useful Tips" tab from Viewer Tab Widget
