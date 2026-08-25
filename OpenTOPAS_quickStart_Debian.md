@@ -126,7 +126,7 @@ Build Geant4.
         rm -rf geant4-install geant4-build
         mkdir geant4-{build,install}
         cd geant4-build
-        cmake ../geant4-v11.4.2 -DGEANT4_INSTALL_DATA=OFF -DGEANT4_BUILD_MULTITHREADED=ON -DGEANT4_BUILD_VERBOSE_CODE=OFF -DCMAKE_INSTALL_PREFIX=../geant4-install -DCMAKE_PREFIX_PATH=/usr/lib/qt6 -DGEANT4_USE_QT=ON -DGEANT4_USE_QT_QT6=ON
+        cmake ../geant4-v11.4.2 -DGEANT4_INSTALL_DATA=OFF -DGEANT4_BUILD_MULTITHREADED=ON -DCMAKE_INSTALL_PREFIX=../geant4-install -DCMAKE_PREFIX_PATH=/usr/lib/qt6 -DGEANT4_USE_QT=ON -DGEANT4_USE_QT_QT6=ON
         sudo make -j20 install
 
 > [!NOTE]

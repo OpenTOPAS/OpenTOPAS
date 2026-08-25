@@ -4,7 +4,7 @@
 FROM debian:12
 
 LABEL maintainer="Jose Ramos-Mendez <Jose.RamosMendez@ucsf.edu>" \
-      description="Docker image for TOPAS v4.3.0 (Geant4 11.3.2, GDCM 2.6.8)"
+      description="Docker image for TOPAS v4.3.0 (Geant4 11.4.2, GDCM 2.6.8)"
 
 # -----------------------------
 # Base dependencies
@@ -32,7 +32,7 @@ WORKDIR $APP_HOME
 # =========================================================
 ARG BUILD_JOBS=20
 ENV BUILD_JOBS=${BUILD_JOBS} \
-    G4_VERSION=11.3.2
+    G4_VERSION=11.4.2
 RUN mkdir GEANT4 && cd GEANT4 && \
     wget https://gitlab.cern.ch/geant4/geant4/-/archive/v${G4_VERSION}/geant4-v${G4_VERSION}.tar.gz && \
     tar -zxf geant4-v${G4_VERSION}.tar.gz && \
@@ -43,9 +43,9 @@ RUN mkdir GEANT4 && cd GEANT4 && \
         -DCMAKE_INSTALL_PREFIX=../geant4-install \
         -DCMAKE_PREFIX_PATH=/usr/lib/qt5 \
         -DGEANT4_USE_QT=ON \
+        -DGEANT4_USE_QT_QT5=ON \
         -DGEANT4_USE_OPENGL_X11=ON \
-        -DGEANT4_USE_RAYTRACER_X11=ON \
-        -DGEANT4_BUILD_VERBOSE_CODE=OFF && \
+        -DGEANT4_USE_RAYTRACER_X11=ON && \
     make -j${BUILD_JOBS} install
 
 WORKDIR $APP_HOME
@@ -119,4 +119,3 @@ VOLUME ["/Applications/G4Data", "/simulations","/extensions"]
 WORKDIR /simulations
 
 ENTRYPOINT ["/usr/local/bin/topas-entrypoint.sh"]
-

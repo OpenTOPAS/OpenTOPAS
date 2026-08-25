@@ -131,7 +131,6 @@ Replace the path supplied to `DCMAKE_PREFIX_PATH` in step 6.2 with the output of
         cd geant4-build
         cmake ../geant4-v11.4.2 -DGEANT4_INSTALL_DATA=OFF \
                                 -DGEANT4_BUILD_MULTITHREADED=ON \
-                                -DGEANT4_BUILD_VERBOSE_CODE=OFF \
                                 -DCMAKE_INSTALL_PREFIX=../geant4-install \
                                 -DCMAKE_PREFIX_PATH=/opt/homebrew/Cellar/qt/6.9.3 \
                                 -DGEANT4_USE_QT=ON -DGEANT4_USE_QT_QT6=ON -DGEANT4_USE_OPENGL=ON \
