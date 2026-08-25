@@ -40,6 +40,7 @@
 #include <fstream>
 #include <sys/stat.h>
 #include <cmath>
+#include <filesystem>
 
 #ifdef TOPAS_MT
 #include "G4MTRunManager.hh"
@@ -396,7 +397,10 @@ void TsSourcePhaseSpace::ReadSomeDataFromFileToBuffer(std::queue<TsPrimaryPartic
 #endif
 
     G4String dataFileSpec = fFileName+".phsp";
-    fDataFile.open(dataFileSpec);
+    if (fIsBinary || fIsLimited)
+        fDataFile.open(dataFileSpec, std::ios::binary);
+    else
+        fDataFile.open(dataFileSpec);
     if (!fDataFile) {
         G4cerr << "Error opening phase space data file:" << dataFileSpec << G4endl;
         fPm->AbortSession(1);
@@ -694,9 +698,12 @@ G4bool TsSourcePhaseSpace::ReadOneParticle(std::queue<TsPrimaryParticle>* partic
 }
 
 
-G4long TsSourcePhaseSpace::GetFileSize(std::string filename)
+int64_t TsSourcePhaseSpace::GetFileSize(std::string filename)
 {
-    struct stat stat_buf;
-    int rc = stat(filename.c_str(), &stat_buf);
-    return rc == 0 ? stat_buf.st_size : -1;
+    // Plain stat() uses a 32-bit off_t on some platforms (notably Windows/MinGW),
+    // which overflows/fails for files larger than ~2 GB (common for IAEA phase
+    // space files). std::filesystem::file_size is 64-bit safe everywhere.
+    std::error_code ec;
+    std::uintmax_t size = std::filesystem::file_size(filename, ec);
+    return ec ? -1 : static_cast<int64_t>(size);
 }

@@ -37,6 +37,7 @@
 
 #include <queue>
 #include <fstream>
+#include <cstdint>
 
 class TsSourcePhaseSpace : public TsSource
 {
@@ -50,12 +51,12 @@ public:
 
     G4bool ReadOneParticle(std::queue<TsPrimaryParticle>* particleBuffer);
 
-    G4long GetFileSize(std::string filename);
+    int64_t GetFileSize(std::string filename);
 
 private:
 	G4String fFileName;
     G4int fRecordLength;
-    G4long fFileSize;
+    int64_t fFileSize;
     std::ifstream fDataFile;
     std::streampos fFilePosition;
     G4String fAsciiLine;
