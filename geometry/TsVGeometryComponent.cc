@@ -963,6 +963,11 @@ void TsVGeometryComponent::BeginConstruction() {
 		fPm->AbortSession(1);
 	}
 
+	// A non-group component in a parallel world requires parallel-world physics,
+	// even when an ancestor Group created the world.
+	if (fIsParallel && !fIsGroup)
+		fGm->SetHaveParallelComponentsThatAreNotGroups();
+
 	// If component is in parallel world but its parent is in mass world, create a new parallel world to hold component
 	// All copy components also have their own parallel world.
 	if ( fIsParallel && !fParentComponent->IsParallel() ) {
