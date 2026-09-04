@@ -44,9 +44,11 @@
 
 #include "G4StepLimiterPhysics.hh"
 #include "G4EmParameters.hh"
+#include "G4HadronicParameters.hh"
 #include "G4GenericBiasingPhysics.hh"
 #include "G4PhysListFactory.hh"
 #include "G4ProductionCutsTable.hh"
+#include "G4RegionStore.hh"
 #include "G4SystemOfUnits.hh"
 
 TsPhysicsManager::TsPhysicsManager(TsParameterManager* pM, TsExtensionManager* eM, TsGeometryManager* gM)
@@ -204,7 +206,30 @@ G4VUserPhysicsList* TsPhysicsManager::GetPhysicsList() {
 		G4ProductionCutsTable::GetProductionCutsTable()->SetEnergyRange (lowEdge, highEdge);
 	}
 
+	// Apply these after physics-list construction because some Geant4 physics
+	// constructors set the same singleton values in their constructors.
+	SetHadronicParameters();
+
 	return physicsList;
+}
+
+
+void TsPhysicsManager::SetHadronicParameters() {
+	G4String parameterName = GetFullParmName("Hadronic/BertiniAsGeant4_11_2");
+	if (fPm->ParameterExists(parameterName))
+		G4HadronicParameters::Instance()->SetBertiniAs11_2(fPm->GetBooleanParameter(parameterName));
+
+	parameterName = GetFullParmName("Hadronic/UsePreciseNeutronResonanceXS");
+	if (fPm->ParameterExists(parameterName)) {
+#if (GEANT4_VERSION_MAJOR > 11) || (GEANT4_VERSION_MAJOR == 11 && GEANT4_VERSION_MINOR >= 4)
+		G4HadronicParameters::Instance()->SetUseRFilesForXS(fPm->GetBooleanParameter(parameterName));
+#else
+		G4cerr << "Topas is exiting due to a serious error in physics setup." << G4endl;
+		G4cerr << "Parameter name: " << parameterName << G4endl;
+		G4cerr << "This parameter requires Geant4 11.4 or later." << G4endl;
+		fPm->AbortSession(1);
+#endif
+	}
 }
 
 
@@ -324,6 +349,36 @@ void TsPhysicsManager::SetEmParameters() {
 
 	if (fPm->ParameterExists(GetFullParmName("PIXE")))
 		G4EmParameters::Instance()->SetPixe(fPm->GetBooleanParameter(GetFullParmName("PIXE")));
+
+	G4String regionPrefix = GetFullParmName("ForRegion");
+	G4String regionSuffix = "EnableEnergyLossFluctuations";
+	std::vector<G4String> regionParameters;
+	fPm->GetParameterNamesBracketedBy(regionPrefix, regionSuffix, &regionParameters);
+	for (auto parameterName : regionParameters) {
+		G4String lowerParameterName = parameterName;
+		G4StrUtil::to_lower(lowerParameterName);
+		G4String lowerPrefix = regionPrefix;
+		G4StrUtil::to_lower(lowerPrefix);
+		G4String regionName = lowerParameterName.substr(lowerPrefix.length() + 1,
+			lowerParameterName.length() - lowerPrefix.length() - regionSuffix.length() - 2);
+		if (regionName == "defaultregionfortheworld")
+			regionName = "DefaultRegionForTheWorld";
+		if (!G4RegionStore::GetInstance()->GetRegion(regionName, false)) {
+			G4cerr << "Topas is exiting due to a serious error in physics setup." << G4endl;
+			G4cerr << "Parameter name: " << parameterName << G4endl;
+			G4cerr << "The named Geant4 region does not exist: " << regionName << G4endl;
+			fPm->AbortSession(1);
+		}
+#if (GEANT4_VERSION_MAJOR > 11) || (GEANT4_VERSION_MAJOR == 11 && GEANT4_VERSION_MINOR >= 4)
+		G4EmParameters::Instance()->SetFluctuationsForRegion(regionName,
+			fPm->GetBooleanParameter(parameterName));
+#else
+		G4cerr << "Topas is exiting due to a serious error in physics setup." << G4endl;
+		G4cerr << "Parameter name: " << parameterName << G4endl;
+		G4cerr << "This parameter requires Geant4 11.4 or later." << G4endl;
+		fPm->AbortSession(1);
+#endif
+	}
 
 	if (fPm->ParameterExists("Ph/Verbosity") && fPm->GetIntegerParameter("Ph/Verbosity") > 0 )
 		G4EmParameters::Instance()->Dump();

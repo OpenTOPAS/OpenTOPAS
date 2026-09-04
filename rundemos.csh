@@ -82,6 +82,7 @@ set basic_examples = ( \
 	ExtraSequence1.txt \
 	ExtraSequence2.txt \
 	FlatteningFilter.txt \
+	Geant4ControlParameters.txt \
 	Isotope.txt \
 	LayeredMassGeometry.txt \
 	OneBox.txt \

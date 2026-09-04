@@ -64,6 +64,7 @@ private:
 	G4String fPhysicsListName;
 
 	void SetEmParameters();
+	void SetHadronicParameters();
 
 	G4String GetFullParmName(const char* parmName);
 	G4String GetLowerCaseString(G4String value);

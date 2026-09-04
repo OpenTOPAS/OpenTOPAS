@@ -1,0 +1,62 @@
+# Demonstrates optional controls exposed from Geant4 11.4.
+# None of these parameters has a TOPAS default. If a parameter is omitted,
+# TOPAS leaves the corresponding Geant4 setting unchanged.
+
+# Smart-voxel navigation controls may be applied to a component or one of its
+# named subcomponents. Smaller Smartless values generally trade more memory and
+# geometry-initialization time for faster navigation.
+u:Ge/Phantom/Smartless             = 0.5
+b:Ge/Phantom/UseVoxelOptimisation = "True"
+
+s:Ge/Phantom/Type                = "TsBox"
+s:Ge/Phantom/Parent              = "World"
+s:Ge/Phantom/Material            = "G4_WATER"
+d:Ge/Phantom/HLX                 = 10. cm
+d:Ge/Phantom/HLY                 = 10. cm
+d:Ge/Phantom/HLZ                 = 10. cm
+d:Ge/Phantom/TransZ              = 20. cm
+i:Ge/Phantom/XBins               = 5
+i:Ge/Phantom/YBins               = 5
+i:Ge/Phantom/ZBins               = 5
+s:Ge/Phantom/AssignToRegionNamed = "PhantomRegion"
+
+# FieldStepper values are case-insensitive. The accuracy controls below are
+# applied only because they are explicitly present.
+s:Ge/Magnet/Type                    = "TsBox"
+s:Ge/Magnet/Parent                  = "World"
+s:Ge/Magnet/Material                = "G4_AIR"
+d:Ge/Magnet/HLX                     = 10. cm
+d:Ge/Magnet/HLY                     = 10. cm
+d:Ge/Magnet/HLZ                     = 10. cm
+s:Ge/Magnet/Field                   = "DipoleMagnet"
+u:Ge/Magnet/MagneticFieldDirectionX = 0.
+u:Ge/Magnet/MagneticFieldDirectionY = 1.
+u:Ge/Magnet/MagneticFieldDirectionZ = 0.
+d:Ge/Magnet/MagneticFieldStrength   = 0.1 tesla
+s:Ge/Magnet/FieldStepper            = "dOrMaNdPrInCe745"
+d:Ge/Magnet/FieldStepMinimum        = 0.01 mm
+d:Ge/Magnet/FieldDeltaChord         = 0.25 mm
+d:Ge/Magnet/FieldDeltaOneStep       = 0.01 mm
+d:Ge/Magnet/FieldDeltaIntersection  = 0.001 mm
+u:Ge/Magnet/FieldMinimumEpsilonStep = 5.e-5
+u:Ge/Magnet/FieldMaximumEpsilonStep = 1.e-3
+
+# These physics controls are also optional. False is used here to demonstrate
+# the parameter mappings without changing Geant4's current physics behavior.
+b:Ph/Default/ForRegion/PhantomRegion/EnableEnergyLossFluctuations = "False"
+b:Ph/Default/Hadronic/BertiniAsGeant4_11_2                       = "False"
+b:Ph/Default/Hadronic/UsePreciseNeutronResonanceXS               = "False"
+
+s:So/Beam/Type                     = "Beam"
+s:So/Beam/Component                = "BeamPosition"
+s:So/Beam/BeamParticle             = "proton"
+d:So/Beam/BeamEnergy               = 100. MeV
+u:So/Beam/BeamEnergySpread         = 0.
+s:So/Beam/BeamPositionDistribution = "None"
+s:So/Beam/BeamAngularDistribution  = "None"
+i:So/Beam/NumberOfHistoriesInRun   = 10
+
+s:Sc/Dose/Quantity                  = "DoseToMedium"
+s:Sc/Dose/Component                 = "Phantom"
+b:Sc/Dose/OutputToConsole           = "True"
+s:Sc/Dose/IfOutputFileAlreadyExists = "Overwrite"

@@ -681,6 +681,20 @@ G4LogicalVolume* TsVGeometryComponent::CreateLogicalVolume(G4String& subComponen
 	// Create the logical volume
 	G4LogicalVolume* lVol = new G4LogicalVolume(solid, material, lVolName);
 
+	// Apply optional Geant4 navigation controls. Do not set either value unless
+	// the user supplied it, so that Geant4 retains control of its defaults.
+	G4String smartlessParameter = GetFullParmName(subComponentName, "Smartless");
+	if (fPm->ParameterExists(smartlessParameter)) {
+		G4double smartless = fPm->GetUnitlessParameter(smartlessParameter);
+		if (smartless <= 0.)
+			Quit(smartlessParameter, "must be greater than zero.");
+		lVol->SetSmartless(smartless);
+	}
+
+	G4String voxelOptimisationParameter = GetFullParmName(subComponentName, "UseVoxelOptimisation");
+	if (fPm->ParameterExists(voxelOptimisationParameter))
+		lVol->SetOptimisation(fPm->GetBooleanParameter(voxelOptimisationParameter));
+
 	// Set visualization attributes
 	G4VisAttributes* visAtt = GetVisAttributes(subComponentName);
 	lVol->SetVisAttributes(visAtt);
