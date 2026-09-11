@@ -202,7 +202,7 @@ void setDataEnvVars(G4String dataDirectory)
 	dataVars.push_back({"G4TENDLDATA", "G4TENDL1.4"});
 	dataVars.push_back({"G4PARTICLEHPDATA", "G4TENDL1.4"});
 	dataVars.push_back({"G4PROTONHPDATA", "G4TENDL1.4/Proton"});
-	dataVars.push_back({"G4CHANNELING", "G4CHANNELING2.0"});
+	dataVars.push_back({"G4CHANNELINGDATA", "G4CHANNELING2.0"});
 	dataVars.push_back({"G4LENDDATA", "LEND_GNDS2.0_ENDF.BVII.1"});
 #else
 	G4cout << "\nUnable to use Ts/G4DataDirectory parameter or TOPAS_G4_DATA_DIR environment variable" << G4endl;

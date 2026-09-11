@@ -96,7 +96,7 @@ set basic_examples = ( \
 	ShapeTestWithOnlyRequiredParameters.txt \
 	Spectrum.txt \
 	TwoBeams.txt \
-	VolumetricSource.txt \ \
+	VolumetricSource.txt \
 	VoxelMaterialsInDividedComponents.txt )
 
 set brachytherapy_case = ( \

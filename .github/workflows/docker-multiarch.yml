@@ -78,7 +78,7 @@ jobs:
           file: ./.github/workflows/Dockerfile.topas.workflow
           platforms: ${{ matrix.platform }}
           push: true
-          tags: opentopas/opentopas:${{ needs.resolve-tags.outputs.tag }}-geant4-${{ matrix.geant4 }}-${{ matrix.suffix }}
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/opentopas:${{ needs.resolve-tags.outputs.tag }}-geant4-${{ matrix.geant4 }}-${{ matrix.suffix }}
           build-args: |
             TOPAS_VERSION=${{ needs.resolve-tags.outputs.tag }}
             G4_VERSION=${{ matrix.geant4 }}
@@ -104,7 +104,7 @@ jobs:
 
       - name: Publish versioned manifest
         env:
-          IMAGE: opentopas/opentopas
+          IMAGE: ${{ secrets.DOCKERHUB_USERNAME }}/opentopas
           TAG: ${{ needs.resolve-tags.outputs.tag }}-geant4-${{ matrix.geant4 }}
         run: |
           set -euo pipefail

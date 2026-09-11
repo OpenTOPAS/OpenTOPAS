@@ -41,8 +41,10 @@ d:Ge/Magnet/FieldDeltaIntersection  = 0.001 mm
 u:Ge/Magnet/FieldMinimumEpsilonStep = 5.e-5
 u:Ge/Magnet/FieldMaximumEpsilonStep = 1.e-3
 
-# These physics controls are also optional. False is used here to demonstrate
-# the parameter mappings without changing Geant4's current physics behavior.
+# These physics controls are optional. Omitting a parameter leaves its
+# Geant4 setting unchanged. Here, energy-loss fluctuations are explicitly
+# disabled; the other controls are explicitly set to False.
+# Energy loss still occurs, but without its stochastic fluctuations.
 b:Ph/Default/ForRegion/PhantomRegion/EnableEnergyLossFluctuations = "False"
 b:Ph/Default/Hadronic/BertiniAsGeant4_11_2                       = "False"
 b:Ph/Default/Hadronic/UsePreciseNeutronResonanceXS               = "False"
