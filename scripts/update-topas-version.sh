@@ -31,6 +31,9 @@ python3 - "$tag" \
   "$root/OpenTOPAS_quickStart_MacOS.md" \
   "$root/OpenTOPAS_quickStart_WSL.md" \
   "$root/docker/README.Docker.md" \
+  "$root/docker/FAQ.Docker.md" \
+  "$root/docker/topas-docker" \
+  "$root/docker/topas-apptainer" \
   "$root/.github/workflows/Dockerfile.topas.workflow" <<'PY'
 import re
 import sys
@@ -42,6 +45,13 @@ paths = [Path(p) for p in sys.argv[2:]]
 for path in paths:
     text = path.read_text(encoding="utf-8")
     updated = text
+    # Preserve the independently selected Geant4 version and architecture.
+    if path.parent.name == "docker":
+        updated = re.sub(
+            r"opentopas/opentopas:v\d+\.\d+\.\d+(?=-geant4-)",
+            f"opentopas/opentopas:{tag}",
+            updated,
+        )
     if path.name.startswith("OpenTOPAS_quickStart_"):
         updated = re.sub(
             r"(TOPAS version \*\*)v\d+\.\d+\.\d+(\*\*)",

@@ -140,6 +140,9 @@ Downloading and installing OpenTOPAS and GDCM.
         mkdir $HOME/Applications/TOPAS
         cd $HOME/Applications/TOPAS
         git clone https://github.com/OpenTOPAS/OpenTOPAS.git
+        cd OpenTOPAS
+        git checkout v4.3.0
+        cd ..
 
 8.1.b Alternatively, you can download OpenTOPAS manually. For a manual download, go to the OpenTOPAS GitHub [website](https://github.com/OpenTOPAS/OpenTOPAS/tree/master), click on the green tab named `<> Code` and `Download ZIP`. Create a directory called `TOPAS` in your `$HOME/Applications` directory, move the compressed folder into this directory, and decompress the file. To follow the following commands, rename the decompressed folder `OpenTOPAS-main` as `OpenTOPAS`. You should have the directory `$HOME/Applications/TOPAS/Open-TOPAS` 
 

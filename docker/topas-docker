@@ -13,7 +13,7 @@
 set -euo pipefail
 
 # Default image if not provided
-IMAGE=${IMAGE:-opentopas/opentopas:latest}
+IMAGE=${IMAGE:-opentopas/opentopas:v4.3.0-geant4-11.4.2}
 ENABLE_X11=false
 DISPLAY_OVERRIDE=""
 ENV_FLAGS=""
@@ -75,7 +75,7 @@ while [ $# -gt 0 ]; do
             echo
             echo "Options:"
             echo "  -data=/path/to/simulations   Optional path to mount as /simulations (default: current dir)"
-            echo "  -image=<image:tag>           Select a specific Docker image (default: opentopas:latest)"
+            echo "  -image=<image:tag>           Select a specific Docker image (default: opentopas/opentopas:v4.3.0-geant4-11.4.2)"
             echo "  -extensions=/path/to/dir     Path to TOPAS extensions source directory"
             echo "  -g4data=/path/to/G4Data      Path to Geant4 data libraries (REQUIRED if not in /Applications/G4Data)"
             echo "  -hostopen=/path/to/script    Optional host URL opener script (defaults to auto-detect)"
@@ -171,13 +171,15 @@ if [ -n "$EXT_DIR" ]; then
     if [ ! -d "$CACHE_ROOT" ]; then
         mkdir -p "$CACHE_ROOT"
     fi
+    # Compiled extensions must not be reused across TOPAS/Geant4 images.
+    EXT_CACHE_ID=$(printf '%s\n%s\n%s\n%s' "$EXT_SRC_DIR" "${IMAGE#docker://}" "$(uname -m)" "${DOCKER_DEFAULT_PLATFORM:-}")
     if command -v shasum >/dev/null 2>&1; then
-        EXT_CACHE_KEY=$(printf "%s" "$EXT_SRC_DIR" | shasum | awk '{print $1}')
+        EXT_CACHE_KEY=$(printf "%s" "$EXT_CACHE_ID" | shasum | awk '{print $1}')
     else
         EXT_CACHE_KEY=$(
-            EXT_PATH="$EXT_SRC_DIR" python3 - <<'PY'
+            EXT_CACHE_ID="$EXT_CACHE_ID" python3 - <<'PY'
 import hashlib, os
-print(hashlib.sha1(os.environ["EXT_PATH"].encode()).hexdigest())
+print(hashlib.sha1(os.environ["EXT_CACHE_ID"].encode()).hexdigest())
 PY
         )
     fi

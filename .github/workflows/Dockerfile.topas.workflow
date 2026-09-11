@@ -3,8 +3,12 @@
 # =========================================================
 FROM debian:12
 
+ARG TOPAS_VERSION=v4.3.0
+ARG G4_VERSION=11.4.2
 LABEL maintainer="Jose Ramos-Mendez <Jose.RamosMendez@ucsf.edu>" \
-      description="Docker image for TOPAS v4.3.0 (Geant4 11.4.2, GDCM 2.6.8)"
+      description="Docker image for TOPAS ${TOPAS_VERSION} (Geant4 ${G4_VERSION}, GDCM 2.6.8)" \
+      org.opencontainers.image.version="${TOPAS_VERSION}" \
+      org.opentopas.geant4.version="${G4_VERSION}"
 
 # -----------------------------
 # Base dependencies
@@ -21,7 +25,6 @@ RUN apt-get update && \
 # -----------------------------
 # Environment paths
 # -----------------------------
-ARG TOPAS_VERSION=v4.3.0
 ENV TOPAS_VERSION=${TOPAS_VERSION} \
     APP_HOME=/Applications
 RUN mkdir -p $APP_HOME
@@ -32,7 +35,7 @@ WORKDIR $APP_HOME
 # =========================================================
 ARG BUILD_JOBS=20
 ENV BUILD_JOBS=${BUILD_JOBS} \
-    G4_VERSION=11.4.2
+    G4_VERSION=${G4_VERSION}
 RUN mkdir GEANT4 && cd GEANT4 && \
     wget https://gitlab.cern.ch/geant4/geant4/-/archive/v${G4_VERSION}/geant4-v${G4_VERSION}.tar.gz && \
     tar -zxf geant4-v${G4_VERSION}.tar.gz && \
@@ -50,7 +53,7 @@ RUN mkdir GEANT4 && cd GEANT4 && \
 
 WORKDIR $APP_HOME
 # Pin to the released OpenTOPAS tag so image builds stay reproducible
-RUN git clone https://github.com/OpenTOPAS/OpenTOPAS.git
+RUN git clone --depth 1 --branch "${TOPAS_VERSION}" https://github.com/OpenTOPAS/OpenTOPAS.git
 
 # =========================================================
 # 2. Build GDCM 2.6.8

@@ -152,6 +152,9 @@ Downloading and installing OpenTOPAS and GDCM.
         mkdir -p /Applications/TOPAS
         cd /Applications/TOPAS
         git clone https://github.com/OpenTOPAS/OpenTOPAS.git
+        cd OpenTOPAS
+        git checkout v4.3.0
+        cd ..
 
 7.2. Next, check if the /Applications/GDCM already exists (GDCM is already installed). If so, rename the directory to GDCM-OLD (or another name) using the following command. 
 

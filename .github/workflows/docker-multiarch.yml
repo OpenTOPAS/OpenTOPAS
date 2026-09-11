@@ -3,62 +3,64 @@ name: Build and Push Multi-Arch TOPAS Image
 on:
   push:
     tags: [ 'v*' ]
-    paths-ignore:
-      - '.github/workflows/**'
   workflow_dispatch:
     inputs:
       tag:
-        description: 'Version tag to build (defaults to release tag or latest)'
-        required: false
+        description: 'Existing OpenTOPAS release tag to build (e.g. v4.3.0)'
+        required: true
 
 jobs:
   resolve-tags:
-    name: Resolve Version Tags
+    name: Resolve Release Tag
     runs-on: ubuntu-latest
     outputs:
       tag: ${{ steps.vars.outputs.tag }}
-      topas_tag: ${{ steps.vars.outputs.topas_tag }}
     steps:
-      - name: Determine tag to build
+      - name: Validate release tag
         id: vars
+        env:
+          REQUESTED_TAG: ${{ github.event.inputs.tag }}
         run: |
-          if [[ -n "${{ github.event.inputs.tag }}" ]]; then
-            TAG="${{ github.event.inputs.tag }}"
-          elif [[ "${GITHUB_REF}" == refs/tags/* ]]; then
-            TAG="${GITHUB_REF#refs/tags/}"
-          else
-            TAG="latest"
+          set -euo pipefail
+          TAG="${REQUESTED_TAG:-${GITHUB_REF#refs/tags/}}"
+          if [[ ! "$TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "Expected an existing release tag such as v4.3.0; received: $TAG"
+            exit 1
           fi
-          TOPAS_SRC_TAG="$TAG"
           echo "tag=$TAG" >> "$GITHUB_OUTPUT"
-          echo "topas_tag=$TOPAS_SRC_TAG" >> "$GITHUB_OUTPUT"
-          echo "version tag resolved to: $TAG"
-          echo "OpenTOPAS source tag: $TOPAS_SRC_TAG"
 
   build:
-    name: Build ${{ matrix.platform }}
+    name: Geant4 ${{ matrix.geant4 }} / ${{ matrix.platform }}
     needs: resolve-tags
     runs-on: ${{ matrix.runner }}
     strategy:
       fail-fast: false
       matrix:
         include:
-          - platform: linux/amd64
+          - geant4: '11.3.2'
+            platform: linux/amd64
             suffix: amd64
             runner: ubuntu-latest
-          - platform: linux/arm64
+          - geant4: '11.3.2'
+            platform: linux/arm64
             suffix: arm64
             runner: ubuntu-24.04-arm
-
+          - geant4: '11.4.2'
+            platform: linux/amd64
+            suffix: amd64
+            runner: ubuntu-latest
+          - geant4: '11.4.2'
+            platform: linux/arm64
+            suffix: arm64
+            runner: ubuntu-24.04-arm
     steps:
-      - name: Checkout source
+      - name: Checkout release source
         uses: actions/checkout@v4
-
-      - name: Set up QEMU
-        if: matrix.platform != 'linux/amd64' && matrix.runner != 'ubuntu-24.04-arm'
-        uses: docker/setup-qemu-action@v3
         with:
-          platforms: ${{ matrix.platform }}
+          ref: ${{ needs.resolve-tags.outputs.tag }}
+
+      - name: Check release version references
+        run: bash scripts/check-topas-version.sh
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -69,67 +71,43 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build and push ${{ matrix.platform }} image
+      - name: Build and push image
         uses: docker/build-push-action@v5
         with:
           context: .
           file: ./.github/workflows/Dockerfile.topas.workflow
           platforms: ${{ matrix.platform }}
           push: true
-          tags: |
-            ${{ secrets.DOCKERHUB_USERNAME }}/opentopas:${{ needs.resolve-tags.outputs.tag }}-${{ matrix.suffix }}
+          tags: opentopas/opentopas:${{ needs.resolve-tags.outputs.tag }}-geant4-${{ matrix.geant4 }}-${{ matrix.suffix }}
           build-args: |
-            TOPAS_VERSION=${{ needs.resolve-tags.outputs.topas_tag }}
-          cache-from: type=gha,scope=${{ matrix.suffix }}
-          cache-to: type=gha,mode=max,scope=${{ matrix.suffix }}
+            TOPAS_VERSION=${{ needs.resolve-tags.outputs.tag }}
+            G4_VERSION=${{ matrix.geant4 }}
+          cache-from: type=gha,scope=g4-${{ matrix.geant4 }}-${{ matrix.suffix }}
+          cache-to: type=gha,mode=max,scope=g4-${{ matrix.geant4 }}-${{ matrix.suffix }}
 
   manifest:
-    name: Publish Multi-Arch Manifest
-    needs: 
-      - resolve-tags
-      - build
+    name: Publish Geant4 ${{ matrix.geant4 }} Multi-Arch Manifest
+    needs: [resolve-tags, build]
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        geant4: ['11.3.2', '11.4.2']
     steps:
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Create and push manifests
+      - name: Publish versioned manifest
         env:
-          IMAGE: ${{ secrets.DOCKERHUB_USERNAME }}/opentopas
-          TAG: ${{ needs.resolve-tags.outputs.tag }}
+          IMAGE: opentopas/opentopas
+          TAG: ${{ needs.resolve-tags.outputs.tag }}-geant4-${{ matrix.geant4 }}
         run: |
           set -euo pipefail
-          amd_digest=$(
-            docker buildx imagetools inspect "${IMAGE}:${TAG}-amd64" --raw \
-            | jq -r '.manifests[] | select(.platform.architecture=="amd64").digest'
-          )   
-          arm_digest=$(
-            docker buildx imagetools inspect "${IMAGE}:${TAG}-arm64" --raw \
-            | jq -r '.manifests[] | select(.platform.architecture=="arm64").digest'
-          )   
-
-          if [[ -z "${amd_digest}" || "${amd_digest}" == "null" ]]; then
-            echo "Failed to resolve digest for amd64 image"
-            exit 1
-          fi  
-          if [[ -z "${arm_digest}" || "${arm_digest}" == "null" ]]; then
-            echo "Failed to resolve digest for arm64 image"
-            exit 1
-          fi  
-
-          docker manifest create "${IMAGE}:${TAG}" \
-            "${IMAGE}@${amd_digest}" \
-            "${IMAGE}@${arm_digest}"
-          docker manifest push "${IMAGE}:${TAG}"
-
-          if [[ "${TAG}" != "latest" ]]; then
-            docker manifest create "${IMAGE}:latest" \
-              "${IMAGE}@${amd_digest}" \
-              "${IMAGE}@${arm_digest}"
-            docker manifest push "${IMAGE}:latest"
-          fi 
-
-          docker manifest inspect "${IMAGE}:${TAG}"
+          docker buildx imagetools create --tag "${IMAGE}:${TAG}" \
+            "${IMAGE}:${TAG}-amd64" "${IMAGE}:${TAG}-arm64"
+          docker buildx imagetools inspect "${IMAGE}:${TAG}"
