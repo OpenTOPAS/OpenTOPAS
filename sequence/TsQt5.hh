@@ -49,6 +49,7 @@ class TsSourceManager;
 class TsVGeometryComponent;
 
 class G4UIQt;
+class QIcon;
 class QDialog;
 class QWidget;
 class QLineEdit;
@@ -93,6 +94,13 @@ public:
 
 	void PrintCallback();
 
+    QWidget* GetQtParent(QWidget* preferredParent = nullptr);
+    G4bool TryOpenWithHostHelper(const QString& helper, const QString& url);
+    void ShowHostOpenFallback(const QString& url, QWidget* parent);
+    G4bool ShowReadOnlyParametersDialog(QWidget* parent);
+    void OpenUrlWithHostHelper(const QString& url, QWidget* parent = nullptr);
+    
+    
 	void DuplicateGeometryCallback();
 	void DuplicateGeometryTreeCallback();
 	void DuplicateScorerCallback();
@@ -100,6 +108,7 @@ public:
 	void ShowParameterContextMenu(const QPoint& pos);
 
 private:
+	QIcon LoadIcon(const QString& baseName);
 	void DuplicateParameters(const G4String& categoryCode, const G4String& oldName, const G4String& newName, std::vector<G4String>* newParameterNames = nullptr);
 	G4bool NameExistsInList(const std::vector<G4String>& list, const G4String& name);
 	void DoDuplicateGeometry(const G4String& oldName);

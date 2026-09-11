@@ -1,7 +1,7 @@
 //
 // ********************************************************************
 // *                                                                  *
-// * Copyright 2025 The TOPAS Collaboration                           *
+// * Copyright 2026 The TOPAS Collaboration                           *
 // * Copyright 2022 The TOPAS Collaboration                           *
 // *                                                                  *
 // * Permission is hereby granted, free of charge, to any person      *
@@ -118,6 +118,15 @@
 #include "G4Transportation.hh"
 #include "G4VPhysicsConstructor.hh"
 
+#if GEANT4_VERSION_MAJOR == 11 && GEANT4_VERSION_MINOR >= 3
+#include "G4PhysicsConstructorRegistry.hh"
+#ifndef REGREF
+#define REGREF TsModularPhysicsList
+#endif
+#include "G4RegisterPhysicsConstructors.icc"
+#define TOPAS_USE_G4_PHYSICS_CONSTRUCTOR_REGISTRY 1
+#endif
+
 #include "G4RegionStore.hh"
 #include "G4SystemOfUnits.hh"
 #include "G4VUserParallelWorld.hh"
@@ -133,6 +142,30 @@
 #define G4MT_physicsVector ((G4VMPLsubInstanceManager.offset[g4vmplInstanceID]).physicsVector)
 
 #include <typeinfo>
+
+namespace {
+G4String GetLowerCasePhysicsName(G4String name)
+{
+	G4StrUtil::to_lower(name);
+	return name;
+}
+
+#ifdef TOPAS_USE_G4_PHYSICS_CONSTRUCTOR_REGISTRY
+class G4RegistryPhysicsCreator : public VPhysicsCreator
+{
+public:
+	G4RegistryPhysicsCreator(const G4String& name) : fName(name) {}
+
+	G4VPhysicsConstructor* operator()() override
+	{
+		return G4PhysicsConstructorRegistry::Instance()->GetPhysicsConstructor(fName);
+	}
+
+private:
+	G4String fName;
+};
+#endif
+}
 
 TsModularPhysicsList::TsModularPhysicsList(TsParameterManager* pM, TsExtensionManager* eM, TsGeometryManager* gM, TsVarianceManager* vM, G4String name)
 	: G4VModularPhysicsList(), fPm(pM), fEm(eM), fGm(gM), fVm(vM), fName(name), fNumberBuilt(0), fTransportationOnly(false)
@@ -202,6 +235,15 @@ TsModularPhysicsList::TsModularPhysicsList(TsParameterManager* pM, TsExtensionMa
 	fPhysicsTable.insert(std::make_pair("g4radioactivedecay", new Creator<G4RadioactiveDecayPhysics>()));
 	fPhysicsTable.insert(std::make_pair("g4stopping", new Creator<G4StoppingPhysics>()));
 
+	std::vector<std::pair<G4String, VPhysicsCreator*>> lowerCaseAliases;
+	for (auto iter = fPhysicsTable.cbegin(); iter != fPhysicsTable.cend(); ++iter) {
+		G4String lowerCaseName = GetLowerCasePhysicsName(iter->first);
+		if (lowerCaseName != iter->first)
+			lowerCaseAliases.push_back(std::make_pair(lowerCaseName, iter->second));
+	}
+	for (auto iter = lowerCaseAliases.cbegin(); iter != lowerCaseAliases.cend(); ++iter)
+		fPhysicsTable.emplace(*iter);
+
 	if (fPm->ParameterExists("Ph/SetEmParametersInTsModularPhysicsList") && fPm->GetBooleanParameter("Ph/SetEmParametersInTsModularPhysicsList"))
 		SetEmParameters();
 }
@@ -229,8 +271,14 @@ void TsModularPhysicsList::AddModule(const G4String& name)
 			G4cerr << "When Transportation_Only is in your Module parameter, no other modules are allowed." << G4endl;
 			fPm->AbortSession(1);
 		}
-        G4VPhysicsConstructor* ph = (*iter->second)();
-        ph->SetVerboseLevel(GetVerboseLevel());
+		G4VPhysicsConstructor* ph = (*iter->second)();
+		ph->SetVerboseLevel(GetVerboseLevel());
+		if (IsPhysicsRegistered(G4MT_physicsVector, ph)) {
+			G4cout << "Topas skipping duplicate physics module: " << name
+				   << " (" << ph->GetPhysicsName() << " is already registered)" << G4endl;
+			delete ph;
+			return;
+		}
 		RegisterPhysics(ph);
 		ActiveG4EmModelPerRegion(nameLower);
 		fNumberBuilt++;
@@ -860,6 +908,36 @@ void TsModularPhysicsList::SetEmParameters()
 	if (fPm->ParameterExists(GetFullParmName("PIXE")))
 		G4EmParameters::Instance()->SetPixe(fPm->GetBooleanParameter(GetFullParmName("PIXE")));
 
+	G4String regionPrefix = GetFullParmName("ForRegion");
+	G4String regionSuffix = "EnableEnergyLossFluctuations";
+	std::vector<G4String> regionParameters;
+	fPm->GetParameterNamesBracketedBy(regionPrefix, regionSuffix, &regionParameters);
+	for (auto parameterName : regionParameters) {
+		G4String lowerParameterName = parameterName;
+		G4StrUtil::to_lower(lowerParameterName);
+		G4String lowerPrefix = regionPrefix;
+		G4StrUtil::to_lower(lowerPrefix);
+		G4String regionName = lowerParameterName.substr(lowerPrefix.length() + 1,
+			lowerParameterName.length() - lowerPrefix.length() - regionSuffix.length() - 2);
+		if (regionName == "defaultregionfortheworld")
+			regionName = "DefaultRegionForTheWorld";
+		if (!G4RegionStore::GetInstance()->GetRegion(regionName, false)) {
+			G4cerr << "Topas is exiting due to a serious error in physics setup." << G4endl;
+			G4cerr << "Parameter name: " << parameterName << G4endl;
+			G4cerr << "The named Geant4 region does not exist: " << regionName << G4endl;
+			fPm->AbortSession(1);
+		}
+#if (GEANT4_VERSION_MAJOR > 11) || (GEANT4_VERSION_MAJOR == 11 && GEANT4_VERSION_MINOR >= 4)
+		G4EmParameters::Instance()->SetFluctuationsForRegion(regionName,
+			fPm->GetBooleanParameter(parameterName));
+#else
+		G4cerr << "Topas is exiting due to a serious error in physics setup." << G4endl;
+		G4cerr << "Parameter name: " << parameterName << G4endl;
+		G4cerr << "This parameter requires Geant4 11.4 or later." << G4endl;
+		fPm->AbortSession(1);
+#endif
+	}
+
 	if (verboseLevel > 0) G4EmParameters::Instance()->Dump();
 }
 
@@ -873,21 +951,58 @@ std::map<G4String, VPhysicsCreator*>::const_iterator TsModularPhysicsList::Locat
 {
 	std::map<G4String, VPhysicsCreator*>::const_iterator it;
 
-	G4String nameLower = model;
-	G4StrUtil::to_lower(nameLower);
+	G4String nameLower = GetLowerCasePhysicsName(model);
 
 	it = fPhysicsTable.find(model);
+	if (it != fPhysicsTable.cend())
+		return it;
+
+	it = fPhysicsTable.find(nameLower);
 	if (it != fPhysicsTable.cend())
 		return it;
 
 	if (allow_extensions) {
 		VPhysicsCreator* physicsCreator = fEm->InstantiatePhysicsModule(fPm, nameLower);
 		if (physicsCreator != nullptr) {
-			fPhysicsTable.emplace(std::make_pair(model, physicsCreator));
-			it = fPhysicsTable.find(model);
+			fPhysicsTable.emplace(std::make_pair(nameLower, physicsCreator));
+			it = fPhysicsTable.find(nameLower);
 			return it;
 		}
 	}
+
+	it = LocateGeant4PhysicsModel(model);
+	if (it != fPhysicsTable.cend())
+		return it;
+
+	return fPhysicsTable.cend();
+}
+
+std::map<G4String, VPhysicsCreator*>::const_iterator TsModularPhysicsList::LocateGeant4PhysicsModel(G4String model)
+{
+#ifdef TOPAS_USE_G4_PHYSICS_CONSTRUCTOR_REGISTRY
+	G4PhysicsConstructorRegistry* registry = G4PhysicsConstructorRegistry::Instance();
+	G4String registryName = model;
+
+	if (!registry->IsKnownPhysicsConstructor(registryName)) {
+		G4String nameLower = GetLowerCasePhysicsName(model);
+		std::vector<G4String> availableConstructors = registry->AvailablePhysicsConstructors();
+		for (auto iter = availableConstructors.cbegin(); iter != availableConstructors.cend(); ++iter) {
+			if (GetLowerCasePhysicsName(*iter) == nameLower) {
+				registryName = *iter;
+				break;
+			}
+		}
+	}
+
+	if (registry->IsKnownPhysicsConstructor(registryName)) {
+		G4String nameLower = GetLowerCasePhysicsName(registryName);
+		VPhysicsCreator* physicsCreator = new G4RegistryPhysicsCreator(registryName);
+		fPhysicsTable.emplace(std::make_pair(nameLower, physicsCreator));
+		return fPhysicsTable.find(nameLower);
+	}
+#else
+	(void)model;
+#endif
 
 	return fPhysicsTable.cend();
 }

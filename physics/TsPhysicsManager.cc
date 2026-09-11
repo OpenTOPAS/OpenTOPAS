@@ -1,7 +1,7 @@
 //
 // ********************************************************************
 // *                                                                  *
-// * Copyright 2025 The TOPAS Collaboration                           *
+// * Copyright 2026 The TOPAS Collaboration                           *
 // * Copyright 2022 The TOPAS Collaboration                           *
 // *                                                                  *
 // * Permission is hereby granted, free of charge, to any person      *
@@ -44,9 +44,11 @@
 
 #include "G4StepLimiterPhysics.hh"
 #include "G4EmParameters.hh"
+#include "G4HadronicParameters.hh"
 #include "G4GenericBiasingPhysics.hh"
 #include "G4PhysListFactory.hh"
 #include "G4ProductionCutsTable.hh"
+#include "G4RegionStore.hh"
 #include "G4SystemOfUnits.hh"
 
 TsPhysicsManager::TsPhysicsManager(TsParameterManager* pM, TsExtensionManager* eM, TsGeometryManager* gM)
@@ -57,6 +59,41 @@ TsPhysicsManager::TsPhysicsManager(TsParameterManager* pM, TsExtensionManager* e
 
 TsPhysicsManager::~TsPhysicsManager()
 {
+}
+
+G4String TsPhysicsManager::GetLowerCaseString(G4String value)
+{
+	G4StrUtil::to_lower(value);
+	return value;
+}
+
+G4String TsPhysicsManager::ResolveReferencePhysListName(const G4PhysListFactory& referenceList, const G4String& listType)
+{
+	if (referenceList.IsReferencePhysList(listType))
+		return listType;
+
+	G4String lowerListType = GetLowerCaseString(listType);
+	G4String requestedBase = listType;
+	G4String requestedEmOption = "";
+	const std::vector<G4String>& emOptions = referenceList.AvailablePhysListsEM();
+	for (std::size_t i = 1; i < emOptions.size(); ++i) {
+		G4String lowerEmOption = GetLowerCaseString(emOptions[i]);
+		if (lowerListType.size() >= lowerEmOption.size() &&
+			lowerListType.substr(lowerListType.size() - lowerEmOption.size()) == lowerEmOption) {
+			requestedBase = listType.substr(0, listType.size() - emOptions[i].size());
+			requestedEmOption = emOptions[i];
+			break;
+		}
+	}
+
+	G4String lowerRequestedBase = GetLowerCaseString(requestedBase);
+	const std::vector<G4String>& availableLists = referenceList.AvailablePhysLists();
+	for (auto iter = availableLists.cbegin(); iter != availableLists.cend(); ++iter) {
+		if (GetLowerCaseString(*iter) == lowerRequestedBase)
+			return *iter + requestedEmOption;
+	}
+
+	return "";
 }
 
 G4VUserPhysicsList* TsPhysicsManager::GetPhysicsList() {
@@ -71,12 +108,11 @@ G4VUserPhysicsList* TsPhysicsManager::GetPhysicsList() {
 	if (fPm->ParameterExists(GetFullParmName("Type"))) {
 		G4String listType = fPm->GetStringParameter(GetFullParmName("Type"));
 		G4String lowerListType = listType;
-		G4String upperListType = listType;
 		G4StrUtil::to_lower(lowerListType);
-		G4StrUtil::to_upper(upperListType);
 
 		G4PhysListFactory ReferenceList;
-		if (ReferenceList.IsReferencePhysList( upperListType ) || lowerListType=="shielding") {
+		G4String referenceListType = ResolveReferencePhysListName(ReferenceList, listType);
+		if (referenceListType != "") {
 			if (fGm->HaveParallelComponentsThatAreNotGroups()) {
 				G4cerr << "Topas is exiting due to inappropriate physics list for your setup." << G4endl;
 				G4cerr << "Your geometry involves parallel worlds, either from explicit IsParallel parameters" << G4endl;
@@ -85,8 +121,7 @@ G4VUserPhysicsList* TsPhysicsManager::GetPhysicsList() {
 				fPm->AbortSession(1);
 			}
 
-			if (lowerListType=="shielding") upperListType = "Shielding";
-			physicsList = ReferenceList.GetReferencePhysList( upperListType );
+			physicsList = ReferenceList.GetReferencePhysList(referenceListType);
 
 			if (fPm->ParameterExists(GetFullParmName("CutForAllParticles")))
 				physicsList->SetDefaultCutValue(fPm->GetDoubleParameter(GetFullParmName("CutForAllParticles"), "Length"));
@@ -171,7 +206,30 @@ G4VUserPhysicsList* TsPhysicsManager::GetPhysicsList() {
 		G4ProductionCutsTable::GetProductionCutsTable()->SetEnergyRange (lowEdge, highEdge);
 	}
 
+	// Apply these after physics-list construction because some Geant4 physics
+	// constructors set the same singleton values in their constructors.
+	SetHadronicParameters();
+
 	return physicsList;
+}
+
+
+void TsPhysicsManager::SetHadronicParameters() {
+	G4String parameterName = GetFullParmName("Hadronic/BertiniAsGeant4_11_2");
+	if (fPm->ParameterExists(parameterName))
+		G4HadronicParameters::Instance()->SetBertiniAs11_2(fPm->GetBooleanParameter(parameterName));
+
+	parameterName = GetFullParmName("Hadronic/UsePreciseNeutronResonanceXS");
+	if (fPm->ParameterExists(parameterName)) {
+#if (GEANT4_VERSION_MAJOR > 11) || (GEANT4_VERSION_MAJOR == 11 && GEANT4_VERSION_MINOR >= 4)
+		G4HadronicParameters::Instance()->SetUseRFilesForXS(fPm->GetBooleanParameter(parameterName));
+#else
+		G4cerr << "Topas is exiting due to a serious error in physics setup." << G4endl;
+		G4cerr << "Parameter name: " << parameterName << G4endl;
+		G4cerr << "This parameter requires Geant4 11.4 or later." << G4endl;
+		fPm->AbortSession(1);
+#endif
+	}
 }
 
 
@@ -291,6 +349,36 @@ void TsPhysicsManager::SetEmParameters() {
 
 	if (fPm->ParameterExists(GetFullParmName("PIXE")))
 		G4EmParameters::Instance()->SetPixe(fPm->GetBooleanParameter(GetFullParmName("PIXE")));
+
+	G4String regionPrefix = GetFullParmName("ForRegion");
+	G4String regionSuffix = "EnableEnergyLossFluctuations";
+	std::vector<G4String> regionParameters;
+	fPm->GetParameterNamesBracketedBy(regionPrefix, regionSuffix, &regionParameters);
+	for (auto parameterName : regionParameters) {
+		G4String lowerParameterName = parameterName;
+		G4StrUtil::to_lower(lowerParameterName);
+		G4String lowerPrefix = regionPrefix;
+		G4StrUtil::to_lower(lowerPrefix);
+		G4String regionName = lowerParameterName.substr(lowerPrefix.length() + 1,
+			lowerParameterName.length() - lowerPrefix.length() - regionSuffix.length() - 2);
+		if (regionName == "defaultregionfortheworld")
+			regionName = "DefaultRegionForTheWorld";
+		if (!G4RegionStore::GetInstance()->GetRegion(regionName, false)) {
+			G4cerr << "Topas is exiting due to a serious error in physics setup." << G4endl;
+			G4cerr << "Parameter name: " << parameterName << G4endl;
+			G4cerr << "The named Geant4 region does not exist: " << regionName << G4endl;
+			fPm->AbortSession(1);
+		}
+#if (GEANT4_VERSION_MAJOR > 11) || (GEANT4_VERSION_MAJOR == 11 && GEANT4_VERSION_MINOR >= 4)
+		G4EmParameters::Instance()->SetFluctuationsForRegion(regionName,
+			fPm->GetBooleanParameter(parameterName));
+#else
+		G4cerr << "Topas is exiting due to a serious error in physics setup." << G4endl;
+		G4cerr << "Parameter name: " << parameterName << G4endl;
+		G4cerr << "This parameter requires Geant4 11.4 or later." << G4endl;
+		fPm->AbortSession(1);
+#endif
+	}
 
 	if (fPm->ParameterExists("Ph/Verbosity") && fPm->GetIntegerParameter("Ph/Verbosity") > 0 )
 		G4EmParameters::Instance()->Dump();

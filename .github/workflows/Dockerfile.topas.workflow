@@ -3,8 +3,12 @@
 # =========================================================
 FROM debian:12
 
+ARG TOPAS_VERSION=v4.3.0
+ARG G4_VERSION=11.4.2
 LABEL maintainer="Jose Ramos-Mendez <Jose.RamosMendez@ucsf.edu>" \
-      description="Docker image for TOPAS v4.2.3 (Geant4 11.3.2, GDCM 2.6.8)"
+      description="Docker image for TOPAS ${TOPAS_VERSION} (Geant4 ${G4_VERSION}, GDCM 2.6.8)" \
+      org.opencontainers.image.version="${TOPAS_VERSION}" \
+      org.opentopas.geant4.version="${G4_VERSION}"
 
 # -----------------------------
 # Base dependencies
@@ -21,7 +25,6 @@ RUN apt-get update && \
 # -----------------------------
 # Environment paths
 # -----------------------------
-ARG TOPAS_VERSION=v4.2.3
 ENV TOPAS_VERSION=${TOPAS_VERSION} \
     APP_HOME=/Applications
 RUN mkdir -p $APP_HOME
@@ -32,7 +35,7 @@ WORKDIR $APP_HOME
 # =========================================================
 ARG BUILD_JOBS=20
 ENV BUILD_JOBS=${BUILD_JOBS} \
-    G4_VERSION=11.3.2
+    G4_VERSION=${G4_VERSION}
 RUN mkdir GEANT4 && cd GEANT4 && \
     wget https://gitlab.cern.ch/geant4/geant4/-/archive/v${G4_VERSION}/geant4-v${G4_VERSION}.tar.gz && \
     tar -zxf geant4-v${G4_VERSION}.tar.gz && \
@@ -43,14 +46,14 @@ RUN mkdir GEANT4 && cd GEANT4 && \
         -DCMAKE_INSTALL_PREFIX=../geant4-install \
         -DCMAKE_PREFIX_PATH=/usr/lib/qt5 \
         -DGEANT4_USE_QT=ON \
+        -DGEANT4_USE_QT_QT5=ON \
         -DGEANT4_USE_OPENGL_X11=ON \
-        -DGEANT4_USE_RAYTRACER_X11=ON \
-        -DGEANT4_BUILD_VERBOSE_CODE=OFF && \
+        -DGEANT4_USE_RAYTRACER_X11=ON && \
     make -j${BUILD_JOBS} install
 
 WORKDIR $APP_HOME
 # Pin to the released OpenTOPAS tag so image builds stay reproducible
-RUN git clone https://github.com/OpenTOPAS/OpenTOPAS.git
+RUN git clone --depth 1 --branch "${TOPAS_VERSION}" https://github.com/OpenTOPAS/OpenTOPAS.git
 
 # =========================================================
 # 2. Build GDCM 2.6.8
@@ -119,4 +122,3 @@ VOLUME ["/Applications/G4Data", "/simulations","/extensions"]
 WORKDIR /simulations
 
 ENTRYPOINT ["/usr/local/bin/topas-entrypoint.sh"]
-

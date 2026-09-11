@@ -1,7 +1,7 @@
 //
 // ********************************************************************
 // *                                                                  *
-// * Copyright 2025 The TOPAS Collaboration                           *
+// * Copyright 2026 The TOPAS Collaboration                           *
 // * Copyright 2022 The TOPAS Collaboration                           *
 // *                                                                  *
 // * Permission is hereby granted, free of charge, to any person      *
@@ -96,91 +96,41 @@
 #include <qstringlist.h>
 #include <qurl.h>
 #include <qtextedit.h>
+#include <qtabwidget.h>
 #include <map>
 #include <set>
 #include <qpixmap.h>
 #include <gdcmVersion.h>
+#include <qcoreapplication.h>
 
-namespace {
-QWidget* GetQtParent(QWidget* preferredParent = nullptr) {
-    if (preferredParent)
-        return preferredParent;
-    
-    QWidget* activeWindow = QApplication::activeWindow();
-    if (activeWindow)
-        return activeWindow;
-    
-    return nullptr;
-}
 
-bool TryOpenWithHostHelper(const QString& helper, const QString& url) {
-    if (helper.isEmpty() || !QFile::exists(helper))
-        return false;
-    
-    QProcess process;
-    process.start(helper, QStringList() << url);
-    if (!process.waitForStarted(1000))
-        return false;
-    
-    // Helper should exit quickly; short timeout keeps UI responsive.
-    process.waitForFinished(3000);
-    return process.exitStatus() == QProcess::NormalExit && process.exitCode() == 0;
-}
+QIcon TsQt5::LoadIcon(const QString& baseName)
+{
+    const QString appDir = QCoreApplication::applicationDirPath();
+    QStringList roots;
+    roots << "/Applications/TOPAS/OpenTOPAS/graphics/"
+          << QDir::homePath() + "/Applications/TOPAS/OpenTOPAS/graphics/"
+          << "graphics/"
+          << appDir + "/../../OpenTOPAS/graphics/";
 
-void ShowHostOpenFallback(const QString& url, QWidget* parent) {
-    QString message = "Could not find a host browser launcher. Please open\n"
-                      "  this URL manually:\n"
-                      "  " + url;
-    
-    QMessageBox box(QMessageBox::Information, "Open Documentation", message, QMessageBox::Ok, GetQtParent(parent));
-    box.exec();
+    QStringList extensions;
+    extensions << ".svg" << ".png";
+
+    for (int i = 0; i < extensions.size(); ++i) {
+        for (int j = 0; j < roots.size(); ++j) {
+            QString path = roots[j] + baseName + extensions[i];
+            if (!QFile::exists(path))
+                continue;
+
+            QIcon icon(path);
+            if (!icon.isNull())
+                return icon;
+        }
+    }
+
+    return QIcon();
 }
 
-bool ShowReadOnlyParametersDialog(QWidget* parent) {
-    QDialog dialog(GetQtParent(parent));
-    dialog.setWindowTitle("Read-Only Parameters");
-    dialog.setModal(true);
-    
-    QVBoxLayout* vbox = new QVBoxLayout();
-    QLabel* text = new QLabel("Note: Parameters in bold cannot be changed!");
-    text->setWordWrap(true);
-    vbox->addWidget(text);
-    
-    QHBoxLayout* buttonLayout = new QHBoxLayout();
-    QPushButton* okButton = new QPushButton("OK");
-    QPushButton* dontShowButton = new QPushButton("Don't show again");
-    buttonLayout->addWidget(okButton, 0, Qt::AlignLeft);
-    buttonLayout->addStretch();
-    buttonLayout->addWidget(dontShowButton, 0, Qt::AlignRight);
-    vbox->addLayout(buttonLayout);
-    
-    dialog.setLayout(vbox);
-    
-    bool suppressFuture = false;
-    QObject::connect(okButton, &QPushButton::clicked, &dialog, &QDialog::accept);
-    QObject::connect(dontShowButton, &QPushButton::clicked, [&dialog, &suppressFuture]() {
-        suppressFuture = true;
-        dialog.accept();
-    });
-    
-    dialog.exec();
-    return suppressFuture;
-}
-
-void OpenUrlWithHostHelper(const QString& url, QWidget* parent = nullptr) {
-    QString helper = QString::fromLocal8Bit(qgetenv("TOPAS_HOST_OPEN"));
-    if (helper.isEmpty())
-        helper = "/opt/topas/host-open";
-    
-    if (TryOpenWithHostHelper(helper, url))
-        return;
-    
-    if (QDesktopServices::openUrl(QUrl(url)))
-        return;
-    
-    ShowHostOpenFallback(url, parent);
-}
-}
 
 TsQt5::TsQt5(TsParameterManager* pM, TsExtensionManager* eM, TsMaterialManager* mM, TsGeometryManager* gM, TsScoringManager* scM, TsSequenceManager* sqM,
            TsGraphicsManager* grM, TsSourceManager* soM) :
@@ -202,37 +152,62 @@ fShowReadOnlyNoteMessage(true)
     fUIQt->GetUserInterfaceWidget()->setWindowTitle("");
     
     // Set window and tab icon
-    fUIQt->GetUITabWidget()->addTab(fParameterEditorWidget,"Parameter Control");
+    QTabWidget* uiTabs = fUIQt->GetUITabWidget();
+    uiTabs->addTab(fParameterEditorWidget,"Parameter Control");
     
     // Add our own control widget
     // Already added above
     
     if (fPm->GetBooleanParameter("Ts/IncludeDefaultGeant4QtWidgets")) {
-        fUIQt->GetUITabWidget()->setCurrentIndex(3);
+        uiTabs->setCurrentWidget(fParameterEditorWidget);
     } else {
-        // Get rid of the default Geant4 Qt control widgets
-        fUIQt->GetUITabWidget()->removeTab(1);
-        fUIQt->GetUITabWidget()->removeTab(1);
-        fUIQt->GetUITabWidget()->setCurrentIndex(1);
+        // Keep only the scene tree and TOPAS parameter controls. Geant4 has
+        // changed the number and order of its tabs between releases, so do
+        // not identify them by index.
+        QWidget* sceneTreeWidget = fUIQt->GetSceneTreeWidget();
+        for (G4int i = uiTabs->count() - 1; i >= 0; --i) {
+            QWidget* widget = uiTabs->widget(i);
+            if (widget != sceneTreeWidget && widget != fParameterEditorWidget)
+                uiTabs->removeTab(i);
+        }
+        uiTabs->setCurrentWidget(fParameterEditorWidget);
         
-        // Reorder Geant4 Qt menu bar actions to preferred sequence
+        // Keep and reorder selected Geant4 toolbar actions by name. Numeric
+        // action indexes changed when Geant4 added new visualization tools.
         QList<QToolBar *> allToolBars = fUIQt->GetMainWindow()->findChildren<QToolBar *>();
-        if (!allToolBars.isEmpty()) {
-            QList<QAction*> actions = allToolBars[0]->actions();
-            QList<int> desiredOrder;
-            desiredOrder << 4 << 5 << 6 << 3 << 7 << 12 << 13 << 15;
-            
-            QList<QAction*> reordered;
-            foreach (int idx, desiredOrder) {
-                if (idx >= 0 && idx < actions.size())
-                    reordered.append(actions[idx]);
+        QToolBar* geant4Toolbar = 0;
+        foreach (QToolBar* candidate, allToolBars) {
+            foreach (QAction* action, candidate->actions()) {
+                if (action->text() == "exit") {
+                    geant4Toolbar = candidate;
+                    break;
+                }
             }
-            
+            if (geant4Toolbar)
+                break;
+        }
+
+        if (geant4Toolbar) {
+            const QList<QAction*> actions = geant4Toolbar->actions();
+            QStringList desiredNames;
+            desiredNames << "pick" << "zoom_out" << "zoom_in" << "move" << "rotate"
+                         << "point_cloud" << "perspective" << "ortho" << "exit";
+
+            QList<QAction*> reordered;
+            foreach (const QString& name, desiredNames) {
+                foreach (QAction* action, actions) {
+                    if (action->text() == name) {
+                        reordered.append(action);
+                        break;
+                    }
+                }
+            }
+
             foreach (QAction* action, actions)
-            allToolBars[0]->removeAction(action);
-            
+                geant4Toolbar->removeAction(action);
+
             foreach (QAction* action, reordered)
-            allToolBars[0]->addAction(action);
+                geant4Toolbar->addAction(action);
         }
         
         // Remove "Useful Tips" tab from Viewer Tab Widget
@@ -286,25 +261,8 @@ fShowReadOnlyNoteMessage(true)
     
     QToolBar* toolbar = new QToolBar();
     
-    auto loadIcon = [](const QString& fileName) {
-        std::vector<QString> candidates = {
-            "/Applications/TOPAS/OpenTOPAS/graphics/" + fileName,
-            QDir::homePath() + "/Applications/TOPAS/OpenTOPAS/graphics/" + fileName,
-            "graphics/" + fileName
-        };
-        for (size_t i=0; i<candidates.size(); ++i) {
-            const QString& path = candidates[i];
-            if (!QFile::exists(path))
-                continue;
-            QIcon icon(path);
-            if (!icon.isNull())
-                return icon;
-        }
-        return QIcon();
-    };
-    
     QSignalMapper* saveSignalMapper = new QSignalMapper(this);
-    QIcon saveIcon = loadIcon("save_as.svg");
+    QIcon saveIcon = LoadIcon("save_as");
     QAction* saveAction = saveIcon.isNull()
     ? toolbar->addAction(QString("Save"), saveSignalMapper, SLOT(map()))
     : toolbar->addAction(saveIcon, QString(""), saveSignalMapper, SLOT(map()));
@@ -315,7 +273,7 @@ fShowReadOnlyNoteMessage(true)
     
     QSignalMapper* componentSignalMapper = new QSignalMapper(this);
     toolbar->addSeparator();
-    QIcon componentIcon = loadIcon("add_box.svg");
+    QIcon componentIcon = LoadIcon("add_box");
     QAction* componentAction = componentIcon.isNull()
     ? toolbar->addAction(QString("+Geom"), componentSignalMapper, SLOT(map()))
     : toolbar->addAction(componentIcon, QString(""), componentSignalMapper, SLOT(map()));
@@ -326,7 +284,7 @@ fShowReadOnlyNoteMessage(true)
     
     QSignalMapper* scorerSignalMapper = new QSignalMapper(this);
     toolbar->addSeparator();
-    QIcon scorerIcon = loadIcon("add_chart.svg");
+    QIcon scorerIcon = LoadIcon("add_chart");
     QAction* scorerAction = scorerIcon.isNull()
     ? toolbar->addAction(QString("+Scorer"), scorerSignalMapper, SLOT(map()))
     : toolbar->addAction(scorerIcon, QString(""), scorerSignalMapper, SLOT(map()));
@@ -337,7 +295,7 @@ fShowReadOnlyNoteMessage(true)
     
     QSignalMapper* sourceSignalMapper = new QSignalMapper(this);
     toolbar->addSeparator();
-    QIcon sourceIcon = loadIcon("add_flash.svg");
+    QIcon sourceIcon = LoadIcon("add_flash");
     QAction* sourceAction = sourceIcon.isNull()
     ? toolbar->addAction(QString("+Source"), sourceSignalMapper, SLOT(map()))
     : toolbar->addAction(sourceIcon, QString(""), sourceSignalMapper, SLOT(map()));
@@ -348,7 +306,7 @@ fShowReadOnlyNoteMessage(true)
     
     QSignalMapper* runSignalMapper = new QSignalMapper(this);
     toolbar->addSeparator();
-    QIcon runIcon = loadIcon("play.svg");
+    QIcon runIcon = LoadIcon("play");
     if (!runIcon.isNull())
         toolbar->setIconSize(QSize(32,32));
     QAction* runAction = runIcon.isNull() ? toolbar->addAction(QString("Run"), runSignalMapper, SLOT(map()))
@@ -360,7 +318,7 @@ fShowReadOnlyNoteMessage(true)
     
     QSignalMapper* printSignalMapper = new QSignalMapper(this);
     toolbar->addSeparator();
-    QIcon pdfIcon = loadIcon("photo.svg");
+    QIcon pdfIcon = LoadIcon("photo");
     QAction* printAction = pdfIcon.isNull()
     ? toolbar->addAction(QString("Capture"), printSignalMapper, SLOT(map()))
     : toolbar->addAction(pdfIcon, QString(""), printSignalMapper, SLOT(map()));
@@ -371,8 +329,8 @@ fShowReadOnlyNoteMessage(true)
     
     toolbar->addSeparator();
     QToolButton* expandCollapseButton = new QToolButton();
-    QIcon collapseIcon = loadIcon("collapse_all.svg");
-    QIcon expandIcon = loadIcon("expand_all.svg");
+    QIcon collapseIcon = LoadIcon("collapse_all");
+    QIcon expandIcon = LoadIcon("expand_all");
     bool haveIcons = !collapseIcon.isNull() && !expandIcon.isNull();
     if (haveIcons) {
         expandCollapseButton->setIcon(collapseIcon);
@@ -455,6 +413,90 @@ void TsQt5::RunCallback() {
 void TsQt5::PrintCallback() {
     G4UImanager::GetUIpointer()->ApplyCommand("/vis/ogl/set/exportFormat pdf");
     G4UImanager::GetUIpointer()->ApplyCommand("/vis/ogl/export");
+}
+
+
+QWidget* TsQt5::GetQtParent(QWidget* preferredParent) {
+    if (preferredParent)
+        return preferredParent;
+    
+    QWidget* activeWindow = QApplication::activeWindow();
+    if (activeWindow)
+        return activeWindow;
+    
+    return nullptr;
+}
+
+
+G4bool TsQt5::TryOpenWithHostHelper(const QString& helper, const QString& url) {
+    if (helper.isEmpty() || !QFile::exists(helper))
+        return false;
+    
+    QProcess process;
+    process.start(helper, QStringList() << url);
+    if (!process.waitForStarted(1000))
+        return false;
+    
+    // Helper should exit quickly; short timeout keeps UI responsive.
+    process.waitForFinished(3000);
+    return process.exitStatus() == QProcess::NormalExit && process.exitCode() == 0;
+}
+
+
+void TsQt5::ShowHostOpenFallback(const QString& url, QWidget* parent) {
+    QString message = "Could not find a host browser launcher. Please open\n"
+    "  this URL manually:\n"
+    "  " + url;
+    
+    QMessageBox box(QMessageBox::Information, "Open Documentation", message, QMessageBox::Ok, GetQtParent(parent));
+    box.exec();
+}
+
+
+G4bool TsQt5::ShowReadOnlyParametersDialog(QWidget* parent) {
+    QDialog dialog(GetQtParent(parent));
+    dialog.setWindowTitle("Read-Only Parameters");
+    dialog.setModal(true);
+    
+    QVBoxLayout* vbox = new QVBoxLayout();
+    QLabel* text = new QLabel("Note: Parameters in bold cannot be changed!");
+    text->setWordWrap(true);
+    vbox->addWidget(text);
+    
+    QHBoxLayout* buttonLayout = new QHBoxLayout();
+    QPushButton* okButton = new QPushButton("OK");
+    QPushButton* dontShowButton = new QPushButton("Don't show again");
+    buttonLayout->addWidget(okButton, 0, Qt::AlignLeft);
+    buttonLayout->addStretch();
+    buttonLayout->addWidget(dontShowButton, 0, Qt::AlignRight);
+    vbox->addLayout(buttonLayout);
+    
+    dialog.setLayout(vbox);
+    
+    bool suppressFuture = false;
+    QObject::connect(okButton, &QPushButton::clicked, &dialog, &QDialog::accept);
+    QObject::connect(dontShowButton, &QPushButton::clicked, &dialog, [&dialog, &suppressFuture]() {
+        suppressFuture = true;
+        dialog.accept();
+    });
+    
+    dialog.exec();
+    return suppressFuture;
+}
+
+
+void TsQt5::OpenUrlWithHostHelper(const QString& url, QWidget* parent) {
+    QString helper = QString::fromLocal8Bit(qgetenv("TOPAS_HOST_OPEN"));
+    if (helper.isEmpty())
+        helper = "/opt/topas/host-open";
+    
+    if (TryOpenWithHostHelper(helper, url))
+        return;
+    
+    if (QDesktopServices::openUrl(QUrl(url)))
+        return;
+    
+    ShowHostOpenFallback(url, parent);
 }
 
 
@@ -1244,8 +1286,8 @@ void TsQt5::DoDuplicateGeometry(const G4String& oldName) {
     buttons.addWidget(&cancelBtn);
     layout.addLayout(&buttons);
     bool accepted = false;
-    QObject::connect(&okBtn, &QPushButton::clicked, [&](){ accepted=true; dialog.accept(); });
-    QObject::connect(&cancelBtn, &QPushButton::clicked, [&](){ dialog.reject(); });
+    QObject::connect(&okBtn, &QPushButton::clicked, &dialog, [&](){ accepted=true; dialog.accept(); });
+    QObject::connect(&cancelBtn, &QPushButton::clicked, &dialog, [&](){ dialog.reject(); });
     
     if (dialog.exec() != QDialog::Accepted || !accepted)
         return;
@@ -1605,10 +1647,12 @@ void TsQt5::ShowAboutDialog() {
     layout->setAlignment(Qt::AlignCenter);
     
     auto loadLogo = []() {
+        const QString appDir = QCoreApplication::applicationDirPath();
         std::vector<QString> candidates = {
             "/Applications/TOPAS/OpenTOPAS/graphics/TOPASLogo.png",
             QDir::homePath() + "/Applications/TOPAS/OpenTOPAS/graphics/TOPASLogo.png",
-            "graphics/TOPASLogo.png"
+            "graphics/TOPASLogo.png",
+            appDir + "/../../OpenTOPAS/graphics/TOPASLogo.png"
         };
         for (size_t i=0; i<candidates.size(); ++i) {
             QPixmap pix(candidates[i]);
@@ -1675,7 +1719,7 @@ void TsQt5::ShowAboutDialog() {
     layout->addWidget(buttonRow);
     
     connect(closeButton, SIGNAL(clicked()), aboutDialog, SLOT(close()));
-    connect(contactButton, &QPushButton::clicked, [aboutDialog]() {
+    connect(contactButton, &QPushButton::clicked, this, [this, aboutDialog]() {
         QDialog* contactDialog = new QDialog(aboutDialog);
         contactDialog->setWindowTitle("Contact TOPAS Team");
         contactDialog->setAttribute(Qt::WA_DeleteOnClose);
@@ -1695,7 +1739,7 @@ void TsQt5::ShowAboutDialog() {
         buttons->addStretch();
         buttons->addWidget(closeBtn);
         vbox->addLayout(buttons);
-        QObject::connect(openButton, &QPushButton::clicked, [contactDialog]() {
+        QObject::connect(openButton, &QPushButton::clicked, contactDialog, [this, contactDialog]() {
             OpenUrlWithHostHelper("https://opentopas.github.io/contact.html", contactDialog);
         });
         QObject::connect(closeBtn, &QPushButton::clicked, contactDialog, &QDialog::accept);
@@ -1703,12 +1747,14 @@ void TsQt5::ShowAboutDialog() {
         contactDialog->setModal(true);
         contactDialog->show();
     });
-    connect(licenseButton, &QPushButton::clicked, [aboutDialog]() {
+    connect(licenseButton, &QPushButton::clicked, this, [aboutDialog]() {
+        const QString appDir = QCoreApplication::applicationDirPath();
         QString licenseText;
         QStringList licenseCandidates;
         licenseCandidates << "LICENSE.txt"
         << "/Applications/TOPAS/OpenTOPAS/LICENSE.txt"
-        << QDir::homePath() + "/Applications/TOPAS/OpenTOPAS/LICENSE.txt";
+        << QDir::homePath() + "/Applications/TOPAS/OpenTOPAS/LICENSE.txt"
+        << appDir + "/../../OpenTOPAS/LICENSE.txt";
         for (int i = 0; i < licenseCandidates.size(); ++i) {
             QFile file(licenseCandidates[i]);
             if (file.exists() && file.open(QIODevice::ReadOnly | QIODevice::Text)) {

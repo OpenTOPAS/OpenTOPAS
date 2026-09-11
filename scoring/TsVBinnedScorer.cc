@@ -1,7 +1,7 @@
 //
 // ********************************************************************
 // *                                                                  *
-// * Copyright 2025 The TOPAS Collaboration                           *
+// * Copyright 2026 The TOPAS Collaboration                           *
 // * Copyright 2022 The TOPAS Collaboration                           *
 // *                                                                  *
 // * Permission is hereby granted, free of charge, to any person      *
@@ -64,6 +64,7 @@
 #include <sstream>
 #include <iomanip>
 #include <algorithm>
+#include <cmath>
 
 TsVBinnedScorer::TsVBinnedScorer(TsParameterManager* pM, TsMaterialManager* mM, TsGeometryManager* gM, TsScoringManager* scM, TsExtensionManager* eM,
                                  G4String scorerName, G4String quantity, G4String outFileName, G4bool isSubScorer)
@@ -2405,35 +2406,7 @@ void TsVBinnedScorer::PrintHeader()
     
     G4cout << G4endl;
     
-    if (fBinByIncidentEnergy) {
-        G4cout << "Binned by incident track energy in " << fNEorTBins << " bins of " << fBinWidth << " MeV"
-        << " from " << fBinMin << " MeV to " << fBinMax << " MeV" << G4endl;
-        G4cout << "First bin is underflow, next to last bin is overflow, final bin is for case of no incident track." << G4endl;
-    }
-    
-    if (fBinByPreStepEnergy) {
-        G4cout << "Binned by pre-step energy in " << fNEorTBins << " bins of " << fBinWidth << " MeV"
-        << " from " << fBinMin << " MeV to " << fBinMax << " MeV" << G4endl;
-        G4cout << "First bin is underflow, last bin is overflow." << G4endl;
-    }
-    
-    if (fBinByStepDepositEnergy) {
-        G4cout << "Binned by energy deposited in step in " << fNEorTBins << " bins of " << fBinWidth << " MeV"
-        << " from " << fBinMin << " MeV to " << fBinMax << " MeV" << G4endl;
-        G4cout << "First bin is underflow, last bin is overflow." << G4endl;
-    }
-    
-    if (fBinByPrimaryEnergy) {
-        G4cout << "Binned by primary track energy in " << fNEorTBins << " bins of " << fBinWidth << " MeV"
-        << " from " << fBinMin << " MeV to " << fBinMax << " MeV" << G4endl;
-        G4cout << "First bin is underflow, last bin is overflow." << G4endl;
-    }
-    
-    if (fBinByTime) {
-        G4cout << "Binned by time in " << fNEorTBins << " bins of " << fBinWidth << " ns"
-        << " from " << fBinMin << " ns to " << fBinMax << " ns" << G4endl;
-        G4cout << "First bin is underflow, last bin is overflow." << G4endl;
-    }
+    PrintBinHeader(G4cout);
     
     if (!fOutputToBinary) {
         if (fSparsify)
@@ -2446,6 +2419,49 @@ void TsVBinnedScorer::PrintHeader()
             fComponent->GetDivisionName(1) << " * N" << fComponent->GetDivisionName(2) <<
             " + " << fComponent->GetDivisionName(2) << G4endl;
     }
+}
+
+
+G4String TsVBinnedScorer::GetBinModeDescription()
+{
+    if (fBinByIncidentEnergy)
+        return "incident track energy";
+    if (fBinByPreStepEnergy)
+        return "pre-step energy";
+    if (fBinByStepDepositEnergy)
+        return "energy deposited in step";
+    if (fBinByPrimaryEnergy)
+        return "primary track energy";
+    if (fBinByTime)
+        return "time";
+
+    return "";
+}
+
+
+void TsVBinnedScorer::PrintBinHeader(std::ostream& a, const G4String& prefix)
+{
+    if (fNEorTBins == 0)
+        return;
+
+    G4String binMode = GetBinModeDescription();
+    G4String unitName = fBinByTime ? "ns" : "MeV";
+
+    a << prefix << "Binned by " << binMode << " ";
+    if (fBinLog && !fBinByTime) {
+        a << "logarithmically in " << fNEorTBins << " bins"
+          << " from " << fBinMin << " " << unitName << " to " << fBinMax << " " << unitName << G4endl;
+        a << prefix << "Log10 bin width: " << fBinWidth << G4endl;
+        a << prefix << "Adjacent energy-bin edge ratio: " << std::pow(10., fBinWidth) << G4endl;
+    } else {
+        a << "in " << fNEorTBins << " bins of " << fBinWidth << " " << unitName
+          << " from " << fBinMin << " " << unitName << " to " << fBinMax << " " << unitName << G4endl;
+    }
+
+    if (fBinByIncidentEnergy)
+        a << prefix << "First bin is underflow, next to last bin is overflow, final bin is for case of no incident track." << G4endl;
+    else
+        a << prefix << "First bin is underflow, last bin is overflow." << G4endl;
 }
 
 
@@ -2535,35 +2551,7 @@ void TsVBinnedScorer::PrintHeader(std::ostream& ofile)
     
     ofile << G4endl;
     
-    if (fBinByIncidentEnergy) {
-        ofile << "# " << "Binned by incident track energy in " << fNEorTBins << " bins of " << fBinWidth << " MeV"
-        << " from " << fBinMin << " MeV to " << fBinMax << " MeV" << G4endl;
-        ofile << "# " << "First bin is underflow, next to last bin is overflow, last bin is for case of no incident track." << G4endl;
-    }
-    
-    if (fBinByPreStepEnergy) {
-        ofile << "# " << "Binned by pre-step energy in " << fNEorTBins << " bins of " << fBinWidth << " MeV"
-        << " from " << fBinMin << " MeV to " << fBinMax << " MeV" << G4endl;
-        ofile << "# " << "First bin is underflow, last bin is overflow." << G4endl;
-    }
-    
-    if (fBinByStepDepositEnergy) {
-        ofile << "# " << "Binned by energy deosited in step in " << fNEorTBins << " bins of " << fBinWidth << " MeV"
-        << " from " << fBinMin << " MeV to " << fBinMax << " MeV" << G4endl;
-        ofile << "# " << "First bin is underflow, last bin is overflow." << G4endl;
-    }
-    
-    if (fBinByPrimaryEnergy) {
-        ofile << "# " << "Binned by primary track energy in " << fNEorTBins << " bins of " << fBinWidth << " MeV"
-        << " from " << fBinMin << " MeV to " << fBinMax << " MeV" << G4endl;
-        ofile << "# " << "First bin is underflow, next to last bin is overflow." << G4endl;
-    }
-    
-    if (fBinByTime) {
-        ofile << "# " << "Binned by time in " << fNEorTBins << " bins of " << fBinWidth << " ns"
-        << " from " << fBinMin << " ns to " << fBinMax << " ns" << G4endl;
-        ofile << "# " << "First bin is underflow, last bin is overflow." << G4endl;
-    }
+    PrintBinHeader(ofile, "# ");
     
     if (!fOutputToBinary) {
         if (fSparsify)
@@ -2950,7 +2938,7 @@ void TsVBinnedScorer::CalculateOneValue(G4int idx)
                     const G4double sum = fFirstMomentMap[idx];
                     fSum = sum / GetUnitValue();
 
-                    if (fReportMean )
+                    if (fReportMean || fRelativeSDLimit > 0)
                         fMean = sum / histories / GetUnitValue();
                     else
                         fMean = 0.;

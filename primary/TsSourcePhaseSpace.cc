@@ -1,7 +1,7 @@
 //
 // ********************************************************************
 // *                                                                  *
-// * Copyright 2025 The TOPAS Collaboration                           *
+// * Copyright 2026 The TOPAS Collaboration                           *
 // * Copyright 2022 The TOPAS Collaboration                           *
 // *                                                                  *
 // * Permission is hereby granted, free of charge, to any person      *
@@ -40,6 +40,7 @@
 #include <fstream>
 #include <sys/stat.h>
 #include <cmath>
+#include <filesystem>
 
 #ifdef TOPAS_MT
 #include "G4MTRunManager.hh"
@@ -396,7 +397,10 @@ void TsSourcePhaseSpace::ReadSomeDataFromFileToBuffer(std::queue<TsPrimaryPartic
 #endif
 
     G4String dataFileSpec = fFileName+".phsp";
-    fDataFile.open(dataFileSpec);
+    if (fIsBinary || fIsLimited)
+        fDataFile.open(dataFileSpec, std::ios::binary);
+    else
+        fDataFile.open(dataFileSpec);
     if (!fDataFile) {
         G4cerr << "Error opening phase space data file:" << dataFileSpec << G4endl;
         fPm->AbortSession(1);
@@ -472,9 +476,12 @@ void TsSourcePhaseSpace::ReadSomeDataFromFileToBuffer(std::queue<TsPrimaryPartic
 
         // If we're read the last particle in the file, close out last history
 		if ((fDataFile.tellg() == -1) || FileIsEmpty || ((fDataFile.tellg() > (fFileSize-fRecordLength)) && (fNumberOfEmptyHistoriesAppended == fNumberOfEmptyHistoriesToAppend))) {
-            if (particleBuffer && (fIncludeEmptyHistories || fPrimaryParticle.particleDefinition != 0))
-                particleBuffer->push(fPrimaryParticle);
-            nHistoriesRead++;
+			// A failed ASCII read leaves fPrimaryParticle unchanged. Since that particle
+			// was already pushed at the start of this iteration, do not push it again.
+			G4bool failedAsciiRead = !fIsBinary && !fIsLimited && FileIsEmpty;
+			if (!failedAsciiRead && particleBuffer && (fIncludeEmptyHistories || fPrimaryParticle.particleDefinition != 0))
+				particleBuffer->push(fPrimaryParticle);
+			nHistoriesRead++;
         } else {
             if (fPrimaryParticle.isNewHistory && (fIncludeEmptyHistories || fPrimaryParticle.particleDefinition != 0))
                 nHistoriesRead++;
@@ -552,11 +559,10 @@ G4bool TsSourcePhaseSpace::ReadOneParticle(std::queue<TsPrimaryParticle>* partic
         // Advance to next particle record in file
         fFilePosition+=fRecordLength;
         fDataFile.seekg(fFilePosition);
-    } else {
-        // Reading ASCII data
-        getline(fDataFile,fAsciiLine);
-        if (!fDataFile.good()) return true;
-        std::istringstream input(fAsciiLine);
+	} else {
+		// Reading ASCII data
+		if (!getline(fDataFile,fAsciiLine)) return true;
+		std::istringstream input(fAsciiLine);
         input >> fPrimaryParticle.posX >> fPrimaryParticle.posY >> fPrimaryParticle.posZ >> fPrimaryParticle.dCos1 >> fPrimaryParticle.dCos2
         >> fPrimaryParticle.kEnergy >> fPrimaryParticle.weight >> particleCode >> cosZIsNegative >> fPrimaryParticle.isNewHistory;
     }
@@ -692,9 +698,12 @@ G4bool TsSourcePhaseSpace::ReadOneParticle(std::queue<TsPrimaryParticle>* partic
 }
 
 
-G4long TsSourcePhaseSpace::GetFileSize(std::string filename)
+int64_t TsSourcePhaseSpace::GetFileSize(std::string filename)
 {
-    struct stat stat_buf;
-    int rc = stat(filename.c_str(), &stat_buf);
-    return rc == 0 ? stat_buf.st_size : -1;
+    // Plain stat() uses a 32-bit off_t on some platforms (notably Windows/MinGW),
+    // which overflows/fails for files larger than ~2 GB (common for IAEA phase
+    // space files). std::filesystem::file_size is 64-bit safe everywhere.
+    std::error_code ec;
+    std::uintmax_t size = std::filesystem::file_size(filename, ec);
+    return ec ? -1 : static_cast<int64_t>(size);
 }
