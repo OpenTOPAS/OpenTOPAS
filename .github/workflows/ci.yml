@@ -76,7 +76,7 @@ jobs:
       id: cache-data
       with:
         path: ~/geant4-data
-        key: ${{ runner.os }}-geant4-data-v11.3.2-${{ hashFiles('.github/workflows/g4data_urls.txt') }}
+        key: ${{ runner.os }}-geant4-data-v11.4.2-${{ hashFiles('.github/workflows/g4data_urls.txt') }}
 
     - name: Download Geant4 data
       if: steps.cache-data.outputs.cache-hit != 'true'
@@ -95,7 +95,7 @@ jobs:
     - name: Clone and install Geant4
       run: |
         cd $HOME
-        git clone https://github.com/Geant4/geant4 --branch v11.3.2
+        git clone https://github.com/Geant4/geant4 --branch v11.4.2
         
         # Patch typo in g4tools (m_barnch → m_branch). This is fixed in 11.3?
         #if [[ "$RUNNER_OS" == "macOS" ]]; then
@@ -109,10 +109,10 @@ jobs:
                         -DGEANT4_BUILD_MULTITHREADED=ON \
                         -DCMAKE_PREFIX_PATH=${{ matrix.qt_path }} \
                         -DGEANT4_USE_QT=ON \
+                        -DGEANT4_USE_QT_QT5=ON \
                         -DGEANT4_USE_OPENGL_X11=ON \
                         -DGEANT4_USE_RAYTRACER_X11=ON \
                         -DGEANT4_USE_SYSTEM_ZLIB=ON \
-                        -DGEANT4_BUILD_VERBOSE_CODE=OFF \
                         -DCMAKE_INSTALL_PREFIX=$HOME/geant4-install
         ${{ matrix.make_command }}
       shell: bash

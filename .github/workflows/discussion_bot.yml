@@ -5,9 +5,8 @@ on:
     types: [created]
 
 env:
-  # Must match the model used when building the index.json embeddings.
-  OPENAI_EMBEDDING_MODEL: "text-embedding-3-small"
   BOT_REPO: OpenTOPAS/TOPAS-assistant-bot
+  OPENAI_MODEL: gpt-5.6-sol
 
 permissions:
   contents: read
@@ -127,19 +126,18 @@ jobs:
         if: steps.optin.outputs.opted_in == 'true'
         run: pip install -r topas-bot/requirements.txt
 
-      - name: Download latest index.json from bot repo releases
+      - name: Load latest Vector Store manifest
         if: steps.optin.outputs.opted_in == 'true'
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
         run: |
+          set -euo pipefail
           mkdir -p topas-bot/.bot
 
-          # Since index.json is a release asset we need to first find the API URL. 
-          # gh api returns an array of releases where [0] is the latest.
-          # .assets loops over assets of that release then we select index.json
-          asset_api_url="$(gh api repos/${{ env.BOT_REPO }}/releases -q '.[0].assets[] | select(.name=="index.json") | .url')"
+          asset_api_url="$(gh api "repos/${BOT_REPO}/releases" \
+            -q 'map(.assets[] | select(.name=="vector_store_manifest.json")) | first | .url')"
           if [ -z "${asset_api_url}" ]; then
-            echo "Could not find index.json asset on latest release in ${{ env.BOT_REPO }}"
+            echo "Could not find vector_store_manifest.json in ${BOT_REPO} releases."
             exit 1
           fi
 
@@ -147,15 +145,21 @@ jobs:
             -H "Authorization: Bearer ${GH_TOKEN}" \
             -H "Accept: application/octet-stream" \
             "${asset_api_url}" \
-            -o topas-bot/.bot/index.json
+            -o topas-bot/.bot/vector_store_manifest.json
 
-          test -s topas-bot/.bot/index.json
+          vector_store_id="$(python -c \
+            "import json; print(json.load(open('topas-bot/.bot/vector_store_manifest.json'))['vector_store_id'])")"
+          if [[ ! "${vector_store_id}" =~ ^vs_ ]]; then
+            echo "Manifest contains an invalid Vector Store ID."
+            exit 1
+          fi
+          echo "OPENAI_VECTOR_STORE_ID=${vector_store_id}" >> "$GITHUB_ENV"
 
       - name: Run GPT Response Script
         if: steps.optin.outputs.opted_in == 'true'
         working-directory: topas-bot
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          OPENAI_EMBEDDING_MODEL: ${{ env.OPENAI_EMBEDDING_MODEL }}
+          OPENAI_MODEL: ${{ env.OPENAI_MODEL }}
           GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
         run: python .github/actions/get_gpt_response.py

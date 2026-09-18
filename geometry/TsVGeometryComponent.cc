@@ -1,7 +1,7 @@
 //
 // ********************************************************************
 // *                                                                  *
-// * Copyright 2025 The TOPAS Collaboration                           *
+// * Copyright 2026 The TOPAS Collaboration                           *
 // * Copyright 2022 The TOPAS Collaboration                           *
 // *                                                                  *
 // * Permission is hereby granted, free of charge, to any person      *
@@ -681,6 +681,20 @@ G4LogicalVolume* TsVGeometryComponent::CreateLogicalVolume(G4String& subComponen
 	// Create the logical volume
 	G4LogicalVolume* lVol = new G4LogicalVolume(solid, material, lVolName);
 
+	// Apply optional Geant4 navigation controls. Do not set either value unless
+	// the user supplied it, so that Geant4 retains control of its defaults.
+	G4String smartlessParameter = GetFullParmName(subComponentName, "Smartless");
+	if (fPm->ParameterExists(smartlessParameter)) {
+		G4double smartless = fPm->GetUnitlessParameter(smartlessParameter);
+		if (smartless <= 0.)
+			Quit(smartlessParameter, "must be greater than zero.");
+		lVol->SetSmartless(smartless);
+	}
+
+	G4String voxelOptimisationParameter = GetFullParmName(subComponentName, "UseVoxelOptimisation");
+	if (fPm->ParameterExists(voxelOptimisationParameter))
+		lVol->SetOptimisation(fPm->GetBooleanParameter(voxelOptimisationParameter));
+
 	// Set visualization attributes
 	G4VisAttributes* visAtt = GetVisAttributes(subComponentName);
 	lVol->SetVisAttributes(visAtt);
@@ -962,6 +976,11 @@ void TsVGeometryComponent::BeginConstruction() {
 		G4cerr << "Components in mass world are forbidden to have parent components in a parallel world" << G4endl;
 		fPm->AbortSession(1);
 	}
+
+	// A non-group component in a parallel world requires parallel-world physics,
+	// even when an ancestor Group created the world.
+	if (fIsParallel && !fIsGroup)
+		fGm->SetHaveParallelComponentsThatAreNotGroups();
 
 	// If component is in parallel world but its parent is in mass world, create a new parallel world to hold component
 	// All copy components also have their own parallel world.

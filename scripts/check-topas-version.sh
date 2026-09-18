@@ -31,6 +31,9 @@ python3 - "$tag" \
   "$root/OpenTOPAS_quickStart_MacOS.md" \
   "$root/OpenTOPAS_quickStart_WSL.md" \
   "$root/docker/README.Docker.md" \
+  "$root/docker/FAQ.Docker.md" \
+  "$root/docker/topas-docker" \
+  "$root/docker/topas-apptainer" \
   "$root/.github/workflows/Dockerfile.topas.workflow" <<'PY'
 import re
 import sys
@@ -50,6 +53,9 @@ def expect_all_equal(values, label, path):
 
 for path in paths:
     text = path.read_text(encoding="utf-8")
+    if path.parent.name == "docker":
+        image_tags = re.findall(r"opentopas/opentopas:(v\d+\.\d+\.\d+)-geant4-\d+\.\d+\.\d+", text)
+        expect_all_equal(image_tags, "image TOPAS tag", path)
     if path.name.startswith("OpenTOPAS_quickStart_"):
         version_line = re.findall(
             r"(?:TOPAS version|target) \*\*(v\d+\.\d+\.\d+)\*\*",
@@ -61,9 +67,9 @@ for path in paths:
         expect_all_equal(checkout_tags, "git checkout tag", path)
         expect_all_equal(app_tags, "apps/topas tag", path)
     elif path.name == "Dockerfile.topas.workflow":
-        desc_tags = re.findall(r"TOPAS (v\d+\.\d+\.\d+)", text)
         arg_tags = re.findall(r"ARG TOPAS_VERSION=(v\d+\.\d+\.\d+)", text)
-        expect_all_equal(desc_tags, "description tag", path)
+        if "TOPAS ${TOPAS_VERSION} (Geant4 ${G4_VERSION}" not in text:
+            errors.append(f"{path}: description must use the build version arguments")
         expect_all_equal(arg_tags, "ARG TOPAS_VERSION", path)
     elif path.name == "README.Docker.md":
         docker_tags = re.findall(r"OpenTOPAS (v\d+\.\d+\.\d+)", text)

@@ -1,7 +1,7 @@
 //
 // ********************************************************************
 // *                                                                  *
-// * Copyright 2025 The TOPAS Collaboration                           *
+// * Copyright 2026 The TOPAS Collaboration                           *
 // * Copyright 2022 The TOPAS Collaboration                           *
 // *                                                                  *
 // * Permission is hereby granted, free of charge, to any person      *
@@ -945,7 +945,7 @@ void TsSequenceManager::NoteParameterizationError(G4double energy, G4String comp
 		G4cerr << "\nTopas experienced an error in scoring." << G4endl;
 		G4cerr << "A scorer in the Component: \"" << componentName << "\"" << G4endl;
 		G4cerr << "has been called for a hit in the non-parameterized volume named: \"" << volumeName << "\"" << G4endl;
-		G4cerr << "But this deos not make sense, as this scorer should only get called for hits" << G4endl;
+		G4cerr << "But this does not make sense, as this scorer should only get called for hits" << G4endl;
 		G4cerr << "in a parameterized volume (volume name would include the string \"_Division\")." << G4endl;
 		G4cerr << "We think this may sometimes happen because Geant4 navigation gets into a corrupted state." << G4endl;
 		G4cerr << "This hit will be omitted from scoring." << G4endl;

@@ -40,7 +40,7 @@ class TsVGeometryComponent;
 
 class G4EqMagElectricField;
 class G4FieldManager;
-class G4MagErrorStepper;
+class G4MagIntegratorStepper;
 class G4MagInt_Driver;
 class G4ChordFinder;
 class G4Navigator;
@@ -72,7 +72,7 @@ protected:
 	G4ElectricField* fField;
 	G4FieldManager* fFieldManager;
 	G4EqMagElectricField* fFieldEquation;
-	G4MagErrorStepper* fStepper;
+	G4MagIntegratorStepper* fStepper;
 	G4MagInt_Driver* fIntgrDriver;
 	G4ChordFinder* fChordFinder;
 };

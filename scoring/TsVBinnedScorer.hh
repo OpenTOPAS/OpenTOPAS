@@ -99,6 +99,8 @@ private:
 	G4String GetOneTokenFromReadLine();
 	void PrintHeader();
 	void PrintHeader(std::ostream&);
+	G4String GetBinModeDescription();
+	void PrintBinHeader(std::ostream& a, const G4String& prefix = "");
 	void PrintASCII(std::ostream& a=G4cout);
 	void PrintBinary(std::ostream& a=G4cout);
 	void PrintOneValueToASCII(std::ostream& ofile);

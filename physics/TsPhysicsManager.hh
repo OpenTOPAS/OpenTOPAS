@@ -42,6 +42,7 @@ class TsVarianceManager;
 
 class G4VUserPhysicsList;
 class G4GeometrySampler;
+class G4PhysListFactory;
 
 class TsPhysicsManager
 {
@@ -63,11 +64,13 @@ private:
 	G4String fPhysicsListName;
 
 	void SetEmParameters();
+	void SetHadronicParameters();
 
 	G4String GetFullParmName(const char* parmName);
+	G4String GetLowerCaseString(G4String value);
+	G4String ResolveReferencePhysListName(const G4PhysListFactory& referenceList, const G4String& listType);
 
 	std::vector<G4GeometrySampler*> fGeomSamplers;
 	std::vector<TsGeometrySampler*> fProtonGeomSamplers;
 };
 #endif
-

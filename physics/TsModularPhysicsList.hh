@@ -108,6 +108,7 @@ protected:
 
 private:
 	G4bool IsPhysicsRegistered(const std::vector<G4VPhysicsConstructor*>* const, G4VPhysicsConstructor*) const;
+	std::map<G4String, VPhysicsCreator*>::const_iterator LocateGeant4PhysicsModel(G4String model);
 };
 
 // Inline methods and templates

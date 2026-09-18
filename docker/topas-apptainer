@@ -11,7 +11,7 @@
 
 set -euo pipefail
 
-IMAGE=${IMAGE:-docker://opentopas/opentopas:latest}
+IMAGE=${IMAGE:-docker://opentopas/opentopas:v4.3.0-geant4-11.4.2}
 BUILD_EXTENSIONS=false
 EXT_DIR=""
 DATA_DIR=""
@@ -51,7 +51,7 @@ Runs OpenTOPAS inside Apptainer/Singularity while mirroring the docker/topas-doc
 
 Options:
   -data=/path/to/simulations   Directory to bind as /simulations (default: current dir)
-  -image=<uri>                 Apptainer image URI/File (default: docker://opentopas/opentopas:latest)
+  -image=<uri>                 Apptainer image URI/File (default: docker://opentopas/opentopas:v4.3.0-geant4-11.4.2)
   -extensions=/path/to/dir     Host directory containing TOPAS extensions
   -g4data=/path/to/G4Data      Geant4 data directory (required if not /Applications/G4Data)
   --build-extensions           Force rebuild of cached extensions
@@ -148,13 +148,15 @@ if [ -n "$EXT_DIR" ]; then
     EXT_SRC_DIR=$(abs_path "$EXT_DIR")
     CACHE_ROOT=${TOPAS_DOCKER_CACHE:-$HOME/.cache/topas-docker}
     mkdir -p "$CACHE_ROOT"
+    # Compiled extensions must not be reused across TOPAS/Geant4 images.
+    EXT_CACHE_ID=$(printf '%s\n%s\n%s\n%s' "$EXT_SRC_DIR" "${IMAGE#docker://}" "$(uname -m)" "${DOCKER_DEFAULT_PLATFORM:-}")
     if command -v shasum >/dev/null 2>&1; then
-        EXT_CACHE_KEY=$(printf "%s" "$EXT_SRC_DIR" | shasum | awk '{print $1}')
+        EXT_CACHE_KEY=$(printf "%s" "$EXT_CACHE_ID" | shasum | awk '{print $1}')
     else
         EXT_CACHE_KEY=$(
-            EXT_PATH="$EXT_SRC_DIR" python3 - <<'PY'
+            EXT_CACHE_ID="$EXT_CACHE_ID" python3 - <<'PY'
 import hashlib, os
-print(hashlib.sha1(os.environ["EXT_PATH"].encode()).hexdigest())
+print(hashlib.sha1(os.environ["EXT_CACHE_ID"].encode()).hexdigest())
 PY
         )
     fi
