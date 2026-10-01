@@ -187,7 +187,7 @@ void setDataEnvVars(G4String dataDirectory)
 	dataVars.push_back({"G4PROTONHPDATA", "G4TENDL1.4/Proton"});
 	dataVars.push_back({"G4LENDDATA", "LEND_GND1.3_ENDF.BVII.1"});
 #elif GEANT4_VERSION_MAJOR == 11 && GEANT4_VERSION_MINOR == 4
-	dataVars.push_back({"G4LEDATA", "G4EMLOW8.8"});
+	dataVars.push_back({"G4LEDATA", "G4EMLOW8.9"});
 	dataVars.push_back({"G4NEUTRONHPDATA", "G4NDL4.7.1"});
 	dataVars.push_back({"G4LEVELGAMMADATA", "PhotonEvaporation6.1.2"});
 	dataVars.push_back({"G4RADIOACTIVEDATA", "RadioactiveDecay6.1.2"});
