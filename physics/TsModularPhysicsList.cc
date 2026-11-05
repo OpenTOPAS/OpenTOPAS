@@ -771,20 +771,33 @@ void TsModularPhysicsList::ActiveG4EmModelPerRegion(G4String moduleName)
 							fPm->AbortSession(1);
 						}
 
-						// G4EmDNAPhysicsActivator expects "DNA_Opt0", "DNA_Opt4", etc. Passing
-						// GetPhysicsName() ("G4EmDNAPhysics_option4") made it silently fall back
-						// to option 0. Map the TOPAS module name (g4em-dna, g4em-dna_optN) instead.
-						G4String emModelLower = emModel;
-						G4StrUtil::to_lower(emModelLower);
-						G4String dnaType = "DNA_Opt0";
-						std::size_t pos = emModelLower.find("dna_opt");
-						if (pos != std::string::npos)
-							dnaType = "DNA_Opt" + emModelLower.substr(pos + 7);
+						// G4EmDNAPhysicsActivator only recognises "DNA_Opt1" ... "DNA_Opt8" and treats any
+						// other string as option 0. Passing GetPhysicsName() ("G4EmDNAPhysics_option4")
+						// therefore silently gave option 0. Map the Geant4 constructor name instead:
+						// G4EmDNAPhysics[_stationary] -> DNA_Opt0, G4EmDNAPhysics[_stationary]_optionN -> DNA_OptN.
+						// Note: GetPhysicsName() instantiates the constructor, which also sets the global
+						// G4EmParameters (including the DNA stationary flag). This call is kept as before.
+						G4String physName = (*iter->second).GetPhysicsName();
+						G4String dnaType = "";
+						const G4String dnaBase = "G4EmDNAPhysics";
+						if (physName == dnaBase || physName == dnaBase + "_stationary") {
+							dnaType = "DNA_Opt0";
+						} else if (G4StrUtil::starts_with(physName, dnaBase)) {
+							std::size_t pos = physName.rfind("_option");
+							if (pos != std::string::npos) {
+								G4String optNumber = physName.substr(pos + 7);
+								if (!optNumber.empty() && optNumber.find_first_not_of("0123456789") == std::string::npos)
+									dnaType = "DNA_Opt" + optNumber;
+							}
+						}
 
-						// GetPhysicsName() instantiates the requested G4EmDNAPhysics_optionN, whose
-						// constructor resets and sets the global G4EmParameters. Keep the call so that
-						// the global EM parameters are unchanged by this fix.
-						emModel = (*iter->second).GetPhysicsName();
+						if (dnaType.empty()) {
+							G4cerr << "Topas is exiting due to a serious error in modular physics setup." << G4endl;
+							G4cerr << "Parameter name: " << GetFullParmName("ForRegion") + "/" + aRegionName + "/" + "ActiveG4EmModelFromModule" << G4endl;
+							G4cerr << "Physics module: " << emModel << " (" << physName << ") cannot be activated per region." << G4endl;
+							G4cerr << "Per-region DNA physics supports g4em-dna, g4em-dna_optN, g4em-dna-stationary and g4em-dna-stationary_optN." << G4endl;
+							fPm->AbortSession(1);
+						}
 						G4EmParameters::Instance()->AddDNA(aRegionName, dnaType);
 					}
 				}
