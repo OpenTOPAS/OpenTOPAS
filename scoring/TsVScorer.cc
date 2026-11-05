@@ -48,6 +48,7 @@
 #include "TsChemTrackingManager.hh"
 
 #include "G4RunManager.hh"
+#include "G4AutoLock.hh"
 #include "G4Run.hh"
 #include "G4Step.hh"
 #include "G4VPhysicalVolume.hh"
@@ -123,10 +124,7 @@ fOnlyIncludeParticlesGoingOut(false), fSetBinToMinusOneIfNotInRTStructure(false)
 
 
 TsVScorer::~TsVScorer()
-{
-	for (auto& entry : fPrivateSolids)
-		delete entry.second;
-}
+{;}
 
 
 void TsVScorer::PostConstructor()
@@ -445,12 +443,15 @@ void TsVScorer::UpdateForNewRun(G4bool rebuiltSomeComponents)
 
 	fCachedCubicVolume = -1;
 
-	// Geometry may have been rebuilt, and a new solid could reuse a freed address.
-	// Drop all private solid clones so that they are recreated from the current solids.
-	for (auto& entry : fPrivateSolids)
-		delete entry.second;
-	fPrivateSolids.clear();
-	fSolid = NULL;
+	// If components were rebuilt, a new solid could reuse the address of a deleted one.
+	// Forget the private solid copies so that they are recreated from the current solids.
+	// The copies themselves are owned (and eventually deleted) by the G4SolidStore.
+	if (rebuiltSomeComponents) {
+		fPrivateSolids.clear();
+		fLastSharedSolid = nullptr;
+		fLastPrivateSolid = nullptr;
+		fSolid = NULL;
+	}
 
 	fHasCombinedSubScorers = false;
 
@@ -816,18 +817,18 @@ void TsVScorer::ResolveSolid(G4Step* aStep) {
 
 		// Do not resize the solid that the parameterisation shares with the navigator:
 		// a navigator still inside another copy would then step with wrong dimensions.
-		// Size a scorer-private clone instead.
+		// Size a scorer-private copy instead.
 		G4VSolid* sharedSolid = physParam->ComputeSolid(idx, physVol);
-		auto it = fPrivateSolids.find(sharedSolid);
-		if (it == fPrivateSolids.end())
-			it = fPrivateSolids.emplace(sharedSolid, sharedSolid->Clone()).first;
-
-		if (it->second) {
-			fSolid = it->second;
-		} else {
-			// Solid type without Clone(): fall back to the original behaviour.
-			fSolid = sharedSolid;
+		if (sharedSolid != fLastSharedSolid) {
+			auto it = fPrivateSolids.find(sharedSolid);
+			if (it == fPrivateSolids.end())
+				it = fPrivateSolids.emplace(sharedSolid, MakePrivateSolid(sharedSolid)).first;
+			fLastSharedSolid = sharedSolid;
+			fLastPrivateSolid = it->second;
 		}
+
+		// Solid type without Clone(): fall back to the shared solid (warned in MakePrivateSolid).
+		fSolid = fLastPrivateSolid ? fLastPrivateSolid : sharedSolid;
 		fSolid->ComputeDimensions(physParam,idx,physVol);
 	}
 	else
@@ -839,6 +840,27 @@ void TsVScorer::ResolveSolid(G4Step* aStep) {
 		// Undivided volume
 		fSolid = physVol->GetLogicalVolume()->GetSolid();
 	}
+}
+
+
+G4VSolid* TsVScorer::MakePrivateSolid(G4VSolid* sharedSolid) {
+	// Creating a solid registers it in the G4SolidStore, which is shared by all threads
+	// and not locked, so serialise this between worker threads. The store owns the copy.
+	static G4Mutex privateSolidMutex = G4MUTEX_INITIALIZER;
+	G4AutoLock lock(&privateSolidMutex);
+
+	G4VSolid* privateSolid = sharedSolid->Clone();
+	if (privateSolid) {
+		privateSolid->SetName(sharedSolid->GetName() + "_ScorerCopy");
+	} else {
+		G4ExceptionDescription msg;
+		msg << "Scorer " << GetName() << ": solid " << sharedSolid->GetName() << " of type "
+			<< sharedSolid->GetEntityType() << " cannot be cloned." << G4endl
+			<< "The scorer will resize the solid shared with the navigator, which can disturb"
+			<< " navigation in this parameterised component.";
+		G4Exception("TsVScorer::MakePrivateSolid", "TsVScorer001", JustWarning, msg);
+	}
+	return privateSolid;
 }
 
 
