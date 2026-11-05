@@ -771,8 +771,21 @@ void TsModularPhysicsList::ActiveG4EmModelPerRegion(G4String moduleName)
 							fPm->AbortSession(1);
 						}
 
+						// G4EmDNAPhysicsActivator expects "DNA_Opt0", "DNA_Opt4", etc. Passing
+						// GetPhysicsName() ("G4EmDNAPhysics_option4") made it silently fall back
+						// to option 0. Map the TOPAS module name (g4em-dna, g4em-dna_optN) instead.
+						G4String emModelLower = emModel;
+						G4StrUtil::to_lower(emModelLower);
+						G4String dnaType = "DNA_Opt0";
+						std::size_t pos = emModelLower.find("dna_opt");
+						if (pos != std::string::npos)
+							dnaType = "DNA_Opt" + emModelLower.substr(pos + 7);
+
+						// GetPhysicsName() instantiates the requested G4EmDNAPhysics_optionN, whose
+						// constructor resets and sets the global G4EmParameters. Keep the call so that
+						// the global EM parameters are unchanged by this fix.
 						emModel = (*iter->second).GetPhysicsName();
-						G4EmParameters::Instance()->AddDNA(aRegionName, emModel);
+						G4EmParameters::Instance()->AddDNA(aRegionName, dnaType);
 					}
 				}
 			}
