@@ -123,7 +123,10 @@ fOnlyIncludeParticlesGoingOut(false), fSetBinToMinusOneIfNotInRTStructure(false)
 
 
 TsVScorer::~TsVScorer()
-{;}
+{
+	for (auto& entry : fPrivateSolids)
+		delete entry.second;
+}
 
 
 void TsVScorer::PostConstructor()
@@ -441,6 +444,13 @@ void TsVScorer::UpdateForNewRun(G4bool rebuiltSomeComponents)
 	}
 
 	fCachedCubicVolume = -1;
+
+	// Geometry may have been rebuilt, and a new solid could reuse a freed address.
+	// Drop all private solid clones so that they are recreated from the current solids.
+	for (auto& entry : fPrivateSolids)
+		delete entry.second;
+	fPrivateSolids.clear();
+	fSolid = NULL;
 
 	fHasCombinedSubScorers = false;
 
@@ -804,7 +814,20 @@ void TsVScorer::ResolveSolid(G4Step* aStep) {
 		// For now, have those calculations use index 0 so that downstream calculations at least have something to work with.
 		if (idx<0) idx = 0;
 
-		fSolid = physParam->ComputeSolid(idx, physVol);
+		// Do not resize the solid that the parameterisation shares with the navigator:
+		// a navigator still inside another copy would then step with wrong dimensions.
+		// Size a scorer-private clone instead.
+		G4VSolid* sharedSolid = physParam->ComputeSolid(idx, physVol);
+		auto it = fPrivateSolids.find(sharedSolid);
+		if (it == fPrivateSolids.end())
+			it = fPrivateSolids.emplace(sharedSolid, sharedSolid->Clone()).first;
+
+		if (it->second) {
+			fSolid = it->second;
+		} else {
+			// Solid type without Clone(): fall back to the original behaviour.
+			fSolid = sharedSolid;
+		}
 		fSolid->ComputeDimensions(physParam,idx,physVol);
 	}
 	else
