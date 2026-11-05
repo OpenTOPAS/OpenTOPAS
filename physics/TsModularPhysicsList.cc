@@ -794,7 +794,7 @@ void TsModularPhysicsList::ActiveG4EmModelPerRegion(G4String moduleName)
 						if (dnaType.empty()) {
 							G4cerr << "Topas is exiting due to a serious error in modular physics setup." << G4endl;
 							G4cerr << "Parameter name: " << GetFullParmName("ForRegion") + "/" + aRegionName + "/" + "ActiveG4EmModelFromModule" << G4endl;
-							G4cerr << "Physics module: " << emModel << " (" << physName << ") cannot be activated per region." << G4endl;
+							G4cerr << "Physics module: " << emModel << " cannot be activated per region." << G4endl;
 							G4cerr << "Per-region DNA physics supports g4em-dna, g4em-dna_optN, g4em-dna-stationary and g4em-dna-stationary_optN." << G4endl;
 							fPm->AbortSession(1);
 						}
