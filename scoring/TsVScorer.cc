@@ -827,8 +827,7 @@ void TsVScorer::ResolveSolid(G4Step* aStep) {
 			fLastPrivateSolid = it->second;
 		}
 
-		// Solid type without Clone(): fall back to the shared solid (warned in MakePrivateSolid).
-		fSolid = fLastPrivateSolid ? fLastPrivateSolid : sharedSolid;
+		fSolid = fLastPrivateSolid;
 		fSolid->ComputeDimensions(physParam,idx,physVol);
 	}
 	else
@@ -850,16 +849,18 @@ G4VSolid* TsVScorer::MakePrivateSolid(G4VSolid* sharedSolid) {
 	G4AutoLock lock(&privateSolidMutex);
 
 	G4VSolid* privateSolid = sharedSolid->Clone();
-	if (privateSolid) {
-		privateSolid->SetName(sharedSolid->GetName() + "_ScorerCopy");
-	} else {
-		G4ExceptionDescription msg;
-		msg << "Scorer " << GetName() << ": solid " << sharedSolid->GetName() << " of type "
-			<< sharedSolid->GetEntityType() << " cannot be cloned." << G4endl
-			<< "The scorer will resize the solid shared with the navigator, which can disturb"
-			<< " navigation in this parameterised component.";
-		G4Exception("TsVScorer::MakePrivateSolid", "TsVScorer001", JustWarning, msg);
+	if (!privateSolid) {
+		// Resizing the shared solid instead would disturb navigation in this component
+		// and give wrong results, so stop rather than fall back.
+		G4cerr << "Topas is exiting due to a serious error in scoring setup." << G4endl;
+		G4cerr << "Scorer " << GetName() << " on component " << fComponent->GetNameWithCopyId()
+			   << " needs a private copy of solid " << sharedSolid->GetName() << " of type "
+			   << sharedSolid->GetEntityType() << "," << G4endl;
+		G4cerr << "but this solid type does not implement Clone()." << G4endl;
+		G4cerr << "Implement Clone() in the solid class to score in this parameterised component." << G4endl;
+		fPm->AbortSession(1);
 	}
+	privateSolid->SetName(sharedSolid->GetName() + "_ScorerCopy");
 	return privateSolid;
 }
 
