@@ -51,7 +51,9 @@ body:
         - 4.0
         - 4.1
         - 4.2
-      default: 5
+        - "4.3.0"
+        - "4.3.1"
+      default: 7
     validations:
       required: true
   - type: dropdown
