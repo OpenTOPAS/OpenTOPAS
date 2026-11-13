@@ -48,6 +48,7 @@
 #include "TsChemTrackingManager.hh"
 
 #include "G4RunManager.hh"
+#include "G4AutoLock.hh"
 #include "G4Run.hh"
 #include "G4Step.hh"
 #include "G4VPhysicalVolume.hh"
@@ -442,6 +443,16 @@ void TsVScorer::UpdateForNewRun(G4bool rebuiltSomeComponents)
 
 	fCachedCubicVolume = -1;
 
+	// If components were rebuilt, a new solid could reuse the address of a deleted one.
+	// Forget the private solid copies so that they are recreated from the current solids.
+	// The copies themselves are owned (and eventually deleted) by the G4SolidStore.
+	if (rebuiltSomeComponents) {
+		fPrivateSolids.clear();
+		fLastSharedSolid = nullptr;
+		fLastPrivateSolid = nullptr;
+		fSolid = NULL;
+	}
+
 	fHasCombinedSubScorers = false;
 
 	if (fHadParameterChangeSinceLastRun) {
@@ -804,7 +815,19 @@ void TsVScorer::ResolveSolid(G4Step* aStep) {
 		// For now, have those calculations use index 0 so that downstream calculations at least have something to work with.
 		if (idx<0) idx = 0;
 
-		fSolid = physParam->ComputeSolid(idx, physVol);
+		// Do not resize the solid that the parameterisation shares with the navigator:
+		// a navigator still inside another copy would then step with wrong dimensions.
+		// Size a scorer-private copy instead.
+		G4VSolid* sharedSolid = physParam->ComputeSolid(idx, physVol);
+		if (sharedSolid != fLastSharedSolid) {
+			auto it = fPrivateSolids.find(sharedSolid);
+			if (it == fPrivateSolids.end())
+				it = fPrivateSolids.emplace(sharedSolid, MakePrivateSolid(sharedSolid)).first;
+			fLastSharedSolid = sharedSolid;
+			fLastPrivateSolid = it->second;
+		}
+
+		fSolid = fLastPrivateSolid;
 		fSolid->ComputeDimensions(physParam,idx,physVol);
 	}
 	else
@@ -816,6 +839,29 @@ void TsVScorer::ResolveSolid(G4Step* aStep) {
 		// Undivided volume
 		fSolid = physVol->GetLogicalVolume()->GetSolid();
 	}
+}
+
+
+G4VSolid* TsVScorer::MakePrivateSolid(G4VSolid* sharedSolid) {
+	// Creating a solid registers it in the G4SolidStore, which is shared by all threads
+	// and not locked, so serialise this between worker threads. The store owns the copy.
+	static G4Mutex privateSolidMutex = G4MUTEX_INITIALIZER;
+	G4AutoLock lock(&privateSolidMutex);
+
+	G4VSolid* privateSolid = sharedSolid->Clone();
+	if (!privateSolid) {
+		// Resizing the shared solid instead would disturb navigation in this component
+		// and give wrong results, so stop rather than fall back.
+		G4cerr << "Topas is exiting due to a serious error in scoring setup." << G4endl;
+		G4cerr << "Scorer " << GetName() << " on component " << fComponent->GetNameWithCopyId()
+			   << " needs a private copy of solid " << sharedSolid->GetName() << " of type "
+			   << sharedSolid->GetEntityType() << "," << G4endl;
+		G4cerr << "but this solid type does not implement Clone()." << G4endl;
+		G4cerr << "Implement Clone() in the solid class to score in this parameterised component." << G4endl;
+		fPm->AbortSession(1);
+	}
+	privateSolid->SetName(sharedSolid->GetName() + "_ScorerCopy");
+	return privateSolid;
 }
 
 
