@@ -3,7 +3,7 @@
 # =========================================================
 FROM debian:12
 
-ARG TOPAS_VERSION=v4.3.0
+ARG TOPAS_VERSION=v4.3.1
 ARG G4_VERSION=11.4.3
 LABEL maintainer="Jose Ramos-Mendez <Jose.RamosMendez@ucsf.edu>" \
       description="Docker image for TOPAS ${TOPAS_VERSION} (Geant4 ${G4_VERSION}, GDCM 2.6.8)" \

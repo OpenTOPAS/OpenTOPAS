@@ -1,7 +1,7 @@
 # QuickStart Guide for OpenTOPAS: TOol for PArticle Simulation
 This file details the steps to be followed by <ins>Mac users</ins> in order to install OpenTOPAS and launch your first simulation. 
 
-These instructions target **v4.3.0** built against Geant4 **v11.4.3**.
+These instructions target **v4.3.1** built against Geant4 **v11.4.3**.
 
 > [!WARNING]
 > We recommend macOS version 14.0 (Sonoma) or higher. Furthermore following these instructions are solely responsability of the end user. 
@@ -153,7 +153,7 @@ Downloading and installing OpenTOPAS and GDCM.
         cd /Applications/TOPAS
         git clone https://github.com/OpenTOPAS/OpenTOPAS.git
         cd OpenTOPAS
-        git checkout v4.3.0
+        git checkout v4.3.1
         cd ..
 
 7.2. Next, check if the /Applications/GDCM already exists (GDCM is already installed). If so, rename the directory to GDCM-OLD (or another name) using the following command. 
@@ -257,9 +257,9 @@ The OpenTOPAS tests are located [here](https://github.com/OpenTOPAS/qi-opentopas
         pip3 install nrtest
         pip3 install git+https://github.com/davidchall/nrtest-topas.git
 
-Modify the `apps/topas-v4.3.0.json` metadata file according to your directories and configuration (remember to set your environment variables) and execute the entire test suite as follows:
+Modify the `apps/topas-v4.3.1.json` metadata file according to your directories and configuration (remember to set your environment variables) and execute the entire test suite as follows:
 
-        nrtest execute apps/topas-v4.3.0.json tests/ -o benchmarks/todayDate
+        nrtest execute apps/topas-v4.3.1.json tests/ -o benchmarks/todayDate
 
 Comparisons can also be made with the following command:
         
