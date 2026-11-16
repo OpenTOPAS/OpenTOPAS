@@ -89,7 +89,7 @@ protected:
 	// User classes should not access any methods or data beyond this point
 public:
 	void UpdateForSpecificParameterChange(G4String parameter);
-	void UpdateForNewRun(G4bool rebuiltSomeComponents);
+	virtual void UpdateForNewRun(G4bool rebuiltSomeComponents);
 
 protected:
 	TsVGenerator* fGenerator;

@@ -39,9 +39,7 @@
 TsFilterByCreatorProcess::TsFilterByCreatorProcess(G4String name, TsParameterManager* pM, TsMaterialManager* mM, TsGeometryManager* gM,
 												   TsFilterManager* fM, TsVGenerator* generator, TsVScorer* scorer, TsVFilter* parentFilter, G4bool invert,
 												   G4bool includeAncestors)
-:TsVFilter(name, pM, mM, gM, fM, generator, scorer, parentFilter, invert), fIncludeAncestors(includeAncestors) {
-	fProcesses = new G4ProcessVector();
-
+:TsVFilter(name, pM, mM, gM, fM, generator, scorer, parentFilter, invert), fIncludeAncestors(includeAncestors), fProcessCacheVersion(1) {
 	ResolveParameters();
 
 	if (fIncludeAncestors)
@@ -54,7 +52,7 @@ TsFilterByCreatorProcess::~TsFilterByCreatorProcess()
 
 
 void TsFilterByCreatorProcess::ResolveParameters() {
-	fProcesses->clear();
+	fProcessNames.clear();
 
 	G4String* processNames = fPm->GetStringVector(GetFullParmName(GetName()));
 	G4int length = fPm->GetVectorLength(GetFullParmName(GetName()));
@@ -63,25 +61,64 @@ void TsFilterByCreatorProcess::ResolveParameters() {
 		G4ProcessTable* theProcessTable = G4ProcessTable::GetProcessTable();
 		G4ProcessVector* oneVector = theProcessTable->FindProcesses(processNames[i]);
 
-		for (size_t j = 0; j < oneVector->size(); j++)
-			fProcesses->insert((*oneVector)[j]);
+		G4bool found = oneVector->size() > 0;
+		delete oneVector;
 
-		if (fProcesses->size()==0) {
+		if (!found) {
 			G4cerr << "Topas is exiting due to a serious error in scoring setup." << G4endl;
 			G4cerr << GetName() << " = " << processNames[i] << " refers to an unknown process." << G4endl;
 			fPm->AbortSession(1);
 		}
+
+		fProcessNames.push_back(processNames[i]);
 	}
 
+	// Invalidate every thread's cache, including threads other than this one.
+	fProcessCacheVersion++;
 	TsVFilter::ResolveParameters();
+}
+
+
+void TsFilterByCreatorProcess::UpdateForNewRun(G4bool rebuiltSomeComponents) {
+	// Physics may have been rebuilt since the previous run.
+	// Updates take place between runs, while workers are not evaluating filters.
+	fProcessCacheVersion++;
+	TsVFilter::UpdateForNewRun(rebuiltSomeComponents);
+}
+
+
+const std::vector<G4VProcess*>& TsFilterByCreatorProcess::GetProcesses() const {
+	ProcessCache& cache = fProcessCache.Get();
+	if (cache.version != fProcessCacheVersion) {
+		cache.processes.clear();
+		G4ProcessTable* theProcessTable = G4ProcessTable::GetProcessTable();
+		for (size_t i = 0; i < fProcessNames.size(); i++) {
+			G4ProcessVector* oneVector = theProcessTable->FindProcesses(fProcessNames[i]);
+			G4bool found = oneVector->size() > 0;
+			for (size_t j = 0; j < oneVector->size(); j++)
+				cache.processes.push_back((*oneVector)[j]);
+			delete oneVector;
+
+			if (!found) {
+				G4cerr << "Topas is exiting due to a serious error in scoring setup." << G4endl;
+				G4cerr << GetName() << " = " << fProcessNames[i] << " refers to an unknown process." << G4endl;
+				fPm->AbortSession(1);
+			}
+		}
+		cache.version = fProcessCacheVersion;
+	}
+
+	return cache.processes;
 }
 
 
 G4bool TsFilterByCreatorProcess::Accept(const G4Step* aStep) const {
 	if (fParentFilter && !fParentFilter->Accept(aStep)) return false;
 
-	for (size_t i = 0; i < fProcesses->size(); i++)
-		if (aStep->GetTrack()->GetCreatorProcess() == (*fProcesses)[i]) {
+	// Resolve pointers in the thread that evaluates the filter.
+	const std::vector<G4VProcess*>& processes = GetProcesses();
+	for (size_t i = 0; i < processes.size(); i++)
+		if (aStep->GetTrack()->GetCreatorProcess() == processes[i]) {
 			if (fInvert) return false;
 			else return true;
 	    }
@@ -91,8 +128,8 @@ G4bool TsFilterByCreatorProcess::Accept(const G4Step* aStep) const {
 		if (parentInformation) {
 			std::vector<G4VProcess*> ancestorProcesses = parentInformation->GetCreatorProcesses();
 			for (size_t i=0; i < ancestorProcesses.size(); i++)
-				for (size_t j = 0; j < fProcesses->size(); j++)
-					if ( ancestorProcesses[i]  == (*fProcesses)[j] ) {
+				for (size_t j = 0; j < processes.size(); j++)
+					if ( ancestorProcesses[i]  == processes[j] ) {
 						if (fInvert) return false;
 						else return true;
 	                }
