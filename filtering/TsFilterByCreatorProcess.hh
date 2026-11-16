@@ -33,7 +33,7 @@
 
 #include "TsVFilter.hh"
 
-class G4ProcessVector;
+#include <vector>
 
 class TsFilterByCreatorProcess : public TsVFilter
 {
@@ -49,6 +49,6 @@ public:
 
 private:
 	G4bool fIncludeAncestors;
-	G4ProcessVector* fProcesses;
+	std::vector<G4String> fProcessNames;
 };
 #endif

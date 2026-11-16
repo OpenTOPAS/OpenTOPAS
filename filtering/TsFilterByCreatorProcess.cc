@@ -36,12 +36,12 @@
 #include "G4ProcessVector.hh"
 #include "G4ProcessTable.hh"
 
+#include <memory>
+
 TsFilterByCreatorProcess::TsFilterByCreatorProcess(G4String name, TsParameterManager* pM, TsMaterialManager* mM, TsGeometryManager* gM,
 												   TsFilterManager* fM, TsVGenerator* generator, TsVScorer* scorer, TsVFilter* parentFilter, G4bool invert,
 												   G4bool includeAncestors)
 :TsVFilter(name, pM, mM, gM, fM, generator, scorer, parentFilter, invert), fIncludeAncestors(includeAncestors) {
-	fProcesses = new G4ProcessVector();
-
 	ResolveParameters();
 
 	if (fIncludeAncestors)
@@ -54,23 +54,23 @@ TsFilterByCreatorProcess::~TsFilterByCreatorProcess()
 
 
 void TsFilterByCreatorProcess::ResolveParameters() {
-	fProcesses->clear();
+	fProcessNames.clear();
 
 	G4String* processNames = fPm->GetStringVector(GetFullParmName(GetName()));
 	G4int length = fPm->GetVectorLength(GetFullParmName(GetName()));
 
 	for (G4int i = 0; i < length; i++) {
 		G4ProcessTable* theProcessTable = G4ProcessTable::GetProcessTable();
-		G4ProcessVector* oneVector = theProcessTable->FindProcesses(processNames[i]);
+		std::unique_ptr<G4ProcessVector> oneVector(theProcessTable->FindProcesses(processNames[i]));
 
-		for (size_t j = 0; j < oneVector->size(); j++)
-			fProcesses->insert((*oneVector)[j]);
-
-		if (fProcesses->size()==0) {
+		if (oneVector->size()==0) {
 			G4cerr << "Topas is exiting due to a serious error in scoring setup." << G4endl;
 			G4cerr << GetName() << " = " << processNames[i] << " refers to an unknown process." << G4endl;
 			fPm->AbortSession(1);
 		}
+
+		// Process instances are thread-local; match by the configured name.
+		fProcessNames.push_back(processNames[i]);
 	}
 
 	TsVFilter::ResolveParameters();
@@ -80,8 +80,9 @@ void TsFilterByCreatorProcess::ResolveParameters() {
 G4bool TsFilterByCreatorProcess::Accept(const G4Step* aStep) const {
 	if (fParentFilter && !fParentFilter->Accept(aStep)) return false;
 
-	for (size_t i = 0; i < fProcesses->size(); i++)
-		if (aStep->GetTrack()->GetCreatorProcess() == (*fProcesses)[i]) {
+	const G4VProcess* creatorProcess = aStep->GetTrack()->GetCreatorProcess();
+	for (size_t i = 0; i < fProcessNames.size(); i++)
+		if (creatorProcess && creatorProcess->GetProcessName() == fProcessNames[i]) {
 			if (fInvert) return false;
 			else return true;
 	    }
@@ -91,8 +92,8 @@ G4bool TsFilterByCreatorProcess::Accept(const G4Step* aStep) const {
 		if (parentInformation) {
 			std::vector<G4VProcess*> ancestorProcesses = parentInformation->GetCreatorProcesses();
 			for (size_t i=0; i < ancestorProcesses.size(); i++)
-				for (size_t j = 0; j < fProcesses->size(); j++)
-					if ( ancestorProcesses[i]  == (*fProcesses)[j] ) {
+				for (size_t j = 0; j < fProcessNames.size(); j++)
+					if (ancestorProcesses[i] && ancestorProcesses[i]->GetProcessName() == fProcessNames[j]) {
 						if (fInvert) return false;
 						else return true;
 	                }

@@ -34,11 +34,11 @@
 #include "G4ProcessVector.hh"
 #include "G4ProcessTable.hh"
 
+#include <memory>
+
 TsFilterByIncidentParticleCreatorProcess::TsFilterByIncidentParticleCreatorProcess(G4String name, TsParameterManager* pM, TsMaterialManager* mM, TsGeometryManager* gM,
 												   TsFilterManager* fM, TsVGenerator* generator, TsVScorer* scorer, TsVFilter* parentFilter, G4bool invert)
 :TsVFilter(name, pM, mM, gM, fM, generator, scorer, parentFilter, invert) {
-	fProcesses = new G4ProcessVector();
-
 	ResolveParameters();
 }
 
@@ -48,23 +48,23 @@ TsFilterByIncidentParticleCreatorProcess::~TsFilterByIncidentParticleCreatorProc
 
 
 void TsFilterByIncidentParticleCreatorProcess::ResolveParameters() {
-	fProcesses->clear();
+	fProcessNames.clear();
 
 	G4String* processNames = fPm->GetStringVector(GetFullParmName(GetName()));
 	G4int length = fPm->GetVectorLength(GetFullParmName(GetName()));
 
 	for (G4int i = 0; i < length; i++) {
 		G4ProcessTable* theProcessTable = G4ProcessTable::GetProcessTable();
-		G4ProcessVector* oneVector = theProcessTable->FindProcesses(processNames[i]);
+		std::unique_ptr<G4ProcessVector> oneVector(theProcessTable->FindProcesses(processNames[i]));
 
-		for (size_t j = 0; j < oneVector->size(); j++)
-			fProcesses->insert((*oneVector)[j]);
-
-		if (fProcesses->size()==0) {
+		if (oneVector->size()==0) {
 			G4cerr << "Topas is exiting due to a serious error in scoring setup." << G4endl;
 			G4cerr << GetName() << " = " << processNames[i] << " refers to an unknown process." << G4endl;
 			fPm->AbortSession(1);
 		}
+
+		// Process instances are thread-local; match by the configured name.
+		fProcessNames.push_back(processNames[i]);
 	}
 
 	TsVFilter::ResolveParameters();
@@ -74,8 +74,9 @@ void TsFilterByIncidentParticleCreatorProcess::ResolveParameters() {
 G4bool TsFilterByIncidentParticleCreatorProcess::Accept(const G4Step* aStep) const {
 	if (fParentFilter && !fParentFilter->Accept(aStep)) return false;
 
-	for (size_t i = 0; i < fProcesses->size(); i++)
-		if (fScorer->GetIncidentParticleCreatorProcess() == (*fProcesses)[i]) {
+	const G4VProcess* creatorProcess = fScorer->GetIncidentParticleCreatorProcess();
+	for (size_t i = 0; i < fProcessNames.size(); i++)
+		if (creatorProcess && creatorProcess->GetProcessName() == fProcessNames[i]) {
 			if (fInvert) return false;
 			else return true;
 	    }

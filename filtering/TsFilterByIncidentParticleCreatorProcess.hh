@@ -33,7 +33,7 @@
 
 #include "TsVFilter.hh"
 
-class G4ProcessVector;
+#include <vector>
 
 class TsFilterByIncidentParticleCreatorProcess : public TsVFilter
 {
@@ -48,6 +48,6 @@ public:
 	virtual G4bool AcceptTrack(const G4Track*) const;
 
 private:
-	G4ProcessVector* fProcesses;
+	std::vector<G4String> fProcessNames;
 };
 #endif
