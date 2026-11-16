@@ -58,20 +58,11 @@
 #include "G4EmDNAChemistry_option1.hh"
 #include "G4EmDNAChemistry_option2.hh"
 #include "G4EmDNAChemistry_option3.hh"
-#include "G4EmDNAPhysics.hh"
 #include "G4EmDNAPhysicsActivator.hh"
-#include "G4EmDNAPhysics_option1.hh"
 #include "G4EmDNAPhysics_option2.hh"
-#include "G4EmDNAPhysics_option3.hh"
 #include "G4EmDNAPhysics_option4.hh"
-#include "G4EmDNAPhysics_option5.hh"
 #include "G4EmDNAPhysics_option6.hh"
-#include "G4EmDNAPhysics_option7.hh"
 #include "G4EmDNAPhysics_option8.hh"
-#include "G4EmDNAPhysics_stationary.hh"
-#include "G4EmDNAPhysics_stationary_option2.hh"
-#include "G4EmDNAPhysics_stationary_option4.hh"
-#include "G4EmDNAPhysics_stationary_option6.hh"
 #include "G4EmExtraPhysics.hh"
 #include "G4EmLivermorePhysics.hh"
 #include "G4EmLivermorePolarizedPhysics.hh"
@@ -176,20 +167,11 @@ TsModularPhysicsList::TsModularPhysicsList(TsParameterManager* pM, TsExtensionMa
 	fPhysicsTable.insert(std::make_pair("tsphotoneutron", new Creator<TsPhotoNeutron>()));
 	fPhysicsTable.insert(std::make_pair("g4h-chargeexchange", new Creator<G4ChargeExchangePhysics>()));
 	fPhysicsTable.insert(std::make_pair("g4decay", new Creator<G4DecayPhysics>()));
-	fPhysicsTable.insert(std::make_pair("g4em-dna", new Creator<G4EmDNAPhysics>()));
-	fPhysicsTable.insert(std::make_pair("g4em-dna_opt1", new Creator<G4EmDNAPhysics_option1>()));
 	fPhysicsTable.insert(std::make_pair("g4em-dna_opt2", new Creator<G4EmDNAPhysics_option2>()));
-	fPhysicsTable.insert(std::make_pair("g4em-dna_opt3", new Creator<G4EmDNAPhysics_option3>()));
 	fPhysicsTable.insert(std::make_pair("g4em-dna_opt4", new Creator<G4EmDNAPhysics_option4>()));
-	fPhysicsTable.insert(std::make_pair("g4em-dna_opt5", new Creator<G4EmDNAPhysics_option5>()));
-	fPhysicsTable.insert(std::make_pair("g4em-dna-chemistry", new Creator<G4EmDNAChemistry>()));
 	fPhysicsTable.insert(std::make_pair("g4em-dna_opt6", new Creator<G4EmDNAPhysics_option6>()));
-	fPhysicsTable.insert(std::make_pair("g4em-dna_opt7", new Creator<G4EmDNAPhysics_option7>()));
 	fPhysicsTable.insert(std::make_pair("g4em-dna_opt8", new Creator<G4EmDNAPhysics_option8>()));
-	fPhysicsTable.insert(std::make_pair("g4em-dna-stationary", new Creator<G4EmDNAPhysics_stationary>()));
-	fPhysicsTable.insert(std::make_pair("g4em-dna-stationary_opt2", new Creator<G4EmDNAPhysics_stationary_option2>()));
-	fPhysicsTable.insert(std::make_pair("g4em-dna-stationary_opt4", new Creator<G4EmDNAPhysics_stationary_option4>()));
-	fPhysicsTable.insert(std::make_pair("g4em-dna-stationary_opt6", new Creator<G4EmDNAPhysics_stationary_option6>()));
+	fPhysicsTable.insert(std::make_pair("g4em-dna-chemistry", new Creator<G4EmDNAChemistry>()));
 	fPhysicsTable.insert(std::make_pair("g4em-dna-chemistry_opt1", new Creator<G4EmDNAChemistry_option1>()));
     fPhysicsTable.insert(std::make_pair("g4em-dna-chemistry_opt2", new Creator<G4EmDNAChemistry_option2>()));
     fPhysicsTable.insert(std::make_pair("g4em-dna-chemistry_opt3", new Creator<G4EmDNAChemistry_option3>()));
@@ -771,8 +753,34 @@ void TsModularPhysicsList::ActiveG4EmModelPerRegion(G4String moduleName)
 							fPm->AbortSession(1);
 						}
 
-						emModel = (*iter->second).GetPhysicsName();
-						G4EmParameters::Instance()->AddDNA(aRegionName, emModel);
+						// G4EmDNAPhysicsActivator only recognises "DNA_Opt1" ... "DNA_Opt8" and treats any
+						// other string as option 0. Passing GetPhysicsName() ("G4EmDNAPhysics_option4")
+						// therefore silently gave option 0. Map the Geant4 constructor name instead:
+						// G4EmDNAPhysics[_stationary] -> DNA_Opt0, G4EmDNAPhysics[_stationary]_optionN -> DNA_OptN.
+						// Note: GetPhysicsName() instantiates the constructor, which also sets the global
+						// G4EmParameters (including the DNA stationary flag). This call is kept as before.
+						G4String physName = (*iter->second).GetPhysicsName();
+						G4String dnaType = "";
+						const G4String dnaBase = "G4EmDNAPhysics";
+						if (physName == dnaBase || physName == dnaBase + "_stationary") {
+							dnaType = "DNA_Opt0";
+						} else if (G4StrUtil::starts_with(physName, dnaBase)) {
+							std::size_t pos = physName.rfind("_option");
+							if (pos != std::string::npos) {
+								G4String optNumber = physName.substr(pos + 7);
+								if (!optNumber.empty() && optNumber.find_first_not_of("0123456789") == std::string::npos)
+									dnaType = "DNA_Opt" + optNumber;
+							}
+						}
+
+						if (dnaType.empty()) {
+							G4cerr << "Topas is exiting due to a serious error in modular physics setup." << G4endl;
+							G4cerr << "Parameter name: " << GetFullParmName("ForRegion") + "/" + aRegionName + "/" + "ActiveG4EmModelFromModule" << G4endl;
+							G4cerr << "Physics module: " << emModel << " cannot be activated per region." << G4endl;
+							G4cerr << "Per-region DNA physics supports g4em-dna, g4em-dna_optN, g4em-dna-stationary and g4em-dna-stationary_optN." << G4endl;
+							fPm->AbortSession(1);
+						}
+						G4EmParameters::Instance()->AddDNA(aRegionName, dnaType);
 					}
 				}
 			}

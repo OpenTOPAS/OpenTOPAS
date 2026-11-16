@@ -1,6 +1,6 @@
 # TOPAS Docker
 
-This repository provides Docker recipes and helper scripts for building and running OpenTOPAS v4.3.0 with either Geant4 11.3.2 or 11.4.2 and GDCM 2.6.8 on macOS or Linux. Geant4 datasets are mounted from the host and must match the selected Geant4 version.
+This repository provides Docker recipes and helper scripts for building and running OpenTOPAS v4.3.1 with either Geant4 11.3.2 or 11.4.3 and GDCM 2.6.8 on macOS or Linux. Geant4 datasets are mounted from the host and must match the selected Geant4 version.
 
 ## Select a TOPAS / Geant4 image
 
@@ -8,15 +8,15 @@ The release workflow publishes these multi-architecture tags:
 
 | Image | Intended use |
 | --- | --- |
-| `opentopas/opentopas:v4.3.0-geant4-11.3.2` | Core OpenTOPAS or local TOPAS-nBio builds |
-| `opentopas/opentopas:v4.3.0-geant4-11.4.2` | Core OpenTOPAS; launcher default |
+| `opentopas/opentopas:v4.3.1-geant4-11.3.2` | Core OpenTOPAS or local TOPAS-nBio builds |
+| `opentopas/opentopas:v4.3.1-geant4-11.4.3` | Core OpenTOPAS; launcher default |
 
-Each tag groups `amd64` and `arm64` images so Docker selects the host architecture automatically. Explicit architecture tags append `-amd64` or `-arm64`, for example `opentopas/opentopas:v4.3.0-geant4-11.3.2-arm64`. Public TOPAS-nBio currently requires the 11.3.2 image; its chemistry is incompatible with 11.4.2.
+Each tag groups `amd64` and `arm64` images so Docker selects the host architecture automatically. Explicit architecture tags append `-amd64` or `-arm64`, for example `opentopas/opentopas:v4.3.1-geant4-11.3.2-arm64`. Public TOPAS-nBio currently requires the 11.3.2 image; its chemistry is incompatible with 11.4.3.
 
 Use `-image=` to override the default:
 
 ```bash
-./topas-docker -image=opentopas/opentopas:v4.3.0-geant4-11.3.2 \
+./topas-docker -image=opentopas/opentopas:v4.3.1-geant4-11.3.2 \
   -g4data=/path/to/G4Data-11.3.2 MySimulation.txt
 ```
 
@@ -39,14 +39,14 @@ For clusters that do not allow Docker, use the following headless script:
 ```bash
 ./topas-apptainer -g4data=$HOME/G4Data OneBox.txt
 ```
-- It wraps `apptainer run` (or `singularity run`) against `docker://opentopas/opentopas:v4.3.0-geant4-11.4.2` by default.
+- It wraps `apptainer run` (or `singularity run`) against `docker://opentopas/opentopas:v4.3.1-geant4-11.4.3` by default.
 - It uses the identical `-data`, `-extensions`, `-g4data`, and `--build-extensions` flags, including cached builds under `~/.cache/topas-docker`.
 - It runs without X11 forwarding (relies on the image’s internal Xvfb), making it good for HPC runs. 
 
 **Initial build with extensions (Apptainer)**
 ```bash
 ./topas-apptainer \
-  -image=docker://opentopas/opentopas:v4.3.0-geant4-11.3.2 \
+  -image=docker://opentopas/opentopas:v4.3.1-geant4-11.3.2 \
   -extensions=$HOME/Applications/TOPAS/Extensions/TOPAS-nBio \
   --build-extensions \
   -g4data=$HOME/G4Data \
@@ -61,7 +61,7 @@ The helper binds `/extensions/src`, `/extensions/build`, and `/extensions/instal
 
    ```bash
    ./topas-docker \
-     -image=opentopas/opentopas:v4.3.0-geant4-11.3.2 \
+     -image=opentopas/opentopas:v4.3.1-geant4-11.3.2 \
      -extensions=$HOME/Applications/TOPAS/Extensions/TOPAS-nBio \
      --build-extensions \
      -g4data=$HOME/Applications/G4Data \
@@ -109,7 +109,7 @@ docker run --rm -it \
   -v /tmp/.X11-unix:/tmp/.X11-unix:rw \
   -v $HOME/Applications/G4Data:/Applications/G4Data:ro \
   -v $PWD:/simulations \
-  opentopas/opentopas:v4.3.0-geant4-11.4.2 MySimulation.txt
+  opentopas/opentopas:v4.3.1-geant4-11.4.3 MySimulation.txt
 ```
 
 ## Directory Organization Inside the Image

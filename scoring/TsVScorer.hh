@@ -38,6 +38,7 @@
 
 #include "G4VPrimitiveScorer.hh"
 #include "G4VSolid.hh"
+#include <map>
 #include "G4SystemOfUnits.hh"
 
 class TsMaterialManager;
@@ -106,6 +107,14 @@ protected:
 
 	// Following call to ResolveSolid, this will now point to the correct solid
 	G4VSolid* fSolid;
+
+	// Scorer-private copies of parameterised solids, keyed by the shared solid.
+	// ResolveSolid sizes these instead of the navigator's shared solid (nullptr: solid cannot be cloned).
+	// The copies are owned by the G4SolidStore.
+	G4VSolid* MakePrivateSolid(G4VSolid* sharedSolid);
+	std::map<G4VSolid*, G4VSolid*> fPrivateSolids;
+	G4VSolid* fLastSharedSolid = nullptr;
+	G4VSolid* fLastPrivateSolid = nullptr;
 
 	// Following call to ResolveSolid, this will compute the volume of the solid less any subvolumes
 	G4double GetCubicVolume(G4Step*);

@@ -1,7 +1,7 @@
 # QuickStart Guide for WSL
 This page details the steps to be followed by <ins>Windows users</ins> in order to install OpenTOPAS in <ins>WSL</ins> and launch your first simulation. 
 
-These instructions target **v4.3.0** built against Geant4 **v11.4.2**.
+These instructions target **v4.3.1** built against Geant4 **v11.4.3**.
 
 > [!WARNING]
 > We recommend Windows 11 or higher since it includes all the visualization libraries built in. We take no responsibility if users encounter an issue with their PCs while following this guide.
@@ -90,7 +90,7 @@ Install all the required libraries for Geant4 and TOPAS by using the following c
         sudo apt-get install -y qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools
 
 ## Step 7
-Install Gean4 11.4.2.
+Install Gean4 11.4.3.
 Make sure you are located in the "Applications" folder by doing the following command:
 
         cd ~/Applications
@@ -99,8 +99,8 @@ Then follow the next commands to create a Geant4 folder and download Geant4 from
 
         mkdir ~/Applications/GEANT4
         cd ~/Applications/GEANT4
-        wget https://gitlab.cern.ch/geant4/geant4/-/archive/v11.4.2/geant4-v11.4.2.tar.gz
-        tar -zxf geant4-v11.4.2.tar.gz
+        wget https://gitlab.cern.ch/geant4/geant4/-/archive/v11.4.3/geant4-v11.4.3.tar.gz
+        tar -zxf geant4-v11.4.3.tar.gz
 
 Your GEANT4 folder should look like this
 
@@ -119,7 +119,7 @@ Again, the GEANT4 folder should look as follows:
 Now we can finish up the installation of Geant4 by using the following commands:
 
         cd ~/Applications/GEANT4/geant4-build
-        cmake ../geant4-v11.4.2 -DGEANT4_INSTALL_DATA=OFF -DGEANT4_BUILD_MULTITHREADED=ON -DCMAKE_INSTALL_PREFIX=~/Applications/GEANT4/geant4-install -DCMAKE_PREFIX_PATH=/usr/lib/qt5 -DGEANT4_USE_QT=ON -DGEANT4_USE_QT_QT5=ON -DGEANT4_USE_OPENGL_X11=ON -DGEANT4_USE_RAYTRACER_X11=ON
+        cmake ../geant4-v11.4.3 -DGEANT4_INSTALL_DATA=OFF -DGEANT4_BUILD_MULTITHREADED=ON -DCMAKE_INSTALL_PREFIX=~/Applications/GEANT4/geant4-install -DCMAKE_PREFIX_PATH=/usr/lib/qt5 -DGEANT4_USE_QT=ON -DGEANT4_USE_QT_QT5=ON -DGEANT4_USE_OPENGL_X11=ON -DGEANT4_USE_RAYTRACER_X11=ON
         make -j10
         make install
 
@@ -178,7 +178,7 @@ Then, download OpenTOPAS from the GitHub repository using:
         cd ~/Applications/TOPAS
         git clone https://github.com/OpenTOPAS/OpenTOPAS.git
         cd OpenTOPAS
-        git checkout v4.3.0
+        git checkout v4.3.1
 
 Compile GDCM as follows:
 
@@ -266,9 +266,9 @@ The OpenTOPAS tests are located [here](https://github.com/OpenTOPAS/qi-opentopas
         pip3 install nrtest
         pip3 install git+https://github.com/davidchall/nrtest-topas.git
 
-Modify the `apps/topas-v4.3.0.json` metadata file according to your directories and configuration (remember to set your environment variables) and execute the entire test suite as follows:
+Modify the `apps/topas-v4.3.1.json` metadata file according to your directories and configuration (remember to set your environment variables) and execute the entire test suite as follows:
 
-        nrtest execute apps/topas-v4.3.0.json tests/ -o benchmarks/todayDate
+        nrtest execute apps/topas-v4.3.1.json tests/ -o benchmarks/todayDate
 
 Comparisons can also be made with the following command:
         
