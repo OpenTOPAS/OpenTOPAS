@@ -35,6 +35,8 @@
 #include "G4VProcess.hh"
 #include "G4ProcessVector.hh"
 #include "G4ProcessTable.hh"
+#include "G4LossTableManager.hh"
+#include "G4VEmProcess.hh"
 
 #include <memory>
 
@@ -60,10 +62,16 @@ void TsFilterByCreatorProcess::ResolveParameters() {
 	G4int length = fPm->GetVectorLength(GetFullParmName(GetName()));
 
 	for (G4int i = 0; i < length; i++) {
-		G4ProcessTable* theProcessTable = G4ProcessTable::GetProcessTable();
-		std::unique_ptr<G4ProcessVector> oneVector(theProcessTable->FindProcesses(processNames[i]));
+		// Check gamma subprocesses first: they are not registered individually
+		// in G4ProcessTable, which would emit a misleading not-found message.
+		G4VEmProcess* gammaGeneralProcess = G4LossTableManager::Instance()->GetGammaGeneralProcess();
+		G4bool found = gammaGeneralProcess && gammaGeneralProcess->GetEmProcess(processNames[i]);
+		if (!found) {
+			std::unique_ptr<G4ProcessVector> oneVector(G4ProcessTable::GetProcessTable()->FindProcesses(processNames[i]));
+			found = oneVector->size() > 0;
+		}
 
-		if (oneVector->size()==0) {
+		if (!found) {
 			G4cerr << "Topas is exiting due to a serious error in scoring setup." << G4endl;
 			G4cerr << GetName() << " = " << processNames[i] << " refers to an unknown process." << G4endl;
 			fPm->AbortSession(1);
