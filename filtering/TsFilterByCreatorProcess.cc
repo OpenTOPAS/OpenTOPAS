@@ -35,6 +35,8 @@
 #include "G4VProcess.hh"
 #include "G4ProcessVector.hh"
 #include "G4ProcessTable.hh"
+#include "G4LossTableManager.hh"
+#include "G4VEmProcess.hh"
 
 TsFilterByCreatorProcess::TsFilterByCreatorProcess(G4String name, TsParameterManager* pM, TsMaterialManager* mM, TsGeometryManager* gM,
 												   TsFilterManager* fM, TsVGenerator* generator, TsVScorer* scorer, TsVFilter* parentFilter, G4bool invert,
@@ -63,6 +65,12 @@ void TsFilterByCreatorProcess::ResolveParameters() {
 
 		G4bool found = oneVector->size() > 0;
 		delete oneVector;
+
+		// Gamma EM subprocesses are owned by the general process and are not
+		// registered individually in G4ProcessTable.
+		G4VEmProcess* gammaGeneralProcess = G4LossTableManager::Instance()->GetGammaGeneralProcess();
+		if (!found && gammaGeneralProcess)
+			found = gammaGeneralProcess->GetEmProcess(processNames[i]) != nullptr;
 
 		if (!found) {
 			G4cerr << "Topas is exiting due to a serious error in scoring setup." << G4endl;
@@ -98,6 +106,16 @@ const std::vector<G4VProcess*>& TsFilterByCreatorProcess::GetProcesses() const {
 			for (size_t j = 0; j < oneVector->size(); j++)
 				cache.processes.push_back((*oneVector)[j]);
 			delete oneVector;
+
+			// Cache the subprocess pointer from this thread's general process.
+			G4VEmProcess* gammaGeneralProcess = G4LossTableManager::Instance()->GetGammaGeneralProcess();
+			if (!found && gammaGeneralProcess) {
+				G4VEmProcess* process = gammaGeneralProcess->GetEmProcess(fProcessNames[i]);
+				if (process) {
+					cache.processes.push_back(process);
+					found = true;
+				}
+			}
 
 			if (!found) {
 				G4cerr << "Topas is exiting due to a serious error in scoring setup." << G4endl;
