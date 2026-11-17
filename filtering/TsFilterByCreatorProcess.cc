@@ -60,17 +60,15 @@ void TsFilterByCreatorProcess::ResolveParameters() {
 	G4int length = fPm->GetVectorLength(GetFullParmName(GetName()));
 
 	for (G4int i = 0; i < length; i++) {
-		G4ProcessTable* theProcessTable = G4ProcessTable::GetProcessTable();
-		G4ProcessVector* oneVector = theProcessTable->FindProcesses(processNames[i]);
-
-		G4bool found = oneVector->size() > 0;
-		delete oneVector;
-
-		// Gamma EM subprocesses are owned by the general process and are not
-		// registered individually in G4ProcessTable.
+		// Check gamma subprocesses first: they are not registered individually
+		// in G4ProcessTable, which would emit a misleading not-found message.
 		G4VEmProcess* gammaGeneralProcess = G4LossTableManager::Instance()->GetGammaGeneralProcess();
-		if (!found && gammaGeneralProcess)
-			found = gammaGeneralProcess->GetEmProcess(processNames[i]) != nullptr;
+		G4bool found = gammaGeneralProcess && gammaGeneralProcess->GetEmProcess(processNames[i]);
+		if (!found) {
+			G4ProcessVector* oneVector = G4ProcessTable::GetProcessTable()->FindProcesses(processNames[i]);
+			found = oneVector->size() > 0;
+			delete oneVector;
+		}
 
 		if (!found) {
 			G4cerr << "Topas is exiting due to a serious error in scoring setup." << G4endl;
@@ -101,20 +99,18 @@ const std::vector<G4VProcess*>& TsFilterByCreatorProcess::GetProcesses() const {
 		cache.processes.clear();
 		G4ProcessTable* theProcessTable = G4ProcessTable::GetProcessTable();
 		for (size_t i = 0; i < fProcessNames.size(); i++) {
-			G4ProcessVector* oneVector = theProcessTable->FindProcesses(fProcessNames[i]);
-			G4bool found = oneVector->size() > 0;
-			for (size_t j = 0; j < oneVector->size(); j++)
-				cache.processes.push_back((*oneVector)[j]);
-			delete oneVector;
-
-			// Cache the subprocess pointer from this thread's general process.
+			// Resolve gamma subprocesses before querying the process table.
 			G4VEmProcess* gammaGeneralProcess = G4LossTableManager::Instance()->GetGammaGeneralProcess();
-			if (!found && gammaGeneralProcess) {
-				G4VEmProcess* process = gammaGeneralProcess->GetEmProcess(fProcessNames[i]);
-				if (process) {
-					cache.processes.push_back(process);
-					found = true;
-				}
+			G4VEmProcess* process = gammaGeneralProcess ? gammaGeneralProcess->GetEmProcess(fProcessNames[i]) : nullptr;
+			G4bool found = process != nullptr;
+			if (found) {
+				cache.processes.push_back(process);
+			} else {
+				G4ProcessVector* oneVector = theProcessTable->FindProcesses(fProcessNames[i]);
+				found = oneVector->size() > 0;
+				for (size_t j = 0; j < oneVector->size(); j++)
+					cache.processes.push_back((*oneVector)[j]);
+				delete oneVector;
 			}
 
 			if (!found) {
