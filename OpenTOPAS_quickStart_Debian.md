@@ -166,6 +166,31 @@ Then use the following commands to move GDCM(<em>gdcm-2.6.8.tar.gz</em>) from th
         cmake ../gdcm-2.6.8 -DGDCM_BUILD_SHARED_LIBS=ON -DGDCM_BUILD_DOCBOOK_MANPAGES:BOOL=OFF  -DCMAKE_INSTALL_PREFIX=../gdcm-install 
         sudo make -j20 install
 
+> [!WARNING]
+> GDCM 2.6.8 requests compatibility with CMake 2.8.7. CMake 4.0 and newer have removed compatibility with versions older than 3.5, so configuration can fail in step 8.3. See the [CMake 4.0 release notes](https://cmake.org/cmake/help/v4.0/release/4.0.html). Use a separate CMake 3.28.1 installation for GDCM if you encounter this error; the system CMake can remain unchanged.
+
+On **x86-64 Linux**, install the separate CMake binary with:
+
+        cd /tmp
+        wget https://github.com/Kitware/CMake/releases/download/v3.28.1/cmake-3.28.1-linux-x86_64.tar.gz
+        sudo mkdir -p /opt/cmake-3.28.1
+        sudo tar -xzf cmake-3.28.1-linux-x86_64.tar.gz -C /opt/cmake-3.28.1 --strip-components=1
+        cmake --version
+        /opt/cmake-3.28.1/bin/cmake --version
+
+For other architectures, use the matching CMake distribution instead of the x86-64 archive.
+
+Then build GDCM in a fresh directory, rather than reusing the cache from the failed configuration:
+
+        cd "$HOME/Applications/GDCM"
+        mkdir gdcm-build-cmake328
+        cd gdcm-build-cmake328
+        /opt/cmake-3.28.1/bin/cmake ../gdcm-2.6.8 -DGDCM_BUILD_SHARED_LIBS=ON -DGDCM_BUILD_DOCBOOK_MANPAGES:BOOL=OFF -DCMAKE_INSTALL_PREFIX="$HOME/Applications/GDCM/gdcm-install"
+        /opt/cmake-3.28.1/bin/cmake --build . --parallel 20
+        /opt/cmake-3.28.1/bin/cmake --install .
+
+These build and installation commands do not need `sudo` when the GDCM directories are owned by your user. Continue with step 8.4 using the system `cmake` as usual.
+
 8.4. With GDCM built and installed, you can continue with the OpenTOPAS installation:
 
         cd $HOME/Applications/TOPAS
