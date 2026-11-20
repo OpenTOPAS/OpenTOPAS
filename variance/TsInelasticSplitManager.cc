@@ -52,6 +52,26 @@ TsInelasticSplitManager::~TsInelasticSplitManager()
 
 
 void TsInelasticSplitManager::ResolveParameters() {
+	const G4String componentsParameter = GetFullParmName("ApplyBiasingInComponentsNamed");
+	const G4String volumesParameter = GetFullParmName("ApplyBiasingInVolumesNamed");
+	const G4bool hasComponents = fPm->ParameterExists(componentsParameter);
+	const G4bool hasVolumes = fPm->ParameterExists(volumesParameter);
+	if (hasComponents == hasVolumes) {
+		G4cerr << "Topas is exiting due to a serious error in variance reduction setup." << G4endl;
+		G4cerr << "Specify exactly one of " << componentsParameter << " and " << volumesParameter << "." << G4endl;
+		G4cerr << "Use ApplyBiasingInComponentsNamed with geometry component names for new inputs." << G4endl;
+		fPm->AbortSession(1);
+	}
+	if (hasVolumes) {
+		G4cerr << "Warning: " << volumesParameter << " is deprecated. Use " << componentsParameter
+			   << " with geometry component names instead of envelope logical-volume names." << G4endl;
+		G4cerr << "For example, for a TsJaws component named Jaw, replace" << G4endl;
+		G4cerr << "sv:" << volumesParameter << " = 1 \"Jaw/Jaw\"" << G4endl;
+		G4cerr << "with sv:" << componentsParameter << " = 1 \"Jaw\"." << G4endl;
+		G4cerr << "The deprecated parameter retains its existing envelope-name matching and recursive attachment behavior."
+			   << G4endl;
+	}
+
     fProcessesToBias = fPm->GetStringVector(GetFullParmName("ProcessesNamed"));
     G4int nbOfProcess = fPm->GetVectorLength(GetFullParmName("ProcessesNamed"));
     fParticlesToBias = fPm->GetStringVector(GetFullParmName("ParticlesNamed"));

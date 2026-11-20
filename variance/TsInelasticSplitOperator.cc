@@ -38,14 +38,19 @@
 
 TsInelasticSplitOperator::TsInelasticSplitOperator(TsParameterManager* pM, G4String name)
 	: G4VBiasingOperator(name), fPm(pM),
-	  fSplittingFactor(1), fBiasPrimaryOnly(true), fBiasOnlyOnce(true), fNInteractions(0)
+	  fSplittingFactor(1), fBiasPrimaryOnly(true), fBiasOnlyOnce(true), fNInteractions(0),
+	  fAcceptedLogicalVolumeNames(nullptr), fNbOfAcceptedLogicalVolumeNames(0)
 {
  	fSplittingOperation = new TsInelasticSplitProcess(fPm, name);
 	fSplittingFactor = fPm->GetIntegerParameter("Vr/" + name + "/SplitNumber");
 	fBiasPrimaryOnly = fPm->GetBooleanParameter("Vr/" + name + "/OnlyBiasPrimaryParticle");
 	fBiasOnlyOnce = fPm->GetBooleanParameter("Vr/" + name + "/BiasParticleOnlyOnce");
-	fAcceptedLogicalVolumeNames = fPm->GetStringVector("Vr/" + name + "/ApplyBiasingInVolumesNamed");
-	fNbOfAcceptedLogicalVolumeNames = fPm->GetVectorLength("Vr/" + name + "/ApplyBiasingInVolumesNamed");
+	// Only the deprecated selector uses envelope logical-volume names.
+	// Component-name selection is resolved by TsGeometryManager.
+	if (fPm->ParameterExists("Vr/" + name + "/ApplyBiasingInVolumesNamed")) {
+		fAcceptedLogicalVolumeNames = fPm->GetStringVector("Vr/" + name + "/ApplyBiasingInVolumesNamed");
+		fNbOfAcceptedLogicalVolumeNames = fPm->GetVectorLength("Vr/" + name + "/ApplyBiasingInVolumesNamed");
+	}
 					
 	if (fPm->ParameterExists("Vr/" + name + "/ApplyRussianRouletteToParticlesDifferentThan") ) {
 		G4String* particleNames = fPm->GetStringVector("Vr/" + name + "/ApplyRussianRouletteToParticlesDifferentThan");
