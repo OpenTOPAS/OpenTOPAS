@@ -33,7 +33,11 @@
 
 #include "TsVFilter.hh"
 
-class G4ProcessVector;
+#include "G4Cache.hh"
+
+#include <vector>
+
+class G4VProcess;
 
 class TsFilterByIncidentParticleCreatorProcess : public TsVFilter
 {
@@ -43,11 +47,22 @@ public:
 	virtual ~TsFilterByIncidentParticleCreatorProcess();
 
 	void ResolveParameters();
+	virtual void UpdateForNewRun(G4bool rebuiltSomeComponents);
 
 	virtual G4bool Accept(const G4Step*) const;
 	virtual G4bool AcceptTrack(const G4Track*) const;
 
 private:
-	G4ProcessVector* fProcesses;
+	const std::vector<G4VProcess*>& GetProcesses() const;
+
+	struct ProcessCache {
+		ProcessCache() : version(0) {}
+		std::vector<G4VProcess*> processes;
+		size_t version;
+	};
+
+	std::vector<G4String> fProcessNames;
+	size_t fProcessCacheVersion;
+	G4Cache<ProcessCache> fProcessCache;
 };
 #endif

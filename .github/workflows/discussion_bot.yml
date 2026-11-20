@@ -35,7 +35,7 @@ jobs:
 
       - name: Checkout OpenTOPAS
         if: steps.optin.outputs.opted_in == 'true'
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Validate required secrets
         if: steps.optin.outputs.opted_in == 'true'
@@ -62,7 +62,7 @@ jobs:
       - name: Create GitHub App token
         if: steps.optin.outputs.opted_in == 'true'
         id: app-token
-        uses: actions/create-github-app-token@v1
+        uses: actions/create-github-app-token@v3
         with:
           app-id: ${{ secrets.BOT_APP_ID }}
           private-key: ${{ secrets.BOT_APP_PRIVATE_KEY }}
@@ -111,14 +111,14 @@ jobs:
       - name: Checkout bot repo
         if: steps.optin.outputs.opted_in == 'true'
         id: bot-repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           repository: ${{ env.BOT_REPO }}
           token: ${{ steps.app-token.outputs.token }}
           path: topas-bot
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v7
         with:
           python-version: "3.11"
 
