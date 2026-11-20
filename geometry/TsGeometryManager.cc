@@ -64,6 +64,8 @@
 #include "G4GeometryTolerance.hh"
 #include "G4SystemOfUnits.hh"
 
+#include <set>
+
 #ifdef TOPAS_MT
 #include "G4AutoLock.hh"
 
@@ -200,15 +202,48 @@ void TsGeometryManager::ConstructSDandField() {
 			G4int index = -1;
 			if ( fVm->BiasingProcessExists("inelasticsplitting", index) ) {
 				TsInelasticSplitOperator* biasingOperatorIS = new TsInelasticSplitOperator(fPm, "inelasticsplitting");
-                
-                for ( iter=fStore->begin(); iter!=fStore->end(); iter++) {
-                    if ( biasingOperatorIS->IsApplicable(iter->second->GetEnvelopePhysicalVolume()->GetLogicalVolume()) ) {
-                        biasingOperatorIS->AttachTo(iter->second->GetEnvelopePhysicalVolume()->GetLogicalVolume());
-                        std::vector<G4VPhysicalVolume*> allVolIS = iter->second->GetAllPhysicalVolumes(true);
-                        for ( size_t t = 0; t < allVolIS.size(); t++ )
-                            biasingOperatorIS->AttachTo(allVolIS[t]->GetLogicalVolume());
-                    }
-                }
+				std::vector<TsVGeometryComponent*> selectedComponents;
+				const G4String componentsParameter = "Vr/inelasticsplitting/ApplyBiasingInComponentsNamed";
+				const G4bool useComponentNames = fPm->ParameterExists(componentsParameter);
+				if (useComponentNames) {
+					G4String* componentNames = fPm->GetStringVector(componentsParameter);
+					G4int numberOfComponents = fPm->GetVectorLength(componentsParameter);
+					for (G4int i = 0; i < numberOfComponents; i++) {
+						TsVGeometryComponent* component = GetComponent(componentNames[i]);
+						if (!component) {
+							G4cerr << "Topas is exiting due to a serious error in variance reduction setup." << G4endl;
+							G4cerr << componentsParameter << " refers to unknown geometry component: "
+								   << componentNames[i] << G4endl;
+							G4cerr << "Use component names, for example Jaw, rather than envelope logical-volume names such as Jaw/Jaw."
+								   << G4endl;
+							fPm->AbortSession(1);
+							return;
+						}
+						selectedComponents.push_back(component);
+					}
+				} else {
+					// Preserve the deprecated parameter's exact envelope-name matching.
+					for (iter = fStore->begin(); iter != fStore->end(); iter++) {
+						G4VPhysicalVolume* envelope = iter->second->GetEnvelopePhysicalVolume();
+						if (envelope && biasingOperatorIS->IsApplicable(envelope->GetLogicalVolume()))
+							selectedComponents.push_back(iter->second);
+					}
+				}
+
+				// A component may be listed more than once or also selected through a parent.
+				std::set<G4LogicalVolume*> attachedVolumes;
+				for (auto component : selectedComponents) {
+					G4VPhysicalVolume* envelope = component->GetEnvelopePhysicalVolume();
+					// Groups have no logical envelope of their own; their physical envelope
+					// belongs to the parent. Do not select that parent with the new parameter.
+					if (envelope && (!useComponentNames || component->GetEnvelopeLogicalVolume()) &&
+						attachedVolumes.insert(envelope->GetLogicalVolume()).second)
+						biasingOperatorIS->AttachTo(envelope->GetLogicalVolume());
+					std::vector<G4VPhysicalVolume*> allVolumes = component->GetAllPhysicalVolumes(true);
+					for (auto volume : allVolumes)
+						if (attachedVolumes.insert(volume->GetLogicalVolume()).second)
+							biasingOperatorIS->AttachTo(volume->GetLogicalVolume());
+				}
 			}
 			
 			index = -1;

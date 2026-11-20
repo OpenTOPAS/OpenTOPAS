@@ -411,7 +411,7 @@ void TsQt5::RunCallback() {
 
 
 void TsQt5::PrintCallback() {
-    G4UImanager::GetUIpointer()->ApplyCommand("/vis/ogl/set/exportFormat pdf");
+    G4UImanager::GetUIpointer()->ApplyCommand("/vis/ogl/set/exportFormat png");
     G4UImanager::GetUIpointer()->ApplyCommand("/vis/ogl/export");
 }
 
